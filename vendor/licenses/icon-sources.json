@@ -1,0 +1,258 @@
+{
+  "material": {
+    "repo": "google/material-design-icons",
+    "commit": "737e3324305806514d7909874fa1818ae1808232",
+    "license": "Apache-2.0",
+    "files": [
+      {
+        "id": "home",
+        "path": "src/action/home/materialicons/24px.svg",
+        "sha256": "99da329970f65dbf03ce2450ac8c613caac4ca53523fd2da1be4421a49f376a3"
+      },
+      {
+        "id": "search",
+        "path": "src/action/search/materialicons/24px.svg",
+        "sha256": "c25d4cdca9972ef7ed9f8e9f32553d0444afd6a7cf8cc6ca9eebf5b4073ef308"
+      },
+      {
+        "id": "settings",
+        "path": "src/action/settings/materialicons/24px.svg",
+        "sha256": "86a35d4b8dd844c6a89f6b195b1600367cb52b8465847a0e7bbc8b3365c3983d"
+      },
+      {
+        "id": "user",
+        "path": "src/social/person/materialicons/24px.svg",
+        "sha256": "b3a98217a56e54c9ec91138f1c22c0c85163407c955dfd0c8c46b9192e5667f5"
+      },
+      {
+        "id": "heart",
+        "path": "src/action/favorite/materialicons/24px.svg",
+        "sha256": "1bf0227e5a365e53b79673f3cd27a10283a0d73aab0c1de35cd4f6b757ccdc20"
+      },
+      {
+        "id": "star",
+        "path": "src/toggle/star/materialicons/24px.svg",
+        "sha256": "b476baf36b66c81802396e090b842d7a84269f1f8aff197af6862ec890441c75"
+      },
+      {
+        "id": "check",
+        "path": "src/navigation/check/materialicons/24px.svg",
+        "sha256": "3f622661988927d85b134f07b0aa7842aeb404c71735d3c32f31de6c695b8d31"
+      },
+      {
+        "id": "close",
+        "path": "src/navigation/close/materialicons/24px.svg",
+        "sha256": "b54342456d5a7f2da53795147f8af36ec76fbf5b57d792fe75f07538e6c6783e"
+      },
+      {
+        "id": "plus",
+        "path": "src/content/add/materialicons/24px.svg",
+        "sha256": "475c29758b4a689598f80099714362c0340ad3a4bc111e2d88807bbf4b0f817e"
+      },
+      {
+        "id": "minus",
+        "path": "src/content/remove/materialicons/24px.svg",
+        "sha256": "ddb31b1d29bec31f6c96badaadee121ee8a5a096379d35d049848d8cc5deaeb9"
+      },
+      {
+        "id": "arrow-left",
+        "path": "src/navigation/arrow_back/materialicons/24px.svg",
+        "sha256": "e1590e051f577d02ec994e7cc6005a2bc96407a3d1ba2d7ce6825fb80402684c"
+      },
+      {
+        "id": "arrow-right",
+        "path": "src/navigation/arrow_forward/materialicons/24px.svg",
+        "sha256": "2f48309fb6ccc7b38a6412757801cd7d07e40b492f64e7146e8899d5a0e7c39a"
+      },
+      {
+        "id": "menu",
+        "path": "src/navigation/menu/materialicons/24px.svg",
+        "sha256": "5222c9f8a54b1023571595636174fa96d136a3c245d80168702888151193762f"
+      },
+      {
+        "id": "more",
+        "path": "src/navigation/more_horiz/materialicons/24px.svg",
+        "sha256": "e98c48cbb8a16a5f548ccc43acb78c42e61a3699cc61852d9b16c4a431a86e5f"
+      },
+      {
+        "id": "bell",
+        "path": "src/social/notifications/materialicons/24px.svg",
+        "sha256": "c43e401f607f9c98627a7c3d6fa5c5a959498adfd419c6d6272c15c559b6965d"
+      },
+      {
+        "id": "calendar",
+        "path": "src/action/event/materialicons/24px.svg",
+        "sha256": "3611221f5e3675e454aa8f74547442b4d5cce04e9873b39ab8d4447b9d3ef21c"
+      },
+      {
+        "id": "clock",
+        "path": "src/action/schedule/materialicons/24px.svg",
+        "sha256": "22d5a7b0e4394b7d359436c6dbaefa72187ee3433867cf108cd2f4be31a1aa26"
+      },
+      {
+        "id": "folder",
+        "path": "src/file/folder/materialicons/24px.svg",
+        "sha256": "f287ca4017ccbe8ff3c562acdd036a3ae88acb8637fb713f0c65b1b2f9a35b61"
+      },
+      {
+        "id": "file",
+        "path": "src/editor/insert_drive_file/materialicons/24px.svg",
+        "sha256": "1d08e14befdb44d6767807fdb8e427376bf7bf8c61f4d2baae4058a1be089e2e"
+      },
+      {
+        "id": "download",
+        "path": "src/file/file_download/materialicons/24px.svg",
+        "sha256": "f36ef37a9435741781187cd25129ff3b74636806c4d19383a4dfe707b6046fa0"
+      },
+      {
+        "id": "upload",
+        "path": "src/file/file_upload/materialicons/24px.svg",
+        "sha256": "8014aec1e17f40e5f29ccdf3d74411b9514864a96f72d6dc44ff2adc03ad3dce"
+      },
+      {
+        "id": "trash",
+        "path": "src/action/delete/materialicons/24px.svg",
+        "sha256": "5f0d4f6a9d1b779ad4063d8ccb799ae4352ba0785a978230113d473115961140"
+      },
+      {
+        "id": "edit",
+        "path": "src/image/edit/materialicons/24px.svg",
+        "sha256": "2301568113724db8d9e6c1cdf649d16af34da24e223a1f6a295d867a2b2037c9"
+      },
+      {
+        "id": "mail",
+        "path": "src/content/mail/materialicons/24px.svg",
+        "sha256": "b7c7b51f3cbd8b13183ac99b71b238be3c68f0b7763e49828ac5fedf3fadc8c5"
+      }
+    ],
+    "licenseSha256": "58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd"
+  },
+  "web": {
+    "repo": "lucide-icons/lucide",
+    "commit": "4b3f93d9d05eca4f43151c94422b6b5ddff83273",
+    "license": "ISC",
+    "files": [
+      {
+        "id": "home",
+        "path": "icons/house.svg",
+        "sha256": "28216c479005731ef5e382e7d8627eda2b129b019eb1f3d9de9f5915576d448e"
+      },
+      {
+        "id": "search",
+        "path": "icons/search.svg",
+        "sha256": "283d371c2e433817bb9c0c8310caa6c77fa4177c0f4f1168d9c83b97af7389dc"
+      },
+      {
+        "id": "settings",
+        "path": "icons/settings.svg",
+        "sha256": "0ae27fd0f81999229e3127ac96c5b32edfea448e291d509e76212b917551d66b"
+      },
+      {
+        "id": "user",
+        "path": "icons/user.svg",
+        "sha256": "eae3b3b2400031ddd5ec869327d127a96014e5f63aa6e06658dd5d4e90661aa8"
+      },
+      {
+        "id": "heart",
+        "path": "icons/heart.svg",
+        "sha256": "70af5f30be9fcb500b852556b38dcdf8c04a4ba81fd262534fb0336bd39b3b52"
+      },
+      {
+        "id": "star",
+        "path": "icons/star.svg",
+        "sha256": "c59da86b889569387db28e69ad00a89f96af22863ad9eea9aa12c4876a14338c"
+      },
+      {
+        "id": "check",
+        "path": "icons/check.svg",
+        "sha256": "7f33acc9a77a61659531044525fc008edebe215bf4dcf1c789c8674ad3277db0"
+      },
+      {
+        "id": "close",
+        "path": "icons/x.svg",
+        "sha256": "4a9cdab38fbb96162e7dace28e33f4ca0e49d8963a6162abc3d4691b7d675117"
+      },
+      {
+        "id": "plus",
+        "path": "icons/plus.svg",
+        "sha256": "7f6af73bf1ff6c4bca3f18351c8d1bdec6749c0c2530c4de5da85d520c21df17"
+      },
+      {
+        "id": "minus",
+        "path": "icons/minus.svg",
+        "sha256": "a0c743ab6dbf545d8a6e19ef3874f48ede686ce68d25e231bd81f540d97b1f19"
+      },
+      {
+        "id": "arrow-left",
+        "path": "icons/arrow-left.svg",
+        "sha256": "c5f4b88076108eb1a0d95336e1aa7e7bb1419a3a92af96f6247d88cd3456f933"
+      },
+      {
+        "id": "arrow-right",
+        "path": "icons/arrow-right.svg",
+        "sha256": "288397fdb73bb4f783cf9eabb726ff47357df1d4e3f1201dd748090579f108b9"
+      },
+      {
+        "id": "menu",
+        "path": "icons/menu.svg",
+        "sha256": "af6491988ac1ba30dc5414f485bc48713e957e1edb0fbef4a0dd8691c3c21598"
+      },
+      {
+        "id": "more",
+        "path": "icons/ellipsis.svg",
+        "sha256": "4f495cc72013ffdfec677f03b33a150f7b4dd741979283fd6853a09024bca112"
+      },
+      {
+        "id": "bell",
+        "path": "icons/bell.svg",
+        "sha256": "394889e9631fe3a9a63be9a479a95b451b708e432d895978d21d9130b5ee5dbe"
+      },
+      {
+        "id": "calendar",
+        "path": "icons/calendar.svg",
+        "sha256": "312ac8e715ac2b71bcc942dec2e8de9c1929085474f08885af35b563f6aa7a0b"
+      },
+      {
+        "id": "clock",
+        "path": "icons/clock.svg",
+        "sha256": "e9d3e3acf4d1c280fcf8092293439dc0a4756a908ceb859de144b12451cd1cb9"
+      },
+      {
+        "id": "folder",
+        "path": "icons/folder.svg",
+        "sha256": "f0d92b94b797a8ab7d4c4ae33c3236c47f64068351b4e14bdb5014ee42898a39"
+      },
+      {
+        "id": "file",
+        "path": "icons/file.svg",
+        "sha256": "499039795d7412d67664ff79d2eb6b7412e746b24c18c8fd8aba383c24ddada0"
+      },
+      {
+        "id": "download",
+        "path": "icons/download.svg",
+        "sha256": "3daeee13ded5a3afa2198b1bb4e2262d163922f97d96ac6ff9953e8ed4fe039d"
+      },
+      {
+        "id": "upload",
+        "path": "icons/upload.svg",
+        "sha256": "42816ee1fa0e9d3b82272a97615c1e562b0e9de64780ebf21963bc1db0ceffd1"
+      },
+      {
+        "id": "trash",
+        "path": "icons/trash.svg",
+        "sha256": "27299f69ad7c6272be64b1b8e2d48cbd6dcf0ef0d4f92827a1affa945c91700e"
+      },
+      {
+        "id": "edit",
+        "path": "icons/pencil.svg",
+        "sha256": "7e1ca7a6f5c1eb949671df762f2baadd32f5bd841d43153c3a15279af7d78d0c"
+      },
+      {
+        "id": "mail",
+        "path": "icons/mail.svg",
+        "sha256": "3236a51d5b8ce9b0528cf2e6ad07e527bd636dded6f5a9d656072052b99caea8"
+      }
+    ],
+    "licenseSha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57"
+  }
+}

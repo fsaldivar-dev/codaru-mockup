@@ -1,0 +1,9 @@
+#!/bin/sh
+# Workspace entry point; the executable itself has no Node.js dependency.
+task_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+task_cli="$task_dir/src-tauri/target/release/codaru"
+if [ ! -x "$task_cli" ]; then
+  printf '%s\n' '{"ok":false,"error":{"code":"CLI_NOT_BUILT","message":"Compila el CLI con npm run cli:build. Después abre Codaru Mockup y ejecuta ./codaru --help."}}'
+  exit 1
+fi
+exec "$task_cli" "$@"

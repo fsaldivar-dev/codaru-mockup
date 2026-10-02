@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="es"><head><meta charset="UTF-8"><title>Paquete de Codaru</title></head><body>
+<h1>Aplicación anfitriona del paquete</h1><div id="package-editor" style="width:1240px;height:760px"></div>
+<script type="module">
+import { mountCodaru } from '/packages/editor/dist/codaru.js';
+const changes = [], errors = [];
+const handle = mountCodaru(document.querySelector('#package-editor'), { onChange: p => changes.push(p), onError: e => errors.push(e.message) });
+window.packageTest = { handle, changes, errors, api: null };
+handle.ready.then(api => { window.packageTest.api = api; }, error => errors.push(error.message));
+</script></body></html>

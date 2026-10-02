@@ -1,0 +1,53 @@
+{
+  "name": "codaru-mockup",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/codaru.js",
+  "types": "./dist/types/embed.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/embed.d.ts",
+      "import": "./dist/codaru.js"
+    },
+    "./dist/*": "./dist/*"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "THIRD-PARTY-NOTICES.md",
+    "scripts"
+  ],
+  "description": "Editor visual embebible sin dependencias de interfaz en ejecución",
+  "license": "BSD-3-Clause",
+  "author": "fsaldivar-dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fsaldivar-dev/codaru-mockup.git",
+    "directory": "packages/editor"
+  },
+  "homepage": "https://github.com/fsaldivar-dev/codaru-mockup#readme",
+  "bugs": {
+    "url": "https://github.com/fsaldivar-dev/codaru-mockup/issues"
+  },
+  "keywords": [
+    "tauri",
+    "mockup",
+    "wireframe",
+    "design",
+    "editor",
+    "ui-kit",
+    "ai",
+    "svg"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "prepack": "node ./scripts/verify-package.mjs"
+  },
+  "bin": {
+    "codaru-assets": "./scripts/copy-assets.mjs"
+  }
+}

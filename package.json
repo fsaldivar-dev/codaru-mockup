@@ -1,0 +1,34 @@
+{
+  "name": "codaru-mockup-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 1432 --strictPort",
+    "check": "tsc --noEmit",
+    "build": "npm run check && vite build",
+    "package:build": "npm run check && node scripts/build-editor.mjs",
+    "test": "tsx --test tests/*.test.ts",
+    "test:ui": "playwright test",
+    "native:dev": "tauri dev",
+    "native:build": "npm run cli:build && tauri build --bundles app",
+    "cli:build": "TAURI_CONFIG='{\"bundle\":{\"resources\":[]}}' cargo build --manifest-path src-tauri/Cargo.toml --release --bin codaru",
+    "package:pack": "npm run package:build && npm pack ./packages/editor --pack-destination artifacts"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@tauri-apps/cli": "^2.0.0",
+    "@types/node": "^24.0.0",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "vite": "8.3.1"
+  },
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fsaldivar-dev/codaru-mockup.git"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

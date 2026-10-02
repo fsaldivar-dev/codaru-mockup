@@ -1,0 +1,8 @@
+[default]
+description = "Allows the Codaru editor to service its local CLI and open user-selected document dialogs. No general filesystem, shell, window, or remote access is granted."
+permissions = [
+  "allow-agent-poll",
+  "allow-agent-respond",
+  "allow-save-document",
+  "allow-open-document",
+]

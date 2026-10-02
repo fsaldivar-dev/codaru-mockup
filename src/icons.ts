@@ -1,0 +1,22 @@
+const paths: Record<string, string> = {
+  cursor: '<path d="m5 3 14 9-7 1-3 7z"/>', frame: '<path d="M8 3v18M16 3v18M3 8h18M3 16h18"/>',
+  rect: '<rect x="4" y="4" width="16" height="16" rx="2"/>', ellipse: '<circle cx="12" cy="12" r="8"/>',
+  text: '<path d="M4 6V4h16v2M12 4v16M8 20h8"/>', button: '<rect x="2" y="6" width="20" height="12" rx="4"/><path d="M8 12h8"/>',
+  input: '<rect x="2" y="5" width="20" height="14" rx="3"/><path d="M7 9v6M11 12h6"/>', card: '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M7 14h6M7 17h10"/>',
+  image: '<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1"/><path d="m3 17 5-5 4 4 4-7 5 8"/>',
+  hand: '<path d="M8 12V5a2 2 0 0 1 4 0v6-8a2 2 0 0 1 4 0v8-5a2 2 0 0 1 4 0v9c0 4-3 6-7 6-4 0-5-3-8-7a2 2 0 0 1 3-2z"/>',
+  play: '<path d="m8 4 12 8-12 8z"/>', undo: '<path d="m8 4-5 5 5 5M3 9h11a7 7 0 0 1 0 14"/>', redo: '<path d="m16 4 5 5-5 5M21 9H10a7 7 0 0 0 0 14"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>', minus: '<path d="M5 12h14"/>', close: '<path d="m6 6 12 12M18 6 6 18"/>', chevron: '<path d="m9 5 7 7-7 7"/>',
+  component: '<path d="m12 2 4 4-4 4-4-4zm-6 6 4 4-4 4-4-4zm12 0 4 4-4 4-4-4zm-6 6 4 4-4 4-4-4z"/>',
+  layers: '<path d="m12 3 10 5-10 5L2 8zm-10 9 10 5 10-5M2 16l10 5 10-5"/>', group: '<rect x="3" y="3" width="18" height="18" rx="2" stroke-dasharray="3 3"/>',
+  eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  lock: '<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+  download: '<path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/>', folder: '<path d="M3 6h7l2 3h9v11H3z"/>',
+  grid: '<rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="3" y="15" width="6" height="6" rx="1"/><rect x="15" y="15" width="6" height="6" rx="1"/>',
+  link: '<path d="m10 13 4-4M8 16l-2 2a4 4 0 0 1-6-6l5-5a4 4 0 0 1 6 0M16 8l2-2a4 4 0 0 0-6-6" transform="translate(3 2)"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2m-3-9-1 1M5 19l-1 1m0-16 1 1m14 14 1 1"/>',
+  moon: '<path d="M20 14A9 9 0 0 1 10 3a9 9 0 1 0 10 11z"/>',
+  align: '<path d="M4 3v18M8 7h12M8 12h8M8 17h12"/>', center: '<path d="M12 2v20M4 7h16M7 12h10M4 17h16"/>',
+  help: '<circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 5M12 17v1"/>', check: '<path d="m5 12 4 4L19 6"/>', spark: '<path d="m12 2 3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/>',
+};
+export function icon(name: string, size = 18) { return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.rect}</svg>`; }

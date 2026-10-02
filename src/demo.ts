@@ -1,0 +1,51 @@
+import { blank, node, createComponent, instantiate, type Project, type DesignNode, type Kind } from './model';
+export function demo(): Project {
+  const p = blank(); p.name = 'Forma · Tu espacio creativo';
+  const add = (type: Kind, patch: Partial<DesignNode>) => { const n = node(type, patch); p.nodes.push(n); return n; };
+  const login = add('frame', { id: 'screen-login', name: '01 · Bienvenida', x: 60, y: 100, width: 390, height: 660 });
+  const dashboard = add('frame', { id: 'screen-dashboard', name: '02 · Tu espacio', x: 530, y: 100, width: 690, height: 660, fill: '@background' });
+  const l = (type: Kind, patch: Partial<DesignNode>) => add(type, { parentId: login.id, ...patch });
+  const d = (type: Kind, patch: Partial<DesignNode>) => add(type, { parentId: dashboard.id, ...patch });
+  l('rect', { name: 'Símbolo', x: 32, y: 32, width: 32, height: 32, radius: 11, gradient: 'linear', gradientEnd: '#ae91ff' });
+  l('text', { name: 'Marca', x: 76, y: 33, width: 100, height: 32, text: 'forma', fontSize: 24, fontWeight: 750 });
+  l('text', { name: 'Etiqueta', x: 32, y: 118, width: 326, height: 20, text: 'UN LUGAR PARA TUS IDEAS', fontSize: 10, fontWeight: 700, color: '@primary' });
+  l('text', { name: 'Título', x: 32, y: 153, width: 326, height: 96, text: 'Tu próxima gran\nidea empieza aquí.', fontSize: 34, lineHeight: 1.15, fontWeight: 720 });
+  l('text', { name: 'Descripción', x: 32, y: 250, width: 326, height: 45, text: 'Entra a tu espacio. Dale forma a lo que sigue.', color: '@muted', fontSize: 14 });
+  l('text', { name: 'Label · Correo', x: 32, y: 317, width: 326, height: 24, text: 'Correo electrónico', fontSize: 12, fontWeight: 600 });
+  l('input', { name: 'Correo', x: 32, y: 346, width: 326, height: 48, text: 'hola@tuestudio.com', color: '@muted', fontSize: 13 });
+  l('text', { name: 'Label · Contraseña', x: 32, y: 414, width: 160, height: 24, text: 'Contraseña', fontSize: 12, fontWeight: 600 });
+  l('text', { name: 'Recuperar', x: 200, y: 414, width: 158, height: 24, text: '¿La olvidaste?', fontSize: 12, color: '@primary', textAlign: 'right' });
+  l('input', { name: 'Contraseña', x: 32, y: 443, width: 326, height: 48, text: '••••••••', fontSize: 14, color: '@muted' });
+  const btn = l('button', { id: 'primary-button', name: 'Botón principal', x: 32, y: 516, width: 326, height: 48, text: 'Entrar a mi espacio    →', targetId: dashboard.id, shadow: true });
+  const component = createComponent(p, btn.id);
+  l('text', { name: 'Pie', x: 32, y: 591, width: 326, height: 22, text: 'Hecho para crear a tu manera.', textAlign: 'center', fontSize: 11, color: '@muted' });
+  d('rect', { name: 'Sidebar', x: 0, y: 0, width: 168, height: 660, fill: '@surface', radius: 0 });
+  d('text', { name: 'Marca', x: 25, y: 34, width: 130, height: 34, text: '◈  forma', fontSize: 23, fontWeight: 750 });
+  d('rect', { name: 'Menú activo', x: 16, y: 110, width: 136, height: 40, fill: '@accent', radius: 8 });
+  d('text', { name: 'Inicio', x: 30, y: 120, width: 116, height: 22, text: '⌂   Mi espacio', fontSize: 12, fontWeight: 650, color: '@primary' });
+  d('text', { name: 'Proyectos', x: 30, y: 167, width: 116, height: 22, text: '▧   Proyectos', fontSize: 12, color: '@muted' });
+  d('text', { name: 'Recursos', x: 30, y: 213, width: 116, height: 22, text: '◇   Recursos', fontSize: 12, color: '@muted' });
+  d('text', { name: 'Equipo', x: 30, y: 259, width: 116, height: 22, text: '◎   Mi equipo', fontSize: 12, color: '@muted' });
+  d('ellipse', { name: 'Avatar', x: 22, y: 596, width: 32, height: 32, fill: '@accent' });
+  d('text', { name: 'Inicial', x: 22, y: 602, width: 32, height: 23, text: 'A', textAlign: 'center', fontSize: 13, color: '@primary', fontWeight: 650 });
+  d('text', { name: 'Perfil', x: 65, y: 595, width: 100, height: 34, text: 'Alex Morgan\nEspacio personal', lineHeight: 1.6, fontSize: 10, color: '@muted' });
+  d('text', { name: 'Breadcrumb', x: 202, y: 39, width: 360, height: 25, text: 'TU ESPACIO CREATIVO', fontSize: 10, color: '@muted', fontWeight: 650 });
+  d('text', { name: 'Saludo', x: 202, y: 89, width: 450, height: 44, text: 'Hola, Alex ☀', fontSize: 30, fontWeight: 720 });
+  d('text', { name: 'Subtítulo', x: 202, y: 136, width: 450, height: 30, text: 'Un buen día para empezar algo nuevo.', fontSize: 13, color: '@muted' });
+  d('card', { name: 'Destacado', x: 202, y: 188, width: 454, height: 170, fill: '@primary', strokeWidth: 0, gradient: 'linear', gradientEnd: '#a18ae8', gradientAngle: 120 });
+  d('text', { name: 'Destacado · etiqueta', x: 225, y: 211, width: 320, height: 22, text: 'DE LA IDEA A LO POSIBLE', fontSize: 9, fontWeight: 700, color: '#ede6ff' });
+  d('text', { name: 'Destacado · título', x: 225, y: 245, width: 300, height: 60, text: 'Algo increíble\nestá por tomar forma.', lineHeight: 1.18, fontSize: 24, fontWeight: 650, color: '#ffffff' });
+  d('ellipse', { name: 'Órbita', x: 560, y: 230, width: 65, height: 65, fill: 'transparent', stroke: '#cbbaff', strokeWidth: 12, opacity: 60 });
+  d('text', { name: 'Sección', x: 202, y: 393, width: 320, height: 28, text: 'Tus proyectos', fontSize: 16, fontWeight: 650 });
+  for (let i = 0; i < 2; i++) {
+    const x = 202 + i * 236;
+    d('card', { name: i ? 'Proyecto · Studio' : 'Proyecto · Brand', x, y: 438, width: 218, height: 104 });
+    d('rect', { name: 'Miniatura', x: x + 16, y: 455, width: 38, height: 38, fill: i ? '#fae6ce' : '@accent', radius: 10 });
+    d('text', { name: 'Nombre de proyecto', x: x + 67, y: 458, width: 138, height: 23, text: i ? 'Studio web' : 'Brand exploration', fontSize: 12, fontWeight: 650 });
+    d('text', { name: 'Estado del proyecto', x: x + 67, y: 482, width: 130, height: 25, text: i ? '8 pantallas' : '4 pantallas', fontSize: 10, color: '@muted' });
+    d('text', { name: 'Actualizado', x: x + 16, y: 516, width: 190, height: 18, text: 'Editado hace un momento', fontSize: 9, color: '@muted' });
+  }
+  const instance = instantiate(p, component.id, dashboard.id, 202, 577);
+  const n = p.nodes.find(n => n.id === instance)!; n.text = '←  Volver a bienvenida'; n.width = 230; n.targetId = login.id; n.overrides = ['text', 'width', 'targetId'];
+  return p;
+}

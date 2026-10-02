@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run package:build
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:ui
+      - run: npm pack ./packages/editor --pack-destination artifacts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: codaru-mockup-npm
+          path: artifacts/codaru-mockup-*.tgz
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-test-results
+          path: test-results/
+
+  native:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: rustup update stable --no-self-update
+      - run: npm ci
+      - name: Verify Rust plugin and CLI
+        env:
+          TAURI_CONFIG: '{"bundle":{"resources":[]}}'
+        run: |
+          cargo test --locked --manifest-path src-tauri/Cargo.toml -p tauri-plugin-codaru --lib
+          cargo test --locked --manifest-path src-tauri/Cargo.toml --bin codaru
+      - run: npm run native:build

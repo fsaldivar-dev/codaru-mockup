@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Codaru · Editor integrado</title>
+  <style>
+    html,body{height:100%;margin:0;font:12px system-ui;color:#dad6e4;background:#17181c}
+    body{display:flex;flex-direction:column}header{height:38px;display:flex;align-items:center;gap:16px;padding:0 18px;border-bottom:1px solid #ffffff12;flex:none}
+    header strong{font-size:11px}#host-status{color:#96929f;margin-right:auto;font-size:10px}
+    button{font:11px system-ui;border:1px solid #ffffff24;border-radius:5px;background:#24242d;color:#d2c5e6;padding:4px 9px;cursor:pointer}
+    #editor-container{flex:1;min-height:0;position:relative}#host-placeholder{padding:32px;color:#96929f}
+  </style>
+</head>
+<body>
+  <header><strong>APP TAURI · EJEMPLO</strong><span id="host-status" role="status">Cargando editor…</span><button id="host-context">Contexto IA</button><button id="host-toggle">Ocultar editor</button></header>
+  <div id="editor-container"></div>
+  <script type="module" src="./tauri-host.ts"></script>
+</body>
+</html>

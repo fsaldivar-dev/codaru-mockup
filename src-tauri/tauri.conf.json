@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Codaru Mockup",
+  "version": "0.1.0",
+  "identifier": "dev.codaru.mockup",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://127.0.0.1:1432",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "url": "examples/tauri-host.html",
+        "title": "Codaru \u00b7 Mockup",
+        "width": 1512,
+        "height": 940,
+        "minWidth": 1060,
+        "minHeight": 700
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; connect-src 'self' ipc: http://ipc.localhost; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self'; object-src 'none'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": [
+      "app"
+    ],
+    "icon": [
+      "icons/128x128.png"
+    ],
+    "resources": {
+      "../CLI.md": "CLI.md",
+      "../vendor/licenses/": "licenses/"
+    }
+  }
+}

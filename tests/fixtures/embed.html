@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es"><head><meta charset="UTF-8"><title>Host de prueba de Codaru</title>
+<style>
+  body { margin: 24px; background: rgb(238, 241, 232); color: rgb(22, 44, 66); font: 17px Georgia, serif; }
+  #host-action { padding: 7px 13px; border: 3px solid rgb(14, 80, 140); color: rgb(14, 80, 140); background: white; font: 19px Georgia, serif; }
+  .slot { width: 1240px; height: 760px; margin-top: 24px; border: 2px solid #123; }
+</style></head><body>
+<h1>Aplicación anfitriona</h1><button id="host-action">Acción del host</button><textarea id="host-input" aria-label="Texto del host">Texto independiente</textarea><main id="mounts"></main>
+<script type="module">
+import { mountCodaru } from '/src/embed.ts';
+import { blank, node } from '/src/model.ts';
+const records = {}, hostKeys = [], events = [];
+document.addEventListener('keydown', event => hostKeys.push({ key: event.key, prevented: event.defaultPrevented }));
+document.addEventListener('codaru:error', event => events.push(event.detail.message));
+function project(name, id = 'host') {
+  const p = blank(); p.name = name;
+  const frame = node('frame', { id: `${id}-screen`, name: 'Pantalla del host', x: 40, y: 40, width: 390, height: 500 });
+  p.nodes.push(frame, node('rect', { id: `${id}-shape`, parentId: frame.id, x: 40, y: 50, width: 160, height: 80, name: 'Forma del host' }));
+  return p;
+}
+function mount(id, options = {}) {
+  const container = document.createElement('div'); container.className = 'slot'; container.id = `slot-${id}`; document.querySelector('#mounts').append(container);
+  const record = { changes: [], errors: [], calls: [], api: null, readyError: null };
+  records[id] = record;
+  const { documentName, withInvoke, ...config } = options;
+  record.handle = mountCodaru(container, {
+    editorUrl: '/index.html', ...config,
+    ...(documentName ? { document: project(documentName, id) } : {}),
+    ...(withInvoke ? { invoke: async (command, args) => { record.calls.push({ command, args }); if (command === 'plugin:codaru|save_document') return '/virtual/design.codaru.json'; if (command === 'plugin:codaru|open_document') return JSON.stringify(project('Documento nativo', 'native')); return null; } } : {}),
+    onChange: document => record.changes.push(document),
+    onError: error => record.errors.push(error.message),
+  });
+  record.handle.element.dataset.embed = id;
+  record.handle.ready.then(api => { record.api = api; }, error => { record.readyError = { name: error.name, message: error.message }; });
+  return record;
+}
+window.embedTest = { records, mount, project, hostKeys, events };
+</script></body></html>
