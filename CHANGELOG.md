@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.0 — 2026-10-02
+
+Integración por piezas, sin iframe.
+
+- `codaru-mockup/core`: sesión del editor sin DOM, con documento, selección por ámbitos, historial, transacciones validadas, suscripciones y API de IA.
+- `codaru-mockup/modular`: `createEditorView()` monta lienzo, capas, inspector, biblioteca, barras y diálogos en contenedores separados del host, en Shadow DOM, con una sola sesión compartida.
+- Los controles de la barra de vista se montan también por separado: `modes`, `designTheme` y `fit`.
+- Apariencia del editor independiente de los temas del diseño: `setAppearance()`, tokens `--codaru-*` heredables y `::part()` por pieza.
+- Desmontar una pieza o la vista confirma los campos en edición y conserva documento, selección e historial; varias sesiones permanecen aisladas.
+- Ejemplo `examples/modular-host.html` y guía `docs/INTEGRATION.md`, con tamaños medidos por punto de entrada.
+- `mountCodaru()` y el editor completo en iframe no cambian. El plugin Rust y el CLI no tienen cambios funcionales.
+
 ## 0.1.0 — 2026-10-02
 
 Primera versión pública de Codaru Mockup.

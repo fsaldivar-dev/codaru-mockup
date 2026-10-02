@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Codaru · Espacio de diseño</title>
+  <style>
+    :root{font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color-scheme:light;--shell:#f5f5f7;--panel:#fff;--raised:#ececf0;--text:#242429;--muted:#777782;--line:#d9d9df;--blue:#007aff;--codaru-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--codaru-font-size:12px;--codaru-radius:6px}
+    :root[data-theme=dark]{color-scheme:dark;--shell:#1b1c21;--panel:#202126;--raised:#292a31;--text:#ededf1;--muted:#9696a3;--line:#3a3b43}
+    *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}body{color:var(--text);background:var(--shell);display:flex;flex-direction:column}[hidden]{display:none!important}
+    button,input,a{font:inherit}button{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid transparent;border-radius:6px;padding:7px 10px;color:inherit;background:transparent;cursor:pointer}button:hover{background:var(--raised)}button:disabled{opacity:.35;cursor:default}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--blue);outline-offset:2px}a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}svg{flex:none}.primary{background:var(--blue);color:#fff}.primary:hover{background:#0068de}.icon-control{width:32px;height:32px;padding:7px}.separator{height:19px;width:1px;background:var(--line);margin:0 5px}
+    .titlebar{height:54px;display:flex;align-items:center;gap:11px;padding:0 18px;border-bottom:1px solid var(--line);flex:none}.app-mark{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--blue);color:white;font-size:19px;font-weight:600;box-shadow:0 2px 6px #007aff25}.project-name{display:flex;flex-direction:column;gap:3px;font-weight:600}.project-name small{font-size:10px;color:var(--muted);font-weight:400}.title-spacer{flex:1}.memory-badge{font-size:10px;color:var(--muted);padding:4px 8px;border:1px solid var(--line);border-radius:5px}.titlebar a{font-size:11px;margin-left:6px}.appearance-control{font-size:11px}
+    .ide{flex:1;display:grid;grid-template-columns:226px minmax(280px,1fr) 282px;min-height:0}.navigator,.properties{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--panel)}.navigator{border-right:1px solid var(--line)}.properties{border-left:1px solid var(--line)}.navigator-caption{font-size:10px;font-weight:600;color:var(--muted);padding:21px 16px 12px}.project-item{margin:0 9px 16px;display:flex;align-items:center;gap:9px;padding:10px;background:#007aff12;color:var(--blue);border-radius:6px;font-weight:500}.project-item small{margin-left:auto;color:var(--muted);font-size:9px;font-weight:400}.panel-tabs{display:flex;padding:0 12px;gap:14px;height:41px;flex:none;border-bottom:1px solid var(--line)}.panel-tabs button{border-radius:0;padding:9px 2px;position:relative;font-size:11px;color:var(--muted)}.panel-tabs button[aria-selected=true]{color:var(--text)}.panel-tabs button[aria-selected=true]:after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--blue)}.navigation-content{flex:1;min-height:0}.fragment-panel{height:100%;min-height:0}.insert-slot{flex:none}.navigator-note{padding:11px 14px;color:var(--muted);font-size:10px;line-height:1.6;border-top:1px solid var(--line)}
+    .editor-area{min-width:0;min-height:0;display:flex;flex-direction:column}.document-tabbar{display:flex;align-items:center;gap:8px;height:37px;padding:0 15px;border-bottom:1px solid var(--line);font-size:10px;color:var(--muted);flex:none}.document-tabbar{overflow:hidden;white-space:nowrap}.document-tabbar strong{color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;min-width:0}.document-tabbar .dot{height:5px;width:5px;border-radius:50%;background:#34a872}.document-actions{min-height:55px;display:flex;align-items:center;gap:5px;padding:7px 14px;background:var(--panel);border-bottom:1px solid var(--line);flex:none;flex-wrap:wrap}.document-actions h1{font-size:13px;font-weight:600;margin:0 auto 0 0;display:flex;align-items:center;gap:9px}.document-actions button{font-size:11px}.bar-slot{flex:none;min-width:0}.inline-slot{display:flex;align-items:stretch;flex:none}.document-tabbar .inline-slot{align-self:stretch}.canvas-slot{flex:1;min-width:0;min-height:0;position:relative}.tools-strip{display:flex;align-items:center;justify-content:center;min-height:51px;padding:3px 8px;border-top:1px solid var(--line);background:var(--shell);flex:none}.tools-slot{max-width:100%}.tools-slot [data-codaru-part=toolbar]::part(toolbar){background:transparent;border-color:transparent;padding:2px}
+    .properties-heading{display:flex;align-items:center;justify-content:space-between;min-height:55px;padding:10px 14px;border-bottom:1px solid var(--line)}.properties-heading h2{font-size:12px;font-weight:600;margin:0}.properties-heading button{font-size:10px;color:var(--muted);padding:5px 7px}.host-inspector{padding:17px 16px;border-bottom:1px solid var(--line)}.inspector-kicker{color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.6px;margin:0 0 10px}.host-inspector strong{display:block;font-size:12px;line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.width-field{display:flex;align-items:center;gap:9px;margin-top:14px;color:var(--muted);font-size:11px}.width-field input{width:87px;min-width:0;margin-left:auto;color:var(--text);background:var(--raised);border:1px solid var(--line);border-radius:6px;padding:7px 9px;font-variant-numeric:tabular-nums}.width-field input:disabled{opacity:.45}.host-inspector p{color:var(--muted);font-size:10px;line-height:1.6;margin:10px 0 0}.properties-content{flex:1;min-height:0}.panel-placeholder{margin:20px 16px;padding:16px;border:1px dashed var(--line);border-radius:8px;color:var(--muted);font-size:11px;line-height:1.8}.panel-placeholder strong{display:block;color:var(--text);font-weight:500;margin-bottom:6px}
+    .app-status{min-height:28px;display:flex;align-items:center;gap:12px;padding:5px 16px;border-top:1px solid var(--line);font-size:10px;flex:none;color:var(--muted)}#host-notice{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.status-spacer{flex:1}.app-status .status-selection{white-space:nowrap}.dialogs-slot{position:fixed;left:0;top:0;width:0;height:0;z-index:1000}
+    @media(max-width:1100px){.ide{grid-template-columns:190px minmax(280px,1fr) 245px}.document-actions{padding:7px 9px}.document-actions h1{font-size:12px}.document-actions button{padding:7px}.memory-badge{display:none}}
+    @media(max-width:850px){.ide{grid-template-columns:160px minmax(240px,1fr) 220px}.titlebar{padding:0 12px}.project-name small,.document-actions h1 span{display:none}.document-actions h1{margin-right:auto}.navigator-caption{padding-left:12px}.titlebar a{max-width:100px;text-align:right;line-height:1.5}.appearance-control span{display:none}}
+  </style>
+</head>
+<body>
+  <header class="titlebar">
+    <span class="app-mark" aria-hidden="true">C</span>
+    <div class="project-name">Codaru Studio<small>Espacio de diseño</small></div>
+    <span class="title-spacer"></span><span class="memory-badge">Proyecto de ejemplo · en memoria</span>
+    <button id="appearance-toggle" class="appearance-control" aria-pressed="false"><span data-icon="moon"></span><span>Apariencia oscura</span></button>
+    <span class="separator"></span><a href="./tauri-host.html" title="Volver al editor completo con su borrador guardado">Editor completo ↗</a>
+  </header>
+  <main class="ide">
+    <aside class="navigator" aria-label="Navegador del proyecto">
+      <div class="navigator-caption">PROYECTO</div>
+      <div class="project-item"><span data-icon="grid"></span>Mockups<small>FORMA</small></div>
+      <div class="panel-tabs" role="tablist" aria-label="Recursos del proyecto">
+        <button id="layers-tab" role="tab" aria-selected="true" aria-controls="layers-panel" tabindex="0">Capas</button>
+        <button id="library-tab" role="tab" aria-selected="false" aria-controls="library-panel" tabindex="-1">Biblioteca</button>
+      </div>
+      <div class="navigation-content">
+        <div id="layers-panel" class="fragment-panel" role="tabpanel" aria-labelledby="layers-tab"></div>
+        <div id="library-panel" class="fragment-panel" role="tabpanel" aria-labelledby="library-tab" hidden></div>
+      </div>
+      <div id="insert-slot" class="insert-slot"></div>
+      <div class="navigator-note">Doble clic para entrar en una pantalla.<br/>Escape para volver al nivel anterior.</div>
+    </aside>
+    <section class="editor-area" aria-label="Editor de mockups">
+      <div class="document-tabbar"><span data-icon="folder"></span><span>Diseño</span><span>›</span><strong>Forma.codarumockup</strong><span class="dot" title="Documento en memoria"></span><span class="title-spacer"></span><div id="modes-slot" class="inline-slot"></div></div>
+      <div class="document-actions">
+        <h1><span data-icon="frame"></span><span>Diseño de interfaces</span></h1>
+        <button id="undo" class="icon-control" title="Deshacer" aria-label="Deshacer"><span data-icon="undo"></span></button>
+        <button id="redo" class="icon-control" title="Rehacer" aria-label="Rehacer"><span data-icon="redo"></span></button>
+        <span class="separator"></span><div id="design-theme-slot" class="inline-slot"></div><button id="theme-tokens">Temas del diseño</button>
+        <div id="fit-slot" class="inline-slot"></div><button id="export-html" class="primary"><span data-icon="download"></span>Exportar HTML</button>
+      </div>
+      <div id="breadcrumb-slot" class="bar-slot"></div>
+      <div id="canvas-slot" class="canvas-slot"></div>
+      <div class="tools-strip"><div id="toolbar-slot" class="tools-slot"></div></div>
+      <div id="status-slot" class="bar-slot"></div>
+    </section>
+    <aside class="properties" aria-label="Propiedades">
+      <header class="properties-heading"><h2>Propiedades</h2><button id="inspector-toggle" aria-expanded="true" aria-controls="inspector-slot">Ocultar panel</button></header>
+      <section class="host-inspector" aria-label="Controles propios del IDE">
+        <p class="inspector-kicker">Control del IDE</p><strong id="selection-name">Sin selección</strong>
+        <label class="width-field" for="host-width">Ancho<input id="host-width" type="number" min="1" step="1" disabled/><span>px</span></label>
+        <p>Este campo pertenece a la app. Comparte selección y deshacer con el lienzo.</p>
+      </section>
+      <div class="properties-content">
+        <div id="inspector-slot" class="fragment-panel"></div>
+        <div id="inspector-placeholder" class="panel-placeholder" hidden><strong>Panel desmontado</strong>El lienzo y el control de ancho siguen activos. Vuelve a mostrar el panel para continuar con la misma selección.</div>
+      </div>
+    </aside>
+  </main>
+  <footer class="app-status"><span id="host-notice" role="status">Listo para diseñar</span><span class="status-spacer"></span><span id="selection-status" class="status-selection"></span><span id="node-count"></span></footer>
+  <div id="dialogs-slot" class="dialogs-slot"></div>
+  <script type="module" src="./modular-host.ts"></script>
+</body>
+</html>

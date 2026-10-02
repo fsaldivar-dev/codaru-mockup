@@ -1,0 +1,229 @@
+/* Appended inside each fragment's shadow root. Public --codaru-* variables are
+   deliberately not defined on :host: values supplied by the IDE must inherit. */
+:host {
+  --_codaru-background: #1b1c21;
+  --_codaru-surface: #202126;
+  --_codaru-surface-raised: #292a31;
+  --_codaru-text: #ededf1;
+  --_codaru-muted: #9696a3;
+  --_codaru-border: #3a3b43;
+  --_codaru-accent: #b39bea;
+  --_codaru-accent-text: #282035;
+  --_codaru-canvas: #18191e;
+  --_codaru-grid: #34353e;
+  --_codaru-selection: #ac8fff;
+  --ui-background: var(--codaru-background, var(--_codaru-background));
+  --ui-surface: var(--codaru-surface, var(--_codaru-surface));
+  --ui-raised: var(--codaru-surface-raised, var(--_codaru-surface-raised));
+  --ui-text: var(--codaru-text, var(--_codaru-text));
+  --ui-muted: var(--codaru-muted, var(--_codaru-muted));
+  --ui-border: var(--codaru-border, var(--_codaru-border));
+  --ui-accent: var(--codaru-accent, var(--_codaru-accent));
+  --ui-accent-text: var(--codaru-accent-text, var(--_codaru-accent-text));
+  --ui-canvas: var(--codaru-canvas, var(--_codaru-canvas));
+  --ui-grid: var(--codaru-grid, var(--_codaru-grid));
+  --ui-selection: var(--codaru-selection, var(--_codaru-selection));
+  --ui-font: var(--codaru-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+  --ui-size: var(--codaru-font-size, 12px);
+  --ui-radius: var(--codaru-radius, 6px);
+  --ui-hover: color-mix(in srgb, var(--ui-text) 7%, transparent);
+  --ui-selected: color-mix(in srgb, var(--ui-accent) 15%, var(--ui-surface));
+  --accent: var(--ui-accent);
+  --line: var(--ui-border);
+  --panel: var(--ui-surface);
+  --muted: var(--ui-muted);
+  --strong: var(--ui-text);
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
+  color: var(--ui-text);
+  background: var(--ui-background);
+  font: var(--ui-size)/1.4 var(--ui-font);
+  font-synthesis: none;
+  color-scheme: dark;
+}
+:host([data-codaru-theme="light"]) {
+  --_codaru-background: #f5f5f7;
+  --_codaru-surface: #ffffff;
+  --_codaru-surface-raised: #ececf0;
+  --_codaru-text: #242429;
+  --_codaru-muted: #686872;
+  --_codaru-border: #d9d9df;
+  --_codaru-accent: #007aff;
+  --_codaru-accent-text: #ffffff;
+  --_codaru-canvas: #e9e9ef;
+  --_codaru-grid: #c6c6d0;
+  --_codaru-selection: #007aff;
+  color-scheme: light;
+}
+
+/* Fragment sizing is local to its container, never to the entire IDE window. */
+:host([data-codaru-part="canvas"]),
+:host([data-codaru-part="layers"]),
+:host([data-codaru-part="library"]),
+:host([data-codaru-part="inspector"]) { width: 100%; height: 100%; overflow: hidden; }
+.stage { width: 100%; height: 100%; min-height: 0; background-color: var(--ui-canvas); background-image: radial-gradient(circle, var(--ui-grid) .8px, transparent .8px); }
+.stage.no-grid { background-image: none; }
+.layer-list, .component-list, #inspector { width: 100%; height: 100%; min-height: 0; max-height: 100%; overflow: auto; background: var(--ui-surface); }
+.toolbar { position: relative; left: auto; bottom: auto; transform: none; width: max-content; max-width: 100%; flex-wrap: wrap; box-shadow: none; }
+.canvas-bottom { height: auto; min-height: 32px; flex-wrap: wrap; padding: 5px 10px; gap: 5px 12px; }
+.topbar { height: auto; min-height: 44px; flex-wrap: wrap; gap: 8px 12px; padding: 8px 12px; }
+.brand { min-width: 0; }
+.project-title { flex: 1 1 120px; }
+.project-title input { width: 100%; min-width: 40px; }
+.top-actions { flex-wrap: wrap; }
+.canvas-top { height: auto; min-height: 40px; flex-wrap: wrap; gap: 8px; padding: 0 12px; }
+.mode-switch { height: 40px; }
+.scope-bar { height: auto; min-height: 30px; padding: 4px 10px; }
+.insert-panel { padding: 12px; }
+.dialog, .theme-dialog, .agent-dialog { max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); overflow: auto; }
+.modal-backdrop { padding: 12px; }
+.theme-controls, .theme-categories { flex-wrap: wrap; }
+.theme-body { grid-template-columns: minmax(110px, .6fr) minmax(180px, 1.5fr) minmax(180px, 1fr); }
+.theme-controls .full-field { min-width: 100px; }
+
+/* Keep selectors on editor chrome. Never blanket-style .design-node or the
+   theme-sample contents: their typography, colors and radius belong to users. */
+button, input, textarea, select { font-family: var(--ui-font); }
+button, input, textarea, select, .number-field { border-radius: var(--ui-radius); }
+button:hover { color: var(--ui-text); background: var(--ui-hover); }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline-color: var(--ui-selection); }
+input, textarea, select, .number-field { color: var(--ui-text); background: var(--ui-raised); border-color: var(--ui-border); }
+input:hover, textarea:hover, select:hover { border-color: var(--ui-accent); }
+input::placeholder, textarea::placeholder { color: var(--ui-muted); opacity: 1; }
+input[type="checkbox"] { accent-color: var(--ui-accent); }
+.number-field input { background: transparent; }
+.number-field:focus-within { outline-color: var(--ui-selection); }
+.primary, .preview-button, .toolbar button.active {
+  color: var(--ui-accent-text); background: var(--ui-accent); border-color: var(--ui-accent);
+}
+.primary:hover, .preview-button:hover { color: var(--ui-accent-text); background: color-mix(in srgb, var(--ui-accent) 85%, var(--ui-text)); }
+.purple, .eyebrow, .summary-icon, .page-active svg, .token-fields>code, .preview-brand { color: var(--ui-accent); }
+.divider { background: var(--ui-border); }
+.topbar, .canvas-top, .scope-bar, .canvas-bottom, .insert-panel,
+.inspector-title, .preview-header { background: var(--ui-background); border-color: var(--ui-border); }
+.toolbar, .dialog, .theme-dialog { color: var(--ui-text); background: var(--ui-surface); border-color: var(--ui-border); border-radius: calc(var(--ui-radius) * 1.5); }
+.toolbar button { color: var(--ui-muted); }
+.toolbar button:hover:not(.active) { background: var(--ui-hover); color: var(--ui-text); }
+.brand-mark { color: var(--ui-accent-text); background: var(--ui-accent); border-radius: var(--ui-radius); }
+.brand strong, .project-title input, .inspector-title, .node-name,
+.selection-summary h3, .dialog h2, .theme-dialog h2, .agent-dialog li>strong { color: var(--ui-text); }
+.project-title input, .node-name { background: transparent; border-color: transparent; }
+.project-title input:focus, .node-name:focus { background: var(--ui-raised); }
+.alpha, .mode-switch span { color: var(--ui-muted); background: var(--ui-raised); border-color: var(--ui-border); border-radius: var(--ui-radius); }
+.brand strong span, .breadcrumb, .slash, .text-button, .section-heading,
+.count, .new-screen, .layer-icon, .layer .collapse, .layer-action,
+.hint-key, .sidebar-footer, .component-caption, .component-tile small,
+.empty-note, .canvas-top-right, .mode-switch button, .zoom-caption,
+.canvas-bottom, .inspector-badge, .node-type, .number-field>span,
+.full-field>span, .color-field>select, .check-field, .corner-details,
+.field-note, .palette-note, .selection-summary p, .inspector-tip,
+.kit-description, .theme-categories button, .token-list small,
+.theme-preview>p, .theme-dialog>footer>span, .stops-heading>span,
+.gradient-stop>button, .agent-button, .agent-dialog li>span,
+.preview-footnote, .preview-footnote span, .scope-bar nav>span,
+.scope-bar button, .scope-bar #scope-hint, .frame-label small { color: var(--ui-muted); }
+.mode-switch button.active, .sidebar-tabs button.active, .inspector-tip strong,
+.theme-preview strong, .stops-heading, .token-fields .full-field>span,
+.component-tile strong, .zoom-controls, .dialog p, .shortcut-list>div,
+.shortcut-list kbd, .agent-dialog li { color: var(--ui-text); }
+.mode-switch button.active:after, .sidebar-tabs button.active:after { background: var(--ui-accent); }
+.sidebar-tabs { border-color: var(--ui-border); }
+.sidebar-tabs button { color: var(--ui-muted); }
+.sidebar-tabs button, .mode-switch button, .theme-categories button, .frame-label { border-radius: 0; }
+.page-active, .insert-grid button, .component-tile, .button-row button,
+.wide-button, .preset-row button, .icon-library-grid button, .library-tabs button {
+  color: var(--ui-text); background: var(--ui-surface); border-color: var(--ui-border); border-radius: var(--ui-radius);
+}
+.insert-grid svg { color: var(--ui-muted); }
+.insert-grid button:hover, .component-tile:hover, .icon-library-grid button:hover,
+.button-row button:hover, .wide-button:hover, .preset-row button:hover {
+  color: var(--ui-text); background: var(--ui-hover); border-color: var(--ui-accent);
+}
+.layer { color: var(--ui-text); }
+.layer.frame-layer { color: var(--ui-text); }
+.layer:hover { background: var(--ui-hover); }
+.layer.selected, .layer.selected .layer-icon { color: var(--ui-accent); }
+.layer.selected { background: var(--ui-selected); border-left-color: var(--ui-accent); }
+.library-tabs button[aria-pressed="true"], .token-list button[aria-pressed="true"],
+.scope-bar button[aria-current], .button-row .component-button {
+  color: var(--ui-accent); background: var(--ui-selected); border-color: var(--ui-accent);
+}
+.component-preview { background: var(--ui-raised); color: var(--ui-accent); }
+.kit-preview { background: var(--ui-raised); }
+.themes-button, .enter-scope { color: var(--ui-accent); border-color: var(--ui-border); }
+.component-preview, .kit-preview { border-radius: var(--ui-radius) var(--ui-radius) 0 0; }
+.color-chip, .palette label, .token-list i, .stop-chip { border-color: var(--ui-border); }
+.frame-label { color: var(--ui-muted); }
+.frame-label:hover { color: var(--ui-accent); background: transparent; }
+.selection-box, .selection-box.is-component, .resize-handle { border-color: var(--ui-selection); }
+.resize-handle { background: var(--ui-surface); }
+.size-label { background: var(--ui-selection); color: var(--ui-accent-text); }
+.marquee { border-color: var(--ui-selection); background: color-mix(in srgb, var(--ui-selection) 12%, transparent); }
+.scope-outline { border-color: var(--ui-selection); outline-color: color-mix(in srgb, var(--ui-selection) 20%, transparent); }
+.node-text[contenteditable="true"] { outline-color: var(--ui-selection); background: color-mix(in srgb, var(--ui-selection) 5%, transparent); }
+#zoom-value { background: var(--ui-raised); color: var(--ui-text); border-color: var(--ui-border); }
+#zoom-options { background: transparent; border-color: transparent; }
+.empty-icon { color: var(--ui-accent); background: var(--ui-selected); border-color: var(--ui-border); border-radius: calc(var(--ui-radius) * 2); }
+#empty-canvas h2 { color: var(--ui-text); }
+#empty-canvas p { color: var(--ui-muted); }
+.modal-backdrop { background: #0006; }
+.preview-backdrop, #preview-viewport { background: var(--ui-canvas); }
+.preview-header select { background: var(--ui-raised); }
+#preview-canvas [role="button"]:focus-visible { outline-color: var(--ui-selection); }
+#toast { color: var(--ui-text); background: var(--ui-surface); border-color: var(--ui-border); border-radius: var(--ui-radius); max-width: calc(100vw - 24px); }
+.shortcut-list>div, .theme-controls>button, .theme-categories,
+.theme-preview, .theme-dialog>footer { border-color: var(--ui-border); }
+.theme-categories button[aria-pressed="true"] { color: var(--ui-accent); border-color: var(--ui-accent); }
+.token-list { background: var(--ui-background); border-color: var(--ui-border); }
+.token-list .add-token { color: var(--ui-accent); }
+.agent-dialog li>code { color: var(--ui-text); background: var(--ui-background); border-color: var(--ui-border); border-radius: var(--ui-radius); }
+.agent-status { color: var(--ui-accent) !important; }
+.theme-error { color: #c7364d; }
+:host(:not([data-codaru-theme="light"])) .theme-error { color: #f1a3ad; }
+.locked-note { color: var(--ui-muted); }
+::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--ui-muted) 35%, transparent); }
+::-webkit-scrollbar-thumb:hover { background: var(--ui-muted); }
+
+/* Scale chrome typography together, preserving design and token previews. */
+.layer, .new-screen, .component-tile strong, .canvas-top-right, .fit-button,
+.number-field input, .full-field select, .hex-input, .check-field,
+.button-row button, .wide-button, .selection-summary p, .kit-description,
+.theme-controls>button, .theme-dialog>footer>span, .token-list input,
+.token-list .add-token, .agent-button, .agent-dialog li>span,
+.preview-footnote, .scope-bar button, #kit-search, #icon-search {
+  font-size: calc(var(--ui-size) * .833333);
+}
+.text-button, .page-active, .sidebar-tabs button, .empty-note,
+.mode-switch button, .inspector-title, .themes-button, .dialog-actions,
+.token-fields>code, .theme-preview>p, .theme-dialog>footer>button,
+.theme-error, .stops-heading, .shortcut-list>div, .gradient-stop .full-field input,
+#toast, #zoom-value, #zoom-options { font-size: calc(var(--ui-size) * .916667); }
+.section-heading, .hint-key, .insert-grid button, .sidebar-footer,
+.component-tile small, .canvas-bottom, .full-field>span, .corner-details,
+.field-note, .palette-note, .eyebrow, .token-list small,
+.stops-heading>span, .scope-bar #scope-hint { font-size: calc(var(--ui-size) * .75); }
+.library-tabs button, .button-row.compact button, .preset-row button,
+.icon-library-grid button>span { font-size: calc(var(--ui-size) * .75); }
+.node-name, .selection-summary h3 { font-size: calc(var(--ui-size) * 1.083333); }
+.dialog p, .agent-dialog li>strong, .inspector-tip,
+.theme-categories button, .preview-brand { font-size: var(--ui-size); }
+.dialog h2 { font-size: calc(var(--ui-size) * 1.75); }
+.theme-dialog h2 { font-size: calc(var(--ui-size) * 2); }
+.agent-dialog li>code { font-size: calc(var(--ui-size) * .833333); }
+@media (max-width: 720px) {
+  .theme-body { display: block; }
+  .token-list { max-height: 170px; overflow: auto; border-right: 0; border-bottom: 1px solid var(--ui-border); }
+  .theme-preview { border-left: 0; border-top: 1px solid var(--ui-border); }
+  .theme-dialog>header, .theme-controls, .theme-categories, .theme-dialog>footer { padding-left: 16px; padding-right: 16px; }
+}
+
+/* Viewbar controls can be mounted on their own; viewbar keeps whatever remains. */
+.canvas-top-right { margin-left: auto; }
+.canvas-top-right .divider:first-child, .canvas-top-right .divider:last-child { display: none; }
+.theme-switch, .fit-button { color: var(--ui-muted); white-space: nowrap; }
+.theme-switch { font-size: calc(var(--ui-size) * .833333); }
+.mode-switch[part] { min-height: 28px; }
+:host([data-codaru-part="modes"]), :host([data-codaru-part="designTheme"]),
+:host([data-codaru-part="fit"]) { background: transparent; }

@@ -8,6 +8,6 @@
     "rootDir": "./src",
     "types": []
   },
-  "include": ["src/embed.ts"],
+  "include": ["src/embed.ts", "src/editor-core.ts", "src/modular.ts", "src/vite-env.d.ts"],
   "exclude": []
 }

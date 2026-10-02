@@ -1,4 +1,4 @@
-# Codaru Mockup · 0.1
+# Codaru Mockup · 0.2
 
 Editor local de maquetas de interfaz, diseñado para integrarse dentro de una aplicación Tauri existente. TypeScript, HTML/CSS y SVG, sin dependencias de interfaz en ejecución. Incluye un paquete embebible, un plugin Rust opcional y una aplicación macOS de ejemplo. La aplicación compilada no necesita Node, un servidor, una cuenta ni conexión a Internet.
 
@@ -16,6 +16,8 @@ Licencia **BSD-3-Clause**. Los iconos Material y Lucide conservan sus licencias;
 `npm run package:build` genera **`packages/editor/dist/`**: módulo `mountCodaru`, editor, declaraciones TypeScript y licencias, sin empaquetar otra app Tauri. `npm run package:pack` crea el archivo instalable en `artifacts/`. El plugin **`packages/tauri-plugin-codaru/`** añade diálogos de archivos y el puente local para el CLI a tu proceso existente. No crea ventanas ni otro proceso de servidor.
 
 Consulta [la guía de integración](packages/editor/README.md) para instalar el paquete, copiar sus assets, montar/desmontar el editor, recibir cambios y registrar el plugin con sus permisos. `examples/tauri-host.html` y `examples/tauri-host.ts` muestran esa integración funcionando. El iframe local del mismo origen aísla estilos y atajos; no representa una frontera de seguridad ni una nueva ventana Tauri.
+
+Desde 0.2 también puedes integrar el editor **por piezas, sin iframe**: `codaru-mockup/core` es el motor sin interfaz y `codaru-mockup/modular` monta lienzo, capas, inspector, biblioteca y barras en contenedores de tu IDE, con una sola sesión compartida y la apariencia de tu app. Consulta [la guía modular](docs/INTEGRATION.md) y el ejemplo `examples/modular-host.html`.
 
 La distribución embebible y la app de ejemplo tienen pesos distintos. `artifacts/embedded-size.json` se regenera con tamaños medidos del runtime y del paquete completo. El CLI es opcional si tu agente ya accede a la API de la aplicación anfitriona.
 

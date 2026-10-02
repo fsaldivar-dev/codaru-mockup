@@ -85,6 +85,6 @@ export function openThemeEditor(options: ThemeEditorOptions) {
       else Object.assign(s[category][key],{[field]:value});
     });
   };
-  root.onkeydown=e=>{if(e.key==='Tab'){const elements=[...root.querySelectorAll<HTMLElement>('button:not(:disabled),input,select')];if(e.shiftKey&&document.activeElement===elements[0]){e.preventDefault();elements.at(-1)?.focus();}else if(!e.shiftKey&&document.activeElement===elements.at(-1)){e.preventDefault();elements[0]?.focus();}}};
+  root.onkeydown=e=>{if(e.key==='Tab'){const elements=[...root.querySelectorAll<HTMLElement>('button:not(:disabled),input,select')];if(e.shiftKey&&(root.getRootNode() as Document | ShadowRoot).activeElement===elements[0]){e.preventDefault();elements.at(-1)?.focus();}else if(!e.shiftKey&&(root.getRootNode() as Document | ShadowRoot).activeElement===elements.at(-1)){e.preventDefault();elements[0]?.focus();}}};
   draw();root.querySelector<HTMLSelectElement>('[data-te-profile]')?.focus();
 }

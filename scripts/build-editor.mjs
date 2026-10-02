@@ -8,7 +8,7 @@ import { readFile } from 'node:fs/promises';
 const output = resolve('packages/editor/dist');
 await build({ configFile: false, base: './', build: {
   target: 'safari16', sourcemap: false, minify: true, outDir: output, emptyOutDir: true,
-  lib: { entry: resolve('src/embed.ts'), formats: ['es'], fileName: () => 'codaru.js' },
+  lib: { entry: { codaru: resolve('src/embed.ts'), core: resolve('src/editor-core.ts'), modular: resolve('src/modular.ts') }, formats: ['es'], fileName: (_format, name) => `${name}.js` },
 } });
 await build({ configFile: false, base: './', build: {
   target: 'safari16', sourcemap: false, outDir: join(output, 'editor'), emptyOutDir: true,

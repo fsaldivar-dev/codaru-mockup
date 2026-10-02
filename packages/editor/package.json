@@ -1,6 +1,6 @@
 {
   "name": "codaru-mockup",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "main": "./dist/codaru.js",
   "types": "./dist/types/embed.d.ts",
@@ -9,7 +9,15 @@
       "types": "./dist/types/embed.d.ts",
       "import": "./dist/codaru.js"
     },
-    "./dist/*": "./dist/*"
+    "./dist/*": "./dist/*",
+    "./core": {
+      "types": "./dist/types/editor-core.d.ts",
+      "import": "./dist/core.js"
+    },
+    "./modular": {
+      "types": "./dist/types/modular.d.ts",
+      "import": "./dist/modular.js"
+    }
   },
   "files": [
     "dist",

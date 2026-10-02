@@ -48,13 +48,31 @@ El contenedor debe tener ancho y alto definidos, por ejemplo `height: calc(100vh
 
 `ready` ofrece `getDocument`, `getSelection`, `getSelectionScope`, `select`, `apply`, `agent`, `importDocument`, `undo`, `redo` y `exportHTML`. Para automatización usa preferentemente `agent`: los lotes incluyen revisión, dry-run y contexto actualizado. El contrato completo está en `CLI.md` en el repositorio y en el comando `schema`.
 
+## Integración por piezas, sin iframe
+
+`codaru-mockup/modular` monta cada parte del editor en un contenedor propio de tu app, dentro de Shadow DOM y con una sola sesión compartida. `codaru-mockup/core` es el mismo motor sin interfaz. No necesitan copiar assets ni un iframe.
+
+```ts
+import { createEditor, createEditorView } from 'codaru-mockup/modular';
+
+const editor = createEditor({ document: project, onChange: save });
+const view = createEditorView(editor, { appearance: { theme: 'light', tokens: { accent: '#007aff' } } });
+view.mount('canvas', document.querySelector('#canvas')!);
+view.mount('layers', document.querySelector('#navigator')!);
+view.mount('inspector', document.querySelector('#properties')!);
+view.mount('modes', document.querySelector('#tabs')!); // Solo las pestañas Diseño/Flujos.
+view.mount('dialogs', document.querySelector('#overlays')!);
+```
+
+Piezas: `canvas`, `layers`, `inspector`, `library`, `toolbar`, `header`, `viewbar` (y sus controles `modes`, `designTheme`, `fit`), `breadcrumb`, `status`, `insert` y `dialogs`. Omite las que quieras sustituir por controles propios sobre `editor`. La [guía modular](https://github.com/fsaldivar-dev/codaru-mockup/blob/v0.2.0/docs/INTEGRATION.md) describe apariencia, tokens CSS, ciclo de vida y tamaños.
+
 ## Conectar Rust/Tauri
 
 En el `Cargo.toml` de la app anfitriona:
 
 ```toml
 [dependencies]
-tauri-plugin-codaru = { git = "https://github.com/fsaldivar-dev/codaru-mockup", tag = "v0.1.0" }
+tauri-plugin-codaru = { git = "https://github.com/fsaldivar-dev/codaru-mockup", tag = "v0.2.0" }
 ```
 
 Registra el plugin sobre tu builder existente:
