@@ -5,7 +5,7 @@ import { effectiveTheme } from './themes';
  * Design review: finds what a careful designer would flag, in both light and dark mode, without
  * drawing anything. Each issue points at one element so it can be shown as a heat map or fixed by an AI.
  */
-export type LintRule = 'contrast' | 'target' | 'text-size' | 'text-fit' | 'overflow' | 'safe-area' | 'hinge' | 'overlap' | 'off-theme' | 'alignment' | 'scale';
+export type LintRule = 'contrast' | 'target' | 'text-size' | 'text-fit' | 'overflow' | 'safe-area' | 'hinge' | 'overlap' | 'off-theme' | 'alignment' | 'scale' | 'palette';
 export interface LintIssue {
   rule: LintRule; severity: 'error' | 'warning' | 'info';
   /** Element to look at, and the screen it belongs to. */
@@ -18,7 +18,7 @@ export interface LintIssue {
 }
 export const lintRules: Record<LintRule, string> = {
   contrast: 'Contraste de texto', target: 'Zona táctil pequeña', 'text-size': 'Texto pequeño', 'text-fit': 'Texto que no cabe', overflow: 'Contenido fuera de la pantalla',
-  'safe-area': 'Contenido bajo el área del sistema', hinge: 'Contenido sobre el pliegue', overlap: 'Acciones superpuestas', 'off-theme': 'Color fuera del tema', alignment: 'Casi alineados', scale: 'Demasiadas variantes',
+  'safe-area': 'Contenido bajo el área del sistema', hinge: 'Contenido sobre el pliegue', overlap: 'Acciones superpuestas', 'off-theme': 'Color fuera del tema', alignment: 'Casi alineados', palette: 'Paleta sin acento', scale: 'Demasiadas variantes',
 };
 
 type RGBA = [number, number, number, number];
@@ -30,6 +30,13 @@ function parse(value: string): RGBA {
 }
 const over = (top: RGBA, bottom: RGBA): RGBA => { const a = top[3]; return [top[0] * a + bottom[0] * (1 - a), top[1] * a + bottom[1] * (1 - a), top[2] * a + bottom[2] * (1 - a), 1]; };
 const luminance = ([r, g, b]: RGBA) => { const f = (v: number) => { v /= 255; return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; }; return .2126 * f(r) + .7152 * f(g) + .0722 * f(b); };
+/** Perceptual chroma and lightness (OKLCH) of an opaque color. */
+function oklch([r, g, b]: RGBA) {
+  const lin = (v: number) => { v /= 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; };
+  const R = lin(r), G = lin(g), B = lin(b);
+  const l = Math.cbrt(.4122214708 * R + .5363325363 * G + .0514459929 * B), m = Math.cbrt(.2119034982 * R + .6806995451 * G + .1073969566 * B), s = Math.cbrt(.0883024619 * R + .2817188376 * G + .6299787005 * B);
+  return { lightness: .2104542553 * l + .793617785 * m - .0040720468 * s, chroma: Math.hypot(1.9779984951 * l - 2.428592205 * m + .4505937099 * s, .0259040371 * l + .7827717662 * m - .808675766 * s) };
+}
 /** WCAG contrast ratio between two opaque colors. */
 export function contrastRatio(a: string, b: string) { const x = luminance(parse(a)), y = luminance(parse(b)); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); }
 const distance = (a: RGBA, b: RGBA) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
@@ -160,6 +167,19 @@ export function lintProject(input: Project, options: { frame?: string } = {}): L
     if (sizes.length > 7) add({ rule: 'scale', severity: 'info', node: frame.id, frame: frame.id, message: `${name(frame)}: ${sizes.length} tamaños de texto distintos (${sizes.join(', ')}).`, fix: 'Reduce a una escala de 4 a 6 tamaños y vincúlalos a tokens de tipografía.' });
     const radii = [...new Set(inside.filter(n => n.radius > 0 && n.type !== 'ellipse' && n.radius < Math.min(n.width, n.height) / 2).map(n => n.radius))].sort((a, b) => a - b);
     if (radii.length > 4) add({ rule: 'scale', severity: 'info', node: frame.id, frame: frame.id, message: `${name(frame)}: ${radii.length} radios distintos (${radii.join(', ')}).`, fix: 'Usa dos o tres radios y vincúlalos a tokens de radio.' });
+  }
+  // Palette: a theme whose primary color is a muddy mid tone neither reads as an accent nor anchors as a dark
+  // neutral; the whole design ends up as one tonal band. Checked per theme in use, in both modes.
+  const themeIds = new Set(input.nodes.filter(n => n.type === 'frame' && visible(n) && inScope(n)).map(n => n.themeId ?? input.activeThemeId));
+  for (const id of themeIds) {
+    const theme = input.designThemes[id]; if (!theme) continue;
+    for (const mode of ['light', 'dark'] as const) {
+      const colors = theme.modes[mode].colors, primary = parse(colors.primary), bg = parse(colors.background);
+      if (primary[3] < 1 || bg[3] < 1) continue;
+      const ratio = contrastRatio(colors.primary, colors.background), { chroma, lightness } = oklch(primary), label = mode === 'light' ? 'claro' : 'oscuro';
+      if (ratio < 3) add({ rule: 'palette', severity: 'error', node: id, frame: null, mode, message: `Tema «${theme.name}», modo ${label}: @primary ${colors.primary} contrasta solo ${ratio.toFixed(1)}:1 con @background, así que la acción principal no se distingue del fondo.`, fix: 'Elige un color principal con al menos 3:1 frente al fondo en ambos modos.' });
+      else if (chroma < .08 && lightness > .3 && lightness < .85) add({ rule: 'palette', severity: 'warning', node: id, frame: null, mode, message: `Tema «${theme.name}», modo ${label}: @primary ${colors.primary} es un tono apagado (croma ${chroma.toFixed(2)}): ni destaca como acento ni ancla como neutro oscuro, y toda la paleta se lee como una sola banda.`, fix: 'Usa un acento con más saturación o un neutro realmente oscuro como color principal y deja los tonos tierra o grises para superficies.' });
+    }
   }
   const order = { error: 0, warning: 1, info: 2 };
   return issues.sort((a, b) => order[a.severity] - order[b.severity]);

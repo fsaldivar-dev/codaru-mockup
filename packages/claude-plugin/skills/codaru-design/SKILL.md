@@ -21,6 +21,16 @@ Ante `revision_conflict`, vuelve a leer el contexto; no reintentes a ciegas. Ant
 
 Decide en una frase qué debe conseguir la pantalla y cuál es su acción principal. Una pantalla, una acción principal. Si hay dos que compiten, una es secundaria.
 
+**Con referencias.** Si te dan capturas o un diseño existente, antes de dibujar extrae por escrito sus rasgos con valores concretos y reprodúcelos tal cual, no una «versión neutra» de ellos:
+
+1. Paleta: fondo, superficie, texto, el neutro más oscuro y el acento, con HEX muestreados de la referencia. Si la referencia es crema + oro + negro, el tema es crema + oro + negro; no lo traduzcas a marrón y beige.
+2. Tipografía: familia de títulos y de cuerpo, si usa cursivas, mayúsculas con espaciado o cifras especiales, y dónde.
+3. Elemento firma: lo que hace reconocible la referencia (un número enorme, un aro, un botón negro, un *eyebrow* con el nombre). Repítelo en las pantallas nuevas.
+4. Formas: radios, píldoras o círculos, grosor de bordes, sombras o material.
+5. Barras y controles: cómo son la barra de pestañas, los botones y los deslizadores.
+
+Nombra el tema con la marca y entrega una tabla rasgo → dónde está en el diseño. Lo que no aparezca en la tabla no se inventa.
+
 ## Principios que aplicar
 
 **Jerarquía.** Tres niveles como máximo por pantalla: título, contenido y apoyo. La acción principal es el elemento de más peso visual; las secundarias, con menos color o solo con borde.
@@ -30,6 +40,8 @@ Decide en una frase qué debe conseguir la pantalla y cuál es su acción princi
 **Tipografía.** De 4 a 6 tamaños por diseño, vinculados a tokens de tipografía. Cuerpo de 14 a 16; nada por debajo de 11. Líneas de 45 a 75 caracteres. Peso para jerarquía antes que tamaño.
 
 **Color.** Todo color sale de un token del tema (`@primary`, `@text`, `@muted`, `@surface`, `@background`, `@border`, `@accent`). Un color fijo no cambia en modo oscuro: es la causa más frecuente de texto ilegible. Texto sobre un color de marca debe usar un token que también cambie con el modo.
+
+**Paleta.** Una paleta tiene anclas: un fondo, una superficie, un neutro realmente oscuro y un acento saturado que marca la acción principal y el estado activo. `@primary` debe contrastar al menos 3:1 con `@background` y ser un color de verdad o un neutro oscuro, nunca un tono medio apagado (marrón, ocre, gris azulado); `./codaru lint` lo marca como `palette`. «Marrón sobre beige» o «gris sobre gris claro» no es una paleta, es un filtro: todo queda en una sola banda tonal y nada destaca. Los tonos tierra y los grises cálidos van en superficies y fondos, con un acento y un oscuro que los sostengan.
 
 **Contraste.** 4,5:1 para texto normal y 3:1 para texto grande (24 px, o 18,5 px en negrita), en claro y en oscuro.
 
@@ -75,4 +87,12 @@ Anima para explicar, no para decorar: entradas de 200 a 500 ms con `ease-out`, u
 
 ## Qué entregar
 
-Di qué pantallas creaste o cambiaste, qué decisiones de diseño tomaste y por qué, y el resumen de `./codaru lint` final. Si dejaste algún aviso sin corregir, explica el motivo.
+Antes de dar por terminado un flujo, comprueba que tiene:
+
+- Un **elemento protagonista por pantalla** (el número, el aro, el botón, la ilustración), no solo cabecera + tarjetas + barra.
+- Un **degradado real** en el momento de marca: `gradientStops` de 3 o 4 paradas o un degradado del tema (`./codaru catalog` y las sugerencias del tema). Si en todo el flujo no hay ninguno, no está terminado.
+- Una **animación de entrada** en Presentar y, si hay ilustración, una animación propia.
+- **Instancias** de los componentes que definiste; definir componentes y luego dibujar copias es trabajo perdido.
+- `./codaru lint` sin errores ni avisos de `palette`.
+
+Di qué pantallas creaste o cambiaste, qué decisiones de diseño tomaste y por qué, la tabla de rasgos si hubo referencias, y el resumen de `./codaru lint` final. Si dejaste algún aviso sin corregir, explica el motivo.

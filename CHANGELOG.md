@@ -2,6 +2,8 @@
 
 ## Sin publicar
 
+- Revisión de diseño: regla `palette`. Error si `@primary` no contrasta 3:1 con `@background`; aviso si es un tono medio apagado (croma OKLCH < 0,08) que ni destaca como acento ni ancla como neutro oscuro. Se evalúa por tema en uso y en ambos modos; en el panel aparece bajo «Paleta del tema» y al pulsarlo se abre Temas.
+- Skill `codaru-design`: sección «Con referencias» (extraer paleta, tipografía, elemento firma, formas y barras con valores concretos y reproducirlos), principio «Paleta» con anclas, y mínimos de entrega: protagonista por pantalla, un degradado real, animación de entrada, instancias de componentes y lint sin `palette`.
 - Lienzo: respuesta visual mientras una IA diseña. Cada lote del agente dibuja partículas que se asientan sobre lo creado o modificado, los elementos nuevos entran con un fundido, las pantallas vacías recién creadas se muestran como esqueleto y una píldora «Diseñando · N pantallas, N cambios» resume el progreso con una burbuja de aumento al pasar el ratón. No reacciona a cambios manuales y respeta «Reducir movimiento».
 - Exportación SVG: las ilustraciones que usan `currentColor` toman el color del elemento, como en Presentar y en HTML; antes salían en negro.
 - Campos: al enfocarlos muestran un borde de 1 px en el color principal del tema, en Presentar, en las vistas previas de Markdown y en el HTML exportado. Sustituye el contorno genérico del navegador.

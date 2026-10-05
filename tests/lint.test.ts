@@ -76,3 +76,21 @@ test('the bundled examples pass the review without errors, and the agent exposes
   const scoped = await handleAgentRequest(host, { command: 'lint', params: { frame: 'nope' } }) as any;
   assert.equal(scoped.ok, false);
 });
+
+test('a muddy primary color is reported as a palette without accent, a dark or saturated one is not', () => {
+  const p = project([{ text: 'Hola', color: '@text' }]);
+  const set = (light: string, dark: string) => { p.designThemes.project.modes.light.colors.primary = light; p.designThemes.project.modes.dark.colors.primary = dark; p.themes.light.primary = light; p.themes.dark.primary = dark; };
+  set('#7a5438', '#d9b48e');
+  const muddy = lintProject(p).filter(i => i.rule === 'palette');
+  assert.equal(muddy.length, 2);
+  assert.equal(muddy[0].severity, 'warning'); assert.equal(muddy[0].node, 'project'); assert.equal(muddy[0].frame, null);
+  assert.match(muddy[0].message, /apagado/);
+  set('#5b3df5', '#a99bff'); assert.equal(lintProject(p).filter(i => i.rule === 'palette').length, 0, 'saturated accent');
+  set('#111111', '#f7f4ec'); assert.equal(lintProject(p).filter(i => i.rule === 'palette').length, 0, 'black anchor');
+  set('#257b67', '#7bcbb1'); assert.equal(lintProject(p).filter(i => i.rule === 'palette').length, 0, 'teal');
+  set('#e6e2dc', '#2a2826');
+  const faint = lintProject(p).filter(i => i.rule === 'palette');
+  assert.equal(faint.length, 2); assert.equal(faint[0].severity, 'error'); assert.match(faint[0].message, /no se distingue del fondo/);
+  assert.equal(lintProject(demo()).filter(i => i.rule === 'palette').length, 0);
+  assert.equal(lintProject(demoDevices()).filter(i => i.rule === 'palette').length, 0);
+});
