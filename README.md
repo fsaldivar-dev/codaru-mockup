@@ -190,7 +190,7 @@ npm run native:build
 - `src/demo.ts`: documento de ejemplo.
 - `src-tauri/`: aplicación anfitriona de ejemplo que registra el plugin.
 
-Una IA puede usar el **CLI local `codaru`** para leer y modificar el documento abierto, consultar kits e iconos y recibir contexto actualizado. **No incluye un modelo ni requiere MCP.** El CLI se comunica con la aplicación mediante un socket Unix privado; no requiere Node ni escucha en la red. El host de la vista web puede usar `window.codaru.agent(command, params)` con el mismo contrato. Consulta [CLI.md](CLI.md) o pulsa **IA / CLI** en la aplicación para ver el flujo completo.
+Una IA puede usar el **CLI local `codaru`** para leer y modificar el documento abierto, consultar kits e iconos y recibir contexto actualizado. Mientras trabaja, el lienzo lo muestra: cada lote dibuja partículas que se asientan sobre lo que creó o cambió, los elementos nuevos aparecen con un fundido, las pantallas vacías que acaba de crear se ven como esqueleto hasta que las rellena y una píldora «Diseñando · N pantallas, N cambios» resume el progreso (al pasar el ratón, una burbuja la amplía). Solo reacciona a cambios del agente, nunca a los tuyos, y respeta «Reducir movimiento». **No incluye un modelo ni requiere MCP.** El CLI se comunica con la aplicación mediante un socket Unix privado; no requiere Node ni escucha en la red. El host de la vista web puede usar `window.codaru.agent(command, params)` con el mismo contrato. Consulta [CLI.md](CLI.md) o pulsa **IA / CLI** en la aplicación para ver el flujo completo.
 
 ```js
 const selected = window.codaru.getSelection();

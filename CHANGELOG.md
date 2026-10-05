@@ -2,6 +2,7 @@
 
 ## Sin publicar
 
+- Lienzo: respuesta visual mientras una IA diseña. Cada lote del agente dibuja partículas que se asientan sobre lo creado o modificado, los elementos nuevos entran con un fundido, las pantallas vacías recién creadas se muestran como esqueleto y una píldora «Diseñando · N pantallas, N cambios» resume el progreso con una burbuja de aumento al pasar el ratón. No reacciona a cambios manuales y respeta «Reducir movimiento».
 - Exportación SVG: las ilustraciones que usan `currentColor` toman el color del elemento, como en Presentar y en HTML; antes salían en negro.
 - Campos: al enfocarlos muestran un borde de 1 px en el color principal del tema, en Presentar, en las vistas previas de Markdown y en el HTML exportado. Sustituye el contorno genérico del navegador.
 - Revisión de diseño: contraste en claro y oscuro contra el fondo real, zonas táctiles, texto pequeño o que no cabe, recortes, área segura, pliegue, acciones superpuestas, colores fuera del tema, desalineaciones y escalas. Lista por pantalla y mapa de calor en el lienzo.

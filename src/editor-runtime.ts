@@ -14,6 +14,7 @@ import type { EmbeddedOptions } from './embed';
 
 import { createEditor, getEditorSession, type CodaruEditor } from './editor-core';
 import { createViewDOM } from './view-dom';
+import { createBuildingFeedback } from './building';
 
 export interface RuntimeOptions { app: HTMLDivElement; editor?: CodaruEditor; modular?: boolean; storageKey?: string | null; invoke?: EmbeddedOptions['invoke']; nativeAgent?: boolean; onDispose?: () => void; }
 export function createEditorRuntime(options: RuntimeOptions) {
@@ -78,6 +79,9 @@ const dom = createViewDOM(app, !!options.modular);
 document = dom.document;
 const events = dom.events;
 const stage = document.querySelector<HTMLDivElement>('#stage')!, world = document.querySelector<HTMLDivElement>('#world')!;
+// Agent batches get visual feedback: particles settle into what changed, a pill reports progress.
+const building = createBuildingFeedback({ stage, artboards: () => byId('artboards'), project: p, camera: () => ({ pan: state.pan, zoom: state.zoom }), document });
+let touchedByAgent: string[] = [];
 const layersEl = document.querySelector<HTMLDivElement>('#layers')!, inspector = document.querySelector<HTMLDivElement>('#inspector')!;
 const selectionOverlay = document.querySelector<HTMLDivElement>('#selection-overlay')!;
 const byId = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -173,6 +177,7 @@ function renderCanvas() {
     artboards.append(layer);
   }
   byId('empty-canvas').hidden = p().nodes.length > 0;
+  building.decorate(p(), touchedByAgent); touchedByAgent = [];
   setTransform(); renderSelection(); renderConnections();
 }
 function setTransform() {
@@ -789,7 +794,7 @@ function disposeEmbedded() {
     clearTimeout(saveTimer);clearTimeout(toastTimer);flushDraft();
     disposed=true;onHostChange=undefined;nativeInvoke=undefined;
     if(agentTimer!==undefined)clearInterval(agentTimer);
-    stageObserver.disconnect();dom.dispose();unbindView();options.onDispose?.();
+    stageObserver.disconnect();building.dispose();dom.dispose();unbindView();options.onDispose?.();
   }
   return clone(p());
 }
@@ -815,7 +820,7 @@ async function runAgent(request:import('./agent').AgentRequest){
   const module=await import('./agent');
   return module.handleAgentRequest({project:p,selection:()=>[...state.selected],scope:()=>state.selectionScope,
     busy:()=>disposed||(embedded&&!options.modular&&!embeddedInitialized)||!!gesture||!!byId('modal-root').children.length||!!document.activeElement?.matches('input,textarea,select,[contenteditable="true"]'),
-    commit:edit=>{assertActive();store.commit(edit);state.selected=state.selected.filter(id=>!!find(id));render();persist();},select:ids=>select(ids),
+    commit:edit=>{assertActive();const before=building.snapshot(p());store.commit(edit);touchedByAgent=building.track(before,p());state.selected=state.selected.filter(id=>!!find(id));render();persist();},select:ids=>select(ids),
     undo:()=>{store.undo();render();persist();},redo:()=>{store.redo();render();persist();}},request);
 }
 let agentConnected=false,agentTimer:ReturnType<typeof setInterval>|undefined;
