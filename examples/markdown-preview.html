@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Codaru · Maquetas en Markdown</title>
+  <style>
+    :root{color-scheme:light;--line:#d9d9df;--muted:#6b6b76;--codaru-border:#d9d9df;--codaru-surface:#fff;--codaru-canvas:#f1f1f5;--codaru-accent:#007aff}
+    *{box-sizing:border-box}html,body{margin:0;height:100%}body{display:flex;flex-direction:column;font:13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#242429;background:#f5f5f7}
+    header{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line);background:#fff}header strong{font-size:14px}header span{color:var(--muted)}header a{margin-left:auto;color:#007aff;text-decoration:none}
+    main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(260px,2fr) minmax(320px,3fr)}
+    section{min-width:0;min-height:0;display:flex;flex-direction:column}section+section{border-left:1px solid var(--line)}
+    h2{margin:0;padding:9px 16px;font-size:10px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);background:#fafafc}
+    textarea{flex:1;border:0;outline:0;resize:none;padding:16px;font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;color:inherit;background:#fff}
+    article{flex:1;overflow:auto;padding:22px 28px;background:#fff;font-size:14px;line-height:1.65}
+    article h1{font-size:24px;margin:0 0 12px}article h2{all:unset;display:block;font-size:17px;font-weight:650;margin:22px 0 8px}article p{margin:0 0 12px}article ul{margin:0 0 12px;padding-left:20px}
+    article code{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;background:#f1f1f5;padding:1px 5px;border-radius:4px}article pre{background:#f1f1f5;padding:12px 14px;border-radius:8px;overflow:auto}article pre code{background:none;padding:0}
+    @media(max-width:760px){main{grid-template-columns:1fr;grid-template-rows:240px 1fr}section+section{border-left:0;border-top:1px solid var(--line)}}
+  </style>
+</head>
+<body>
+  <header><strong>Maquetas en Markdown</strong><span>Edita el documento de la izquierda: los bloques <code>codaru-mockup</code> se convierten en vistas en vivo.</span><a href="./modular-host.html">Ejemplo modular ↗</a></header>
+  <main>
+    <section><h2>Documento Markdown</h2><textarea id="source" spellcheck="false" aria-label="Documento Markdown"></textarea></section>
+    <section><h2>Vista del cliente</h2><article id="rendered" aria-live="polite"><p><strong>Esta página necesita el servidor de desarrollo.</strong></p><p>Abierta como archivo suelto no puede cargar su código. Ejecuta <code>npm run dev</code> y abre <code>http://127.0.0.1:1432/examples/markdown-preview.html</code>.</p></article></section>
+  </main>
+  <script type="module" src="./markdown-preview.ts"></script>
+</body>
+</html>

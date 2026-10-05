@@ -1,0 +1,8 @@
+{
+  "name": "codaru-design",
+  "description": "Diseñar y revisar interfaces en Codaru Mockup con criterio profesional: flujo con el CLI, principios de diseño y revisión automática de contraste, zonas táctiles y coherencia.",
+  "version": "0.3.0",
+  "author": { "name": "fsaldivar-dev" },
+  "license": "BSD-3-Clause",
+  "repository": "https://github.com/fsaldivar-dev/codaru-mockup"
+}

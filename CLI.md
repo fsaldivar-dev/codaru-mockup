@@ -62,7 +62,18 @@ Para conectar una interacción con otra pantalla usa `{"op":"flow","from":"ID_OR
 
 Un degradado propio de varios colores se define con `gradient` (`linear` o `radial`), `gradientAngle` y `gradientStops`: `[{"color":"#2a7b9b","position":0},{"color":"#57c785","position":50},{"color":"#eddd53","position":100}]`, de 2 a 16 paradas en orden creciente. Sin `gradientStops` se usan `fill` y `gradientEnd` como extremos.
 
+El auto layout de un contenedor usa `layout` (`vertical` u `horizontal`), `padding` o `paddingSides`, `gap`, `justify` (`start`, `center`, `end`, `between`), `align` (`stretch`, `start`, `center`, `end`), `wrap`, `hugWidth` y `hugHeight`. En cada hijo, `sizing` (`fixed` o `fill`) y `minWidth`, `maxWidth`, `minHeight`, `maxHeight`. El editor recalcula posiciones y tamaños al aplicar el lote; no hace falta enviar `x` e `y` de los hijos.
+
 Los tokens y los iconos se resuelven con el tema del elemento o de su pantalla. Los materiales conservan su simulación en HTML; SVG simplifica el vidrio a tinte y borde.
+
+## Revisar el diseño
+
+```sh
+./codaru lint
+./codaru lint --frame pantalla-inicio
+```
+
+Devuelve `summary` (errores, avisos y notas, y cuántos por regla) e `issues`, cada uno con `node`, `frame`, `rule`, `severity`, `message`, `fix` y, si el problema solo aparece en un modo, `mode`. El contraste se calcula contra el fondo real del texto en claro y en oscuro. Corrige con `apply` y repite hasta no tener errores. Reglas: `contrast`, `target`, `text-size`, `text-fit`, `overflow`, `safe-area`, `hinge`, `overlap`, `off-theme`, `alignment` y `scale`.
 
 ## Ilustraciones, animaciones y transiciones
 

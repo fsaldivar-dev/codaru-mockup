@@ -1,0 +1,36 @@
+import { test, expect } from '@playwright/test';
+
+test('codaru-mockup blocks in rendered Markdown become live previews and bad blocks explain themselves',async({page})=>{
+  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto('/tests/fixtures/markdown.html');await page.waitForFunction(()=>!!(window as any).markdownTest);
+  const previews=page.locator('[data-codaru-mockup]');await expect(previews).toHaveCount(5);
+  expect(await previews.evaluateAll(els=>els.map(el=>(el as HTMLElement).dataset.codaruMockup))).toEqual(['prototype','static','error','error','error']);
+  await expect(page.locator('pre:visible')).toHaveCount(4);await expect(page.locator('code.language-js')).toBeVisible();
+  const prototype=previews.nth(0);
+  await expect(prototype.locator('.name')).toHaveText('Pasaporte · Cerrado · Bienvenida');
+  await expect(prototype.locator('.device-chrome')).toHaveCount(1);
+  expect(await prototype.locator('.sizer').evaluate(el=>el.getBoundingClientRect().height)).toBeLessThanOrEqual(640);
+  await prototype.locator('[data-target="pasaporte-cerrado-espacio"]').click();
+  await expect(prototype.locator('.name')).toHaveText('Pasaporte · Cerrado · Tu espacio');
+  await expect(prototype.locator('.canvas > *')).toHaveCount(1);
+  await prototype.getByRole('button',{name:'Desplegar'}).click();
+  await expect(prototype.locator('.name')).toHaveText('Pasaporte · Abierto · Tu espacio');
+  await expect(prototype.locator('.canvas > *')).toHaveCount(1);await expect(prototype.locator('.fold-guide')).toHaveCount(1);
+  await prototype.getByRole('button',{name:'Pantalla anterior'}).click();
+  await expect(prototype.locator('.name')).toHaveText('Pasaporte · Cerrado · Tu espacio');
+  await prototype.getByLabel('Pantalla',{exact:true}).selectOption('android-espacio');
+  await expect(prototype.locator('.name')).toHaveText('Android · Tu espacio');
+  await prototype.getByRole('button',{name:'Abrir en el editor'}).click();
+  expect(await page.evaluate(()=>(window as any).markdownTest.opened)).toEqual([['/examples/Forma-dispositivos.codaru.json','android-espacio']]);
+  const fixed=previews.nth(1);
+  await expect(fixed.locator('.name')).toHaveText('iPhone · Tu espacio');
+  await expect(fixed.locator('[data-target]')).toHaveCount(0);await expect(fixed.getByLabel('Pantalla',{exact:true})).toHaveCount(0);
+  expect(await fixed.locator('.canvas > *').evaluate(el=>[(el as HTMLElement).dataset.themeMode,(el as HTMLElement).style.pointerEvents])).toEqual(['dark','none']);
+  expect(await fixed.locator('.sizer').evaluate(el=>el.getBoundingClientRect().height)).toBeLessThanOrEqual(420);
+  await expect(previews.nth(2)).toContainText('No existe la pantalla «no-existe»');await expect(previews.nth(2)).toContainText('ios-bienvenida');
+  await expect(previews.nth(3)).toContainText('no contiene JSON válido');
+  await expect(previews.nth(4)).toContainText('Línea no reconocida');
+  expect(await page.locator('#host-button').evaluate(el=>getComputedStyle(el).borderTopWidth)).toBe('3px');
+  expect(await page.evaluate(()=>{const p=(window as any).markdownTest.previews[0];p.show('ios-bienvenida');const id=p.screen();p.destroy();return [id,document.querySelectorAll('[data-codaru-mockup]').length];})).toEqual(['ios-bienvenida',4]);
+  expect(errors).toEqual([]);
+});

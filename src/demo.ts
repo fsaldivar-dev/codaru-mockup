@@ -16,7 +16,8 @@ export function demo(): Project {
   l('text', { name: 'Label · Contraseña', x: 32, y: 414, width: 160, height: 24, text: 'Contraseña', fontSize: 12, fontWeight: 600 });
   l('text', { name: 'Recuperar', x: 200, y: 414, width: 158, height: 24, text: '¿La olvidaste?', fontSize: 12, color: '@primary', textAlign: 'right' });
   l('input', { name: 'Contraseña', x: 32, y: 443, width: 326, height: 48, text: '••••••••', fontSize: 14, color: '@muted' });
-  const btn = l('button', { id: 'primary-button', name: 'Botón principal', x: 32, y: 516, width: 326, height: 48, text: 'Entrar a mi espacio    →', targetId: dashboard.id, shadow: true });
+  // Text over the brand color uses a token: white in light mode, dark in dark mode, where the primary gets lighter.
+  const btn = l('button', { id: 'primary-button', name: 'Botón principal', x: 32, y: 516, width: 326, height: 48, text: 'Entrar a mi espacio    →', targetId: dashboard.id, shadow: true, color: '@surface' });
   const component = createComponent(p, btn.id);
   l('text', { name: 'Pie', x: 32, y: 591, width: 326, height: 22, text: 'Hecho para crear a tu manera.', textAlign: 'center', fontSize: 11, color: '@muted' });
   d('rect', { name: 'Sidebar', x: 0, y: 0, width: 168, height: 660, fill: '@surface', radius: 0 });
@@ -33,8 +34,8 @@ export function demo(): Project {
   d('text', { name: 'Saludo', x: 202, y: 89, width: 450, height: 44, text: 'Hola, Alex ☀', fontSize: 30, fontWeight: 720 });
   d('text', { name: 'Subtítulo', x: 202, y: 136, width: 450, height: 30, text: 'Un buen día para empezar algo nuevo.', fontSize: 13, color: '@muted' });
   d('card', { name: 'Destacado', x: 202, y: 188, width: 454, height: 170, fill: '@primary', strokeWidth: 0, gradient: 'linear', gradientEnd: '#a18ae8', gradientAngle: 120 });
-  d('text', { name: 'Destacado · etiqueta', x: 225, y: 211, width: 320, height: 22, text: 'DE LA IDEA A LO POSIBLE', fontSize: 9, fontWeight: 700, color: '#ede6ff' });
-  d('text', { name: 'Destacado · título', x: 225, y: 245, width: 300, height: 60, text: 'Algo increíble\nestá por tomar forma.', lineHeight: 1.18, fontSize: 24, fontWeight: 650, color: '#ffffff' });
+  d('text', { name: 'Destacado · etiqueta', x: 225, y: 211, width: 320, height: 22, text: 'DE LA IDEA A LO POSIBLE', fontSize: 9, fontWeight: 700, color: '@surface' });
+  d('text', { name: 'Destacado · título', x: 225, y: 245, width: 300, height: 60, text: 'Algo increíble\nestá por tomar forma.', lineHeight: 1.18, fontSize: 24, fontWeight: 650, color: '@surface' });
   d('ellipse', { name: 'Órbita', x: 560, y: 230, width: 65, height: 65, fill: 'transparent', stroke: '#cbbaff', strokeWidth: 12, opacity: 60 });
   d('text', { name: 'Sección', x: 202, y: 393, width: 320, height: 28, text: 'Tus proyectos', fontSize: 16, fontWeight: 650 });
   for (let i = 0; i < 2; i++) {

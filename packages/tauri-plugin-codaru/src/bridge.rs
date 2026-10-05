@@ -6,7 +6,7 @@ use std::sync::{atomic::{AtomicU64, Ordering}, mpsc, Arc, Mutex};
 use std::time::Instant;
 
 const MAX_PENDING: usize = 8;
-const COMMANDS: &[&str] = &["schema", "context", "apply", "catalog", "select", "undo", "redo", "export"];
+const COMMANDS: &[&str] = &["schema", "context", "apply", "catalog", "select", "undo", "redo", "export", "lint"];
 
 #[derive(Clone, Serialize, Debug)]
 pub struct AgentRequest { pub id: String, pub command: String, pub params: Value }
@@ -30,7 +30,7 @@ struct Queue {
 struct Shared { queue: Mutex<Queue>, counter: AtomicU64 }
 impl Shared {
     fn enqueue(&self, request: WireRequest) -> Result<(String, mpsc::Receiver<Value>)> {
-        if !COMMANDS.contains(&request.command.as_str()) { return Err(AgentError::new("UNKNOWN_COMMAND", "Use schema, context, apply, catalog, select, undo, redo, or export.")); }
+        if !COMMANDS.contains(&request.command.as_str()) { return Err(AgentError::new("UNKNOWN_COMMAND", "Use schema, context, apply, catalog, select, undo, redo, export, or lint.")); }
         if !request.params.is_object() { return Err(AgentError::new("INVALID_REQUEST", "Command params must be a JSON object.")); }
         let mut queue = self.queue.lock().unwrap_or_else(|e| e.into_inner());
         if queue.replies.len() >= MAX_PENDING { return Err(AgentError::new("BRIDGE_BUSY", "The local command queue is full. Wait for the current commands and retry.")); }

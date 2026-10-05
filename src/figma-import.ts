@@ -1,4 +1,4 @@
-import { containerKinds, createComponent, labels, node, validate, type DesignNode, type Kind, type Project } from './model';
+import { children, containerKinds, createComponent, labels, layoutNode, node, validate, type DesignNode, type Kind, type Project } from './model';
 import { sanitizeSVG } from './motion';
 
 /**
@@ -70,6 +70,7 @@ export function importFigma(p: Project, input: unknown): FigmaReport {
     const angle = (Math.round(Math.atan2(-num(m[1]?.[0]), num(m[0]?.[0], 1)) * 180 / Math.PI) + 90 + 360) % 360;
     return { type: paint.type === 'GRADIENT_RADIAL' ? 'radial' as const : 'linear' as const, angle, stops };
   }
+  const autoLayouts: string[] = [];
   function convert(raw: unknown, parentId: string | null, depth: number, top: boolean): DesignNode | undefined {
     if (!record(raw) || added.length >= 3000) { if (added.length >= 3000) note('El archivo supera 3000 capas: el resto no se importó.'); return; }
     if (raw.visible === false) { note('Capas ocultas descartadas.'); return; }
@@ -118,10 +119,13 @@ export function importFigma(p: Project, input: unknown): FigmaReport {
     if (strokes[0] && type !== 'vector') Object.assign(patch, { stroke: hex(strokes[0].color, num(strokes[0].opacity, 1, 0, 1)), strokeWidth: num(raw.strokeWeight, 1, 0, 50) });
     const layout = record(raw.layout) ? raw.layout : undefined;
     if (layout && containerKinds.includes(type) && (layout.mode === 'HORIZONTAL' || layout.mode === 'VERTICAL')) {
-      const padding = Array.isArray(layout.padding) ? layout.padding.map((value: unknown) => num(value, 0, 0, 1000)) : [0, 0, 0, 0];
-      const simple = padding.every((value: number) => value === padding[0]) && layout.wrap !== true && (layout.primaryAlign ?? 'MIN') === 'MIN' && (layout.counterAlign ?? 'MIN') === 'MIN';
-      if (simple) Object.assign(patch, { layout: layout.mode === 'HORIZONTAL' ? 'horizontal' : 'vertical', padding: padding[0], gap: num(layout.gap, 0, 0, 1000) });
-      else note('Auto layout con alineación, ajuste de línea o márgenes distintos: se conservaron las posiciones, sin auto layout.');
+      const padding = Array.isArray(layout.padding) ? layout.padding.map((value: unknown) => num(value, 0, 0, 2000)) : [0, 0, 0, 0], [top = 0, right = 0, bottom = 0, left = 0] = padding;
+      const vertical = layout.mode === 'VERTICAL', stretched = kids.length > 0 && kids.every((kid: unknown) => record(kid) && kid.stretch === true);
+      Object.assign(patch, { layout: vertical ? 'vertical' : 'horizontal', padding: top, gap: num(layout.gap, 0, 0, 1000), ...(padding.some((value: number) => value !== top) ? { paddingSides: { top, right, bottom, left } } : {}),
+        justify: ({ CENTER: 'center', MAX: 'end', SPACE_BETWEEN: 'between' } as Record<string, DesignNode['justify']>)[layout.primaryAlign] ?? 'start',
+        align: stretched ? 'stretch' : ({ CENTER: 'center', MAX: 'end' } as Record<string, DesignNode['align']>)[layout.counterAlign] ?? 'start',
+        ...(layout.wrap === true ? { wrap: true } : {}), ...((vertical ? layout.counterSizing : layout.primarySizing) === 'AUTO' ? { hugWidth: true } : {}), ...((vertical ? layout.primarySizing : layout.counterSizing) === 'AUTO' ? { hugHeight: true } : {}) });
+      autoLayouts.push(id);
     }
     if (raw.grow === 1) patch.sizing = 'fill';
     const created = node(type, patch); added.push(created); report.layers++;
@@ -156,6 +160,20 @@ export function importFigma(p: Project, input: unknown): FigmaReport {
   p.nodes.push(...added);
   for (const created of added.filter(n => loose.length && n.parentId === roots.at(-1)!.id)) {
     try { createComponent(p, created.id); report.components++; } catch { note('Componentes que contienen otros componentes: se importaron como grupos.'); }
+  }
+  // Auto layout is kept only where Codaru arranges the children exactly as Figma had them;
+  // otherwise the container keeps Figma's positions as a free layout. Innermost containers first.
+  const draft = { ...p, nodes: added };
+  for (const id of autoLayouts.reverse()) {
+    const container = added.find(n => n.id === id); if (!container) continue;
+    const kids = children(draft, id).filter(k => !k.hidden), before = [container, ...kids].map(k => [k.x, k.y, k.width, k.height]);
+    layoutNode(draft, container);
+    if ([container, ...kids].some((k, i) => [k.x, k.y, k.width, k.height].some((value, j) => Math.abs(value - before[i][j]) > 1.5))) {
+      [container, ...kids].forEach((k, i) => { [k.x, k.y, k.width, k.height] = before[i]; });
+      Object.assign(container, { layout: 'free', paddingSides: undefined, justify: undefined, align: undefined, wrap: undefined, hugWidth: undefined, hugHeight: undefined });
+      for (const k of kids) k.sizing = 'fixed';
+      note('Auto layout que Codaru no reproduce igual (posiciones absolutas, texto que se ajusta, espaciado negativo): se conservaron las posiciones.');
+    }
   }
   if (families.size) note(`Tipografías no incluidas (${[...families].slice(0, 6).join(', ')}): se muestran con la fuente de sistema, serif o monoespaciada más parecida.`);
   report.notes = [...counts].sort((a, b) => b[1] - a[1]).map(([message, count]) => count > 1 ? `${message} (${count})` : message);

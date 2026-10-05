@@ -17,6 +17,18 @@ export interface DesignNode {
   text: string; fontSize: number; fontWeight: number; fontFamily: string; lineHeight: number;
   textAlign: 'left' | 'center' | 'right';
   layout: Layout; padding: number; gap: number; sizing: 'fixed' | 'fill';
+  /** Auto layout refinements; absent means the defaults: uniform padding, start, stretch, one line, fixed size. */
+  paddingSides?: { top: number; right: number; bottom: number; left: number };
+  /** Distribution along the layout direction. */
+  justify?: 'start' | 'center' | 'end' | 'between';
+  /** Alignment across the layout direction; stretch resizes the children. */
+  align?: 'stretch' | 'start' | 'center' | 'end';
+  /** Continue on a new line or column when the children do not fit. */
+  wrap?: boolean;
+  /** Resize the container to its content. */
+  hugWidth?: boolean; hugHeight?: boolean;
+  /** Limits applied when a parent's auto layout resizes this element. */
+  minWidth?: number; maxWidth?: number; minHeight?: number; maxHeight?: number;
   hidden: boolean; locked: boolean; targetId: string | null;
   image: string;
   iconPack?: string; iconName?: string;
@@ -105,21 +117,48 @@ export function updateNode(p: Project, id: string, patch: Partial<DesignNode>) {
   if (n.instanceOf || n.componentKey) n.overrides = [...new Set([...(n.overrides || []), ...Object.keys(patch).filter(k => !['id', 'overrides'].includes(k))])];
   Object.assign(n, patch);
 }
+/** Arrange the visible children of one auto layout container, and resize it when it hugs its content. */
+export function layoutNode(p: Project, n: DesignNode) {
+  if (n.layout === 'free') return;
+  const kids = children(p, n.id).filter(k => !k.hidden); if (!kids.length) return;
+  const vert = n.layout === 'vertical', pad = n.paddingSides ?? { top: n.padding, right: n.padding, bottom: n.padding, left: n.padding };
+  const main = vert ? 'height' : 'width', cross = vert ? 'width' : 'height', at = vert ? 'y' : 'x', across = vert ? 'x' : 'y';
+  const start = vert ? pad.top : pad.left, end = vert ? pad.bottom : pad.right, crossStart = vert ? pad.left : pad.top, crossEnd = vert ? pad.right : pad.bottom;
+  const limit = (k: DesignNode, key: 'width' | 'height', value: number) => Math.max(key === 'width' ? k.minWidth ?? 16 : k.minHeight ?? 16, Math.min(key === 'width' ? k.maxWidth ?? Infinity : k.maxHeight ?? Infinity, value));
+  const hugMain = vert ? n.hugHeight : n.hugWidth, hugCross = vert ? n.hugWidth : n.hugHeight, align = n.align ?? 'stretch', wrap = !!n.wrap && !hugMain;
+  if (hugMain) n[main] = Math.max(1, start + end + kids.reduce((sum, k) => sum + k[main], 0) + (kids.length - 1) * n.gap);
+  const inner = Math.max(16, n[main] - start - end);
+  // Lines: one, unless wrapping breaks the children when the next one does not fit.
+  const lines: DesignNode[][] = [[]];
+  for (const k of kids) {
+    const line = lines.at(-1)!, used = line.reduce((sum, item) => sum + item[main] + n.gap, 0);
+    if (wrap && line.length && used + k[main] > inner + .01) lines.push([k]); else line.push(k);
+  }
+  const lineSizes = lines.map(line => Math.max(...line.map(k => k[cross])));
+  if (hugCross) n[cross] = Math.max(1, crossStart + crossEnd + lineSizes.reduce((sum, size) => sum + size, 0) + (lines.length - 1) * n.gap);
+  const innerCross = Math.max(16, n[cross] - crossStart - crossEnd);
+  let offset = crossStart;
+  lines.forEach((line, index) => {
+    const lineCross = lines.length === 1 ? innerCross : lineSizes[index], fills = line.filter(k => k.sizing === 'fill'), gaps = (line.length - 1) * n.gap;
+    const available = Math.max(16, inner - gaps), fixed = line.filter(k => k.sizing !== 'fill').reduce((sum, k) => sum + k[main], 0);
+    for (const k of fills) k[main] = limit(k, main, (available - fixed) / fills.length);
+    const free = fills.length ? 0 : Math.max(0, inner - gaps - fixed), justify = n.justify ?? 'start';
+    let pos = start + (justify === 'center' ? free / 2 : justify === 'end' ? free : 0);
+    const gap = n.gap + (justify === 'between' && line.length > 1 ? free / (line.length - 1) : 0);
+    for (const k of line) {
+      if (align === 'stretch') k[cross] = limit(k, cross, lineCross);
+      k[at] = pos; k[across] = offset + (align === 'center' ? (lineCross - k[cross]) / 2 : align === 'end' ? lineCross - k[cross] : 0);
+      pos += k[main] + gap;
+    }
+    offset += lineCross + n.gap;
+  });
+}
 export function layoutProject(p: Project) {
   function apply(n: DesignNode) {
-    const kids = children(p, n.id).filter(n => !n.hidden);
-    if (n.layout !== 'free') {
-      const vert = n.layout === 'vertical'; let pos = n.padding;
-      const available = Math.max(16, (vert ? n.height : n.width) - n.padding * 2 - Math.max(0, kids.length - 1) * n.gap);
-      const fills = kids.filter(k => k.sizing === 'fill');
-      const space = Math.max(16, (available - kids.filter(k => k.sizing !== 'fill').reduce((s, k) => s + (vert ? k.height : k.width), 0)) / (fills.length || 1));
-      for (const k of kids) {
-        k.x = vert ? n.padding : pos; k.y = vert ? pos : n.padding;
-        if (vert) { k.width = Math.max(16, n.width - n.padding * 2); if (k.sizing === 'fill') k.height = space; }
-        else { k.height = Math.max(16, n.height - n.padding * 2); if (k.sizing === 'fill') k.width = space; }
-        pos += (vert ? k.height : k.width) + n.gap;
-      }
-    }
+    const kids = children(p, n.id).filter(k => !k.hidden);
+    // Containers that hug their content know their size before the parent arranges them.
+    for (const k of kids) if (k.layout !== 'free' && (k.hugWidth || k.hugHeight)) apply(k);
+    layoutNode(p, n);
     for (const k of kids) apply(k);
   }
   for (const n of children(p, null)) apply(n);
@@ -211,7 +250,7 @@ export function validate(input: unknown): Project {
     p.version = 2; p.designThemes = { project: theme }; p.activeThemeId = 'project';
   }
   validateDesignThemes(p);
-  const overrideKeys = new Set([...Object.keys(node('rect')), 'radiusTR', 'radiusBR', 'radiusBL', 'componentId', 'instanceOf', 'componentKey', 'overrides', 'fillToken', 'materialToken', 'typographyToken', 'radiusToken', 'themeId', 'themeMode', 'kitId', 'iconPack', 'iconName', 'svg', 'animations', 'transition', 'gradientStops', 'device', 'fold', 'foldPair', 'safeArea', 'skin']);
+  const overrideKeys = new Set([...Object.keys(node('rect')), 'radiusTR', 'radiusBR', 'radiusBL', 'componentId', 'instanceOf', 'componentKey', 'overrides', 'fillToken', 'materialToken', 'typographyToken', 'radiusToken', 'themeId', 'themeMode', 'kitId', 'iconPack', 'iconName', 'svg', 'animations', 'transition', 'gradientStops', 'device', 'fold', 'foldPair', 'safeArea', 'skin', 'paddingSides', 'justify', 'align', 'wrap', 'hugWidth', 'hugHeight', 'minWidth', 'maxWidth', 'minHeight', 'maxHeight']);
   function validateNodes(ns: DesignNode[]) {
     const ids = new Set<string>();
     for (const n of ns) {
@@ -230,6 +269,11 @@ export function validate(input: unknown): Project {
       if (n.foldPair !== undefined && (n.type !== 'frame' || typeof n.foldPair !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(n.foldPair) || n.foldPair === n.id)) throw new Error('Pantalla emparejada inválida.');
       if (n.skin !== undefined && (n.type !== 'frame' || !Object.hasOwn(deviceSkins, n.skin))) throw new Error('Marco de dispositivo desconocido.');
       if (n.safeArea !== undefined && (n.type !== 'frame' || !n.safeArea || typeof n.safeArea !== 'object' || Object.keys(n.safeArea).sort().join() !== 'bottom,left,right,top' || Object.values(n.safeArea).some(v => !Number.isFinite(v) || v < 0 || v > 400))) throw new Error('Área segura inválida: top, right, bottom y left de 0 a 400, solo en pantallas.');
+      if (n.paddingSides !== undefined && (!n.paddingSides || typeof n.paddingSides !== 'object' || Object.keys(n.paddingSides).sort().join() !== 'bottom,left,right,top' || Object.values(n.paddingSides).some(v => !Number.isFinite(v) || v < 0 || v > 2000))) throw new Error('Márgenes inválidos: top, right, bottom y left de 0 a 2000.');
+      if ((n.justify !== undefined && !['start', 'center', 'end', 'between'].includes(n.justify)) || (n.align !== undefined && !['stretch', 'start', 'center', 'end'].includes(n.align))) throw new Error('Alineación de auto layout inválida.');
+      for (const key of ['wrap', 'hugWidth', 'hugHeight'] as const) if (n[key] !== undefined && typeof n[key] !== 'boolean') throw new Error('Opción de auto layout inválida.');
+      for (const key of ['minWidth', 'maxWidth', 'minHeight', 'maxHeight'] as const) if (n[key] !== undefined && (!Number.isFinite(n[key]) || n[key]! < 1 || n[key]! > 100000)) throw new Error('Límite de tamaño inválido: de 1 a 100000.');
+      if ((n.minWidth ?? 0) > (n.maxWidth ?? Infinity) || (n.minHeight ?? 0) > (n.maxHeight ?? Infinity)) throw new Error('El tamaño mínimo no puede superar al máximo.');
       if (n.gradientStops !== undefined) {
         if (!Array.isArray(n.gradientStops) || n.gradientStops.length < 2 || n.gradientStops.length > 16) throw new Error('Un degradado necesita entre 2 y 16 paradas.');
         let previous = -1;

@@ -1,5 +1,15 @@
 # Changelog
 
+## Sin publicar
+
+- Revisión de diseño: contraste en claro y oscuro contra el fondo real, zonas táctiles, texto pequeño o que no cabe, recortes, área segura, pliegue, acciones superpuestas, colores fuera del tema, desalineaciones y escalas. Lista por pantalla y mapa de calor en el lienzo.
+- CLI: comando `lint [--frame ID]`, también disponible para la IA.
+- Plugin de Claude Code en `packages/claude-plugin` con los skills `codaru-design` y `codaru-review`.
+- Ejemplos Forma y multiplataforma: el texto sobre color de marca usa tokens, de modo que pasan la revisión sin errores en claro y en oscuro.
+- Markdown: bloque ```` ```codaru-mockup ```` y entrada `codaru-mockup/preview` para que un cliente muestre pantallas en vivo dentro de un documento, como prototipo o estáticas, sin cargar el editor.
+- Auto layout: padding por lado, reparto (inicio, centro, final, repartido), alineación transversal (estirar, inicio, centro, final), salto de línea, ajuste del contenedor al contenido y tamaño mínimo y máximo de los hijos. Sin estos campos el comportamiento es el anterior.
+- Figma: el auto layout se conserva con alineación, padding por lado, salto de línea y ajuste al contenido, solo cuando Codaru reproduce la misma geometría; si no, se mantienen las posiciones. El plugin exporta además los modos de tamaño y el estirado de cada hijo.
+
 ## 0.3.0 — 2026-10-05
 
 Animación, color, dispositivos y plegables, e importación desde Figma. El paquete sigue sin dependencias de ejecución.

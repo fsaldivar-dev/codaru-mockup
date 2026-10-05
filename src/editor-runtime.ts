@@ -6,6 +6,7 @@ import type { KitId, KitVariant } from './kits';
 import { element, escape as esc, exportHTML, exportSVG } from './render';
 import { icon } from './icons';
 import { devicePresets, deviceSkins, presetSafeArea, sizeClass } from './devices';
+import { lintProject, lintRules, lintSummary, type LintIssue } from './lint';
 import { closeColorPicker, openColorPicker, pickColorFor, type GradientValue } from './color-picker';
 import { easingLabels, easings, sanitizeSVG, startMotion, transitionLabels, transitionScreens, transitionTypes, vectorLayers, vectorSize, type Transition } from './motion';
 import { atScope, commonScope, scopeAtPoint, inMarquee, type Scope } from './selection';
@@ -46,6 +47,8 @@ let space = false;
 const MIN_ZOOM = .1, MAX_ZOOM = 8;
 let collapsed = new Set<string>(); let saveTimer: ReturnType<typeof setTimeout>; let toastTimer: ReturnType<typeof setTimeout>;
 let lastPoint = { x: 90, y: 120 }; let previewFrame: string | null = null; let previewHistory: { id: string; transition?: Transition }[] = []; let previewRatio = 1;
+/** Result of the last design review; the heat map is drawn while it is on. */
+let review: { issues: LintIssue[]; heat: boolean } | null = null;
 const p = () => store.project;
 const find = (id: string) => p().nodes.find(n => n.id === id);
 const app = options.app;
@@ -156,6 +159,18 @@ function renderCanvas() {
       artboards.append(label);
     }
     artboards.append(element(p(), n));
+  }
+  if (review?.heat) {
+    // One soft spot per issue: red for errors, amber for warnings, blue for notes. Overlaps add up.
+    const layer = document.createElement('div'); layer.className = 'heat-layer'; layer.setAttribute('aria-hidden', 'true');
+    for (const issue of review.issues) {
+      const n = find(issue.node); if (!n || n.type === 'frame') continue;
+      const at = absolute(p(), n), spot = document.createElement('div'), grow = Math.max(18, Math.min(n.width, n.height) * .35);
+      spot.className = `heat-spot ${issue.severity}`; spot.dataset.heat = issue.node;
+      Object.assign(spot.style, { left: `${at.x - grow}px`, top: `${at.y - grow}px`, width: `${n.width + grow * 2}px`, height: `${n.height + grow * 2}px` });
+      layer.append(spot);
+    }
+    artboards.append(layer);
   }
   byId('empty-canvas').hidden = p().nodes.length > 0;
   setTransform(); renderSelection(); renderConnections();
@@ -327,6 +342,17 @@ function openFillPicker(anchor: HTMLElement, n: DesignNode) {
       commit:g=>change(pr=>updateNode(pr,id,{gradient:g.type,gradientAngle:g.angle,gradientStops:g.stops,fill:g.stops[0].color,gradientEnd:g.stops.at(-1)!.color,fillToken:undefined})),
       pickTheme:token=>change(pr=>updateNode(pr,id,{fillToken:token}))}});
 }
+function reviewPanel() {
+  if (!review) return `<section class="inspector-section"><div class="section-heading"><span>REVISIÓN DE DISEÑO</span></div><p class="field-note">Busca poco contraste en claro y oscuro, zonas táctiles pequeñas, contenido recortado o bajo el sistema, colores fuera del tema y desalineaciones.</p><button class="wide-button" data-action="lint">${icon('check',16)} Revisar el diseño</button></section>`;
+  const summary=lintSummary(review.issues), frames=new Map<string,LintIssue[]>();
+  for(const issue of review.issues){const key=issue.frame??'';frames.set(key,[...(frames.get(key)??[]),issue]);}
+  const mark={error:'●',warning:'▲',info:'○'};
+  return `<section class="inspector-section review-panel"><div class="section-heading"><span>REVISIÓN DE DISEÑO</span><button class="text-button" data-action="lint-close">Cerrar</button></div>
+    <p class="review-summary" role="status">${review.issues.length?`<b class="error">${summary.errors} errores</b> · <b class="warning">${summary.warnings} avisos</b> · <b class="info">${summary.notes} notas</b>`:'Sin problemas detectados.'}</p>
+    <label class="check-field"><input type="checkbox" data-heat ${review.heat?'checked':''}/> Mapa de calor en el lienzo</label>
+    <div class="review-list">${[...frames].map(([id,list])=>`<div class="review-frame">${esc(find(id)?.name??'Fuera de pantalla')} <span>${list.length}</span></div>${list.slice(0,30).map(issue=>`<button class="review-issue ${issue.severity}" data-lint-node="${esc(issue.node)}" title="${esc(issue.fix)}"><i>${mark[issue.severity]}</i><span><strong>${lintRules[issue.rule]}${issue.mode?` · ${issue.mode==='light'?'claro':'oscuro'}`:''}</strong>${esc(issue.message)}</span></button>`).join('')}${list.length>30?`<p class="field-note">…y ${list.length-30} más en esta pantalla.</p>`:''}`).join('')}</div>
+    <button class="wide-button" data-action="lint">Volver a revisar</button></section>`;
+}
 function themePanel() {
   return `<section class="inspector-section"><div class="section-heading"><span>TEMA DEL PROYECTO</span><button data-action="theme" class="text-button">${p().theme==='light'?'Claro':'Oscuro'}</button></div><div class="palette">${tokens.map(t=>`<button type="button" class="color-chip" data-pick-token="${t}" title="${t}" aria-label="Color del tema ${t}" style="--chip:${esc(color(p(),'@'+t))}"></button>`).join('')}</div><p class="palette-note">${esc(p().designThemes[p().activeThemeId].name)} · colores y estilos compartidos.</p><button class="wide-button" data-action="themes">Configurar temas y tokens →</button></section>`;
 }
@@ -347,7 +373,7 @@ function tokenPanel(n: DesignNode) {
 function renderInspector() {
   const n = state.selected.length === 1 ? find(state.selected[0]) : undefined;
   if (!n) {
-    inspector.innerHTML = `<section class="inspector-section selection-summary"><span class="summary-icon">${icon(state.selected.length?'layers':'frame',24)}</span><h3>${state.selected.length?state.selected.length+' elementos':'Un espacio para crear'}</h3><p>${state.selected.length?'Alinea, agrupa o convierte tu selección en un componente.':'Selecciona un elemento para editarlo, o arrastra una herramienta al lienzo.'}</p>${state.selected.length?`<div class="button-row"><button data-action="group">Agrupar</button><button data-action="duplicate">Duplicar</button></div><div class="button-row"><button data-action="align-left">Alinear izquierda</button><button data-action="align-center">Centrar</button></div><button class="wide-button" data-action="distribute">Distribuir horizontalmente</button>`:''}</section>${themePanel()}<section class="inspector-section"><div class="section-heading"><span>DOCUMENTO</span></div><button class="wide-button" data-action="save">${icon('download',16)} Guardar proyecto .json</button><button class="wide-button" data-action="export-html">${icon('play',16)} Exportar prototipo HTML</button><button class="wide-button" data-action="new">${icon('plus',16)} Nuevo proyecto</button><button class="wide-button" data-action="open">${icon('folder',16)} Importar de Figma o abrir .json</button><button class="wide-button" data-action="example">${icon('grid',16)} Abrir ejemplo Forma</button><button class="wide-button" data-action="example-devices">${icon('frame',16)} Ejemplo iOS, Android y plegables</button></section><div class="inspector-tip">Dibuja primero.<br/><strong>Dale forma a tu idea.</strong></div>`; return;
+    inspector.innerHTML = `<section class="inspector-section selection-summary"><span class="summary-icon">${icon(state.selected.length?'layers':'frame',24)}</span><h3>${state.selected.length?state.selected.length+' elementos':'Un espacio para crear'}</h3><p>${state.selected.length?'Alinea, agrupa o convierte tu selección en un componente.':'Selecciona un elemento para editarlo, o arrastra una herramienta al lienzo.'}</p>${state.selected.length?`<div class="button-row"><button data-action="group">Agrupar</button><button data-action="duplicate">Duplicar</button></div><div class="button-row"><button data-action="align-left">Alinear izquierda</button><button data-action="align-center">Centrar</button></div><button class="wide-button" data-action="distribute">Distribuir horizontalmente</button>`:''}</section>${reviewPanel()}${themePanel()}<section class="inspector-section"><div class="section-heading"><span>DOCUMENTO</span></div><button class="wide-button" data-action="save">${icon('download',16)} Guardar proyecto .json</button><button class="wide-button" data-action="export-html">${icon('play',16)} Exportar prototipo HTML</button><button class="wide-button" data-action="new">${icon('plus',16)} Nuevo proyecto</button><button class="wide-button" data-action="open">${icon('folder',16)} Importar de Figma o abrir .json</button><button class="wide-button" data-action="example">${icon('grid',16)} Abrir ejemplo Forma</button><button class="wide-button" data-action="example-devices">${icon('frame',16)} Ejemplo iOS, Android y plegables</button></section><div class="inspector-tip">Dibuja primero.<br/><strong>Dale forma a tu idea.</strong></div>`; return;
   }
   const isText = ['text','button','input'].includes(n.type); const isContainer = containerKinds.includes(n.type);
   inspector.innerHTML = `
@@ -356,8 +382,15 @@ function renderInspector() {
     <section class="inspector-section"><div class="section-heading"><span>POSICIÓN Y TAMAÑO</span><button class="icon-button tiny" data-action="duplicate" aria-label="Duplicar selección">${icon('plus',14)}</button></div><div class="field-grid">${numField('X','x',n.x,-100000,100000)}${numField('Y','y',n.y,-100000,100000)}${numField('W','width',n.width,1)}${numField('H','height',n.height,1)}</div><div class="button-row compact"><button data-action="align-left" title="Alinear a la izquierda">${icon('align',16)}</button><button data-action="align-center" title="Centrar horizontalmente">${icon('center',16)}</button><button data-action="front">Al frente</button><button data-action="back">Al fondo</button></div></section>
     ${n.type==='icon'?`<section class="inspector-section"><div class="section-heading"><span>ICONO VECTORIAL</span></div><p class="field-note">${esc(n.iconPack)} / ${esc(n.iconName)}</p>${colorField('Color del icono','color',n.color)}<p class="field-note">Escala sin perder nitidez. El color admite tokens como @primary.</p></section>`:''}
     ${isText?`<section class="inspector-section"><div class="section-heading"><span>TEXTO</span></div><textarea aria-label="Contenido del texto" data-field="text" rows="2">${esc(n.text)}</textarea>${selectField('Fuente','fontFamily',n.fontFamily,[['system','Sistema / Sans'],['serif','Georgia / Serif'],['mono','Monoespaciada']])}<div class="field-grid">${numField('Tamaño','fontSize',n.fontSize,1,200)}${numField('Peso','fontWeight',n.fontWeight,100,900,50)}${numField('Línea','lineHeight',n.lineHeight,.5,4,.1)}${selectField('Alinear','textAlign',n.textAlign,[['left','Izquierda'],['center','Centro'],['right','Derecha']])}</div>${colorField('Texto','color',n.color)}</section>`:''}
-    ${isContainer?`<section class="inspector-section"><div class="section-heading"><span>DISTRIBUCIÓN</span></div>${selectField('Organización','layout',n.layout,[['free','Libre'],['vertical','Columna ↕'],['horizontal','Fila ↔']])}${n.layout!=='free'?`<div class="field-grid">${numField('Padding','padding',n.padding,0,300)}${numField('Espacio','gap',n.gap,0,300)}</div><p class="field-note">Los hijos siguen el orden de las capas. «Llenar» reparte el espacio disponible.</p>`:''}</section>`:''}
-    ${n.parentId&&find(n.parentId)?.layout!=='free'?`<section class="inspector-section">${selectField('Tamaño en contenedor','sizing',n.sizing,[['fixed','Fijo'],['fill','Llenar espacio']])}</section>`:''}
+    ${isContainer?`<section class="inspector-section"><div class="section-heading"><span>DISTRIBUCIÓN</span></div>${selectField('Organización','layout',n.layout,[['free','Libre'],['vertical','Columna ↕'],['horizontal','Fila ↔']])}${n.layout!=='free'?`<div class="field-grid">${n.paddingSides?'':numField('Padding','padding',n.padding,0,300)}${numField('Espacio','gap',n.gap,0,300)}</div>
+      ${n.paddingSides?`<div class="stops-heading">Padding por lado <span>sup. · der. · inf. · izq.</span></div><div class="field-grid safe-fields">${(['top','right','bottom','left'] as const).map(edge=>`<label class="number-field"><span>${{top:'↑',right:'→',bottom:'↓',left:'←'}[edge]}</span><input type="number" aria-label="Padding ${{top:'superior',right:'derecho',bottom:'inferior',left:'izquierdo'}[edge]}" data-pad="${edge}" value="${n.paddingSides![edge]}" min="0" max="2000" step="1"/></label>`).join('')}</div>`:''}
+      <button class="text-button" data-action="padding-sides">${n.paddingSides?'Usar un solo padding':'Padding por lado'}</button>
+      <div class="field-grid">${selectField(n.layout==='vertical'?'Reparto vertical':'Reparto horizontal','justify',n.justify??'start',[['start','Al inicio'],['center','Centrado'],['end','Al final'],['between','Repartido']])}${selectField(n.layout==='vertical'?'Alineación horizontal':'Alineación vertical','align',n.align??'stretch',[['stretch','Estirar'],['start','Al inicio'],['center','Centrado'],['end','Al final']])}</div>
+      <label class="check-field"><input type="checkbox" data-field="wrap" ${n.wrap?'checked':''}/> Pasar a otra línea si no caben</label>
+      <label class="check-field"><input type="checkbox" data-field="hugWidth" ${n.hugWidth?'checked':''}/> Ajustar el ancho al contenido</label>
+      <label class="check-field"><input type="checkbox" data-field="hugHeight" ${n.hugHeight?'checked':''}/> Ajustar el alto al contenido</label>
+      <p class="field-note">Los hijos siguen el orden de las capas. «Llenar» reparte el espacio disponible.</p>`:''}</section>`:''}
+    ${n.parentId&&find(n.parentId)?.layout!=='free'?`<section class="inspector-section"><div class="section-heading"><span>EN SU CONTENEDOR</span></div>${selectField('Tamaño en contenedor','sizing',n.sizing,[['fixed','Fijo'],['fill','Llenar espacio']])}<details class="corner-details" ${n.minWidth||n.maxWidth||n.minHeight||n.maxHeight?'open':''}><summary>Tamaño mínimo y máximo</summary><div class="field-grid">${([['minWidth','Ancho mín.'],['maxWidth','Ancho máx.'],['minHeight','Alto mín.'],['maxHeight','Alto máx.']] as const).map(([key,label])=>`<label class="number-field"><span>${label}</span><input type="number" aria-label="${label}" data-limit="${key}" value="${n[key]??''}" min="1" max="100000" step="1" placeholder="—"/></label>`).join('')}</div></details></section>`:''}
     <section class="inspector-section"><div class="section-heading"><span>RELLENO</span></div>${fillFields(n)}<div class="field-grid">${numField('Opacidad','opacity',n.opacity,0,100)}${numField('Radio','radius',n.radius,0,500)}</div><details class="corner-details"><summary>Radios por esquina</summary><div class="field-grid">${numField('Sup. der.','radiusTR',n.radiusTR??n.radius,0,500)}${numField('Inf. der.','radiusBR',n.radiusBR??n.radius,0,500)}${numField('Inf. izq.','radiusBL',n.radiusBL??n.radius,0,500)}</div></details></section>
     <section class="inspector-section"><div class="section-heading"><span>BORDE Y EFECTOS</span></div>${colorField('Borde','stroke',n.stroke)}<div class="field-grid">${numField('Grosor','strokeWidth',n.strokeWidth,0,50)}<label class="check-field"><input type="checkbox" data-field="shadow" ${n.shadow?'checked':''}/> Sombra</label></div></section>
     ${n.type==='image'?'<section class="inspector-section"><button class="wide-button" data-action="image">Cambiar imagen local</button></section>':''}
@@ -459,6 +492,9 @@ async function action(act: string) {
     case 'agent-help':agentHelp();break;
     case 'themes':openThemeEditor({root:byId('modal-root'),get:p,commit:fn=>{store.commit(fn);render();persist();},undo:()=>{store.undo();render();persist();},close:closePreview});break;
     case 'animator':{const id=state.selected[0];if(state.selected.length!==1||!find(id)){toast('Selecciona un solo elemento para animarlo.');break;}const {openAnimator}=await import('./animator');if(disposed)break;openAnimator({root:byId('modal-root'),get:p,nodeId:id,commit:fn=>{store.commit(fn);render();persist();},undo:()=>{store.undo();render();persist();},close:closePreview});break;}
+    case 'lint':review={issues:lintProject(p()),heat:review?.heat??true};select([]);render();toast(review.issues.length?`Revisión: ${review.issues.length} hallazgos. Pulsa uno para ir a él.`:'Revisión: sin problemas detectados.');break;
+    case 'lint-close':review=null;render();break;
+    case 'padding-sides':{const n=find(state.selected[0]);if(n)change(pr=>updateNode(pr,n.id,n.paddingSides?{paddingSides:undefined,padding:n.paddingSides.top}:{paddingSides:{top:n.padding,right:n.padding,bottom:n.padding,left:n.padding}}));break;}
     case 'rotate-frame':{const n=find(state.selected[0]);if(n?.type==='frame')change(pr=>updateNode(pr,n.id,{width:n.height,height:n.width,...(n.fold?{fold:{...n.fold,axis:n.fold.axis==='vertical'?'horizontal':'vertical'}}:{}),...(n.safeArea?{safeArea:{top:n.safeArea.left,right:n.safeArea.top,bottom:n.safeArea.right,left:n.safeArea.bottom}}:{})}));fit(true);break;}
     case 'theme':change(pr=>pr.theme=pr.theme==='light'?'dark':'light');break;
     case 'save':await saveProject();break;
@@ -493,6 +529,7 @@ events.addEventListener('click',e=>{
   if('scope' in el.dataset){enterScope(el.dataset.scope||null);return;}
   if((el.dataset.pick||'pickFill' in el.dataset)&&el.closest('#inspector')){const n=state.selected.length===1?find(state.selected[0]):undefined;if(n&&('pickFill' in el.dataset||el.dataset.pick==='Relleno: valor'))openFillPicker(el,n);else pickColorFor(el,pickerContext(n));return;}
   if(el.dataset.pickToken&&el.closest('#inspector')){const token=el.dataset.pickToken;openColorPicker({...pickerContext(),anchor:el,value:p().designThemes[p().activeThemeId].modes[p().theme].colors[token],commit:value=>change(pr=>{pr.designThemes[pr.activeThemeId].modes[pr.theme].colors[token]=value;if(pr.activeThemeId==='project')pr.themes[pr.theme][token]=value;})});return;}
+  if(el.dataset.lintNode){const n=find(el.dataset.lintNode);if(n){select([n.id]);fit(true);}return;}
   if(el.dataset.posture){const current=find(previewFrame||''),other=find(el.dataset.posture);if(current&&other){const t:Transition={type:panelsOf(other)>panelsOf(current)?'unfold':'fold',duration:700,easing:'ease-in-out'};previewHistory.push({id:current.id,transition:t});preview(other.id,false,t);}return;}
   if(el.dataset.action){void action(el.dataset.action).catch(err=>toast(String(err)));return;}
   if(el.dataset.library){libraryTab=el.dataset.library as typeof libraryTab;renderComponents();if(libraryTab==='kits')void loadKits().catch(err=>toast(String(err)));if(libraryTab==='icons')void loadIcons().catch(err=>toast(String(err)));return;}
@@ -532,6 +569,14 @@ events.addEventListener('change',e=>{
   if(el.id==='kit-search'){kitSearch=el.value;renderComponents();return;}
   if(el.id==='frame-kit'&&el.value&&state.selected.length===1){const id=state.selected[0],kit=el.value as KitId;void loadKits().then(kits=>change(pr=>{const themeId=kits.ensureKitTheme(pr,kit);updateNode(pr,id,{themeId,kitId:kit});})).catch(err=>toast(String(err)));return;}
   if(el.dataset.token){change(pr=>{pr.designThemes[pr.activeThemeId].modes[pr.theme].colors[el.dataset.token!]=el.value;if(pr.activeThemeId==='project')pr.themes[pr.theme][el.dataset.token!]=el.value;});return;}
+  if('heat' in el.dataset&&review){review.heat=(el as HTMLInputElement).checked;render();return;}
+  if((el.dataset.pad||el.dataset.limit)&&state.selected.length===1){
+    const n=find(state.selected[0]);if(!n||isUnavailable(p(),n))return;
+    if(!(el as HTMLInputElement).checkValidity()){toast('Introduce un valor dentro del rango permitido.');renderInspector();return;}
+    if(el.dataset.pad)change(pr=>updateNode(pr,n.id,{paddingSides:{...n.paddingSides!,[el.dataset.pad!]:Number(el.value)}}));
+    else change(pr=>updateNode(pr,n.id,{[el.dataset.limit!]:el.value.trim()===''?undefined:Number(el.value)}));
+    return;
+  }
   if((el.dataset.frameField||el.dataset.safe)&&state.selected.length===1){
     const n=find(state.selected[0]);if(!n||n.type!=='frame'||isUnavailable(p(),n))return;
     if(el.dataset.safe){

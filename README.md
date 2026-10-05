@@ -52,6 +52,32 @@ Atajos adicionales: **V** seleccionar, **F** pantalla, **O** elipse, **B** botó
 
 Para editar un texto directamente, entra primero en su pantalla o grupo y haz doble clic sobre él. Las teclas Escape y Enter conservan su función de edición cuando el foco está en un campo.
 
+## Revisión de diseño
+
+Sin nada seleccionado, «Revisar el diseño» analiza todas las pantallas y lista los hallazgos por pantalla; el mapa de calor los marca sobre el lienzo y al pulsar uno se va a su elemento.
+
+- **Contraste** de cada texto contra su fondo real, en claro y en oscuro. Indica cuándo solo falla en un modo, que suele deberse a un color fijo.
+- **Zonas táctiles** de menos de 44 × 44, **texto** de menos de 11 px o que no cabe en su caja.
+- Contenido **recortado**, bajo el **área del sistema** o cruzando el **pliegue**, y acciones superpuestas.
+- **Coherencia**: colores casi iguales a un token sin vincular, bordes casi alineados y demasiados tamaños o radios.
+
+`./codaru lint` devuelve lo mismo en JSON con una corrección sugerida por hallazgo. El plugin de [packages/claude-plugin](packages/claude-plugin/README.md) enseña a un agente a diseñar y a revisar con estas reglas.
+
+## Maquetas en Markdown
+
+Un bloque ```` ```codaru-mockup ```` con `archivo`, `pantalla` y `modo` muestra una pantalla dentro de un documento. La entrada `codaru-mockup/preview` lo convierte en una vista previa en vivo, navegable o estática, sobre el HTML de cualquier motor de Markdown. Consulta [docs/MARKDOWN.md](docs/MARKDOWN.md).
+
+## Auto layout
+
+Un contenedor (pantalla, tarjeta o grupo) puede organizar a sus hijos en fila o columna desde «Distribución»:
+
+- **Padding** único o por lado, y **espacio** entre hijos.
+- **Reparto** a lo largo: al inicio, centrado, al final o repartido.
+- **Alineación** transversal: estirar, al inicio, centrada o al final.
+- **Pasar a otra línea** cuando los hijos no caben.
+- **Ajustar al contenido** en ancho, alto o ambos.
+- Cada hijo puede ser fijo o **llenar** el espacio, con tamaño mínimo y máximo.
+
 ## Importar desde Figma
 
 Cada persona puede traer sus propios archivos con el plugin de [packages/figma-plugin](packages/figma-plugin/README.md): se instala en Figma desde su manifiesto, exporta un `.figma.codaru.json` sin token ni red, y Codaru lo abre con «Abrir proyecto». La importación se añade al documento, convierte los estilos en tokens y resume qué se simplificó.

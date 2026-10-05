@@ -40,14 +40,14 @@ Una IA puede hacer lo mismo con la operación `{"op":"figma","data":{…contenid
 | Vectores, operaciones booleanas, líneas, estrellas | Ilustraciones SVG saneadas (animables) |
 | Imágenes de hasta 3 MB | Imágenes incrustadas |
 | Componentes sueltos de la página | Componentes, reunidos en una pantalla «Componentes de Figma» |
-| Auto layout sencillo | Filas y columnas |
+| Auto layout | Filas y columnas con padding, reparto y alineación |
 
 ## Qué se limpia o se simplifica
 
 - Las capas ocultas y los grupos vacíos se descartan.
 - Los nombres genéricos («Frame 427», «Rectangle 12») se sustituyen por el tipo de capa.
 - Las **instancias** llegan como copias independientes y cada **variante** como un componente separado.
-- El auto layout con alineación centrada, ajuste de línea o márgenes distintos conserva las posiciones, sin auto layout.
+- El auto layout se conserva (dirección, padding por lado, reparto, alineación, salto de línea y ajuste al contenido) cuando Codaru coloca los hijos igual que Figma. Si no coincide, por ejemplo con hijos en posición absoluta o espaciado negativo, se mantienen las posiciones sin auto layout.
 - Las tipografías se muestran con la fuente de sistema, serif o monoespaciada más parecida.
 - Las sombras se aproximan con la sombra estándar; desenfoques, rotaciones, máscaras y rellenos angulares se omiten.
 - El límite es de 3000 capas por exportación.

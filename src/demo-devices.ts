@@ -39,10 +39,10 @@ export function demoDevices(): Project {
     a('input', { name: 'Correo', x: right.x, y: y + 26, width: right.w, height: 48, radius, text: 'hola@tuestudio.com', color: '@muted', fontSize: 13 });
     a('text', { name: 'Label · Contraseña', x: right.x, y: y + 90, width: right.w, height: 20, text: 'Contraseña', fontSize: 12, fontWeight: 600 });
     a('input', { name: 'Contraseña', x: right.x, y: y + 116, width: right.w, height: 48, radius, text: '••••••••', color: '@muted', fontSize: 13 });
-    a('button', { name: 'Entrar', x: right.x, y: y + 188, width: right.w, height: 50, radius, text: 'Entrar a mi espacio  →', shadow: !android, targetId: home, transition, animations: [motion('entrar', 'appear', 150)] });
+    a('button', { color: '@surface', name: 'Entrar', x: right.x, y: y + 188, width: right.w, height: 50, radius, text: 'Entrar a mi espacio  →', shadow: !android, targetId: home, transition, animations: [motion('entrar', 'appear', 150)] });
     if (cols[2]) {
-      const promo = a('card', { name: 'Presentación', x: cols[2].x, y: safe.top + 64, width: cols[2].w, height: f.height - safe.top - safe.bottom - 160, radius: android ? 28 : 20, fillToken: 'brand', strokeWidth: 0, animations: [motion('presentacion', 'appear', 200)] });
-      add('text', { parentId: promo.id, name: 'Presentación · título', x: 26, y: 30, width: cols[2].w - 52, height: 90, text: 'Diseña una vez.\nMíralo en cada postura.', fontSize: 24, lineHeight: 1.2, fontWeight: 720, color: '#ffffff' });
+      const promo = a('card', { name: 'Presentación', x: cols[2].x, y: safe.top + 64, width: cols[2].w, height: f.height - safe.top - safe.bottom - 160, radius: android ? 28 : 20, fill: '@primary', strokeWidth: 0, animations: [motion('presentacion', 'appear', 200)] });
+      add('text', { parentId: promo.id, name: 'Presentación · título', x: 26, y: 30, width: cols[2].w - 52, height: 90, text: 'Diseña una vez.\nMíralo en cada postura.', fontSize: 24, lineHeight: 1.2, fontWeight: 720, color: '@surface' });
     }
     a('text', { name: 'Pie', x: 24, y: f.height - safe.bottom - 40, width: f.width - 48, height: 20, text: '¿Nuevo por aquí? Crea tu espacio', textAlign: 'center', color: '@muted', fontSize: 12 });
   }
@@ -64,9 +64,9 @@ export function demoDevices(): Project {
     y += 78;
     // Open foldables keep the list on one half and the featured card on the other.
     const hero = split ? { x: right.x, y: safe.top + 22, w: right.w, h: Math.min(260, f.height - safe.top - safe.bottom - 150) } : { x: first.x, y, w: first.w, h: 150 };
-    const card = a('card', { name: 'Destacado', x: hero.x, y: hero.y, width: hero.w, height: hero.h, radius: radius + 4, fillToken: 'brand', strokeWidth: 0, animations: [motion('destacado', 'appear')] });
-    add('text', { parentId: card.id, name: 'Destacado · etiqueta', x: 22, y: 22, width: hero.w - 44, height: 16, text: 'EN LO QUE ESTÁS AHORA', fontSize: 9, fontWeight: 700, color: '#ffffff' });
-    add('text', { parentId: card.id, name: 'Destacado · título', x: 22, y: 50, width: hero.w - 44, height: 64, text: 'Algo increíble\nestá por tomar forma.', fontSize: 20, lineHeight: 1.2, fontWeight: 700, color: '#ffffff' });
+    const card = a('card', { name: 'Destacado', x: hero.x, y: hero.y, width: hero.w, height: hero.h, radius: radius + 4, fill: '@primary', strokeWidth: 0, animations: [motion('destacado', 'appear')] });
+    add('text', { parentId: card.id, name: 'Destacado · etiqueta', x: 22, y: 22, width: hero.w - 44, height: 16, text: 'EN LO QUE ESTÁS AHORA', fontSize: 9, fontWeight: 700, color: '@surface' });
+    add('text', { parentId: card.id, name: 'Destacado · título', x: 22, y: 50, width: hero.w - 44, height: 64, text: 'Algo increíble\nestá por tomar forma.', fontSize: 20, lineHeight: 1.2, fontWeight: 700, color: '@surface' });
     if (!split) y += hero.h + 26;
     a('text', { name: 'Tus proyectos', x: first.x, y, width: first.w, height: 22, text: 'Tus proyectos', fontSize: 15, fontWeight: 700 });
     y += 34;
@@ -87,7 +87,7 @@ export function demoDevices(): Project {
       });
     }
     const action = split ? { x: right.x, y: hero.y + hero.h + 20, w: right.w } : { x: first.x, y: f.height - safe.bottom - (wide ? 76 : 138), w: wide ? 220 : first.w };
-    a('button', { name: 'Volver a bienvenida', x: action.x, y: action.y, width: action.w, height: 46, radius: android ? 23 : 13, text: '←  Volver a bienvenida', targetId: back, transition });
+    a('button', { color: '@surface', name: 'Volver a bienvenida', x: action.x, y: action.y, width: action.w, height: 46, radius: android ? 23 : 13, text: '←  Volver a bienvenida', targetId: back, transition });
     if (!wide) {
       // Bottom navigation sits above the home indicator, inside the safe area.
       const bar = a('rect', { name: 'Navegación inferior', x: 0, y: f.height - safe.bottom - 64, width: f.width, height: 64 + safe.bottom, radius: 0, fill: '@surface', strokeWidth: 1, stroke: '@border' });
@@ -102,10 +102,10 @@ export function demoDevices(): Project {
   function cover(f: DesignNode, open: string) {
     const a = (type: Kind, patch: Partial<DesignNode>) => add(type, { parentId: f.id, ...patch }), safe = f.safeArea ?? { top: 0, right: 0, bottom: 0, left: 0 }, w = f.width - 40;
     a('text', { name: 'Saludo', x: 20, y: safe.top + 14, width: w, height: 28, text: 'Hola, Alex', fontSize: 20, fontWeight: 720 });
-    const card = a('card', { name: 'Resumen', x: 20, y: safe.top + 54, width: w, height: 150, radius: 24, fillToken: 'brand', strokeWidth: 0, animations: [motion('resumen', 'appear')] });
-    add('text', { parentId: card.id, name: 'Resumen · etiqueta', x: 18, y: 18, width: w - 36, height: 16, text: '3 PROYECTOS ACTIVOS', fontSize: 9, fontWeight: 700, color: '#ffffff' });
-    add('text', { parentId: card.id, name: 'Resumen · título', x: 18, y: 44, width: w - 36, height: 56, text: 'Algo increíble\nestá por tomar forma.', fontSize: 18, lineHeight: 1.2, fontWeight: 700, color: '#ffffff' });
-    a('button', { name: 'Abrir', x: 20, y: f.height - safe.bottom - 66, width: w, height: 44, radius: 22, text: 'Abre el teléfono para continuar', fontSize: 13, targetId: open, transition: { type: 'unfold', duration: 700, easing: 'ease-in-out' } });
+    const card = a('card', { name: 'Resumen', x: 20, y: safe.top + 54, width: w, height: 150, radius: 24, fill: '@primary', strokeWidth: 0, animations: [motion('resumen', 'appear')] });
+    add('text', { parentId: card.id, name: 'Resumen · etiqueta', x: 18, y: 18, width: w - 36, height: 16, text: '3 PROYECTOS ACTIVOS', fontSize: 9, fontWeight: 700, color: '@surface' });
+    add('text', { parentId: card.id, name: 'Resumen · título', x: 18, y: 44, width: w - 36, height: 56, text: 'Algo increíble\nestá por tomar forma.', fontSize: 18, lineHeight: 1.2, fontWeight: 700, color: '@surface' });
+    a('button', { color: '@surface', name: 'Abrir', x: 20, y: f.height - safe.bottom - 66, width: w, height: 44, radius: 22, text: 'Abre el teléfono para continuar', fontSize: 13, targetId: open, transition: { type: 'unfold', duration: 700, easing: 'ease-in-out' } });
   }
   const link = (...screens: DesignNode[]) => screens.forEach((f, i) => { f.foldPair = screens[(i + 1) % screens.length].id; });
   const slide: [Transition, Transition] = [{ type: 'slide-left', duration: 350, easing: 'ease-out' }, { type: 'slide-right', duration: 350, easing: 'ease-out' }];

@@ -247,3 +247,5 @@ input[type="checkbox"] { accent-color: var(--ui-accent); }
 .cp-swatches button.active { outline-color: var(--ui-accent); }
 .cp-stop.active { box-shadow: 0 0 0 2px var(--ui-accent), 0 2px 5px #0006; }
 .cp-area:focus-visible { outline-color: var(--ui-accent); }
+/* Design review. */
+.review-frame { color: var(--ui-muted); } .review-issue { border-color: var(--ui-border); color: var(--ui-text); }

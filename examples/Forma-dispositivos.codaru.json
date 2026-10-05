@@ -516,7 +516,7 @@
    "kitId": "ios"
   },
   {
-   "id": "d10ae63a-77e7-4312-b841-f43a4fb12891",
+   "id": "0cf34e0a-0b67-4001-90d7-6f06a22756f5",
    "type": "rect",
    "name": "Símbolo",
    "parentId": "ios-bienvenida",
@@ -551,7 +551,7 @@
    "fillToken": "brand"
   },
   {
-   "id": "82b99536-2098-4cec-85b3-36dafc32f28b",
+   "id": "fe000c70-e072-4489-a522-4283d765fe9f",
    "type": "text",
    "name": "Marca",
    "parentId": "ios-bienvenida",
@@ -585,7 +585,7 @@
    "image": ""
   },
   {
-   "id": "5b825ad7-3f6b-41d3-b411-5b171ad06a58",
+   "id": "2f414ae9-5c2e-4605-8a6f-1059356d418b",
    "type": "text",
    "name": "Etiqueta",
    "parentId": "ios-bienvenida",
@@ -619,7 +619,7 @@
    "image": ""
   },
   {
-   "id": "d589cc3d-ca25-45e9-a0a7-906d5659612d",
+   "id": "32e62e4c-71c0-4c95-9fdd-27306bc0a326",
    "type": "text",
    "name": "Título",
    "parentId": "ios-bienvenida",
@@ -678,7 +678,7 @@
    ]
   },
   {
-   "id": "522fe65b-cd8d-4871-a187-7d76f110cc05",
+   "id": "e76415e8-6053-40b4-97fa-9b5aeb9105be",
    "type": "text",
    "name": "Descripción",
    "parentId": "ios-bienvenida",
@@ -712,7 +712,7 @@
    "image": ""
   },
   {
-   "id": "0ed8cf59-d580-4029-bb71-2a2eda592817",
+   "id": "3971f558-1012-4439-be29-485b4ecdd27e",
    "type": "text",
    "name": "Label · Correo",
    "parentId": "ios-bienvenida",
@@ -746,7 +746,7 @@
    "image": ""
   },
   {
-   "id": "971f18d0-780c-41d4-8ca1-c6db738b0577",
+   "id": "9ff4c64a-641a-4b65-9f8b-53c1abf3f0b8",
    "type": "input",
    "name": "Correo",
    "parentId": "ios-bienvenida",
@@ -780,7 +780,7 @@
    "image": ""
   },
   {
-   "id": "86e98e83-4d93-4e57-abc6-748f62a964cd",
+   "id": "c6b32060-83b2-428b-ac24-e87acc62cfad",
    "type": "text",
    "name": "Label · Contraseña",
    "parentId": "ios-bienvenida",
@@ -814,7 +814,7 @@
    "image": ""
   },
   {
-   "id": "f59e2d8e-7801-4882-9f53-6f23d61688f4",
+   "id": "debb24c8-68e0-40b2-a50b-dfb847a77105",
    "type": "input",
    "name": "Contraseña",
    "parentId": "ios-bienvenida",
@@ -848,7 +848,7 @@
    "image": ""
   },
   {
-   "id": "4d041580-ffe6-428b-b023-a85de4ba420b",
+   "id": "d8493c1d-4110-4897-abe5-46c684a09b0f",
    "type": "button",
    "name": "Entrar",
    "parentId": "ios-bienvenida",
@@ -857,7 +857,7 @@
    "width": 354,
    "height": 50,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 13,
@@ -912,7 +912,7 @@
    ]
   },
   {
-   "id": "92fd58a5-bbb3-473c-814e-e0d08143fa8d",
+   "id": "5879f855-463c-484f-8ddd-0859594a3e8f",
    "type": "text",
    "name": "Pie",
    "parentId": "ios-bienvenida",
@@ -946,7 +946,7 @@
    "image": ""
   },
   {
-   "id": "f89d6d5b-0deb-493f-8a1c-2e5837681d8a",
+   "id": "2beb2993-35a5-42ba-81e9-f5321f379218",
    "type": "text",
    "name": "Saludo",
    "parentId": "ios-espacio",
@@ -980,7 +980,7 @@
    "image": ""
   },
   {
-   "id": "7fd343c1-3afe-46d6-817c-34110f65df10",
+   "id": "c88bd47b-6fd1-4f8f-90b5-9aed7494d18d",
    "type": "text",
    "name": "Subtítulo",
    "parentId": "ios-espacio",
@@ -1014,7 +1014,7 @@
    "image": ""
   },
   {
-   "id": "9358902f-e7aa-4060-84fe-c9f1f8274fa1",
+   "id": "10e62a47-feb1-49da-8a14-9dbeb5949df2",
    "type": "card",
    "name": "Destacado",
    "parentId": "ios-espacio",
@@ -1022,7 +1022,7 @@
    "y": 162,
    "width": 362,
    "height": 150,
-   "fill": "@surface",
+   "fill": "@primary",
    "color": "@text",
    "stroke": "@border",
    "strokeWidth": 0,
@@ -1046,7 +1046,6 @@
    "locked": false,
    "targetId": null,
    "image": "",
-   "fillToken": "brand",
    "animations": [
     {
      "id": "destacado",
@@ -1074,16 +1073,16 @@
    ]
   },
   {
-   "id": "8079e7cd-551e-4bca-9996-2114cd98555f",
+   "id": "8773d688-b80f-4c6b-9ff3-f9b76a9fc963",
    "type": "text",
    "name": "Destacado · etiqueta",
-   "parentId": "9358902f-e7aa-4060-84fe-c9f1f8274fa1",
+   "parentId": "10e62a47-feb1-49da-8a14-9dbeb5949df2",
    "x": 22,
    "y": 22,
    "width": 318,
    "height": 16,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -1108,16 +1107,16 @@
    "image": ""
   },
   {
-   "id": "8b6f38e1-1497-4670-9371-877ef0d26abe",
+   "id": "84f782c0-4059-4c5d-85c3-cb2431f26200",
    "type": "text",
    "name": "Destacado · título",
-   "parentId": "9358902f-e7aa-4060-84fe-c9f1f8274fa1",
+   "parentId": "10e62a47-feb1-49da-8a14-9dbeb5949df2",
    "x": 22,
    "y": 50,
    "width": 318,
    "height": 64,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -1142,7 +1141,7 @@
    "image": ""
   },
   {
-   "id": "c74f71d6-44f2-4a0e-b12b-13e4edaf0748",
+   "id": "cafa0bd3-8b51-4fac-9b07-212af2eec8c5",
    "type": "text",
    "name": "Tus proyectos",
    "parentId": "ios-espacio",
@@ -1176,7 +1175,7 @@
    "image": ""
   },
   {
-   "id": "bc832961-3210-49fa-8a22-cd9190a8273c",
+   "id": "38ba2d85-fb1d-4e82-9c10-775693f90dbf",
    "type": "card",
    "name": "Proyecto · Brand exploration",
    "parentId": "ios-espacio",
@@ -1235,10 +1234,10 @@
    ]
   },
   {
-   "id": "f9debadd-9399-4228-8b0e-375673702fe8",
+   "id": "fbb0a9ab-09d3-448e-a0d5-1c70fe230f81",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "bc832961-3210-49fa-8a22-cd9190a8273c",
+   "parentId": "38ba2d85-fb1d-4e82-9c10-775693f90dbf",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -1269,10 +1268,10 @@
    "image": ""
   },
   {
-   "id": "2f1a66a8-a176-4acc-bf8a-726b8515a694",
+   "id": "77c65c5c-7690-4571-8cbe-f4ff961a288b",
    "type": "text",
    "name": "Nombre",
-   "parentId": "bc832961-3210-49fa-8a22-cd9190a8273c",
+   "parentId": "38ba2d85-fb1d-4e82-9c10-775693f90dbf",
    "x": 14,
    "y": 54,
    "width": 147,
@@ -1303,10 +1302,10 @@
    "image": ""
   },
   {
-   "id": "38d7f735-2968-47c1-ae08-bee7f010f592",
+   "id": "a7b57604-d742-4b40-b3c0-16717a40d7c7",
    "type": "text",
    "name": "Detalle",
-   "parentId": "bc832961-3210-49fa-8a22-cd9190a8273c",
+   "parentId": "38ba2d85-fb1d-4e82-9c10-775693f90dbf",
    "x": 14,
    "y": 74,
    "width": 147,
@@ -1337,7 +1336,7 @@
    "image": ""
   },
   {
-   "id": "37390750-171b-4350-b0b0-41235911f532",
+   "id": "6cd3cd69-4d14-41fe-92c5-d0c16d00d91c",
    "type": "card",
    "name": "Proyecto · Studio web",
    "parentId": "ios-espacio",
@@ -1396,10 +1395,10 @@
    ]
   },
   {
-   "id": "75f80fa1-2bb0-4f54-ada7-f00215a6bf17",
+   "id": "4e606d29-553e-4609-8315-b9aff0293d10",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "37390750-171b-4350-b0b0-41235911f532",
+   "parentId": "6cd3cd69-4d14-41fe-92c5-d0c16d00d91c",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -1430,10 +1429,10 @@
    "image": ""
   },
   {
-   "id": "f9406e73-de11-497d-97aa-6a322f42e68e",
+   "id": "07cdc838-012a-4e54-97db-e42392cd8e22",
    "type": "text",
    "name": "Nombre",
-   "parentId": "37390750-171b-4350-b0b0-41235911f532",
+   "parentId": "6cd3cd69-4d14-41fe-92c5-d0c16d00d91c",
    "x": 14,
    "y": 54,
    "width": 147,
@@ -1464,10 +1463,10 @@
    "image": ""
   },
   {
-   "id": "7279b77a-f94e-44a4-b0f8-80b1b1a73c84",
+   "id": "e2f4c904-0acf-416c-bf9a-023e301db792",
    "type": "text",
    "name": "Detalle",
-   "parentId": "37390750-171b-4350-b0b0-41235911f532",
+   "parentId": "6cd3cd69-4d14-41fe-92c5-d0c16d00d91c",
    "x": 14,
    "y": 74,
    "width": 147,
@@ -1498,7 +1497,7 @@
    "image": ""
   },
   {
-   "id": "7b95f30f-4d08-497b-a45d-f8a3d009aa93",
+   "id": "f6c72597-7c62-4969-ae2a-f6693dd3abe8",
    "type": "button",
    "name": "Volver a bienvenida",
    "parentId": "ios-espacio",
@@ -1507,7 +1506,7 @@
    "width": 362,
    "height": 46,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 13,
@@ -1537,7 +1536,7 @@
    }
   },
   {
-   "id": "aa7ac586-6998-4c0d-ac17-5f27398c27ed",
+   "id": "4737ab92-cc0f-4b06-9d04-387f9a1faa3a",
    "type": "rect",
    "name": "Navegación inferior",
    "parentId": "ios-espacio",
@@ -1571,7 +1570,7 @@
    "image": ""
   },
   {
-   "id": "b7ec838d-f1f2-4000-adc2-8c5c193f016f",
+   "id": "4b158f81-700f-4e93-bb0d-402ee7356164",
    "type": "text",
    "name": "Pestaña · Inicio",
    "parentId": "ios-espacio",
@@ -1605,7 +1604,7 @@
    "image": ""
   },
   {
-   "id": "d57ae22d-0e60-4782-99e8-c1a4ac9a64d1",
+   "id": "d40ff203-dd7b-4eef-ba03-572ccc7dd6d5",
    "type": "text",
    "name": "Pestaña · Ideas",
    "parentId": "ios-espacio",
@@ -1639,7 +1638,7 @@
    "image": ""
   },
   {
-   "id": "db0e99fa-7c0b-454c-9841-3b76cead2eae",
+   "id": "fc4c134e-72a6-4493-97d8-1e7701efbb22",
    "type": "text",
    "name": "Pestaña · Equipo",
    "parentId": "ios-espacio",
@@ -1673,7 +1672,7 @@
    "image": ""
   },
   {
-   "id": "b3fd2cd7-41e5-4975-80d0-94f517ec894c",
+   "id": "fccc357b-e736-4a69-92c2-f43b5ad099fb",
    "type": "text",
    "name": "Pestaña · Perfil",
    "parentId": "ios-espacio",
@@ -1797,7 +1796,7 @@
    "foldPair": "duo-abierto-espacio"
   },
   {
-   "id": "8d658b9c-ef14-4bcb-84fb-f2ccfe2f82ab",
+   "id": "6b7557d9-4d2c-488b-9aca-be6bae3479fa",
    "type": "rect",
    "name": "Símbolo",
    "parentId": "duo-cerrado-bienvenida",
@@ -1832,7 +1831,7 @@
    "fillToken": "brand"
   },
   {
-   "id": "fa09fb22-db29-4650-8d44-e9a07d7f0cef",
+   "id": "00ebbce6-69b3-48a5-b964-0b216b89bc0c",
    "type": "text",
    "name": "Marca",
    "parentId": "duo-cerrado-bienvenida",
@@ -1866,7 +1865,7 @@
    "image": ""
   },
   {
-   "id": "23737337-3c8e-4050-8f2e-5d0f2d3930b0",
+   "id": "899f5e5f-caad-4814-8c78-e9b9f8a276dd",
    "type": "text",
    "name": "Etiqueta",
    "parentId": "duo-cerrado-bienvenida",
@@ -1900,7 +1899,7 @@
    "image": ""
   },
   {
-   "id": "94c07bb5-9a89-4d0a-8f2f-b1b531fd88c7",
+   "id": "5bb8a83b-e93c-4a8f-951d-4f795d2ca17a",
    "type": "text",
    "name": "Título",
    "parentId": "duo-cerrado-bienvenida",
@@ -1959,7 +1958,7 @@
    ]
   },
   {
-   "id": "bf6239e9-8c9a-44f6-9200-265f910586c5",
+   "id": "53ce1e5f-c922-435e-bd4e-d44e43a33270",
    "type": "text",
    "name": "Descripción",
    "parentId": "duo-cerrado-bienvenida",
@@ -1993,7 +1992,7 @@
    "image": ""
   },
   {
-   "id": "a2bc0b66-62d8-418b-a867-9c544e39be0d",
+   "id": "8532a09f-f9fa-44de-a5b8-8b5d10ee0e40",
    "type": "text",
    "name": "Label · Correo",
    "parentId": "duo-cerrado-bienvenida",
@@ -2027,7 +2026,7 @@
    "image": ""
   },
   {
-   "id": "db3dfcd2-4ad5-4019-bfda-57c4c8d04e23",
+   "id": "63a645e8-1c43-4022-a54c-9cc43c0a70cc",
    "type": "input",
    "name": "Correo",
    "parentId": "duo-cerrado-bienvenida",
@@ -2061,7 +2060,7 @@
    "image": ""
   },
   {
-   "id": "313ca3ef-dc2d-43aa-939b-0dbf9ad28199",
+   "id": "504620ad-6e90-4472-9d33-0a4b6f80bb61",
    "type": "text",
    "name": "Label · Contraseña",
    "parentId": "duo-cerrado-bienvenida",
@@ -2095,7 +2094,7 @@
    "image": ""
   },
   {
-   "id": "bbed68d1-d1f0-408c-a89f-79ae4bd75421",
+   "id": "13311868-db90-4ec5-ab01-64d75cbec588",
    "type": "input",
    "name": "Contraseña",
    "parentId": "duo-cerrado-bienvenida",
@@ -2129,7 +2128,7 @@
    "image": ""
   },
   {
-   "id": "ba6c3763-8137-49bf-b5e5-03d57844fcac",
+   "id": "bd39b7be-1973-4348-b3c4-2287f3cab9aa",
    "type": "button",
    "name": "Entrar",
    "parentId": "duo-cerrado-bienvenida",
@@ -2138,7 +2137,7 @@
    "width": 418,
    "height": 50,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 13,
@@ -2193,7 +2192,7 @@
    ]
   },
   {
-   "id": "76e534c5-08e2-4155-b32d-7631338d68fa",
+   "id": "e300e2f1-f929-4f7d-8552-9f015331e446",
    "type": "text",
    "name": "Pie",
    "parentId": "duo-cerrado-bienvenida",
@@ -2227,7 +2226,7 @@
    "image": ""
   },
   {
-   "id": "c7c70a59-4399-48db-a071-770a1fbcd82d",
+   "id": "03cc4527-c4e8-446a-9421-e9cff7af55c9",
    "type": "text",
    "name": "Saludo",
    "parentId": "duo-cerrado-espacio",
@@ -2261,7 +2260,7 @@
    "image": ""
   },
   {
-   "id": "343db868-d749-4193-b72e-c237d4fbae16",
+   "id": "f7a0fd0a-3af3-4e14-9fd0-27321c8fbc84",
    "type": "text",
    "name": "Subtítulo",
    "parentId": "duo-cerrado-espacio",
@@ -2295,7 +2294,7 @@
    "image": ""
   },
   {
-   "id": "9357c91b-ddd4-4488-8059-27507c597881",
+   "id": "cb7a64dd-b884-4cf6-aa39-b088fa241e55",
    "type": "card",
    "name": "Destacado",
    "parentId": "duo-cerrado-espacio",
@@ -2303,7 +2302,7 @@
    "y": 144,
    "width": 426,
    "height": 150,
-   "fill": "@surface",
+   "fill": "@primary",
    "color": "@text",
    "stroke": "@border",
    "strokeWidth": 0,
@@ -2327,7 +2326,6 @@
    "locked": false,
    "targetId": null,
    "image": "",
-   "fillToken": "brand",
    "animations": [
     {
      "id": "destacado",
@@ -2355,16 +2353,16 @@
    ]
   },
   {
-   "id": "6695a0de-dc9e-44fb-9df5-9990e1c551f3",
+   "id": "b9e37cc4-c524-4ffd-924f-05d8dd9b6491",
    "type": "text",
    "name": "Destacado · etiqueta",
-   "parentId": "9357c91b-ddd4-4488-8059-27507c597881",
+   "parentId": "cb7a64dd-b884-4cf6-aa39-b088fa241e55",
    "x": 22,
    "y": 22,
    "width": 382,
    "height": 16,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -2389,16 +2387,16 @@
    "image": ""
   },
   {
-   "id": "709947d3-aeb2-47e5-b20f-20c29f7890bb",
+   "id": "58484ce8-163b-4f96-904c-55994339f2f8",
    "type": "text",
    "name": "Destacado · título",
-   "parentId": "9357c91b-ddd4-4488-8059-27507c597881",
+   "parentId": "cb7a64dd-b884-4cf6-aa39-b088fa241e55",
    "x": 22,
    "y": 50,
    "width": 382,
    "height": 64,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -2423,7 +2421,7 @@
    "image": ""
   },
   {
-   "id": "bea1381d-0c8d-4f5c-84e6-da78c4a392bb",
+   "id": "b9f09dec-93e3-43ff-9e19-473272c647d6",
    "type": "text",
    "name": "Tus proyectos",
    "parentId": "duo-cerrado-espacio",
@@ -2457,7 +2455,7 @@
    "image": ""
   },
   {
-   "id": "a5d2ff18-74aa-42b3-831c-2d25a647ee91",
+   "id": "a2ac3308-ca7c-4b15-8ee6-76e9d5217643",
    "type": "card",
    "name": "Proyecto · Brand exploration",
    "parentId": "duo-cerrado-espacio",
@@ -2516,10 +2514,10 @@
    ]
   },
   {
-   "id": "0d026944-cb12-4ff6-82bf-4c7d2f4181a2",
+   "id": "995c1bf5-d7c7-4d5b-b320-b8c8019dc3f2",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "a5d2ff18-74aa-42b3-831c-2d25a647ee91",
+   "parentId": "a2ac3308-ca7c-4b15-8ee6-76e9d5217643",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -2550,10 +2548,10 @@
    "image": ""
   },
   {
-   "id": "91e828da-cc3c-48bd-945a-e5b28f9d1655",
+   "id": "a2b94404-19d7-4a29-bea1-b175a7f556fa",
    "type": "text",
    "name": "Nombre",
-   "parentId": "a5d2ff18-74aa-42b3-831c-2d25a647ee91",
+   "parentId": "a2ac3308-ca7c-4b15-8ee6-76e9d5217643",
    "x": 14,
    "y": 54,
    "width": 179,
@@ -2584,10 +2582,10 @@
    "image": ""
   },
   {
-   "id": "398d7288-b6cd-43a2-b8aa-994195710384",
+   "id": "7722e610-5f68-4463-93c4-c73e5fd233ac",
    "type": "text",
    "name": "Detalle",
-   "parentId": "a5d2ff18-74aa-42b3-831c-2d25a647ee91",
+   "parentId": "a2ac3308-ca7c-4b15-8ee6-76e9d5217643",
    "x": 14,
    "y": 74,
    "width": 179,
@@ -2618,7 +2616,7 @@
    "image": ""
   },
   {
-   "id": "55c3b70b-6eb7-461a-a1a3-0747769cbf3a",
+   "id": "a2d5510c-6f09-417c-aa45-2c7a55967eab",
    "type": "card",
    "name": "Proyecto · Studio web",
    "parentId": "duo-cerrado-espacio",
@@ -2677,10 +2675,10 @@
    ]
   },
   {
-   "id": "9a61684d-71c0-4e30-830f-0fa83b47eb64",
+   "id": "f1397066-eac5-40ca-afa2-abf9b81a04d3",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "55c3b70b-6eb7-461a-a1a3-0747769cbf3a",
+   "parentId": "a2d5510c-6f09-417c-aa45-2c7a55967eab",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -2711,10 +2709,10 @@
    "image": ""
   },
   {
-   "id": "4533f589-66ee-4c39-9d97-854f2740ac48",
+   "id": "34eae70c-58ce-4c26-8d78-aeddeae33df9",
    "type": "text",
    "name": "Nombre",
-   "parentId": "55c3b70b-6eb7-461a-a1a3-0747769cbf3a",
+   "parentId": "a2d5510c-6f09-417c-aa45-2c7a55967eab",
    "x": 14,
    "y": 54,
    "width": 179,
@@ -2745,10 +2743,10 @@
    "image": ""
   },
   {
-   "id": "dd3bcef6-29bf-4f15-9943-b8ce68cad0f7",
+   "id": "90a22730-06ba-4e27-9609-74dd95ce549c",
    "type": "text",
    "name": "Detalle",
-   "parentId": "55c3b70b-6eb7-461a-a1a3-0747769cbf3a",
+   "parentId": "a2d5510c-6f09-417c-aa45-2c7a55967eab",
    "x": 14,
    "y": 74,
    "width": 179,
@@ -2779,7 +2777,7 @@
    "image": ""
   },
   {
-   "id": "287484c3-e682-4323-b080-f85166655052",
+   "id": "ded6605c-3b4e-4722-9d60-7996f0fe502c",
    "type": "button",
    "name": "Volver a bienvenida",
    "parentId": "duo-cerrado-espacio",
@@ -2788,7 +2786,7 @@
    "width": 426,
    "height": 46,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 13,
@@ -2818,7 +2816,7 @@
    }
   },
   {
-   "id": "f909339e-d0d1-4859-b59c-b99579d95311",
+   "id": "be03ca85-38d0-4979-9dec-443dd3d37b59",
    "type": "rect",
    "name": "Navegación inferior",
    "parentId": "duo-cerrado-espacio",
@@ -2852,7 +2850,7 @@
    "image": ""
   },
   {
-   "id": "842bc3f0-b6be-46a1-94c6-c1d13cd7a1d1",
+   "id": "b6ee12cd-4c7e-42ec-b8a0-a500bcf6408d",
    "type": "text",
    "name": "Pestaña · Inicio",
    "parentId": "duo-cerrado-espacio",
@@ -2886,7 +2884,7 @@
    "image": ""
   },
   {
-   "id": "da95a434-1a84-4263-a5ec-a0dff2b21d4d",
+   "id": "b470a226-149f-45dd-b6a7-15d307e3f28a",
    "type": "text",
    "name": "Pestaña · Ideas",
    "parentId": "duo-cerrado-espacio",
@@ -2920,7 +2918,7 @@
    "image": ""
   },
   {
-   "id": "60c8e8da-6ad7-4f27-9d99-4e32a0c6fa2e",
+   "id": "9dc565d7-592f-495c-8f9f-4c58d9381d83",
    "type": "text",
    "name": "Pestaña · Equipo",
    "parentId": "duo-cerrado-espacio",
@@ -2954,7 +2952,7 @@
    "image": ""
   },
   {
-   "id": "3faf7269-6791-4df3-86dd-8466596ca628",
+   "id": "65b3e3ab-b067-48a1-be5d-c303ff5a5097",
    "type": "text",
    "name": "Pestaña · Perfil",
    "parentId": "duo-cerrado-espacio",
@@ -3086,7 +3084,7 @@
    "foldPair": "duo-cerrado-espacio"
   },
   {
-   "id": "30c954bf-3372-477d-88ee-c54a74e1c4ae",
+   "id": "80b5d3b3-02b3-433f-8c5d-f5626ae06fb5",
    "type": "rect",
    "name": "Símbolo",
    "parentId": "duo-abierto-bienvenida",
@@ -3121,7 +3119,7 @@
    "fillToken": "brand"
   },
   {
-   "id": "8a8f9890-36f7-4934-b5ee-8d347a5264cd",
+   "id": "3241146b-db0b-44d7-b9f4-0f6d23de019f",
    "type": "text",
    "name": "Marca",
    "parentId": "duo-abierto-bienvenida",
@@ -3155,7 +3153,7 @@
    "image": ""
   },
   {
-   "id": "3f711bba-953a-4030-935a-a459ee841c22",
+   "id": "9001c071-41cb-49b4-9e50-747270ea117e",
    "type": "text",
    "name": "Etiqueta",
    "parentId": "duo-abierto-bienvenida",
@@ -3189,7 +3187,7 @@
    "image": ""
   },
   {
-   "id": "2459df14-bdca-49da-b40f-5cdc47be1028",
+   "id": "b8054229-d4cd-4803-a539-1fd596dbf66b",
    "type": "text",
    "name": "Título",
    "parentId": "duo-abierto-bienvenida",
@@ -3248,7 +3246,7 @@
    ]
   },
   {
-   "id": "7aa41b79-bf46-47b1-b173-f4973a11a508",
+   "id": "63a37beb-0740-4b2d-bdc1-32162cd84bdd",
    "type": "text",
    "name": "Descripción",
    "parentId": "duo-abierto-bienvenida",
@@ -3282,7 +3280,7 @@
    "image": ""
   },
   {
-   "id": "e65544f5-02c8-4290-8682-7dba7c50b378",
+   "id": "c0c4af0b-c737-421b-bb11-dd351a31425e",
    "type": "text",
    "name": "Label · Correo",
    "parentId": "duo-abierto-bienvenida",
@@ -3316,7 +3314,7 @@
    "image": ""
   },
   {
-   "id": "a03c3430-1872-42ec-89c0-6a2c00e3e2c9",
+   "id": "2b508866-5e4c-4d87-ac00-9639d1d679df",
    "type": "input",
    "name": "Correo",
    "parentId": "duo-abierto-bienvenida",
@@ -3350,7 +3348,7 @@
    "image": ""
   },
   {
-   "id": "6c3c80c9-710e-4e02-a0a5-88aade7f9a5e",
+   "id": "9ca7da7a-3f01-42e2-9bad-810b9caa6c3c",
    "type": "text",
    "name": "Label · Contraseña",
    "parentId": "duo-abierto-bienvenida",
@@ -3384,7 +3382,7 @@
    "image": ""
   },
   {
-   "id": "cf3ce585-b7d7-479e-a0a4-a8e1493d84d0",
+   "id": "f11da113-5d7e-45a2-9148-9caee6058684",
    "type": "input",
    "name": "Contraseña",
    "parentId": "duo-abierto-bienvenida",
@@ -3418,7 +3416,7 @@
    "image": ""
   },
   {
-   "id": "84efa3c8-7d59-4634-9b1c-058c66a56b41",
+   "id": "6be6bcef-e35d-4cd7-a729-593838e7ec9b",
    "type": "button",
    "name": "Entrar",
    "parentId": "duo-abierto-bienvenida",
@@ -3427,7 +3425,7 @@
    "width": 365,
    "height": 50,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 13,
@@ -3482,7 +3480,7 @@
    ]
   },
   {
-   "id": "83bb986f-92de-4d4d-aa46-2b5217e7c54e",
+   "id": "88e27956-2ad7-4e92-8ae5-c62414ea5dcc",
    "type": "text",
    "name": "Pie",
    "parentId": "duo-abierto-bienvenida",
@@ -3516,7 +3514,7 @@
    "image": ""
   },
   {
-   "id": "c57e8bb6-a49d-44e1-a0ed-80269ad12af9",
+   "id": "9413139a-57cb-422f-b1a3-5bbe4cf9c48e",
    "type": "text",
    "name": "Saludo",
    "parentId": "duo-abierto-espacio",
@@ -3550,7 +3548,7 @@
    "image": ""
   },
   {
-   "id": "5839f965-3b0f-475b-bae7-e0888b421c2c",
+   "id": "61a77ea8-4535-4491-acea-69d6f920ea85",
    "type": "text",
    "name": "Subtítulo",
    "parentId": "duo-abierto-espacio",
@@ -3584,7 +3582,7 @@
    "image": ""
   },
   {
-   "id": "33e5d87f-d400-475a-9012-dbfa22ca668a",
+   "id": "95b5cc43-ef0f-405a-863c-bd3024bf21b0",
    "type": "card",
    "name": "Destacado",
    "parentId": "duo-abierto-espacio",
@@ -3592,7 +3590,7 @@
    "y": 50,
    "width": 389,
    "height": 260,
-   "fill": "@surface",
+   "fill": "@primary",
    "color": "@text",
    "stroke": "@border",
    "strokeWidth": 0,
@@ -3616,7 +3614,6 @@
    "locked": false,
    "targetId": null,
    "image": "",
-   "fillToken": "brand",
    "animations": [
     {
      "id": "destacado",
@@ -3644,16 +3641,16 @@
    ]
   },
   {
-   "id": "7927a8d9-b37c-48fe-b89a-487b7392a518",
+   "id": "f99a8e57-c217-4329-bdb9-1f47f638ce0b",
    "type": "text",
    "name": "Destacado · etiqueta",
-   "parentId": "33e5d87f-d400-475a-9012-dbfa22ca668a",
+   "parentId": "95b5cc43-ef0f-405a-863c-bd3024bf21b0",
    "x": 22,
    "y": 22,
    "width": 345,
    "height": 16,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -3678,16 +3675,16 @@
    "image": ""
   },
   {
-   "id": "de19228a-e19b-4a56-b616-076417f53745",
+   "id": "a757b648-9c7b-4dae-9834-58e4c342465a",
    "type": "text",
    "name": "Destacado · título",
-   "parentId": "33e5d87f-d400-475a-9012-dbfa22ca668a",
+   "parentId": "95b5cc43-ef0f-405a-863c-bd3024bf21b0",
    "x": 22,
    "y": 50,
    "width": 345,
    "height": 64,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -3712,7 +3709,7 @@
    "image": ""
   },
   {
-   "id": "980bbd81-415e-4372-accd-128acc89eba8",
+   "id": "2174551a-60cd-4b06-95cf-f340fccd96d8",
    "type": "text",
    "name": "Tus proyectos",
    "parentId": "duo-abierto-espacio",
@@ -3746,7 +3743,7 @@
    "image": ""
   },
   {
-   "id": "93e76d8d-3770-4902-b365-02f7a7ab418e",
+   "id": "d2775f62-828f-474e-868f-b45e04624952",
    "type": "card",
    "name": "Proyecto · Brand exploration",
    "parentId": "duo-abierto-espacio",
@@ -3805,10 +3802,10 @@
    ]
   },
   {
-   "id": "88c25c48-2824-4c50-a3dc-832a5c1c1850",
+   "id": "70d90ec8-b3d1-447d-a7fd-e4659da2e467",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "93e76d8d-3770-4902-b365-02f7a7ab418e",
+   "parentId": "d2775f62-828f-474e-868f-b45e04624952",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -3839,10 +3836,10 @@
    "image": ""
   },
   {
-   "id": "5564aad1-bd38-428c-afbc-a05034d905c4",
+   "id": "97b6ab00-1a38-4cae-aa5d-37162f36688d",
    "type": "text",
    "name": "Nombre",
-   "parentId": "93e76d8d-3770-4902-b365-02f7a7ab418e",
+   "parentId": "d2775f62-828f-474e-868f-b45e04624952",
    "x": 14,
    "y": 54,
    "width": 160.5,
@@ -3873,10 +3870,10 @@
    "image": ""
   },
   {
-   "id": "95fa3a4b-8cd1-4de3-a73e-00a4885a37a3",
+   "id": "369dea51-fe97-41a5-b092-4ba381822d79",
    "type": "text",
    "name": "Detalle",
-   "parentId": "93e76d8d-3770-4902-b365-02f7a7ab418e",
+   "parentId": "d2775f62-828f-474e-868f-b45e04624952",
    "x": 14,
    "y": 74,
    "width": 160.5,
@@ -3907,7 +3904,7 @@
    "image": ""
   },
   {
-   "id": "8a6c9dd4-a264-4b73-9d86-b1621ccfad98",
+   "id": "63db7a99-d4a8-4ae6-b7b3-ef7a6ed0a762",
    "type": "card",
    "name": "Proyecto · Studio web",
    "parentId": "duo-abierto-espacio",
@@ -3966,10 +3963,10 @@
    ]
   },
   {
-   "id": "7317d560-5cb2-4a68-80a7-766f5df3f4d7",
+   "id": "7885f6c4-f29f-4b7f-917c-6474fa9518f3",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "8a6c9dd4-a264-4b73-9d86-b1621ccfad98",
+   "parentId": "63db7a99-d4a8-4ae6-b7b3-ef7a6ed0a762",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -4000,10 +3997,10 @@
    "image": ""
   },
   {
-   "id": "03a66148-ce8e-4ad4-b6ce-a21cd549c6a1",
+   "id": "eed9d52c-26e6-49de-9b32-da16c49ae201",
    "type": "text",
    "name": "Nombre",
-   "parentId": "8a6c9dd4-a264-4b73-9d86-b1621ccfad98",
+   "parentId": "63db7a99-d4a8-4ae6-b7b3-ef7a6ed0a762",
    "x": 14,
    "y": 54,
    "width": 160.5,
@@ -4034,10 +4031,10 @@
    "image": ""
   },
   {
-   "id": "fa125299-107c-4402-8a10-f2024d9afe00",
+   "id": "bc057832-41a1-4230-81af-1358e7777883",
    "type": "text",
    "name": "Detalle",
-   "parentId": "8a6c9dd4-a264-4b73-9d86-b1621ccfad98",
+   "parentId": "63db7a99-d4a8-4ae6-b7b3-ef7a6ed0a762",
    "x": 14,
    "y": 74,
    "width": 160.5,
@@ -4068,7 +4065,7 @@
    "image": ""
   },
   {
-   "id": "4f87869f-696f-400e-9628-7e46b035e9d6",
+   "id": "8f61e728-191b-4d47-9907-bb9c6f3e42c8",
    "type": "card",
    "name": "Proyecto · App móvil",
    "parentId": "duo-abierto-espacio",
@@ -4127,10 +4124,10 @@
    ]
   },
   {
-   "id": "4a35f97d-2cf2-4324-9cbf-78e20ecaeeb9",
+   "id": "5ef2029c-49a6-4005-8b4d-c867939bbd43",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "4f87869f-696f-400e-9628-7e46b035e9d6",
+   "parentId": "8f61e728-191b-4d47-9907-bb9c6f3e42c8",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -4161,10 +4158,10 @@
    "image": ""
   },
   {
-   "id": "05c60d1c-0e28-4bee-b866-503da4ac5cdf",
+   "id": "8ba2ce0c-fcd2-45cb-85c1-e609520938b0",
    "type": "text",
    "name": "Nombre",
-   "parentId": "4f87869f-696f-400e-9628-7e46b035e9d6",
+   "parentId": "8f61e728-191b-4d47-9907-bb9c6f3e42c8",
    "x": 14,
    "y": 54,
    "width": 160.5,
@@ -4195,10 +4192,10 @@
    "image": ""
   },
   {
-   "id": "6e99f77d-0740-49de-8be9-0626bc08b260",
+   "id": "3a5b98a5-6993-4c4f-ba08-2a94f090ca65",
    "type": "text",
    "name": "Detalle",
-   "parentId": "4f87869f-696f-400e-9628-7e46b035e9d6",
+   "parentId": "8f61e728-191b-4d47-9907-bb9c6f3e42c8",
    "x": 14,
    "y": 74,
    "width": 160.5,
@@ -4229,7 +4226,7 @@
    "image": ""
   },
   {
-   "id": "52aade45-10e2-4dec-b0c1-23a2461857c4",
+   "id": "bd8191d2-fae4-4d2f-8aab-2b9a61c64400",
    "type": "card",
    "name": "Proyecto · Sistema visual",
    "parentId": "duo-abierto-espacio",
@@ -4288,10 +4285,10 @@
    ]
   },
   {
-   "id": "34aee182-9c37-4b35-9d60-3993256e58ad",
+   "id": "55a042be-1c4f-4ced-a11c-ec9911cead7d",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "52aade45-10e2-4dec-b0c1-23a2461857c4",
+   "parentId": "bd8191d2-fae4-4d2f-8aab-2b9a61c64400",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -4322,10 +4319,10 @@
    "image": ""
   },
   {
-   "id": "1333c527-9b80-4476-85f4-9317ef17971b",
+   "id": "0d001bd1-d6f8-4a63-85ae-4da56d82aa90",
    "type": "text",
    "name": "Nombre",
-   "parentId": "52aade45-10e2-4dec-b0c1-23a2461857c4",
+   "parentId": "bd8191d2-fae4-4d2f-8aab-2b9a61c64400",
    "x": 14,
    "y": 54,
    "width": 160.5,
@@ -4356,10 +4353,10 @@
    "image": ""
   },
   {
-   "id": "270fba00-a4c4-440f-b464-2b7af3560fc2",
+   "id": "8596973e-4be0-4948-8450-44bf1ad67279",
    "type": "text",
    "name": "Detalle",
-   "parentId": "52aade45-10e2-4dec-b0c1-23a2461857c4",
+   "parentId": "bd8191d2-fae4-4d2f-8aab-2b9a61c64400",
    "x": 14,
    "y": 74,
    "width": 160.5,
@@ -4390,7 +4387,7 @@
    "image": ""
   },
   {
-   "id": "72f7ad7d-410b-4303-9d9c-959c887564d7",
+   "id": "55895696-e878-4462-9ca6-1c2e5fedc56d",
    "type": "button",
    "name": "Volver a bienvenida",
    "parentId": "duo-abierto-espacio",
@@ -4399,7 +4396,7 @@
    "width": 389,
    "height": 46,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 13,
@@ -4517,7 +4514,7 @@
    "kitId": "android"
   },
   {
-   "id": "b722068b-7b62-4b92-ac10-8c5cebbe63f6",
+   "id": "52fcbb6c-20d7-4510-8243-e4a37e7c7a95",
    "type": "rect",
    "name": "Símbolo",
    "parentId": "android-bienvenida",
@@ -4552,7 +4549,7 @@
    "fillToken": "brand"
   },
   {
-   "id": "ed8ed64b-4694-40c1-aec8-4ca548123fb1",
+   "id": "876c78f6-acac-4a39-a520-1e371d12786e",
    "type": "text",
    "name": "Marca",
    "parentId": "android-bienvenida",
@@ -4586,7 +4583,7 @@
    "image": ""
   },
   {
-   "id": "ae0cc197-9382-4c4f-bfd6-361010aef230",
+   "id": "e76b5196-3cdb-4fbb-b43e-c529eb39fb77",
    "type": "text",
    "name": "Etiqueta",
    "parentId": "android-bienvenida",
@@ -4620,7 +4617,7 @@
    "image": ""
   },
   {
-   "id": "a1a66542-e537-4e72-955c-d8eff07bc523",
+   "id": "a674424d-afc4-45c7-9609-fb88f06d9522",
    "type": "text",
    "name": "Título",
    "parentId": "android-bienvenida",
@@ -4679,7 +4676,7 @@
    ]
   },
   {
-   "id": "d6aa7b05-71c8-4b1f-a32f-9b941922e7e5",
+   "id": "611ffb00-fec0-4fe6-a341-a185000d5ed5",
    "type": "text",
    "name": "Descripción",
    "parentId": "android-bienvenida",
@@ -4713,7 +4710,7 @@
    "image": ""
   },
   {
-   "id": "74c615e6-3ec6-4e90-9f29-05b692f5b7c7",
+   "id": "8e13d452-f605-4e52-8e19-fb888ccb1d30",
    "type": "text",
    "name": "Label · Correo",
    "parentId": "android-bienvenida",
@@ -4747,7 +4744,7 @@
    "image": ""
   },
   {
-   "id": "8d09a192-a0cb-4e92-b53b-01278f2ec9b4",
+   "id": "abec3f45-0093-4232-ad66-a9139935a98b",
    "type": "input",
    "name": "Correo",
    "parentId": "android-bienvenida",
@@ -4781,7 +4778,7 @@
    "image": ""
   },
   {
-   "id": "aaea6799-b3b3-4bad-b105-33944f86e14e",
+   "id": "36325ed0-e9cc-44fe-a223-e998a267dc98",
    "type": "text",
    "name": "Label · Contraseña",
    "parentId": "android-bienvenida",
@@ -4815,7 +4812,7 @@
    "image": ""
   },
   {
-   "id": "7e98d20a-c5d3-425e-a36d-8604b021f610",
+   "id": "eadf6b94-065c-4b65-bf59-10c94d8ec544",
    "type": "input",
    "name": "Contraseña",
    "parentId": "android-bienvenida",
@@ -4849,7 +4846,7 @@
    "image": ""
   },
   {
-   "id": "f08b8341-1f50-4bde-8d7a-da79bf984663",
+   "id": "c578cb27-d7f3-4808-9f15-caf567091984",
    "type": "button",
    "name": "Entrar",
    "parentId": "android-bienvenida",
@@ -4858,7 +4855,7 @@
    "width": 363,
    "height": 50,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 26,
@@ -4913,7 +4910,7 @@
    ]
   },
   {
-   "id": "fe96e3bd-7b0c-43f5-bc30-4a5c5242fd57",
+   "id": "4aeaab22-bb38-435b-9c9c-531345783733",
    "type": "text",
    "name": "Pie",
    "parentId": "android-bienvenida",
@@ -4947,7 +4944,7 @@
    "image": ""
   },
   {
-   "id": "3ea17408-f66f-419c-944c-6327c801474f",
+   "id": "b915c5ba-500a-4c74-8af8-b353d0b5bf5d",
    "type": "text",
    "name": "Saludo",
    "parentId": "android-espacio",
@@ -4981,7 +4978,7 @@
    "image": ""
   },
   {
-   "id": "bdc59f5f-bfc3-4c8c-b34b-62054f5da12b",
+   "id": "12192263-e632-426f-8b44-1ed94f8c3908",
    "type": "text",
    "name": "Subtítulo",
    "parentId": "android-espacio",
@@ -5015,7 +5012,7 @@
    "image": ""
   },
   {
-   "id": "dd0063f9-004a-444e-bc30-88ad03e5e37e",
+   "id": "b3d0900a-c971-48f2-a49f-63503f0df615",
    "type": "card",
    "name": "Destacado",
    "parentId": "android-espacio",
@@ -5023,7 +5020,7 @@
    "y": 128,
    "width": 371,
    "height": 150,
-   "fill": "@surface",
+   "fill": "@primary",
    "color": "@text",
    "stroke": "@border",
    "strokeWidth": 0,
@@ -5047,7 +5044,6 @@
    "locked": false,
    "targetId": null,
    "image": "",
-   "fillToken": "brand",
    "animations": [
     {
      "id": "destacado",
@@ -5075,16 +5071,16 @@
    ]
   },
   {
-   "id": "03ad1900-f7b6-4244-a376-371962136d3f",
+   "id": "35038336-1b05-4b9e-91e8-ed239794592a",
    "type": "text",
    "name": "Destacado · etiqueta",
-   "parentId": "dd0063f9-004a-444e-bc30-88ad03e5e37e",
+   "parentId": "b3d0900a-c971-48f2-a49f-63503f0df615",
    "x": 22,
    "y": 22,
    "width": 327,
    "height": 16,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -5109,16 +5105,16 @@
    "image": ""
   },
   {
-   "id": "c7290a45-43d1-4953-901c-e40e25bde6b6",
+   "id": "ecd4d998-b976-455c-926f-ca6b5b84e13a",
    "type": "text",
    "name": "Destacado · título",
-   "parentId": "dd0063f9-004a-444e-bc30-88ad03e5e37e",
+   "parentId": "b3d0900a-c971-48f2-a49f-63503f0df615",
    "x": 22,
    "y": 50,
    "width": 327,
    "height": 64,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -5143,7 +5139,7 @@
    "image": ""
   },
   {
-   "id": "c5593926-186e-45c0-9bb0-a90c2c0b812c",
+   "id": "be4ac98f-4626-42b5-a0c4-e12e9c46e5b4",
    "type": "text",
    "name": "Tus proyectos",
    "parentId": "android-espacio",
@@ -5177,7 +5173,7 @@
    "image": ""
   },
   {
-   "id": "90d3658d-4224-45ba-a39b-9b6a8a6a1935",
+   "id": "916df1d2-b8d9-4730-b941-c29a75e07253",
    "type": "card",
    "name": "Proyecto · Brand exploration",
    "parentId": "android-espacio",
@@ -5236,10 +5232,10 @@
    ]
   },
   {
-   "id": "f6657225-1c10-4bfe-8f76-38d04705f8e6",
+   "id": "5a2169df-3b69-467f-87f7-2d929cf1376e",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "90d3658d-4224-45ba-a39b-9b6a8a6a1935",
+   "parentId": "916df1d2-b8d9-4730-b941-c29a75e07253",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -5270,10 +5266,10 @@
    "image": ""
   },
   {
-   "id": "3a557ef3-dabd-4516-ae7e-ab66112c2c11",
+   "id": "b1666d8e-a277-405a-abe8-4d68b7843ec2",
    "type": "text",
    "name": "Nombre",
-   "parentId": "90d3658d-4224-45ba-a39b-9b6a8a6a1935",
+   "parentId": "916df1d2-b8d9-4730-b941-c29a75e07253",
    "x": 14,
    "y": 54,
    "width": 151.5,
@@ -5304,10 +5300,10 @@
    "image": ""
   },
   {
-   "id": "bcc67fc8-101d-411b-9dd0-e38e3abe0488",
+   "id": "94e0658c-fdfe-4dfb-bc87-edf17f091227",
    "type": "text",
    "name": "Detalle",
-   "parentId": "90d3658d-4224-45ba-a39b-9b6a8a6a1935",
+   "parentId": "916df1d2-b8d9-4730-b941-c29a75e07253",
    "x": 14,
    "y": 74,
    "width": 151.5,
@@ -5338,7 +5334,7 @@
    "image": ""
   },
   {
-   "id": "3f80ec52-4e4c-41b8-919d-64394297abdb",
+   "id": "620bb156-e23e-4850-b434-d7f8ebf1c1be",
    "type": "card",
    "name": "Proyecto · Studio web",
    "parentId": "android-espacio",
@@ -5397,10 +5393,10 @@
    ]
   },
   {
-   "id": "d150cb2d-3825-496c-821e-4458963072b8",
+   "id": "7852be3a-977d-4c3a-b9f1-444969b5b79f",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "3f80ec52-4e4c-41b8-919d-64394297abdb",
+   "parentId": "620bb156-e23e-4850-b434-d7f8ebf1c1be",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -5431,10 +5427,10 @@
    "image": ""
   },
   {
-   "id": "bae8e397-f46f-40ee-8083-d53bede1ba47",
+   "id": "5164506c-a552-46db-993a-35d182f237f7",
    "type": "text",
    "name": "Nombre",
-   "parentId": "3f80ec52-4e4c-41b8-919d-64394297abdb",
+   "parentId": "620bb156-e23e-4850-b434-d7f8ebf1c1be",
    "x": 14,
    "y": 54,
    "width": 151.5,
@@ -5465,10 +5461,10 @@
    "image": ""
   },
   {
-   "id": "7ccc5ce3-9b5c-42fe-b394-736124232700",
+   "id": "47e3e398-dd8d-4d92-bd87-26a33be5ba3c",
    "type": "text",
    "name": "Detalle",
-   "parentId": "3f80ec52-4e4c-41b8-919d-64394297abdb",
+   "parentId": "620bb156-e23e-4850-b434-d7f8ebf1c1be",
    "x": 14,
    "y": 74,
    "width": 151.5,
@@ -5499,7 +5495,7 @@
    "image": ""
   },
   {
-   "id": "46ef109f-3052-4497-92dc-088a52f32708",
+   "id": "d6ac5903-96b3-48c3-91d4-d5c659ecc7be",
    "type": "button",
    "name": "Volver a bienvenida",
    "parentId": "android-espacio",
@@ -5508,7 +5504,7 @@
    "width": 371,
    "height": 46,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 23,
@@ -5538,7 +5534,7 @@
    }
   },
   {
-   "id": "ebe293f5-fe2c-4f04-a729-c614ee952792",
+   "id": "7100ebc4-0e59-4f21-86bc-2263e855d482",
    "type": "rect",
    "name": "Navegación inferior",
    "parentId": "android-espacio",
@@ -5572,7 +5568,7 @@
    "image": ""
   },
   {
-   "id": "76ebd6e5-4ff0-4bff-9b86-73a6e885d516",
+   "id": "7119c356-12cc-4178-b7cb-18ef4757cc95",
    "type": "rect",
    "name": "Indicador activo",
    "parentId": "android-espacio",
@@ -5606,7 +5602,7 @@
    "image": ""
   },
   {
-   "id": "e7d9d6b9-1efc-4aef-9a6f-4a42847b7dfb",
+   "id": "7b1584ac-b9a9-4ca3-a797-5fe9e910fc48",
    "type": "text",
    "name": "Pestaña · Inicio",
    "parentId": "android-espacio",
@@ -5640,7 +5636,7 @@
    "image": ""
   },
   {
-   "id": "61ed5aa2-efc0-4b5e-993c-f00d35d9bc06",
+   "id": "7f8d1427-e41b-4523-b257-b57ff3bfe5be",
    "type": "text",
    "name": "Pestaña · Ideas",
    "parentId": "android-espacio",
@@ -5674,7 +5670,7 @@
    "image": ""
   },
   {
-   "id": "4fecd3c7-8c1b-418d-9155-ea36c22fba21",
+   "id": "e486a60e-5a39-4863-a31e-23741f5ec382",
    "type": "text",
    "name": "Pestaña · Equipo",
    "parentId": "android-espacio",
@@ -5708,7 +5704,7 @@
    "image": ""
   },
   {
-   "id": "df4fba76-15b8-49b3-a592-84ea2c1b2d87",
+   "id": "8d1601ae-7c8d-4f24-81e0-951d2fb77ad7",
    "type": "text",
    "name": "Pestaña · Perfil",
    "parentId": "android-espacio",
@@ -5832,7 +5828,7 @@
    "foldPair": "pasaporte-abierto-espacio"
   },
   {
-   "id": "18264708-dbac-4714-9b72-09feb4dd4289",
+   "id": "f4522bd9-f7fd-42f9-9f0f-7c2e605cb8d3",
    "type": "rect",
    "name": "Símbolo",
    "parentId": "pasaporte-cerrado-bienvenida",
@@ -5867,7 +5863,7 @@
    "fillToken": "brand"
   },
   {
-   "id": "29b75517-d271-460f-b194-20b465284e81",
+   "id": "b8eebd49-0c92-4333-871d-8080a7b1b04d",
    "type": "text",
    "name": "Marca",
    "parentId": "pasaporte-cerrado-bienvenida",
@@ -5901,7 +5897,7 @@
    "image": ""
   },
   {
-   "id": "d0225fb0-53aa-4e86-8f4d-5eae998017f8",
+   "id": "427aa9f1-8f9e-4891-a971-b442c58d9e48",
    "type": "text",
    "name": "Etiqueta",
    "parentId": "pasaporte-cerrado-bienvenida",
@@ -5935,7 +5931,7 @@
    "image": ""
   },
   {
-   "id": "82bdc839-5258-476f-8b81-e2b0243b4cee",
+   "id": "9fde1378-b016-4716-9491-ef810d21af8c",
    "type": "text",
    "name": "Título",
    "parentId": "pasaporte-cerrado-bienvenida",
@@ -5994,7 +5990,7 @@
    ]
   },
   {
-   "id": "8b2992bf-412c-42be-9b89-e49410617d4f",
+   "id": "7180b963-3ead-4e96-9d2d-939b2534402c",
    "type": "text",
    "name": "Descripción",
    "parentId": "pasaporte-cerrado-bienvenida",
@@ -6028,7 +6024,7 @@
    "image": ""
   },
   {
-   "id": "2a690a3a-423a-432c-b287-7a3557c0c56b",
+   "id": "14cf1354-438f-4ff2-bfe8-3247bb63436f",
    "type": "text",
    "name": "Label · Correo",
    "parentId": "pasaporte-cerrado-bienvenida",
@@ -6062,7 +6058,7 @@
    "image": ""
   },
   {
-   "id": "b662aa47-329f-46c7-9fc0-b7fe843098fc",
+   "id": "f17a58d4-3ddc-4235-847a-9c4d1a4e880e",
    "type": "input",
    "name": "Correo",
    "parentId": "pasaporte-cerrado-bienvenida",
@@ -6096,7 +6092,7 @@
    "image": ""
   },
   {
-   "id": "e3cf0dd1-9dcc-4559-ac59-f593b37f5c0a",
+   "id": "dee482d1-a226-456c-9beb-6fccc9ca8d3d",
    "type": "text",
    "name": "Label · Contraseña",
    "parentId": "pasaporte-cerrado-bienvenida",
@@ -6130,7 +6126,7 @@
    "image": ""
   },
   {
-   "id": "cb8aeede-a307-48a6-94b3-ba73174cfa1d",
+   "id": "31f29f94-8353-422d-ac4c-437c99c783cf",
    "type": "input",
    "name": "Contraseña",
    "parentId": "pasaporte-cerrado-bienvenida",
@@ -6164,7 +6160,7 @@
    "image": ""
   },
   {
-   "id": "31ba54b1-7336-4c87-afb1-3cc9025cbef0",
+   "id": "440c835e-5086-48d8-b859-e70487ced809",
    "type": "button",
    "name": "Entrar",
    "parentId": "pasaporte-cerrado-bienvenida",
@@ -6173,7 +6169,7 @@
    "width": 312,
    "height": 50,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 26,
@@ -6228,7 +6224,7 @@
    ]
   },
   {
-   "id": "9163a91e-e4c2-4dc3-a067-174ba6bf5b15",
+   "id": "409ea888-6d1e-4cba-8939-013bfbcd23bc",
    "type": "text",
    "name": "Pie",
    "parentId": "pasaporte-cerrado-bienvenida",
@@ -6262,7 +6258,7 @@
    "image": ""
   },
   {
-   "id": "4be856fb-327a-4795-81a7-51720f7dc925",
+   "id": "89748efc-cdf2-44a3-837d-2969c128c536",
    "type": "text",
    "name": "Saludo",
    "parentId": "pasaporte-cerrado-espacio",
@@ -6296,7 +6292,7 @@
    "image": ""
   },
   {
-   "id": "3f092050-d7c5-4b64-b567-9b328259de71",
+   "id": "75c8fe8c-8061-4a08-bb7c-ef32ce8a86b0",
    "type": "text",
    "name": "Subtítulo",
    "parentId": "pasaporte-cerrado-espacio",
@@ -6330,7 +6326,7 @@
    "image": ""
   },
   {
-   "id": "34666403-d8ef-4358-adc2-10252a717589",
+   "id": "b17f1f00-fb63-4437-adf7-7c4a9b46c267",
    "type": "card",
    "name": "Destacado",
    "parentId": "pasaporte-cerrado-espacio",
@@ -6338,7 +6334,7 @@
    "y": 128,
    "width": 320,
    "height": 150,
-   "fill": "@surface",
+   "fill": "@primary",
    "color": "@text",
    "stroke": "@border",
    "strokeWidth": 0,
@@ -6362,7 +6358,6 @@
    "locked": false,
    "targetId": null,
    "image": "",
-   "fillToken": "brand",
    "animations": [
     {
      "id": "destacado",
@@ -6390,16 +6385,16 @@
    ]
   },
   {
-   "id": "23299086-9331-4129-8f1d-d28f6d3513b8",
+   "id": "60aadb2c-0246-457e-a7a0-ebbf63caeda3",
    "type": "text",
    "name": "Destacado · etiqueta",
-   "parentId": "34666403-d8ef-4358-adc2-10252a717589",
+   "parentId": "b17f1f00-fb63-4437-adf7-7c4a9b46c267",
    "x": 22,
    "y": 22,
    "width": 276,
    "height": 16,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -6424,16 +6419,16 @@
    "image": ""
   },
   {
-   "id": "c3fabfb8-42ab-4d17-9dbf-499b43769e35",
+   "id": "6b65257c-c433-420b-b761-9569550d19a1",
    "type": "text",
    "name": "Destacado · título",
-   "parentId": "34666403-d8ef-4358-adc2-10252a717589",
+   "parentId": "b17f1f00-fb63-4437-adf7-7c4a9b46c267",
    "x": 22,
    "y": 50,
    "width": 276,
    "height": 64,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -6458,7 +6453,7 @@
    "image": ""
   },
   {
-   "id": "df3f3f28-2c02-449e-94e5-dafda7343ae9",
+   "id": "e28dfe7d-49a1-4819-b346-432d063bdef9",
    "type": "text",
    "name": "Tus proyectos",
    "parentId": "pasaporte-cerrado-espacio",
@@ -6492,7 +6487,7 @@
    "image": ""
   },
   {
-   "id": "4d779bcd-c505-4798-9d9a-667c9eea18e1",
+   "id": "c93de78d-3e76-4035-b387-8742a40af6cf",
    "type": "card",
    "name": "Proyecto · Brand exploration",
    "parentId": "pasaporte-cerrado-espacio",
@@ -6551,10 +6546,10 @@
    ]
   },
   {
-   "id": "c42c46c8-b3cc-45ea-8742-0e0895d25cd1",
+   "id": "7a21cddf-1297-49f8-8bdb-b5a081d44dbe",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "4d779bcd-c505-4798-9d9a-667c9eea18e1",
+   "parentId": "c93de78d-3e76-4035-b387-8742a40af6cf",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -6585,10 +6580,10 @@
    "image": ""
   },
   {
-   "id": "42d997c3-7249-4006-bb8a-d91e578cec6c",
+   "id": "cb5aa9b7-765c-40dc-a062-67fb970719ea",
    "type": "text",
    "name": "Nombre",
-   "parentId": "4d779bcd-c505-4798-9d9a-667c9eea18e1",
+   "parentId": "c93de78d-3e76-4035-b387-8742a40af6cf",
    "x": 14,
    "y": 54,
    "width": 126,
@@ -6619,10 +6614,10 @@
    "image": ""
   },
   {
-   "id": "8faf6225-7389-4ef2-ae3c-12a22d5490cc",
+   "id": "7b8ad7a7-f9e3-4dde-97cb-61cc09b4692c",
    "type": "text",
    "name": "Detalle",
-   "parentId": "4d779bcd-c505-4798-9d9a-667c9eea18e1",
+   "parentId": "c93de78d-3e76-4035-b387-8742a40af6cf",
    "x": 14,
    "y": 74,
    "width": 126,
@@ -6653,7 +6648,7 @@
    "image": ""
   },
   {
-   "id": "feead450-eba2-4eed-9512-538648af65f8",
+   "id": "a90b3e5a-7bb7-4ecf-b0ef-a17a084fd6f7",
    "type": "card",
    "name": "Proyecto · Studio web",
    "parentId": "pasaporte-cerrado-espacio",
@@ -6712,10 +6707,10 @@
    ]
   },
   {
-   "id": "132c51ab-5926-48a0-a792-16424013e461",
+   "id": "4abd097e-ce52-4630-96b3-12d4ccc363b6",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "feead450-eba2-4eed-9512-538648af65f8",
+   "parentId": "a90b3e5a-7bb7-4ecf-b0ef-a17a084fd6f7",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -6746,10 +6741,10 @@
    "image": ""
   },
   {
-   "id": "155832cc-e196-4fc9-ab33-d52c29c4ea90",
+   "id": "f7020de3-8b17-4150-9508-0413c8682751",
    "type": "text",
    "name": "Nombre",
-   "parentId": "feead450-eba2-4eed-9512-538648af65f8",
+   "parentId": "a90b3e5a-7bb7-4ecf-b0ef-a17a084fd6f7",
    "x": 14,
    "y": 54,
    "width": 126,
@@ -6780,10 +6775,10 @@
    "image": ""
   },
   {
-   "id": "e0bbb792-3adc-4606-a493-38a7ef27ec13",
+   "id": "90a34eb9-da0c-4b10-920e-1f74c61ee50f",
    "type": "text",
    "name": "Detalle",
-   "parentId": "feead450-eba2-4eed-9512-538648af65f8",
+   "parentId": "a90b3e5a-7bb7-4ecf-b0ef-a17a084fd6f7",
    "x": 14,
    "y": 74,
    "width": 126,
@@ -6814,7 +6809,7 @@
    "image": ""
   },
   {
-   "id": "e6956b4f-d828-4373-a5ac-bb0f79623ba3",
+   "id": "85d248af-6ca3-4ec2-a92c-b8da20ff261a",
    "type": "button",
    "name": "Volver a bienvenida",
    "parentId": "pasaporte-cerrado-espacio",
@@ -6823,7 +6818,7 @@
    "width": 320,
    "height": 46,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 23,
@@ -6853,7 +6848,7 @@
    }
   },
   {
-   "id": "ca67dd49-7ec5-4049-a930-51741749f6b3",
+   "id": "89b77f91-ac1a-4e2b-afd7-b8085c70fbaf",
    "type": "rect",
    "name": "Navegación inferior",
    "parentId": "pasaporte-cerrado-espacio",
@@ -6887,7 +6882,7 @@
    "image": ""
   },
   {
-   "id": "3c342826-6e7f-48bc-93b9-e01bfae2b558",
+   "id": "a07863fd-16be-4b98-bd38-05673d24b462",
    "type": "rect",
    "name": "Indicador activo",
    "parentId": "pasaporte-cerrado-espacio",
@@ -6921,7 +6916,7 @@
    "image": ""
   },
   {
-   "id": "97fd554b-12fa-495d-9afa-d2e078229dca",
+   "id": "3e1e3a6d-98d6-4801-b229-adc0c636e8f5",
    "type": "text",
    "name": "Pestaña · Inicio",
    "parentId": "pasaporte-cerrado-espacio",
@@ -6955,7 +6950,7 @@
    "image": ""
   },
   {
-   "id": "bef2288c-4bb9-4beb-a8fd-ea5158f3398b",
+   "id": "4ed254d7-7b05-43ce-8e23-b2b2f833dc00",
    "type": "text",
    "name": "Pestaña · Ideas",
    "parentId": "pasaporte-cerrado-espacio",
@@ -6989,7 +6984,7 @@
    "image": ""
   },
   {
-   "id": "5bad37e9-452c-450b-b51a-d8158de0647c",
+   "id": "73fab57d-519d-4710-8b40-8536e1b62458",
    "type": "text",
    "name": "Pestaña · Equipo",
    "parentId": "pasaporte-cerrado-espacio",
@@ -7023,7 +7018,7 @@
    "image": ""
   },
   {
-   "id": "1c491cea-383c-4445-ae80-775eba824217",
+   "id": "0619e899-1bea-40e3-b3ba-f4f14f099c3d",
    "type": "text",
    "name": "Pestaña · Perfil",
    "parentId": "pasaporte-cerrado-espacio",
@@ -7155,7 +7150,7 @@
    "foldPair": "pasaporte-cerrado-espacio"
   },
   {
-   "id": "cb5213c8-4a49-420a-89ca-ad11a70bf478",
+   "id": "5afbd49b-6e7d-438c-a828-f1e660da0195",
    "type": "rect",
    "name": "Símbolo",
    "parentId": "pasaporte-abierto-bienvenida",
@@ -7190,7 +7185,7 @@
    "fillToken": "brand"
   },
   {
-   "id": "e25eb8ee-10d7-4bf3-824c-b8dc1b55afb0",
+   "id": "2a752add-fd77-4022-9e32-b89c31925671",
    "type": "text",
    "name": "Marca",
    "parentId": "pasaporte-abierto-bienvenida",
@@ -7224,7 +7219,7 @@
    "image": ""
   },
   {
-   "id": "7ff93d69-9e92-47e7-8ba4-39986707c298",
+   "id": "2f5ad521-6b9f-43d3-bed1-2797ea0c16f4",
    "type": "text",
    "name": "Etiqueta",
    "parentId": "pasaporte-abierto-bienvenida",
@@ -7258,7 +7253,7 @@
    "image": ""
   },
   {
-   "id": "344b1d87-7a92-4bfd-92b7-fed1ad15fe1c",
+   "id": "2bbe9b2a-5200-4ad1-b7a9-a503be9666f7",
    "type": "text",
    "name": "Título",
    "parentId": "pasaporte-abierto-bienvenida",
@@ -7317,7 +7312,7 @@
    ]
   },
   {
-   "id": "fb3c4d3e-9fd2-47c0-8fa0-043129b5d709",
+   "id": "57a4ddc1-3e65-4b97-9066-82915423cfb7",
    "type": "text",
    "name": "Descripción",
    "parentId": "pasaporte-abierto-bienvenida",
@@ -7351,7 +7346,7 @@
    "image": ""
   },
   {
-   "id": "03ebc1b0-be28-4910-b012-30d9051e1d44",
+   "id": "b9b713a8-b167-43c4-ace5-8b2cf03cfcc5",
    "type": "text",
    "name": "Label · Correo",
    "parentId": "pasaporte-abierto-bienvenida",
@@ -7385,7 +7380,7 @@
    "image": ""
   },
   {
-   "id": "d020a6a4-cbe8-4519-9616-4e57f4d054b8",
+   "id": "8a36ab5c-c0d4-4bc5-9a6a-74002044c939",
    "type": "input",
    "name": "Correo",
    "parentId": "pasaporte-abierto-bienvenida",
@@ -7419,7 +7414,7 @@
    "image": ""
   },
   {
-   "id": "d9b4eaeb-0b4b-4746-8a17-ed4b4283cbdd",
+   "id": "a3af6031-c19b-4f15-ab65-84282cf7f885",
    "type": "text",
    "name": "Label · Contraseña",
    "parentId": "pasaporte-abierto-bienvenida",
@@ -7453,7 +7448,7 @@
    "image": ""
   },
   {
-   "id": "c0779d7f-d97a-4c6d-86ad-46d1b7e9af25",
+   "id": "49ad7466-0431-4f0d-9cc1-632350fd0bb6",
    "type": "input",
    "name": "Contraseña",
    "parentId": "pasaporte-abierto-bienvenida",
@@ -7487,7 +7482,7 @@
    "image": ""
   },
   {
-   "id": "c74b4919-f5bd-4055-b58f-71da056c2f50",
+   "id": "96a7aeb3-96df-4936-af8b-6780f64949db",
    "type": "button",
    "name": "Entrar",
    "parentId": "pasaporte-abierto-bienvenida",
@@ -7496,7 +7491,7 @@
    "width": 256.5,
    "height": 50,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 26,
@@ -7551,7 +7546,7 @@
    ]
   },
   {
-   "id": "82393128-22af-4892-abda-a4a326ecad28",
+   "id": "51c1616e-42a6-401a-966e-e7709e3a1c55",
    "type": "text",
    "name": "Pie",
    "parentId": "pasaporte-abierto-bienvenida",
@@ -7585,7 +7580,7 @@
    "image": ""
   },
   {
-   "id": "2986fe72-3a0a-49c9-b699-869b2935f165",
+   "id": "252c7c12-2b09-488e-b6fc-1c3066b7ca6d",
    "type": "rect",
    "name": "Barra lateral",
    "parentId": "pasaporte-abierto-espacio",
@@ -7619,7 +7614,7 @@
    "image": ""
   },
   {
-   "id": "a27257ad-37eb-418c-ade0-016b4d19029f",
+   "id": "263a9d37-c9ab-41b3-813f-c7d8465ec5e3",
    "type": "rect",
    "name": "Indicador activo",
    "parentId": "pasaporte-abierto-espacio",
@@ -7653,7 +7648,7 @@
    "image": ""
   },
   {
-   "id": "e46c600f-91ee-4277-8bb9-449ac41bb494",
+   "id": "474d94e7-4781-48e2-8efc-401d6e432057",
    "type": "text",
    "name": "Sección · Inicio",
    "parentId": "pasaporte-abierto-espacio",
@@ -7687,7 +7682,7 @@
    "image": ""
   },
   {
-   "id": "885fff4e-d6fb-4cce-8e8c-4857c1b353cc",
+   "id": "c5a8a6d4-5e97-459a-8fb2-550c2af4d3a8",
    "type": "text",
    "name": "Sección · Ideas",
    "parentId": "pasaporte-abierto-espacio",
@@ -7721,7 +7716,7 @@
    "image": ""
   },
   {
-   "id": "31dd4824-6d00-4c61-ae7e-339155674b10",
+   "id": "e15c5342-d416-4220-a9f1-3b59806b1f0c",
    "type": "text",
    "name": "Sección · Equipo",
    "parentId": "pasaporte-abierto-espacio",
@@ -7755,7 +7750,7 @@
    "image": ""
   },
   {
-   "id": "5abf3bad-d25a-4ba7-8796-623f1fb92485",
+   "id": "63363c8f-ff70-4224-ba7b-5224c504048a",
    "type": "text",
    "name": "Saludo",
    "parentId": "pasaporte-abierto-espacio",
@@ -7789,7 +7784,7 @@
    "image": ""
   },
   {
-   "id": "de8c3dd1-1a7b-41f2-84ae-814f410ce9dd",
+   "id": "e7b542f3-7020-4a78-83ca-036986dd7ce6",
    "type": "text",
    "name": "Subtítulo",
    "parentId": "pasaporte-abierto-espacio",
@@ -7823,7 +7818,7 @@
    "image": ""
   },
   {
-   "id": "751470e5-d766-481f-b6b8-850d46c6ab8e",
+   "id": "f0ec41cc-e3ab-4d80-a2c2-663692f24be2",
    "type": "card",
    "name": "Destacado",
    "parentId": "pasaporte-abierto-espacio",
@@ -7831,7 +7826,7 @@
    "y": 50,
    "width": 280.5,
    "height": 260,
-   "fill": "@surface",
+   "fill": "@primary",
    "color": "@text",
    "stroke": "@border",
    "strokeWidth": 0,
@@ -7855,7 +7850,6 @@
    "locked": false,
    "targetId": null,
    "image": "",
-   "fillToken": "brand",
    "animations": [
     {
      "id": "destacado",
@@ -7883,16 +7877,16 @@
    ]
   },
   {
-   "id": "e631197a-3218-4b16-8a9e-08afe65b1cab",
+   "id": "fb023cc6-db35-4872-9296-0ca02dfec702",
    "type": "text",
    "name": "Destacado · etiqueta",
-   "parentId": "751470e5-d766-481f-b6b8-850d46c6ab8e",
+   "parentId": "f0ec41cc-e3ab-4d80-a2c2-663692f24be2",
    "x": 22,
    "y": 22,
    "width": 236.5,
    "height": 16,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -7917,16 +7911,16 @@
    "image": ""
   },
   {
-   "id": "80ec8084-4ffc-46bb-a72a-ccfaccc582a6",
+   "id": "4ca83398-fe43-48f1-aab9-b5c4931c2212",
    "type": "text",
    "name": "Destacado · título",
-   "parentId": "751470e5-d766-481f-b6b8-850d46c6ab8e",
+   "parentId": "f0ec41cc-e3ab-4d80-a2c2-663692f24be2",
    "x": 22,
    "y": 50,
    "width": 236.5,
    "height": 64,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -7951,7 +7945,7 @@
    "image": ""
   },
   {
-   "id": "b87869aa-2890-4a49-abfb-cf6ef02f3596",
+   "id": "a77eabec-35ea-4464-a5e2-76da51035913",
    "type": "text",
    "name": "Tus proyectos",
    "parentId": "pasaporte-abierto-espacio",
@@ -7985,7 +7979,7 @@
    "image": ""
   },
   {
-   "id": "52db632d-b932-408e-bce1-add2a6d9c8a9",
+   "id": "4b46a0e6-66f6-4e27-aa7e-00a43d87e602",
    "type": "card",
    "name": "Proyecto · Brand exploration",
    "parentId": "pasaporte-abierto-espacio",
@@ -8044,10 +8038,10 @@
    ]
   },
   {
-   "id": "2f5fc2de-dce7-4c05-88f9-0feb4c3bac62",
+   "id": "66974ad7-b60d-4550-9401-f82b7b4e3ce9",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "52db632d-b932-408e-bce1-add2a6d9c8a9",
+   "parentId": "4b46a0e6-66f6-4e27-aa7e-00a43d87e602",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -8078,10 +8072,10 @@
    "image": ""
   },
   {
-   "id": "18fa6769-3d9f-4921-93e5-f56e394a4d0e",
+   "id": "47f9720a-4949-4c06-ab81-945d456499c6",
    "type": "text",
    "name": "Nombre",
-   "parentId": "52db632d-b932-408e-bce1-add2a6d9c8a9",
+   "parentId": "4b46a0e6-66f6-4e27-aa7e-00a43d87e602",
    "x": 14,
    "y": 54,
    "width": 164.5,
@@ -8112,10 +8106,10 @@
    "image": ""
   },
   {
-   "id": "3a63486b-aea2-424c-a375-b1eb77deb0cf",
+   "id": "f6578a3d-7dae-421d-8854-176a207108d2",
    "type": "text",
    "name": "Detalle",
-   "parentId": "52db632d-b932-408e-bce1-add2a6d9c8a9",
+   "parentId": "4b46a0e6-66f6-4e27-aa7e-00a43d87e602",
    "x": 14,
    "y": 74,
    "width": 164.5,
@@ -8146,7 +8140,7 @@
    "image": ""
   },
   {
-   "id": "2c04cca8-d9be-427a-8355-444eb2c14da8",
+   "id": "626e0503-9130-4959-a0ec-dcfb435f1271",
    "type": "card",
    "name": "Proyecto · Studio web",
    "parentId": "pasaporte-abierto-espacio",
@@ -8205,10 +8199,10 @@
    ]
   },
   {
-   "id": "70c53d02-53fa-49c0-b093-9b66cc424a1b",
+   "id": "ee709af9-5dd0-4248-837f-644106bd32f4",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "2c04cca8-d9be-427a-8355-444eb2c14da8",
+   "parentId": "626e0503-9130-4959-a0ec-dcfb435f1271",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -8239,10 +8233,10 @@
    "image": ""
   },
   {
-   "id": "48e6d087-db3b-408f-988f-a0120fe53693",
+   "id": "04df9e3b-ed11-4f1f-a67f-cccc809c1e71",
    "type": "text",
    "name": "Nombre",
-   "parentId": "2c04cca8-d9be-427a-8355-444eb2c14da8",
+   "parentId": "626e0503-9130-4959-a0ec-dcfb435f1271",
    "x": 14,
    "y": 54,
    "width": 164.5,
@@ -8273,10 +8267,10 @@
    "image": ""
   },
   {
-   "id": "570d7887-4fbe-4e2a-aa30-90e474caabb7",
+   "id": "da7028b6-b9e1-4b01-acf8-935462748170",
    "type": "text",
    "name": "Detalle",
-   "parentId": "2c04cca8-d9be-427a-8355-444eb2c14da8",
+   "parentId": "626e0503-9130-4959-a0ec-dcfb435f1271",
    "x": 14,
    "y": 74,
    "width": 164.5,
@@ -8307,7 +8301,7 @@
    "image": ""
   },
   {
-   "id": "b278c42d-bbf2-4c6c-95f9-6e89f7778b2a",
+   "id": "b9361bd8-0d59-40ff-af90-f969553f41e2",
    "type": "card",
    "name": "Proyecto · App móvil",
    "parentId": "pasaporte-abierto-espacio",
@@ -8366,10 +8360,10 @@
    ]
   },
   {
-   "id": "6e1edf27-5772-4b7b-b463-78a5dff7cf77",
+   "id": "9331154e-10e1-4e01-9217-4ad64868cbeb",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "b278c42d-bbf2-4c6c-95f9-6e89f7778b2a",
+   "parentId": "b9361bd8-0d59-40ff-af90-f969553f41e2",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -8400,10 +8394,10 @@
    "image": ""
   },
   {
-   "id": "de86cdbc-b2bb-4d24-b25c-7fb71d4ded2d",
+   "id": "91a4e967-7d39-47c4-b9f6-02b3e74aa4ca",
    "type": "text",
    "name": "Nombre",
-   "parentId": "b278c42d-bbf2-4c6c-95f9-6e89f7778b2a",
+   "parentId": "b9361bd8-0d59-40ff-af90-f969553f41e2",
    "x": 14,
    "y": 54,
    "width": 164.5,
@@ -8434,10 +8428,10 @@
    "image": ""
   },
   {
-   "id": "89006da8-11b0-4ee3-97a6-cc23e21fcd28",
+   "id": "f1288638-16f1-4baa-81aa-e931697e5ec9",
    "type": "text",
    "name": "Detalle",
-   "parentId": "b278c42d-bbf2-4c6c-95f9-6e89f7778b2a",
+   "parentId": "b9361bd8-0d59-40ff-af90-f969553f41e2",
    "x": 14,
    "y": 74,
    "width": 164.5,
@@ -8468,7 +8462,7 @@
    "image": ""
   },
   {
-   "id": "5310abb9-df88-4b86-9843-28083de4104a",
+   "id": "74908975-159a-48c4-be3c-8b3657dc6b35",
    "type": "card",
    "name": "Proyecto · Sistema visual",
    "parentId": "pasaporte-abierto-espacio",
@@ -8527,10 +8521,10 @@
    ]
   },
   {
-   "id": "5b1627b6-6d5f-4db9-badd-56b20d2a5c92",
+   "id": "3244d490-8c9c-4754-a651-19d24f187ceb",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "5310abb9-df88-4b86-9843-28083de4104a",
+   "parentId": "74908975-159a-48c4-be3c-8b3657dc6b35",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -8561,10 +8555,10 @@
    "image": ""
   },
   {
-   "id": "259d5683-4fd2-4b9d-9280-c6fde05b873e",
+   "id": "77647c0a-30c9-4ab9-a5a0-1b5ffac4abed",
    "type": "text",
    "name": "Nombre",
-   "parentId": "5310abb9-df88-4b86-9843-28083de4104a",
+   "parentId": "74908975-159a-48c4-be3c-8b3657dc6b35",
    "x": 14,
    "y": 54,
    "width": 164.5,
@@ -8595,10 +8589,10 @@
    "image": ""
   },
   {
-   "id": "645b9e7c-f41e-484e-a82b-2af06fdcd233",
+   "id": "ef9fb4dc-156b-4f26-b3c3-3236a4ee1c23",
    "type": "text",
    "name": "Detalle",
-   "parentId": "5310abb9-df88-4b86-9843-28083de4104a",
+   "parentId": "74908975-159a-48c4-be3c-8b3657dc6b35",
    "x": 14,
    "y": 74,
    "width": 164.5,
@@ -8629,7 +8623,7 @@
    "image": ""
   },
   {
-   "id": "df2cda17-b03f-4da3-b919-413030ee71bc",
+   "id": "632c8e0d-3456-453f-a5e9-336bd52e574f",
    "type": "button",
    "name": "Volver a bienvenida",
    "parentId": "pasaporte-abierto-espacio",
@@ -8638,7 +8632,7 @@
    "width": 280.5,
    "height": 46,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 23,
@@ -8765,7 +8759,7 @@
    "foldPair": "flip-exterior"
   },
   {
-   "id": "c9ff1ca4-ce1e-4052-9020-ab928289300d",
+   "id": "51ed6379-d968-4dd6-b386-f3dabccd8ae4",
    "type": "rect",
    "name": "Símbolo",
    "parentId": "flip-abierto-bienvenida",
@@ -8800,7 +8794,7 @@
    "fillToken": "brand"
   },
   {
-   "id": "28c88cd7-c7e4-4f75-bf7a-709673bdb59c",
+   "id": "a3846b9d-4e8f-4a1d-baf1-4920cbbe8646",
    "type": "text",
    "name": "Marca",
    "parentId": "flip-abierto-bienvenida",
@@ -8834,7 +8828,7 @@
    "image": ""
   },
   {
-   "id": "a5cafe30-07e4-4201-b57e-9c7c7c4c681d",
+   "id": "0e16a239-a40f-4112-8325-73c5ece8061a",
    "type": "text",
    "name": "Etiqueta",
    "parentId": "flip-abierto-bienvenida",
@@ -8868,7 +8862,7 @@
    "image": ""
   },
   {
-   "id": "4052a2d3-2140-45a9-9405-0de3d2fd91e2",
+   "id": "86a3e67b-d745-4176-91ff-779d070eaeb0",
    "type": "text",
    "name": "Título",
    "parentId": "flip-abierto-bienvenida",
@@ -8927,7 +8921,7 @@
    ]
   },
   {
-   "id": "a545f6d7-8b7f-4444-971c-8e7e2dd57509",
+   "id": "32aa2f14-8e9a-4c11-9080-f98b0e142ecb",
    "type": "text",
    "name": "Descripción",
    "parentId": "flip-abierto-bienvenida",
@@ -8961,7 +8955,7 @@
    "image": ""
   },
   {
-   "id": "cad22465-9a01-4792-8751-5ea533d51aef",
+   "id": "b2af8377-4730-4fa1-9416-56b87e8fedc0",
    "type": "text",
    "name": "Label · Correo",
    "parentId": "flip-abierto-bienvenida",
@@ -8995,7 +8989,7 @@
    "image": ""
   },
   {
-   "id": "9c16cb71-be90-4429-8eac-41b02f831694",
+   "id": "21b0b81c-ff45-4fe5-bd87-8f719c471088",
    "type": "input",
    "name": "Correo",
    "parentId": "flip-abierto-bienvenida",
@@ -9029,7 +9023,7 @@
    "image": ""
   },
   {
-   "id": "9158fcef-b040-4d94-92a9-354ec1d242a8",
+   "id": "aa6148a7-f80b-47c2-b779-da0cf542423e",
    "type": "text",
    "name": "Label · Contraseña",
    "parentId": "flip-abierto-bienvenida",
@@ -9063,7 +9057,7 @@
    "image": ""
   },
   {
-   "id": "af6d7486-beda-4787-b19f-5780590cec3b",
+   "id": "491e3953-21c9-4803-9095-f2da668f07de",
    "type": "input",
    "name": "Contraseña",
    "parentId": "flip-abierto-bienvenida",
@@ -9097,7 +9091,7 @@
    "image": ""
   },
   {
-   "id": "f9e8e9bb-00f2-409d-bfd8-a0fbe92478a6",
+   "id": "4fc1dcf7-97fb-44ac-8309-f3ce246f368e",
    "type": "button",
    "name": "Entrar",
    "parentId": "flip-abierto-bienvenida",
@@ -9106,7 +9100,7 @@
    "width": 363,
    "height": 50,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 26,
@@ -9161,7 +9155,7 @@
    ]
   },
   {
-   "id": "d152a42e-eb9a-4c25-bc13-5e562ef13503",
+   "id": "b02a6869-1368-4333-80fb-1f839f242db1",
    "type": "text",
    "name": "Pie",
    "parentId": "flip-abierto-bienvenida",
@@ -9195,7 +9189,7 @@
    "image": ""
   },
   {
-   "id": "285785c1-9345-4e8a-8d98-1d6c003dcc50",
+   "id": "26c9a564-ea0b-4698-b1b8-eb920147a63e",
    "type": "text",
    "name": "Saludo",
    "parentId": "flip-abierto-espacio",
@@ -9229,7 +9223,7 @@
    "image": ""
   },
   {
-   "id": "c0b9d447-71ca-47ca-a91f-ac8e9445ff8e",
+   "id": "8749d9f5-7a8f-41c5-bd2a-43b5fd7ae074",
    "type": "text",
    "name": "Subtítulo",
    "parentId": "flip-abierto-espacio",
@@ -9263,7 +9257,7 @@
    "image": ""
   },
   {
-   "id": "75da82d3-437c-4f9f-9d63-bbdef94ee796",
+   "id": "f0c914cb-3407-43f4-af2c-decf664d1a78",
    "type": "card",
    "name": "Destacado",
    "parentId": "flip-abierto-espacio",
@@ -9271,7 +9265,7 @@
    "y": 128,
    "width": 371,
    "height": 150,
-   "fill": "@surface",
+   "fill": "@primary",
    "color": "@text",
    "stroke": "@border",
    "strokeWidth": 0,
@@ -9295,7 +9289,6 @@
    "locked": false,
    "targetId": null,
    "image": "",
-   "fillToken": "brand",
    "animations": [
     {
      "id": "destacado",
@@ -9323,16 +9316,16 @@
    ]
   },
   {
-   "id": "a6a97641-1597-4bab-8dea-2466d7aff3f6",
+   "id": "c77befe0-a54e-437e-882d-05d88a048921",
    "type": "text",
    "name": "Destacado · etiqueta",
-   "parentId": "75da82d3-437c-4f9f-9d63-bbdef94ee796",
+   "parentId": "f0c914cb-3407-43f4-af2c-decf664d1a78",
    "x": 22,
    "y": 22,
    "width": 327,
    "height": 16,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -9357,16 +9350,16 @@
    "image": ""
   },
   {
-   "id": "dfe7d91a-fbc4-4f55-b012-d751c4f45f3a",
+   "id": "dab1b661-2807-4f14-bb06-83f91822cbab",
    "type": "text",
    "name": "Destacado · título",
-   "parentId": "75da82d3-437c-4f9f-9d63-bbdef94ee796",
+   "parentId": "f0c914cb-3407-43f4-af2c-decf664d1a78",
    "x": 22,
    "y": 50,
    "width": 327,
    "height": 64,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -9391,7 +9384,7 @@
    "image": ""
   },
   {
-   "id": "5a928424-9c71-4eb3-b964-746435744809",
+   "id": "30ea72a2-e645-4599-9c8c-a2512f3dfce4",
    "type": "text",
    "name": "Tus proyectos",
    "parentId": "flip-abierto-espacio",
@@ -9425,7 +9418,7 @@
    "image": ""
   },
   {
-   "id": "50502f9e-d224-4661-b3e1-b4953356516c",
+   "id": "b89f8fdb-7962-4220-b787-513f9cda6bfe",
    "type": "card",
    "name": "Proyecto · Brand exploration",
    "parentId": "flip-abierto-espacio",
@@ -9484,10 +9477,10 @@
    ]
   },
   {
-   "id": "63f22fb2-8253-45b4-bf0f-07c845037a21",
+   "id": "91c615a5-5a40-4c7a-88a3-257a12ebde07",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "50502f9e-d224-4661-b3e1-b4953356516c",
+   "parentId": "b89f8fdb-7962-4220-b787-513f9cda6bfe",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -9518,10 +9511,10 @@
    "image": ""
   },
   {
-   "id": "98723bdd-7f1c-419a-9160-533c2df9007b",
+   "id": "50c5fc5e-8b30-4498-9df4-56f37ba34c58",
    "type": "text",
    "name": "Nombre",
-   "parentId": "50502f9e-d224-4661-b3e1-b4953356516c",
+   "parentId": "b89f8fdb-7962-4220-b787-513f9cda6bfe",
    "x": 14,
    "y": 54,
    "width": 151.5,
@@ -9552,10 +9545,10 @@
    "image": ""
   },
   {
-   "id": "300f5945-715f-4300-ad54-b99a0bc5a7b1",
+   "id": "f97f95ec-6cc3-4869-850a-f48e2d4e7e4f",
    "type": "text",
    "name": "Detalle",
-   "parentId": "50502f9e-d224-4661-b3e1-b4953356516c",
+   "parentId": "b89f8fdb-7962-4220-b787-513f9cda6bfe",
    "x": 14,
    "y": 74,
    "width": 151.5,
@@ -9586,7 +9579,7 @@
    "image": ""
   },
   {
-   "id": "24200545-3d85-4515-be00-5127e8a975b8",
+   "id": "007c019c-6fb7-4c02-94d5-ab014af8dd3d",
    "type": "card",
    "name": "Proyecto · Studio web",
    "parentId": "flip-abierto-espacio",
@@ -9645,10 +9638,10 @@
    ]
   },
   {
-   "id": "d6cc4ecf-bea5-44f4-b6f5-1918ae7c634a",
+   "id": "52ec4396-fbdd-4347-965d-7bceac73a5db",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "24200545-3d85-4515-be00-5127e8a975b8",
+   "parentId": "007c019c-6fb7-4c02-94d5-ab014af8dd3d",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -9679,10 +9672,10 @@
    "image": ""
   },
   {
-   "id": "3bc50546-96ef-4839-b03f-bb4181a43c70",
+   "id": "8f8f1062-edf3-4832-9cb4-172e33dbb462",
    "type": "text",
    "name": "Nombre",
-   "parentId": "24200545-3d85-4515-be00-5127e8a975b8",
+   "parentId": "007c019c-6fb7-4c02-94d5-ab014af8dd3d",
    "x": 14,
    "y": 54,
    "width": 151.5,
@@ -9713,10 +9706,10 @@
    "image": ""
   },
   {
-   "id": "c5ea12e1-3fd7-48f0-b468-7a5d1c66e671",
+   "id": "6d7bb4a6-7696-48b7-9ec6-73130df99100",
    "type": "text",
    "name": "Detalle",
-   "parentId": "24200545-3d85-4515-be00-5127e8a975b8",
+   "parentId": "007c019c-6fb7-4c02-94d5-ab014af8dd3d",
    "x": 14,
    "y": 74,
    "width": 151.5,
@@ -9747,7 +9740,7 @@
    "image": ""
   },
   {
-   "id": "d21bd295-5202-4e80-9e2c-7c577e88258b",
+   "id": "5a335549-1047-4e9e-8bba-52cf1ae2c179",
    "type": "button",
    "name": "Volver a bienvenida",
    "parentId": "flip-abierto-espacio",
@@ -9756,7 +9749,7 @@
    "width": 371,
    "height": 46,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 23,
@@ -9786,7 +9779,7 @@
    }
   },
   {
-   "id": "9c632ce4-6f81-421c-94cb-b357cdab252a",
+   "id": "f35a2f21-57d1-4a5e-8692-52561f0d8f5f",
    "type": "rect",
    "name": "Navegación inferior",
    "parentId": "flip-abierto-espacio",
@@ -9820,7 +9813,7 @@
    "image": ""
   },
   {
-   "id": "df486267-16dd-4918-8f6a-1bb911bdf687",
+   "id": "7f2d5109-e915-4471-b375-74ed63882f27",
    "type": "rect",
    "name": "Indicador activo",
    "parentId": "flip-abierto-espacio",
@@ -9854,7 +9847,7 @@
    "image": ""
   },
   {
-   "id": "a324526a-2e80-4bff-9b97-24d035a3eab0",
+   "id": "3794afc8-e456-41b9-8884-4f5965dd2993",
    "type": "text",
    "name": "Pestaña · Inicio",
    "parentId": "flip-abierto-espacio",
@@ -9888,7 +9881,7 @@
    "image": ""
   },
   {
-   "id": "57b2b05d-29c7-411f-b5cb-f9398a0dcc4d",
+   "id": "6701f7e8-9753-495c-90bb-ab1bd872a650",
    "type": "text",
    "name": "Pestaña · Ideas",
    "parentId": "flip-abierto-espacio",
@@ -9922,7 +9915,7 @@
    "image": ""
   },
   {
-   "id": "13881ce0-42f9-4a7e-b889-fcbebb5943b9",
+   "id": "bd59d49c-77b2-4aaf-bb79-3b3013dc9749",
    "type": "text",
    "name": "Pestaña · Equipo",
    "parentId": "flip-abierto-espacio",
@@ -9956,7 +9949,7 @@
    "image": ""
   },
   {
-   "id": "fba6bdbc-107f-4dc6-a790-a846c5327afa",
+   "id": "7264fe0b-b902-40db-b97c-0548d4aa60c1",
    "type": "text",
    "name": "Pestaña · Perfil",
    "parentId": "flip-abierto-espacio",
@@ -10035,7 +10028,7 @@
    "foldPair": "flip-abierto-espacio"
   },
   {
-   "id": "5c055a78-5a04-4b02-a052-c4b35830f103",
+   "id": "1760ea87-5eaf-4ba8-9ebd-28df6945c5b6",
    "type": "text",
    "name": "Saludo",
    "parentId": "flip-exterior",
@@ -10069,7 +10062,7 @@
    "image": ""
   },
   {
-   "id": "d25049fd-2df2-4334-86a3-4055cbd1e111",
+   "id": "25ffb745-25b7-432f-a539-5bceed7975c7",
    "type": "card",
    "name": "Resumen",
    "parentId": "flip-exterior",
@@ -10077,7 +10070,7 @@
    "y": 78,
    "width": 359,
    "height": 150,
-   "fill": "@surface",
+   "fill": "@primary",
    "color": "@text",
    "stroke": "@border",
    "strokeWidth": 0,
@@ -10101,7 +10094,6 @@
    "locked": false,
    "targetId": null,
    "image": "",
-   "fillToken": "brand",
    "animations": [
     {
      "id": "resumen",
@@ -10129,16 +10121,16 @@
    ]
   },
   {
-   "id": "857c4026-99d3-4d21-b9b2-948a53f9c47e",
+   "id": "718df596-0d19-49c0-b0a8-fe219b8ca743",
    "type": "text",
    "name": "Resumen · etiqueta",
-   "parentId": "d25049fd-2df2-4334-86a3-4055cbd1e111",
+   "parentId": "25ffb745-25b7-432f-a539-5bceed7975c7",
    "x": 18,
    "y": 18,
    "width": 323,
    "height": 16,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -10163,16 +10155,16 @@
    "image": ""
   },
   {
-   "id": "79e860b0-27ce-4a9b-a876-42bbc8976e52",
+   "id": "337a6a1f-aa33-445c-9f14-72b42179949e",
    "type": "text",
    "name": "Resumen · título",
-   "parentId": "d25049fd-2df2-4334-86a3-4055cbd1e111",
+   "parentId": "25ffb745-25b7-432f-a539-5bceed7975c7",
    "x": 18,
    "y": 44,
    "width": 323,
    "height": 56,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -10197,7 +10189,7 @@
    "image": ""
   },
   {
-   "id": "bb289df4-15a1-4438-ab97-ffb9490b9d72",
+   "id": "6927d3c4-6d5b-4c79-83af-419dcf96fcd5",
    "type": "button",
    "name": "Abrir",
    "parentId": "flip-exterior",
@@ -10206,7 +10198,7 @@
    "width": 359,
    "height": 44,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 22,
@@ -10326,7 +10318,7 @@
    "foldPair": "triptico-dos-paneles-espacio"
   },
   {
-   "id": "33b17fae-84cf-418e-82a5-59a86e2fa227",
+   "id": "75e4a08c-ce21-434c-9ba8-f875f1398ad0",
    "type": "rect",
    "name": "Símbolo",
    "parentId": "triptico-cerrado-bienvenida",
@@ -10361,7 +10353,7 @@
    "fillToken": "brand"
   },
   {
-   "id": "2407a6de-3489-40b8-bc01-4f4dfdea7493",
+   "id": "ffe49542-982f-428d-93cd-98084e3f0676",
    "type": "text",
    "name": "Marca",
    "parentId": "triptico-cerrado-bienvenida",
@@ -10395,7 +10387,7 @@
    "image": ""
   },
   {
-   "id": "f02ca7ae-574d-44e9-959b-e0d1a580a1cb",
+   "id": "1f35cf8f-da48-4b6d-adbe-e23d7a885aa6",
    "type": "text",
    "name": "Etiqueta",
    "parentId": "triptico-cerrado-bienvenida",
@@ -10429,7 +10421,7 @@
    "image": ""
   },
   {
-   "id": "89df3505-d65a-4068-9448-b0341cefa2fe",
+   "id": "5194e696-1e83-4620-b33a-8fb3154b4880",
    "type": "text",
    "name": "Título",
    "parentId": "triptico-cerrado-bienvenida",
@@ -10488,7 +10480,7 @@
    ]
   },
   {
-   "id": "476f2c65-42a4-4fd6-aba8-f16fb83d431b",
+   "id": "8651f0ff-eb90-4baa-b210-95a7248bc698",
    "type": "text",
    "name": "Descripción",
    "parentId": "triptico-cerrado-bienvenida",
@@ -10522,7 +10514,7 @@
    "image": ""
   },
   {
-   "id": "90d2992e-47b7-4d3f-a4a0-b3ead0f4aab8",
+   "id": "cbe7586b-a3e6-4c2e-a2b8-8c2ad1de738a",
    "type": "text",
    "name": "Label · Correo",
    "parentId": "triptico-cerrado-bienvenida",
@@ -10556,7 +10548,7 @@
    "image": ""
   },
   {
-   "id": "5c1ec402-0e09-4929-87b8-edfe6bb6bf83",
+   "id": "c0d21fa3-25ca-4716-857f-b3f991ff6a04",
    "type": "input",
    "name": "Correo",
    "parentId": "triptico-cerrado-bienvenida",
@@ -10590,7 +10582,7 @@
    "image": ""
   },
   {
-   "id": "f62696cc-5fce-4b1b-93b2-fe674b43eb99",
+   "id": "2ab69776-e9be-42d1-8b75-4e212bbf2eb1",
    "type": "text",
    "name": "Label · Contraseña",
    "parentId": "triptico-cerrado-bienvenida",
@@ -10624,7 +10616,7 @@
    "image": ""
   },
   {
-   "id": "ce82e296-ead2-4eb2-a2d0-5022bdcbde39",
+   "id": "392032f6-3617-491f-b246-e14bcb927286",
    "type": "input",
    "name": "Contraseña",
    "parentId": "triptico-cerrado-bienvenida",
@@ -10658,7 +10650,7 @@
    "image": ""
   },
   {
-   "id": "9cee1ee8-cf5e-42a8-b610-f4bf5830402e",
+   "id": "7061693f-40be-49a6-a1fe-e7b12bb0aa9c",
    "type": "button",
    "name": "Entrar",
    "parentId": "triptico-cerrado-bienvenida",
@@ -10667,7 +10659,7 @@
    "width": 363,
    "height": 50,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 26,
@@ -10722,7 +10714,7 @@
    ]
   },
   {
-   "id": "26d59d84-ba96-4ec6-b708-71a12ee9dd4b",
+   "id": "682358f1-44d6-44cc-9727-21de6079a7bb",
    "type": "text",
    "name": "Pie",
    "parentId": "triptico-cerrado-bienvenida",
@@ -10756,7 +10748,7 @@
    "image": ""
   },
   {
-   "id": "f8ad4462-559c-4c42-b6c7-5dcd783bcbb9",
+   "id": "45e6e582-5ebf-45c2-8ef4-635a3d568014",
    "type": "text",
    "name": "Saludo",
    "parentId": "triptico-cerrado-espacio",
@@ -10790,7 +10782,7 @@
    "image": ""
   },
   {
-   "id": "7d3d6cb3-313f-4e62-89e0-b60c959e5ad2",
+   "id": "4d9ca7bb-76f3-4367-9abf-6498190a5fd5",
    "type": "text",
    "name": "Subtítulo",
    "parentId": "triptico-cerrado-espacio",
@@ -10824,7 +10816,7 @@
    "image": ""
   },
   {
-   "id": "de2594dd-4da7-49b9-98e8-916dc561f6e4",
+   "id": "c28b5453-cc8d-4d2a-9f98-8bf34109f884",
    "type": "card",
    "name": "Destacado",
    "parentId": "triptico-cerrado-espacio",
@@ -10832,7 +10824,7 @@
    "y": 128,
    "width": 371,
    "height": 150,
-   "fill": "@surface",
+   "fill": "@primary",
    "color": "@text",
    "stroke": "@border",
    "strokeWidth": 0,
@@ -10856,7 +10848,6 @@
    "locked": false,
    "targetId": null,
    "image": "",
-   "fillToken": "brand",
    "animations": [
     {
      "id": "destacado",
@@ -10884,16 +10875,16 @@
    ]
   },
   {
-   "id": "352fea86-8f48-4712-af6e-738daf4d9b22",
+   "id": "1683a8f0-cd5b-4504-9a50-1c28f7ded3af",
    "type": "text",
    "name": "Destacado · etiqueta",
-   "parentId": "de2594dd-4da7-49b9-98e8-916dc561f6e4",
+   "parentId": "c28b5453-cc8d-4d2a-9f98-8bf34109f884",
    "x": 22,
    "y": 22,
    "width": 327,
    "height": 16,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -10918,16 +10909,16 @@
    "image": ""
   },
   {
-   "id": "9929f5a6-23a9-4125-8e27-c2a4aec66146",
+   "id": "001074fc-260f-4fe2-9b5c-63c7780c2e51",
    "type": "text",
    "name": "Destacado · título",
-   "parentId": "de2594dd-4da7-49b9-98e8-916dc561f6e4",
+   "parentId": "c28b5453-cc8d-4d2a-9f98-8bf34109f884",
    "x": 22,
    "y": 50,
    "width": 327,
    "height": 64,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -10952,7 +10943,7 @@
    "image": ""
   },
   {
-   "id": "6ea509d6-74a1-476f-aafd-de126405a643",
+   "id": "ee0b244c-4bc2-401a-b6a6-36ed0dbeace1",
    "type": "text",
    "name": "Tus proyectos",
    "parentId": "triptico-cerrado-espacio",
@@ -10986,7 +10977,7 @@
    "image": ""
   },
   {
-   "id": "c02c8e7c-9407-4744-a67b-f29bcdfd6484",
+   "id": "3be6af89-c7db-4849-8bbd-16fddf5e3145",
    "type": "card",
    "name": "Proyecto · Brand exploration",
    "parentId": "triptico-cerrado-espacio",
@@ -11045,10 +11036,10 @@
    ]
   },
   {
-   "id": "4c794e7a-720f-4698-bb3d-5165b3876855",
+   "id": "6a9efc97-4453-441c-8303-1fcfe1efdc61",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "c02c8e7c-9407-4744-a67b-f29bcdfd6484",
+   "parentId": "3be6af89-c7db-4849-8bbd-16fddf5e3145",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -11079,10 +11070,10 @@
    "image": ""
   },
   {
-   "id": "018a59ca-4b4c-4000-95da-d114fb38436a",
+   "id": "5053f894-94e5-4196-b1e0-187d30979d04",
    "type": "text",
    "name": "Nombre",
-   "parentId": "c02c8e7c-9407-4744-a67b-f29bcdfd6484",
+   "parentId": "3be6af89-c7db-4849-8bbd-16fddf5e3145",
    "x": 14,
    "y": 54,
    "width": 151.5,
@@ -11113,10 +11104,10 @@
    "image": ""
   },
   {
-   "id": "5f541bcb-566a-488f-a481-d1dab105e9f6",
+   "id": "e2981d82-ccc2-4c78-a77e-21180c55c845",
    "type": "text",
    "name": "Detalle",
-   "parentId": "c02c8e7c-9407-4744-a67b-f29bcdfd6484",
+   "parentId": "3be6af89-c7db-4849-8bbd-16fddf5e3145",
    "x": 14,
    "y": 74,
    "width": 151.5,
@@ -11147,7 +11138,7 @@
    "image": ""
   },
   {
-   "id": "57ff0143-03fa-4e27-8b30-8e7c0cc14987",
+   "id": "5b26d808-0e1c-4e94-8dcd-f7f97ee49ca7",
    "type": "card",
    "name": "Proyecto · Studio web",
    "parentId": "triptico-cerrado-espacio",
@@ -11206,10 +11197,10 @@
    ]
   },
   {
-   "id": "3d660158-ae3a-427e-8e4f-8813e13dac8d",
+   "id": "d12b959c-89a2-41a0-a891-7b340763688e",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "57ff0143-03fa-4e27-8b30-8e7c0cc14987",
+   "parentId": "5b26d808-0e1c-4e94-8dcd-f7f97ee49ca7",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -11240,10 +11231,10 @@
    "image": ""
   },
   {
-   "id": "d6ee4347-eff5-4482-9966-6d0f7e63c7e9",
+   "id": "2af25d82-fc4b-4cd5-84f3-2776c730c6bc",
    "type": "text",
    "name": "Nombre",
-   "parentId": "57ff0143-03fa-4e27-8b30-8e7c0cc14987",
+   "parentId": "5b26d808-0e1c-4e94-8dcd-f7f97ee49ca7",
    "x": 14,
    "y": 54,
    "width": 151.5,
@@ -11274,10 +11265,10 @@
    "image": ""
   },
   {
-   "id": "3da9a1b0-bc54-490b-8772-1aa0b0c2f3e1",
+   "id": "bd932085-fd0c-40cc-b7ab-15faec978c4f",
    "type": "text",
    "name": "Detalle",
-   "parentId": "57ff0143-03fa-4e27-8b30-8e7c0cc14987",
+   "parentId": "5b26d808-0e1c-4e94-8dcd-f7f97ee49ca7",
    "x": 14,
    "y": 74,
    "width": 151.5,
@@ -11308,7 +11299,7 @@
    "image": ""
   },
   {
-   "id": "bf859a5e-d373-4887-9135-a44e55ee8598",
+   "id": "9d0c8669-8575-4be4-90ab-d998d7612124",
    "type": "button",
    "name": "Volver a bienvenida",
    "parentId": "triptico-cerrado-espacio",
@@ -11317,7 +11308,7 @@
    "width": 371,
    "height": 46,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 23,
@@ -11347,7 +11338,7 @@
    }
   },
   {
-   "id": "afd5c9f8-5d63-4763-bc8d-f4a7c4e9bf9a",
+   "id": "c0ce330c-c2bf-488f-8ce1-029f0288300c",
    "type": "rect",
    "name": "Navegación inferior",
    "parentId": "triptico-cerrado-espacio",
@@ -11381,7 +11372,7 @@
    "image": ""
   },
   {
-   "id": "a5bf54d8-5d5f-4b27-b07e-0366a2f86a96",
+   "id": "b3bf16ae-ca4d-4104-9594-d7c4dc689c43",
    "type": "rect",
    "name": "Indicador activo",
    "parentId": "triptico-cerrado-espacio",
@@ -11415,7 +11406,7 @@
    "image": ""
   },
   {
-   "id": "8038abb2-0289-4946-8ae9-0b426e7fc1fa",
+   "id": "f79bff7b-1714-4404-8a1d-3ea288c74351",
    "type": "text",
    "name": "Pestaña · Inicio",
    "parentId": "triptico-cerrado-espacio",
@@ -11449,7 +11440,7 @@
    "image": ""
   },
   {
-   "id": "f07aaf03-b129-4246-9e91-33b1ba192c62",
+   "id": "e0f2a42c-7554-42ee-aa5f-d06488988ce4",
    "type": "text",
    "name": "Pestaña · Ideas",
    "parentId": "triptico-cerrado-espacio",
@@ -11483,7 +11474,7 @@
    "image": ""
   },
   {
-   "id": "22abf06d-185a-4553-9650-eed04c11a470",
+   "id": "49749840-1436-4daa-a543-51a45ee32445",
    "type": "text",
    "name": "Pestaña · Equipo",
    "parentId": "triptico-cerrado-espacio",
@@ -11517,7 +11508,7 @@
    "image": ""
   },
   {
-   "id": "26028397-792c-4201-93ac-d886bc6c59bb",
+   "id": "c610c0e1-d4aa-4c4b-82fd-de06d55945cd",
    "type": "text",
    "name": "Pestaña · Perfil",
    "parentId": "triptico-cerrado-espacio",
@@ -11649,7 +11640,7 @@
    "foldPair": "triptico-abierto-espacio"
   },
   {
-   "id": "81bdd9d6-4a0f-40d6-b6af-978b63fafba4",
+   "id": "3268e397-c48d-4ecd-976d-4f747e10a4af",
    "type": "rect",
    "name": "Símbolo",
    "parentId": "triptico-dos-paneles-bienvenida",
@@ -11684,7 +11675,7 @@
    "fillToken": "brand"
   },
   {
-   "id": "5c2511d1-9ec2-4113-93e2-cb3d5dfe8169",
+   "id": "5dcaee23-fa7a-4c40-82fa-a1e53365ff18",
    "type": "text",
    "name": "Marca",
    "parentId": "triptico-dos-paneles-bienvenida",
@@ -11718,7 +11709,7 @@
    "image": ""
   },
   {
-   "id": "24d13a2d-a895-4e3a-80b6-41486fc016d5",
+   "id": "b9068537-a072-4839-9d41-6ef67d390fef",
    "type": "text",
    "name": "Etiqueta",
    "parentId": "triptico-dos-paneles-bienvenida",
@@ -11752,7 +11743,7 @@
    "image": ""
   },
   {
-   "id": "2f48d50e-ea8b-49be-9698-c2e73a62a0d1",
+   "id": "ca8d2b92-31c9-496c-89d0-926b761421b5",
    "type": "text",
    "name": "Título",
    "parentId": "triptico-dos-paneles-bienvenida",
@@ -11811,7 +11802,7 @@
    ]
   },
   {
-   "id": "c836cc4f-196c-4de8-be87-8d066f46c843",
+   "id": "86fac6a5-eb53-4dca-b983-5cc3fb69ce99",
    "type": "text",
    "name": "Descripción",
    "parentId": "triptico-dos-paneles-bienvenida",
@@ -11845,7 +11836,7 @@
    "image": ""
   },
   {
-   "id": "87c645b7-73b4-4e00-be44-1aa42c532ebf",
+   "id": "753acf49-4c66-4cb4-a237-26fe93dc4d25",
    "type": "text",
    "name": "Label · Correo",
    "parentId": "triptico-dos-paneles-bienvenida",
@@ -11879,7 +11870,7 @@
    "image": ""
   },
   {
-   "id": "b722121d-3936-4343-8347-1c0f55cad8b0",
+   "id": "987aeb29-8b37-4cf7-bd0e-257532a3c8d9",
    "type": "input",
    "name": "Correo",
    "parentId": "triptico-dos-paneles-bienvenida",
@@ -11913,7 +11904,7 @@
    "image": ""
   },
   {
-   "id": "b384d3b6-b101-4f51-8f4f-f984f0efe8d0",
+   "id": "a028dde1-2294-44f4-af22-2164e6132d02",
    "type": "text",
    "name": "Label · Contraseña",
    "parentId": "triptico-dos-paneles-bienvenida",
@@ -11947,7 +11938,7 @@
    "image": ""
   },
   {
-   "id": "5c55a122-3421-4ab8-af76-b2a539371933",
+   "id": "cbe3e411-f243-49c9-8d1b-47f429c866f6",
    "type": "input",
    "name": "Contraseña",
    "parentId": "triptico-dos-paneles-bienvenida",
@@ -11981,7 +11972,7 @@
    "image": ""
   },
   {
-   "id": "5a287a7e-f50d-4e79-83a1-b2347c1d199d",
+   "id": "95bac46b-4edf-4f5b-aa15-0f7b49838efa",
    "type": "button",
    "name": "Entrar",
    "parentId": "triptico-dos-paneles-bienvenida",
@@ -11990,7 +11981,7 @@
    "width": 350,
    "height": 50,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 26,
@@ -12045,7 +12036,7 @@
    ]
   },
   {
-   "id": "2eb1ccdd-1764-472b-bbb0-cd2acb3fe192",
+   "id": "79e1869f-f03b-4406-bded-43b460af9e21",
    "type": "text",
    "name": "Pie",
    "parentId": "triptico-dos-paneles-bienvenida",
@@ -12079,7 +12070,7 @@
    "image": ""
   },
   {
-   "id": "85237708-f9c6-4be2-84a5-bf72527ec19c",
+   "id": "c3c4ee5f-c20c-44f1-a73e-95aff0133ba2",
    "type": "rect",
    "name": "Barra lateral",
    "parentId": "triptico-dos-paneles-espacio",
@@ -12113,7 +12104,7 @@
    "image": ""
   },
   {
-   "id": "faaf2ed7-4363-40a8-96dc-88b1ab9ce59f",
+   "id": "5a797312-f138-45c6-a132-4220a51dac7a",
    "type": "rect",
    "name": "Indicador activo",
    "parentId": "triptico-dos-paneles-espacio",
@@ -12147,7 +12138,7 @@
    "image": ""
   },
   {
-   "id": "a9d99ddb-a95f-4684-9ec3-d9fa643219a0",
+   "id": "253639c7-adfb-4899-bf7e-88b377dfd39a",
    "type": "text",
    "name": "Sección · Inicio",
    "parentId": "triptico-dos-paneles-espacio",
@@ -12181,7 +12172,7 @@
    "image": ""
   },
   {
-   "id": "c2dd477b-13e2-4eee-9f5b-deb2254884f6",
+   "id": "0d1189cf-de4c-4c82-b00d-5939004b2b3c",
    "type": "text",
    "name": "Sección · Ideas",
    "parentId": "triptico-dos-paneles-espacio",
@@ -12215,7 +12206,7 @@
    "image": ""
   },
   {
-   "id": "597df743-1e3a-4c05-afda-cddb53a3c3a9",
+   "id": "7754e9d3-b59e-4a30-83ae-ea5c73c1592c",
    "type": "text",
    "name": "Sección · Equipo",
    "parentId": "triptico-dos-paneles-espacio",
@@ -12249,7 +12240,7 @@
    "image": ""
   },
   {
-   "id": "8c99eb38-bcaf-43df-83cf-a3b13784f74f",
+   "id": "a6bd668d-8377-4068-adcd-b939484bae41",
    "type": "text",
    "name": "Saludo",
    "parentId": "triptico-dos-paneles-espacio",
@@ -12283,7 +12274,7 @@
    "image": ""
   },
   {
-   "id": "27f307d0-ecc4-488e-8a05-3e36394f14da",
+   "id": "39e4aafe-c44c-4e45-8d58-c956f778de0f",
    "type": "text",
    "name": "Subtítulo",
    "parentId": "triptico-dos-paneles-espacio",
@@ -12317,7 +12308,7 @@
    "image": ""
   },
   {
-   "id": "28b64b43-d2ed-456c-bf39-5c38e0f3ca1b",
+   "id": "5db41a9f-f3c3-403b-820b-6dd9353575ab",
    "type": "card",
    "name": "Destacado",
    "parentId": "triptico-dos-paneles-espacio",
@@ -12325,7 +12316,7 @@
    "y": 50,
    "width": 374,
    "height": 260,
-   "fill": "@surface",
+   "fill": "@primary",
    "color": "@text",
    "stroke": "@border",
    "strokeWidth": 0,
@@ -12349,7 +12340,6 @@
    "locked": false,
    "targetId": null,
    "image": "",
-   "fillToken": "brand",
    "animations": [
     {
      "id": "destacado",
@@ -12377,16 +12367,16 @@
    ]
   },
   {
-   "id": "ad828e4d-f0fa-496f-8c5f-a6a828b3b1f0",
+   "id": "cd20462d-aaf8-4bc5-ae4e-745c6d2e8f18",
    "type": "text",
    "name": "Destacado · etiqueta",
-   "parentId": "28b64b43-d2ed-456c-bf39-5c38e0f3ca1b",
+   "parentId": "5db41a9f-f3c3-403b-820b-6dd9353575ab",
    "x": 22,
    "y": 22,
    "width": 330,
    "height": 16,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -12411,16 +12401,16 @@
    "image": ""
   },
   {
-   "id": "f5337eef-cc28-4cdf-9203-c19330a916b6",
+   "id": "438ebcef-8d78-415a-91df-2c91c4b65ede",
    "type": "text",
    "name": "Destacado · título",
-   "parentId": "28b64b43-d2ed-456c-bf39-5c38e0f3ca1b",
+   "parentId": "5db41a9f-f3c3-403b-820b-6dd9353575ab",
    "x": 22,
    "y": 50,
    "width": 330,
    "height": 64,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -12445,7 +12435,7 @@
    "image": ""
   },
   {
-   "id": "0ef4dce1-6c44-43a8-8b62-4a8f47324840",
+   "id": "46400cd7-6626-4a83-8498-843e1193b903",
    "type": "text",
    "name": "Tus proyectos",
    "parentId": "triptico-dos-paneles-espacio",
@@ -12479,7 +12469,7 @@
    "image": ""
   },
   {
-   "id": "6117aedc-7f5b-4c30-aba2-cb99bf0c1f9f",
+   "id": "70ca24c5-00e2-405f-bc2b-6c101ba63490",
    "type": "card",
    "name": "Proyecto · Brand exploration",
    "parentId": "triptico-dos-paneles-espacio",
@@ -12538,10 +12528,10 @@
    ]
   },
   {
-   "id": "9e3b4038-4ac2-4acf-b6b6-9488a456b414",
+   "id": "95bfad01-0b9c-451d-a72e-e28756a1fe2e",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "6117aedc-7f5b-4c30-aba2-cb99bf0c1f9f",
+   "parentId": "70ca24c5-00e2-405f-bc2b-6c101ba63490",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -12572,10 +12562,10 @@
    "image": ""
   },
   {
-   "id": "e5326cbc-47fd-4996-8965-8c9a57c10752",
+   "id": "3b121c5d-817c-4958-82d1-e963e9a17496",
    "type": "text",
    "name": "Nombre",
-   "parentId": "6117aedc-7f5b-4c30-aba2-cb99bf0c1f9f",
+   "parentId": "70ca24c5-00e2-405f-bc2b-6c101ba63490",
    "x": 14,
    "y": 54,
    "width": 258,
@@ -12606,10 +12596,10 @@
    "image": ""
   },
   {
-   "id": "f42b93f2-2929-428e-897e-1cf3c188183b",
+   "id": "27dd9a1c-41b9-46cb-8a8d-77044d99927b",
    "type": "text",
    "name": "Detalle",
-   "parentId": "6117aedc-7f5b-4c30-aba2-cb99bf0c1f9f",
+   "parentId": "70ca24c5-00e2-405f-bc2b-6c101ba63490",
    "x": 14,
    "y": 74,
    "width": 258,
@@ -12640,7 +12630,7 @@
    "image": ""
   },
   {
-   "id": "8ff2f6c1-bab0-4346-a1c5-d4379fa26054",
+   "id": "3e272549-e4de-46e0-bcc2-b9c2a38d2566",
    "type": "card",
    "name": "Proyecto · Studio web",
    "parentId": "triptico-dos-paneles-espacio",
@@ -12699,10 +12689,10 @@
    ]
   },
   {
-   "id": "18ddb12b-f26f-402a-82f3-eb228f5c41e6",
+   "id": "a291021d-0e60-4571-ad8c-59bb9aecc3dd",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "8ff2f6c1-bab0-4346-a1c5-d4379fa26054",
+   "parentId": "3e272549-e4de-46e0-bcc2-b9c2a38d2566",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -12733,10 +12723,10 @@
    "image": ""
   },
   {
-   "id": "a91e9cd9-d85a-42fb-89c3-1ae4562eee04",
+   "id": "51725160-ec51-4102-a67b-6c63baed2dab",
    "type": "text",
    "name": "Nombre",
-   "parentId": "8ff2f6c1-bab0-4346-a1c5-d4379fa26054",
+   "parentId": "3e272549-e4de-46e0-bcc2-b9c2a38d2566",
    "x": 14,
    "y": 54,
    "width": 258,
@@ -12767,10 +12757,10 @@
    "image": ""
   },
   {
-   "id": "8c70116c-6538-4cb4-a20d-d2380244fe7d",
+   "id": "df995b52-43f8-433e-8161-b6f9ae2ff775",
    "type": "text",
    "name": "Detalle",
-   "parentId": "8ff2f6c1-bab0-4346-a1c5-d4379fa26054",
+   "parentId": "3e272549-e4de-46e0-bcc2-b9c2a38d2566",
    "x": 14,
    "y": 74,
    "width": 258,
@@ -12801,7 +12791,7 @@
    "image": ""
   },
   {
-   "id": "7f7fb824-617f-4b7f-9df5-4eb6bcfc1620",
+   "id": "234ec0d6-c6b9-4174-ae87-9cac1f5c9fb3",
    "type": "card",
    "name": "Proyecto · App móvil",
    "parentId": "triptico-dos-paneles-espacio",
@@ -12860,10 +12850,10 @@
    ]
   },
   {
-   "id": "e225a54a-fca5-4d83-9df4-8125f75e0662",
+   "id": "904e8d20-1f52-44bf-9a35-46889710529b",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "7f7fb824-617f-4b7f-9df5-4eb6bcfc1620",
+   "parentId": "234ec0d6-c6b9-4174-ae87-9cac1f5c9fb3",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -12894,10 +12884,10 @@
    "image": ""
   },
   {
-   "id": "95bd8a28-a69e-4def-a84d-39e9de6b3e70",
+   "id": "cf181819-9987-4308-9809-93da09d7edd8",
    "type": "text",
    "name": "Nombre",
-   "parentId": "7f7fb824-617f-4b7f-9df5-4eb6bcfc1620",
+   "parentId": "234ec0d6-c6b9-4174-ae87-9cac1f5c9fb3",
    "x": 14,
    "y": 54,
    "width": 258,
@@ -12928,10 +12918,10 @@
    "image": ""
   },
   {
-   "id": "1a3d9089-9758-44f1-b09f-21269ad4a39d",
+   "id": "85da2c69-f6c1-48b5-be17-6150c468d8d5",
    "type": "text",
    "name": "Detalle",
-   "parentId": "7f7fb824-617f-4b7f-9df5-4eb6bcfc1620",
+   "parentId": "234ec0d6-c6b9-4174-ae87-9cac1f5c9fb3",
    "x": 14,
    "y": 74,
    "width": 258,
@@ -12962,7 +12952,7 @@
    "image": ""
   },
   {
-   "id": "b6915046-8ae0-48de-8197-28173e4c9fc1",
+   "id": "73f86306-cf60-4f85-a86b-9c2a88efb2d6",
    "type": "card",
    "name": "Proyecto · Sistema visual",
    "parentId": "triptico-dos-paneles-espacio",
@@ -13021,10 +13011,10 @@
    ]
   },
   {
-   "id": "f4a6161c-3030-46a2-9d7a-42edc93c6fbd",
+   "id": "5308ff0a-bb71-461c-b876-151cfef529a6",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "b6915046-8ae0-48de-8197-28173e4c9fc1",
+   "parentId": "73f86306-cf60-4f85-a86b-9c2a88efb2d6",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -13055,10 +13045,10 @@
    "image": ""
   },
   {
-   "id": "30fd190c-6133-4638-b238-82f7d8d9bc95",
+   "id": "ad3ed72f-c3c7-455a-ba23-e1410bd28d61",
    "type": "text",
    "name": "Nombre",
-   "parentId": "b6915046-8ae0-48de-8197-28173e4c9fc1",
+   "parentId": "73f86306-cf60-4f85-a86b-9c2a88efb2d6",
    "x": 14,
    "y": 54,
    "width": 258,
@@ -13089,10 +13079,10 @@
    "image": ""
   },
   {
-   "id": "6b42fb0a-43fa-4e09-b3ee-0b32bb1f059f",
+   "id": "067563cc-4bc3-41f4-8541-2563caccc45f",
    "type": "text",
    "name": "Detalle",
-   "parentId": "b6915046-8ae0-48de-8197-28173e4c9fc1",
+   "parentId": "73f86306-cf60-4f85-a86b-9c2a88efb2d6",
    "x": 14,
    "y": 74,
    "width": 258,
@@ -13123,7 +13113,7 @@
    "image": ""
   },
   {
-   "id": "f9d6be82-690a-46ac-b6c8-5b36d90d59af",
+   "id": "84052c09-58be-4e1c-bab8-9867c4246083",
    "type": "button",
    "name": "Volver a bienvenida",
    "parentId": "triptico-dos-paneles-espacio",
@@ -13132,7 +13122,7 @@
    "width": 374,
    "height": 46,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 23,
@@ -13262,7 +13252,7 @@
    "foldPair": "triptico-cerrado-espacio"
   },
   {
-   "id": "3db30aa9-9695-41e7-a5cd-fe216b1665ae",
+   "id": "8630d6a8-674a-4d57-80d3-6e4bd6b73138",
    "type": "rect",
    "name": "Símbolo",
    "parentId": "triptico-abierto-bienvenida",
@@ -13297,7 +13287,7 @@
    "fillToken": "brand"
   },
   {
-   "id": "3c71fdbc-ba8f-4a45-a9c3-6c5477977669",
+   "id": "d67ecd6c-60ca-4613-accf-126af43c74d7",
    "type": "text",
    "name": "Marca",
    "parentId": "triptico-abierto-bienvenida",
@@ -13331,7 +13321,7 @@
    "image": ""
   },
   {
-   "id": "650b5aa7-6a5a-426f-99b1-6dc60a4acde1",
+   "id": "38596d81-3baa-4772-bdfc-79e885649fd1",
    "type": "text",
    "name": "Etiqueta",
    "parentId": "triptico-abierto-bienvenida",
@@ -13365,7 +13355,7 @@
    "image": ""
   },
   {
-   "id": "a76914bd-66b7-43fd-a906-93567b593c76",
+   "id": "710402a6-2692-4c8d-94d2-231ea951489a",
    "type": "text",
    "name": "Título",
    "parentId": "triptico-abierto-bienvenida",
@@ -13424,7 +13414,7 @@
    ]
   },
   {
-   "id": "2015ce09-e044-4fdd-9523-be8bf079d8cd",
+   "id": "e4e9ec22-b3e8-4e1b-bd73-7793e6a6e6d9",
    "type": "text",
    "name": "Descripción",
    "parentId": "triptico-abierto-bienvenida",
@@ -13458,7 +13448,7 @@
    "image": ""
   },
   {
-   "id": "23c6acfd-0f26-4586-9cf5-d94e923834cc",
+   "id": "f02a401a-b3e6-4b77-af36-a532480fe0bf",
    "type": "text",
    "name": "Label · Correo",
    "parentId": "triptico-abierto-bienvenida",
@@ -13492,7 +13482,7 @@
    "image": ""
   },
   {
-   "id": "e070e6ae-df5b-464f-8f44-a1365c07e54c",
+   "id": "301c5490-0c92-40cd-b959-ce809ab06857",
    "type": "input",
    "name": "Correo",
    "parentId": "triptico-abierto-bienvenida",
@@ -13526,7 +13516,7 @@
    "image": ""
   },
   {
-   "id": "ad306e15-a644-4d38-b347-f44288dbe76a",
+   "id": "47f28c3f-1593-41f8-8b6f-92461a9918f6",
    "type": "text",
    "name": "Label · Contraseña",
    "parentId": "triptico-abierto-bienvenida",
@@ -13560,7 +13550,7 @@
    "image": ""
   },
   {
-   "id": "6c0e531a-f118-47e8-a6b1-cefc82ae73c0",
+   "id": "becffa89-a2b6-4853-a77a-a4836ee2c0b3",
    "type": "input",
    "name": "Contraseña",
    "parentId": "triptico-abierto-bienvenida",
@@ -13594,7 +13584,7 @@
    "image": ""
   },
   {
-   "id": "b14ed5f0-cf06-46eb-9ec1-2332749ec482",
+   "id": "5814b772-11e2-44cb-bbb9-3636ac4560d0",
    "type": "button",
    "name": "Entrar",
    "parentId": "triptico-abierto-bienvenida",
@@ -13603,7 +13593,7 @@
    "width": 348.6666666666667,
    "height": 50,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 26,
@@ -13658,7 +13648,7 @@
    ]
   },
   {
-   "id": "5e526f17-2b54-4cd4-b72e-553508a79aca",
+   "id": "870db9ac-5f2f-413d-970c-9d1d0bb8b5c2",
    "type": "card",
    "name": "Presentación",
    "parentId": "triptico-abierto-bienvenida",
@@ -13666,7 +13656,7 @@
    "y": 92,
    "width": 348.6666666666667,
    "height": 731,
-   "fill": "@surface",
+   "fill": "@primary",
    "color": "@text",
    "stroke": "@border",
    "strokeWidth": 0,
@@ -13690,7 +13680,6 @@
    "locked": false,
    "targetId": null,
    "image": "",
-   "fillToken": "brand",
    "animations": [
     {
      "id": "presentacion",
@@ -13718,16 +13707,16 @@
    ]
   },
   {
-   "id": "d632a638-3f4d-4bb6-95b5-5b26346d3515",
+   "id": "d9856f3b-de93-42d5-9876-6c8f2aebf4aa",
    "type": "text",
    "name": "Presentación · título",
-   "parentId": "5e526f17-2b54-4cd4-b72e-553508a79aca",
+   "parentId": "870db9ac-5f2f-413d-970c-9d1d0bb8b5c2",
    "x": 26,
    "y": 30,
    "width": 296.6666666666667,
    "height": 90,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -13752,7 +13741,7 @@
    "image": ""
   },
   {
-   "id": "d7085639-67b2-4694-9e5c-90de23f81a49",
+   "id": "a9a56b7b-52a8-409c-bf5f-15247396c728",
    "type": "text",
    "name": "Pie",
    "parentId": "triptico-abierto-bienvenida",
@@ -13786,7 +13775,7 @@
    "image": ""
   },
   {
-   "id": "c936dfe6-c2e3-47ea-9cc0-37e070e4d354",
+   "id": "334c288c-a661-4466-96c5-7b10b334ea48",
    "type": "rect",
    "name": "Barra lateral",
    "parentId": "triptico-abierto-espacio",
@@ -13820,7 +13809,7 @@
    "image": ""
   },
   {
-   "id": "1f133e4f-cc03-4f6d-8ce7-5bad2d370a7b",
+   "id": "8b92f0c4-c327-4ac3-844d-5d1306c3548e",
    "type": "rect",
    "name": "Indicador activo",
    "parentId": "triptico-abierto-espacio",
@@ -13854,7 +13843,7 @@
    "image": ""
   },
   {
-   "id": "82f683c2-e975-4f1a-b5ab-bd9fb8befe64",
+   "id": "bba0250a-c4a0-4361-8215-676fc68586a7",
    "type": "text",
    "name": "Sección · Inicio",
    "parentId": "triptico-abierto-espacio",
@@ -13888,7 +13877,7 @@
    "image": ""
   },
   {
-   "id": "ce354ab9-2c88-4230-80a9-3579134c98d1",
+   "id": "c6e48212-5dec-452c-8bc7-cb6d3c7e4a88",
    "type": "text",
    "name": "Sección · Ideas",
    "parentId": "triptico-abierto-espacio",
@@ -13922,7 +13911,7 @@
    "image": ""
   },
   {
-   "id": "cb398cff-35b6-48b2-9b0f-cd3420a566b8",
+   "id": "506d4655-91e9-493b-9455-8bae40bb0aa0",
    "type": "text",
    "name": "Sección · Equipo",
    "parentId": "triptico-abierto-espacio",
@@ -13956,7 +13945,7 @@
    "image": ""
   },
   {
-   "id": "2f44efe7-b6fa-435a-9385-38e980642822",
+   "id": "5d6b6e53-03fe-4b76-9b49-4f793ab5e626",
    "type": "text",
    "name": "Saludo",
    "parentId": "triptico-abierto-espacio",
@@ -13990,7 +13979,7 @@
    "image": ""
   },
   {
-   "id": "111294a5-0cd8-4179-98f2-118d4bf70bc7",
+   "id": "3f4b7594-c6d2-41db-9a6a-2e7ed2308ded",
    "type": "text",
    "name": "Subtítulo",
    "parentId": "triptico-abierto-espacio",
@@ -14024,7 +14013,7 @@
    "image": ""
   },
   {
-   "id": "9146e705-c49b-4d04-be6e-156b1c6856d7",
+   "id": "27a53a49-def7-4d13-9f8e-c050f12264d2",
    "type": "card",
    "name": "Destacado",
    "parentId": "triptico-abierto-espacio",
@@ -14032,7 +14021,7 @@
    "y": 50,
    "width": 372.6666666666667,
    "height": 260,
-   "fill": "@surface",
+   "fill": "@primary",
    "color": "@text",
    "stroke": "@border",
    "strokeWidth": 0,
@@ -14056,7 +14045,6 @@
    "locked": false,
    "targetId": null,
    "image": "",
-   "fillToken": "brand",
    "animations": [
     {
      "id": "destacado",
@@ -14084,16 +14072,16 @@
    ]
   },
   {
-   "id": "9ea8728a-6e28-4090-ab6a-e13ce09cc305",
+   "id": "aedcc014-e912-487d-8ead-57b81a8ff1e9",
    "type": "text",
    "name": "Destacado · etiqueta",
-   "parentId": "9146e705-c49b-4d04-be6e-156b1c6856d7",
+   "parentId": "27a53a49-def7-4d13-9f8e-c050f12264d2",
    "x": 22,
    "y": 22,
    "width": 328.6666666666667,
    "height": 16,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -14118,16 +14106,16 @@
    "image": ""
   },
   {
-   "id": "85272622-78ea-4b41-97df-6a4a781ddfcc",
+   "id": "20cb5a97-ac5e-4672-b9ba-e9a45a0a8b1e",
    "type": "text",
    "name": "Destacado · título",
-   "parentId": "9146e705-c49b-4d04-be6e-156b1c6856d7",
+   "parentId": "27a53a49-def7-4d13-9f8e-c050f12264d2",
    "x": 22,
    "y": 50,
    "width": 328.6666666666667,
    "height": 64,
    "fill": "transparent",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 0,
@@ -14152,7 +14140,7 @@
    "image": ""
   },
   {
-   "id": "5830977d-231d-4b44-8649-9f4a56896e86",
+   "id": "e38992fd-b4d0-4ded-a4ee-37762134af65",
    "type": "text",
    "name": "Tus proyectos",
    "parentId": "triptico-abierto-espacio",
@@ -14186,7 +14174,7 @@
    "image": ""
   },
   {
-   "id": "85c76454-217f-40d8-9194-3a77cc24a05d",
+   "id": "a4d99bc2-a90e-45d7-8c8b-f8c23f927bc3",
    "type": "card",
    "name": "Proyecto · Brand exploration",
    "parentId": "triptico-abierto-espacio",
@@ -14245,10 +14233,10 @@
    ]
   },
   {
-   "id": "7f1fd2ef-6313-41ac-ab4f-ee02aa2d60c4",
+   "id": "11c2ff3d-63ba-461f-abc4-adf5f761ec4b",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "85c76454-217f-40d8-9194-3a77cc24a05d",
+   "parentId": "a4d99bc2-a90e-45d7-8c8b-f8c23f927bc3",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -14279,10 +14267,10 @@
    "image": ""
   },
   {
-   "id": "de3864f9-64b6-4181-8044-a92418dbeaa8",
+   "id": "b021c222-7103-43af-abdf-3d0e27988ed7",
    "type": "text",
    "name": "Nombre",
-   "parentId": "85c76454-217f-40d8-9194-3a77cc24a05d",
+   "parentId": "a4d99bc2-a90e-45d7-8c8b-f8c23f927bc3",
    "x": 14,
    "y": 54,
    "width": 256.6666666666667,
@@ -14313,10 +14301,10 @@
    "image": ""
   },
   {
-   "id": "f1f5ad8b-220d-4364-92c4-53c378228ba8",
+   "id": "6741e0a7-5d0a-45e7-b70a-e75a16814a95",
    "type": "text",
    "name": "Detalle",
-   "parentId": "85c76454-217f-40d8-9194-3a77cc24a05d",
+   "parentId": "a4d99bc2-a90e-45d7-8c8b-f8c23f927bc3",
    "x": 14,
    "y": 74,
    "width": 256.6666666666667,
@@ -14347,7 +14335,7 @@
    "image": ""
   },
   {
-   "id": "6fef9f19-7ee2-4109-a550-c6b870c5a0a4",
+   "id": "8bd9ec97-9e53-463d-b7ee-6a0591c800c5",
    "type": "card",
    "name": "Proyecto · Studio web",
    "parentId": "triptico-abierto-espacio",
@@ -14406,10 +14394,10 @@
    ]
   },
   {
-   "id": "7d90886d-f2a2-4437-b746-f9b22d68554b",
+   "id": "d1e1ef3a-318b-4e06-9501-dd3495ce5a46",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "6fef9f19-7ee2-4109-a550-c6b870c5a0a4",
+   "parentId": "8bd9ec97-9e53-463d-b7ee-6a0591c800c5",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -14440,10 +14428,10 @@
    "image": ""
   },
   {
-   "id": "f13e6fa6-55f2-495c-a056-ae50fec2e812",
+   "id": "34402503-c6c6-47e1-8a28-c273efa187fc",
    "type": "text",
    "name": "Nombre",
-   "parentId": "6fef9f19-7ee2-4109-a550-c6b870c5a0a4",
+   "parentId": "8bd9ec97-9e53-463d-b7ee-6a0591c800c5",
    "x": 14,
    "y": 54,
    "width": 256.6666666666667,
@@ -14474,10 +14462,10 @@
    "image": ""
   },
   {
-   "id": "87843978-37f3-4e64-98ad-202b536c5e71",
+   "id": "63b18db7-f5de-4183-b9ba-6af437252484",
    "type": "text",
    "name": "Detalle",
-   "parentId": "6fef9f19-7ee2-4109-a550-c6b870c5a0a4",
+   "parentId": "8bd9ec97-9e53-463d-b7ee-6a0591c800c5",
    "x": 14,
    "y": 74,
    "width": 256.6666666666667,
@@ -14508,7 +14496,7 @@
    "image": ""
   },
   {
-   "id": "3e3dd882-c25d-4251-aadf-896ddf5e2fc1",
+   "id": "343faa2e-2234-4b53-a956-1fdbe70564d1",
    "type": "card",
    "name": "Proyecto · App móvil",
    "parentId": "triptico-abierto-espacio",
@@ -14567,10 +14555,10 @@
    ]
   },
   {
-   "id": "f9886eb0-1b2a-4c5d-bfe7-161c1ce14a4b",
+   "id": "d1f8fa10-9efb-4c48-9004-e6116b07bdce",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "3e3dd882-c25d-4251-aadf-896ddf5e2fc1",
+   "parentId": "343faa2e-2234-4b53-a956-1fdbe70564d1",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -14601,10 +14589,10 @@
    "image": ""
   },
   {
-   "id": "07e0bbd7-52c7-4f2f-88e2-d5c2e1819e00",
+   "id": "742872b7-86e8-4a2f-a956-556878d2ba11",
    "type": "text",
    "name": "Nombre",
-   "parentId": "3e3dd882-c25d-4251-aadf-896ddf5e2fc1",
+   "parentId": "343faa2e-2234-4b53-a956-1fdbe70564d1",
    "x": 14,
    "y": 54,
    "width": 256.6666666666667,
@@ -14635,10 +14623,10 @@
    "image": ""
   },
   {
-   "id": "fdc7340b-ef0a-4630-8749-836b3be6c6bc",
+   "id": "cb788769-45e6-421f-98e0-283ccc02fd83",
    "type": "text",
    "name": "Detalle",
-   "parentId": "3e3dd882-c25d-4251-aadf-896ddf5e2fc1",
+   "parentId": "343faa2e-2234-4b53-a956-1fdbe70564d1",
    "x": 14,
    "y": 74,
    "width": 256.6666666666667,
@@ -14669,7 +14657,7 @@
    "image": ""
   },
   {
-   "id": "c4db7acd-4f71-4a40-94a7-5dafd211ef8c",
+   "id": "564477bb-c9c2-46a8-aaa4-64a3fb0afa9f",
    "type": "card",
    "name": "Proyecto · Sistema visual",
    "parentId": "triptico-abierto-espacio",
@@ -14728,10 +14716,10 @@
    ]
   },
   {
-   "id": "ff0d1c27-acae-457a-8727-ff040b6d1240",
+   "id": "0043228b-c691-448a-ac1e-939f8ba39dcd",
    "type": "rect",
    "name": "Miniatura",
-   "parentId": "c4db7acd-4f71-4a40-94a7-5dafd211ef8c",
+   "parentId": "564477bb-c9c2-46a8-aaa4-64a3fb0afa9f",
    "x": 14,
    "y": 14,
    "width": 30,
@@ -14762,10 +14750,10 @@
    "image": ""
   },
   {
-   "id": "8b512afb-e41e-4a02-8bb1-ea01bf5dbfcc",
+   "id": "8a3941ee-79b0-402d-9382-0dfaa789c5f8",
    "type": "text",
    "name": "Nombre",
-   "parentId": "c4db7acd-4f71-4a40-94a7-5dafd211ef8c",
+   "parentId": "564477bb-c9c2-46a8-aaa4-64a3fb0afa9f",
    "x": 14,
    "y": 54,
    "width": 256.6666666666667,
@@ -14796,10 +14784,10 @@
    "image": ""
   },
   {
-   "id": "02336822-748d-4d90-b07b-43e3d8d12dfe",
+   "id": "3ac14470-afdf-48d7-b047-ea2a1f00fb8e",
    "type": "text",
    "name": "Detalle",
-   "parentId": "c4db7acd-4f71-4a40-94a7-5dafd211ef8c",
+   "parentId": "564477bb-c9c2-46a8-aaa4-64a3fb0afa9f",
    "x": 14,
    "y": 74,
    "width": 256.6666666666667,
@@ -14830,7 +14818,7 @@
    "image": ""
   },
   {
-   "id": "5e08d1dc-8438-4542-9b1d-af5eecec0507",
+   "id": "dcb540ed-ff1c-4b6d-93b0-db8b0a1fd3b2",
    "type": "text",
    "name": "Actividad",
    "parentId": "triptico-abierto-espacio",
@@ -14864,7 +14852,7 @@
    "image": ""
   },
   {
-   "id": "cd879138-b560-4365-9a45-082f5311d836",
+   "id": "58d941e1-d56f-4140-8fe9-9664e0871d72",
    "type": "card",
    "name": "Actividad · 1",
    "parentId": "triptico-abierto-espacio",
@@ -14923,10 +14911,10 @@
    ]
   },
   {
-   "id": "9d261dc8-335d-42d4-8396-61682556064a",
+   "id": "b918a6ca-7ac9-42fc-a8f2-edbe44afdb79",
    "type": "rect",
    "name": "Avatar",
-   "parentId": "cd879138-b560-4365-9a45-082f5311d836",
+   "parentId": "58d941e1-d56f-4140-8fe9-9664e0871d72",
    "x": 14,
    "y": 16,
    "width": 32,
@@ -14957,10 +14945,10 @@
    "image": ""
   },
   {
-   "id": "c1e3aff1-e601-4b86-9e9e-636c138daa31",
+   "id": "442572e6-6bc2-4720-83c8-f6368db496e6",
    "type": "text",
    "name": "Texto",
-   "parentId": "cd879138-b560-4365-9a45-082f5311d836",
+   "parentId": "58d941e1-d56f-4140-8fe9-9664e0871d72",
    "x": 58,
    "y": 22,
    "width": 300.6666666666667,
@@ -14991,7 +14979,7 @@
    "image": ""
   },
   {
-   "id": "77adf42d-e4ec-4b67-8eef-e5aedbab48c4",
+   "id": "824e7b3f-209f-45dc-ba7f-b59e2769b4f8",
    "type": "card",
    "name": "Actividad · 2",
    "parentId": "triptico-abierto-espacio",
@@ -15050,10 +15038,10 @@
    ]
   },
   {
-   "id": "9032d408-d64e-48a0-b77c-d11ad832c505",
+   "id": "43872daf-9f1c-4a91-a9e4-973d5081ff30",
    "type": "rect",
    "name": "Avatar",
-   "parentId": "77adf42d-e4ec-4b67-8eef-e5aedbab48c4",
+   "parentId": "824e7b3f-209f-45dc-ba7f-b59e2769b4f8",
    "x": 14,
    "y": 16,
    "width": 32,
@@ -15084,10 +15072,10 @@
    "image": ""
   },
   {
-   "id": "391285ee-deb1-4ae6-8251-7faff374221a",
+   "id": "b7400418-23c0-45ad-8f7f-60003116240a",
    "type": "text",
    "name": "Texto",
-   "parentId": "77adf42d-e4ec-4b67-8eef-e5aedbab48c4",
+   "parentId": "824e7b3f-209f-45dc-ba7f-b59e2769b4f8",
    "x": 58,
    "y": 22,
    "width": 300.6666666666667,
@@ -15118,7 +15106,7 @@
    "image": ""
   },
   {
-   "id": "c82a7c84-c247-4f61-b8e0-1788fc462aca",
+   "id": "1f2cf431-d73d-45ac-ac8e-cc465160e1a1",
    "type": "card",
    "name": "Actividad · 3",
    "parentId": "triptico-abierto-espacio",
@@ -15177,10 +15165,10 @@
    ]
   },
   {
-   "id": "fb7caa35-bc29-4b54-99d7-b5fd80b79c1c",
+   "id": "dc099056-9bfd-4f62-8099-d246719a841e",
    "type": "rect",
    "name": "Avatar",
-   "parentId": "c82a7c84-c247-4f61-b8e0-1788fc462aca",
+   "parentId": "1f2cf431-d73d-45ac-ac8e-cc465160e1a1",
    "x": 14,
    "y": 16,
    "width": 32,
@@ -15211,10 +15199,10 @@
    "image": ""
   },
   {
-   "id": "2d5c168f-166d-4e5f-ab0c-a33441f0a968",
+   "id": "dff467e3-6f36-45d9-a139-f0587bf63c74",
    "type": "text",
    "name": "Texto",
-   "parentId": "c82a7c84-c247-4f61-b8e0-1788fc462aca",
+   "parentId": "1f2cf431-d73d-45ac-ac8e-cc465160e1a1",
    "x": 58,
    "y": 22,
    "width": 300.6666666666667,
@@ -15245,7 +15233,7 @@
    "image": ""
   },
   {
-   "id": "d0ed2bb0-419f-4d87-a9ba-947c790074a3",
+   "id": "c5822af2-8e8b-4971-9303-ca66f8dec653",
    "type": "card",
    "name": "Actividad · 4",
    "parentId": "triptico-abierto-espacio",
@@ -15304,10 +15292,10 @@
    ]
   },
   {
-   "id": "e18024a6-f299-4cde-bf61-1cf1eff50e02",
+   "id": "9fcc182a-825c-4664-b126-5a572399bdfc",
    "type": "rect",
    "name": "Avatar",
-   "parentId": "d0ed2bb0-419f-4d87-a9ba-947c790074a3",
+   "parentId": "c5822af2-8e8b-4971-9303-ca66f8dec653",
    "x": 14,
    "y": 16,
    "width": 32,
@@ -15338,10 +15326,10 @@
    "image": ""
   },
   {
-   "id": "244dde51-143c-4156-b61e-c4648f222ec5",
+   "id": "2b5300d9-fc59-41d8-9a34-939358df0fff",
    "type": "text",
    "name": "Texto",
-   "parentId": "d0ed2bb0-419f-4d87-a9ba-947c790074a3",
+   "parentId": "c5822af2-8e8b-4971-9303-ca66f8dec653",
    "x": 58,
    "y": 22,
    "width": 300.6666666666667,
@@ -15372,7 +15360,7 @@
    "image": ""
   },
   {
-   "id": "cc52cbbe-44e1-4ba7-9261-40db9d27dcba",
+   "id": "ff5b85dd-5fd8-4167-bfeb-574db639fa56",
    "type": "button",
    "name": "Volver a bienvenida",
    "parentId": "triptico-abierto-espacio",
@@ -15381,7 +15369,7 @@
    "width": 372.6666666666667,
    "height": 46,
    "fill": "@primary",
-   "color": "#ffffff",
+   "color": "@surface",
    "stroke": "@border",
    "strokeWidth": 0,
    "radius": 23,

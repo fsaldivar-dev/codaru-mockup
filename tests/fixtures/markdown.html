@@ -1,0 +1,32 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Markdown con maquetas</title><style>
+body{margin:0 auto;max-width:760px;padding:24px;font:15px/1.6 Georgia,serif;color:#1d2433;background:#fbfbfd}pre{background:#eef0f4;padding:12px;border-radius:8px;font:12px ui-monospace,monospace}button{border:3px solid #117755}
+</style></head><body>
+<h1>Especificación</h1><p>Desarrollar esta maqueta:</p>
+<pre><code class="language-codaru-mockup">archivo: /examples/Forma-dispositivos.codaru.json
+pantalla: pasaporte-cerrado-bienvenida
+modo: prototipo
+</code></pre>
+<p>Vista de referencia, sin interacción:</p>
+<pre><code class="language-codaru-mockup">archivo: /examples/Forma-dispositivos.codaru.json
+pantalla: ios-espacio
+modo: estático
+tema: oscuro
+alto: 420
+</code></pre>
+<pre><code class="language-codaru-mockup">archivo: /examples/Forma-dispositivos.codaru.json
+pantalla: no-existe
+</code></pre>
+<pre><code class="language-codaru-mockup">archivo: /examples/no-hay.codaru.json
+</code></pre>
+<pre><code class="language-codaru-mockup">pantala: typo
+</code></pre>
+<pre><code class="language-js">const untouched = true;</code></pre>
+<button id="host-button">Botón del documento</button>
+<script type="module">
+import { enhanceMarkdown } from '/src/preview.ts';
+const opened = [];
+window.markdownTest = { opened, previews: await enhanceMarkdown(document, {
+  load: async file => { const response = await fetch(file); if (!response.ok) throw new Error(`No se encontró el archivo (${response.status}).`); return response.text(); },
+  onOpen: (block, screen) => opened.push([block.file, screen]),
+}) };
+</script></body></html>

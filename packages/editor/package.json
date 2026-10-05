@@ -14,6 +14,10 @@
       "types": "./dist/types/editor-core.d.ts",
       "import": "./dist/core.js"
     },
+    "./preview": {
+      "types": "./dist/types/preview.d.ts",
+      "import": "./dist/preview.js"
+    },
     "./modular": {
       "types": "./dist/types/modular.d.ts",
       "import": "./dist/modular.js"

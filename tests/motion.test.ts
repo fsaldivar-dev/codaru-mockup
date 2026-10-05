@@ -98,3 +98,11 @@ test('fold hinges are limited to screens and unfold is a valid transition', () =
   store.commit(draft => applyOperations(draft, [{ op: 'update', id: 'open', patch: { fold: null, device: null } }]));
   assert.equal(store.project.nodes[0].fold, undefined); assert.equal(store.project.nodes[0].device, undefined);
 });
+
+test('codaru-mockup blocks accept Spanish or English keys and reject typos', async () => {
+  const { parseMockupBlock } = await import('../src/preview');
+  assert.deepEqual(parseMockupBlock('archivo: diseno/forma.codaru.json\npantalla: screen-login\nmodo: prototipo\n'), { mode: 'prototype', file: 'diseno/forma.codaru.json', screen: 'screen-login' });
+  assert.deepEqual(parseMockupBlock('# nota\nfile: "a b.json"\nscreen: Inicio: principal\nmode: static\ntheme: dark\nheight: 300'), { mode: 'static', file: 'a b.json', screen: 'Inicio: principal', theme: 'dark', maxHeight: 300 });
+  assert.equal(parseMockupBlock('archivo: x.json').mode, 'prototype');
+  for (const bad of ['pantalla: a', 'archivo: x\nmodo: video', 'archivo: x\ncolor: rojo', 'archivo: x\nalto: 5', 'sin dos puntos']) assert.throws(() => parseMockupBlock(bad));
+});

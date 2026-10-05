@@ -62,9 +62,11 @@ async function serialize(node, origin, state) {
   if ('fillStyleId' in node && typeof node.fillStyleId === 'string' && node.fillStyleId) out.fillStyle = node.fillStyleId;
   if ('layoutMode' in node && node.layoutMode !== 'NONE') {
     out.layout = { mode: node.layoutMode, gap: node.itemSpacing, padding: [node.paddingTop, node.paddingRight, node.paddingBottom, node.paddingLeft],
-      primaryAlign: node.primaryAxisAlignItems, counterAlign: node.counterAxisAlignItems, wrap: node.layoutWrap === 'WRAP' };
+      primaryAlign: node.primaryAxisAlignItems, counterAlign: node.counterAxisAlignItems, wrap: node.layoutWrap === 'WRAP',
+      primarySizing: node.primaryAxisSizingMode, counterSizing: node.counterAxisSizingMode };
   }
   if ('layoutGrow' in node) out.grow = node.layoutGrow;
+  if ('layoutAlign' in node) out.stretch = node.layoutAlign === 'STRETCH';
 
   if (node.type === 'TEXT') {
     var mixed = node.fontSize === MIXED || node.fontName === MIXED || node.fills === MIXED;

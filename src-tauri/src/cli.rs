@@ -22,6 +22,7 @@ Usage: codaru [--socket PATH] COMMAND [OPTIONS]
   undo                                    Undo one editor transaction
   redo                                    Redo one editor transaction
   export [--format json|html|svg] [--frame ID] [--output PATH]
+  lint [--frame ID]                         Review contrast, targets and consistency
   --help                                  Show this help without opening the app
 
 Workflow:
@@ -56,7 +57,7 @@ fn parse(args: &[String]) -> Result<Options> {
         socket = Some(PathBuf::from(take_value(args, &mut index, "--socket")?)); index += 1;
     }
     let command = args.get(index).ok_or_else(|| invalid("Choose a command. Run codaru --help."))?.clone(); index += 1;
-    if !["schema", "context", "apply", "catalog", "select", "undo", "redo", "export"].contains(&command.as_str()) { return Err(invalid(format!("Unknown command '{}'. Run codaru --help.", command))); }
+    if !["schema", "context", "apply", "catalog", "select", "undo", "redo", "export", "lint"].contains(&command.as_str()) { return Err(invalid(format!("Unknown command '{}'. Run codaru --help.", command))); }
     let mut options = Options { command, params: Map::new(), file: None, output: None, socket };
     let mut ids = Vec::new(); let mut seen = std::collections::HashSet::new();
     while index < args.len() {
@@ -79,6 +80,7 @@ fn parse(args: &[String]) -> Result<Options> {
                 if !["json", "html", "svg"].contains(&format.as_str()) { return Err(invalid("--format must be json, html, or svg.")); }
                 options.params.insert("format".into(), json!(format));
             },
+            ("lint", "--frame") => { options.params.insert("frame".into(), json!(take_value(args, &mut index, arg)?)); },
             ("export", "--frame") => { options.params.insert("frame".into(), json!(take_value(args, &mut index, arg)?)); },
             ("export", "--output") => { options.output = Some(PathBuf::from(take_value(args, &mut index, arg)?)); },
             _ => return Err(invalid(format!("Unexpected option '{}' for {}. Run codaru --help.", arg, options.command))),
@@ -161,6 +163,8 @@ mod tests {
         let apply = parse(&args(&["--socket", "/private/agent.sock", "apply", "--file", "-", "--dry-run"])).unwrap();
         assert_eq!(apply.file.as_deref(), Some("-")); assert_eq!(apply.params["dryRun"], true); assert_eq!(apply.socket.unwrap(), PathBuf::from("/private/agent.sock"));
         assert_eq!(parse(&args(&["export"])).unwrap().params["format"], "json");
+        assert_eq!(parse(&args(&["lint", "--frame", "home"])).unwrap().params, json!({"frame":"home"}).as_object().unwrap().clone());
+        assert!(parse(&args(&["lint"])).unwrap().params.is_empty());
         assert_eq!(parse(&args(&["catalog", "--kind", "component", "--kit", "glass", "--query", "card"])).unwrap().params, json!({"kind":"component","kit":"glass","query":"card"}).as_object().unwrap().clone());
         let export = parse(&args(&["export", "--format", "svg", "--frame", "screen-1", "--output", "preview.svg"])).unwrap();
         assert_eq!(export.params["frame"], "screen-1"); assert_eq!(export.params["format"], "svg"); assert_eq!(export.output.unwrap(), PathBuf::from("preview.svg"));
