@@ -86,7 +86,12 @@ test('a muddy primary color is reported as a palette without accent, a dark or s
   assert.equal(muddy[0].severity, 'warning'); assert.equal(muddy[0].node, 'project'); assert.equal(muddy[0].frame, null);
   assert.match(muddy[0].message, /apagado/);
   set('#5b3df5', '#a99bff'); assert.equal(lintProject(p).filter(i => i.rule === 'palette').length, 0, 'saturated accent');
-  set('#111111', '#f7f4ec'); assert.equal(lintProject(p).filter(i => i.rule === 'palette').length, 0, 'black anchor');
+  const accent = (light: string, dark: string) => { p.designThemes.project.modes.light.colors.accent = light; p.designThemes.project.modes.dark.colors.accent = dark; p.themes.light.accent = light; p.themes.dark.accent = dark; };
+  set('#111111', '#f7f4ec'); accent('#c5a23e', '#d4af37'); assert.equal(lintProject(p).filter(i => i.rule === 'palette').length, 0, 'black anchor with gold accent');
+  accent('#7a5438', '#d9b48e');
+  const mono = lintProject(p).filter(i => i.rule === 'palette');
+  assert.equal(mono.length, 2); assert.match(mono[0].message, /monocroma sin ningún acento/);
+  accent('#ece7ff', '#2a2440');
   set('#257b67', '#7bcbb1'); assert.equal(lintProject(p).filter(i => i.rule === 'palette').length, 0, 'teal');
   set('#e6e2dc', '#2a2826');
   const faint = lintProject(p).filter(i => i.rule === 'palette');

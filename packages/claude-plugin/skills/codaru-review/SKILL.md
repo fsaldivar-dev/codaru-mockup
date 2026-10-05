@@ -27,7 +27,7 @@ description: Revisar un diseño de Codaru Mockup y corregir sus problemas. Úsal
 | `off-theme` | Color fijo casi igual a un token | Sustitúyelo por el token indicado en `fix` |
 | `alignment` | Bordes a 1–3 px de alinearse | Iguala `x`, o usa auto layout |
 | `scale` | Demasiados tamaños de texto o radios en una pantalla | Reduce la escala y vincula a tokens |
-| `palette` | `@primary` del tema no contrasta 3:1 con el fondo (error) o es un tono medio apagado sin saturación (aviso): la paleta se lee como una sola banda | Cambia el color principal del tema con `theme`: un acento saturado o un neutro realmente oscuro; deja los tonos tierra y grises para superficies |
+| `palette` | `@primary` del tema no contrasta 3:1 con el fondo (error), es un tono medio apagado sin saturación, o es un neutro y `@accent` tampoco tiene color (aviso): la paleta se lee como una sola banda | Cambia el color principal del tema con `theme`: un acento saturado o un neutro realmente oscuro; deja los tonos tierra y grises para superficies |
 
 ## Criterio
 
