@@ -1,0 +1,39 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+  body { margin: 0; padding: 16px; font: 12px/1.5 Inter, -apple-system, "Segoe UI", sans-serif; color: var(--figma-color-text, #222); background: var(--figma-color-bg, #fff); }
+  h1 { margin: 0 0 6px; font-size: 14px; }
+  p { margin: 0 0 12px; color: var(--figma-color-text-secondary, #666); }
+  fieldset { border: 0; margin: 0 0 12px; padding: 0; display: grid; gap: 6px; }
+  button { width: 100%; padding: 9px; border: 0; border-radius: 6px; font: inherit; font-weight: 600; cursor: pointer; color: #fff; background: var(--figma-color-bg-brand, #0d99ff); }
+  button:disabled { opacity: .5; cursor: default; }
+  #status { margin-top: 12px; white-space: pre-line; }
+  #status.error { color: var(--figma-color-text-danger, #c0392b); }
+</style>
+<h1>Exportar a Codaru Mockup</h1>
+<p>Guarda un archivo que Codaru abre con «Abrir proyecto». No se envía nada por la red.</p>
+<fieldset>
+  <label><input type="radio" name="scope" value="selection" checked> Solo la selección</label>
+  <label><input type="radio" name="scope" value="page"> Toda la página actual</label>
+</fieldset>
+<button id="export">Exportar</button>
+<div id="status" role="status"></div>
+<script>
+  var button = document.getElementById('export'), status = document.getElementById('status');
+  button.onclick = function () {
+    button.disabled = true; status.className = ''; status.textContent = 'Leyendo capas…';
+    parent.postMessage({ pluginMessage: { type: 'export', scope: document.querySelector('input[name=scope]:checked').value } }, '*');
+  };
+  onmessage = function (event) {
+    var message = event.data.pluginMessage; if (!message) return;
+    button.disabled = false;
+    if (message.type === 'error') { status.className = 'error'; status.textContent = message.message; return; }
+    var name = String(message.name || 'figma').replace(/[^\w\-]+/g, '-').slice(0, 60) + '.figma.codaru.json';
+    var link = document.createElement('a'); link.href = URL.createObjectURL(new Blob([message.json], { type: 'application/json' })); link.download = name; link.click();
+    var s = message.summary, lines = [s.count + ' capas exportadas en ' + name + '.'];
+    if (s.truncated) lines.push('Se alcanzó el límite de 3000 capas: exporta por partes.');
+    if (s.skippedImages) lines.push(s.skippedImages + ' imágenes de más de 3 MB o de formato no admitido se omitieron.');
+    if (s.skippedVectors) lines.push(s.skippedVectors + ' vectores no se pudieron convertir.');
+    status.textContent = lines.join('\n');
+  };
+</script>

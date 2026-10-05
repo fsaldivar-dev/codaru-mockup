@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.3.0 — 2026-10-05
+
+Animación, color, dispositivos y plegables, e importación desde Figma. El paquete sigue sin dependencias de ejecución.
+
+**Cambio de comportamiento:** la rueda mueve el lienzo; el zoom pasa a ⌘/Ctrl + rueda y al pellizco.
+
+- Pantallas: tamaños de dispositivo para iOS, Android, plegables y escritorio, con giro y clase de ancho (compacto, medio, expandido).
+- Plegables: pliegue vertical u horizontal con ancho de bisagra, guía sobre el lienzo y transiciones «Desplegar» y «Plegar» en Presentar y en el HTML exportado: la pantalla exterior gira sobre la bisagra y deja ver los paneles interiores. Campos opcionales `device` y `fold`.
+- Importación desde Figma: plugin `packages/figma-plugin` que exporta la selección o la página, e importador que añade pantallas, componentes, tokens e ilustraciones al documento con un informe de lo simplificado.
+- Áreas seguras por pantalla (con guías en el lienzo) y marcos de dispositivo: barra de estado, isla o cámara, indicador de inicio y bisel al presentar.
+- Plegables por categoría: iPhone Duo (cerrado y abierto) y, en Android, Pasaporte (libro), Flip (almeja) y Tríptico (doble bisagra, tres paneles).
+- Posturas emparejadas: al presentar, y en el HTML exportado, un botón alterna entre la pantalla plegada y la desplegada.
+- Ejemplo «iOS, Android y plegables»: Forma recreado en 21 pantallas para iPhone, iPhone Duo, teléfono Android, Pasaporte, Flip y Tríptico, en cada postura (`examples/Forma-dispositivos.codaru.json`).
+- Selector de color propio en todos los campos de color (inspector, paleta del tema, editor de temas, paradas de degradado, materiales y animador): colores del tema, sólidos personalizados con transparencia, HEX y RGBA.
+- Relleno: degradados personalizados con hasta 16 paradas (barra con paradas arrastrables, lineal o radial, ángulo), degradados del tema y doce sugerencias. Campo nuevo opcional `gradientStops`.
+- Ilustraciones: sube un SVG (se sanea y cada forma queda como capa) y anímalo con el animador de fotogramas clave. También anima cualquier otro elemento.
+- Animador: color de relleno y de borde por fotograma con selector y tokens del tema, y bases «Esqueleto» (pulso de color y brillo de carga).
+- Transiciones entre pantallas por conexión: disolver, deslizar en cuatro sentidos y escalar, con duración y curva.
+- Las animaciones y transiciones se reproducen en «Presentar» y en el HTML exportado; el lienzo y SVG siguen estáticos.
+- IA/CLI: operaciones `vector` y `animate`, `transition` en `flow`, y `layers`/`animations` en el contexto.
+- Relleno: el selector «Tipo» lista los degradados del tema; al elegir uno se vincula, se previsualiza y cambia con el tema y el modo.
+- Lienzo: la rueda y los dos dedos del trackpad mueven el lienzo en vertical y horizontal. El zoom pasa a ⌘/Ctrl + rueda y pellizco; Shift + rueda desplaza en horizontal.
+
 ## 0.2.0 — 2026-10-02
 
 Integración por piezas, sin iframe.

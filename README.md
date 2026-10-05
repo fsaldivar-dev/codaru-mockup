@@ -1,4 +1,4 @@
-# Codaru Mockup · 0.2
+# Codaru Mockup · 0.3
 
 Editor local de maquetas de interfaz, diseñado para integrarse dentro de una aplicación Tauri existente. TypeScript, HTML/CSS y SVG, sin dependencias de interfaz en ejecución. Incluye un paquete embebible, un plugin Rust opcional y una aplicación macOS de ejemplo. La aplicación compilada no necesita Node, un servidor, una cuenta ni conexión a Internet.
 
@@ -52,12 +52,36 @@ Atajos adicionales: **V** seleccionar, **F** pantalla, **O** elipse, **B** botó
 
 Para editar un texto directamente, entra primero en su pantalla o grupo y haz doble clic sobre él. Las teclas Escape y Enter conservan su función de edición cuando el foco está en un campo.
 
+## Importar desde Figma
+
+Cada persona puede traer sus propios archivos con el plugin de [packages/figma-plugin](packages/figma-plugin/README.md): se instala en Figma desde su manifiesto, exporta un `.figma.codaru.json` sin token ni red, y Codaru lo abre con «Abrir proyecto». La importación se añade al documento, convierte los estilos en tokens y resume qué se simplificó.
+
+## Dispositivos y plegables
+
+- **Tamaño de pantalla**: al seleccionar una pantalla, «Dispositivo» ofrece tamaños de iPhone, iPad, teléfonos y tabletas Android, plegables y escritorio, en puntos o dp. «Girar» intercambia ancho y alto.
+- **Plegables**: una pantalla puede tener un pliegue vertical (libro) u horizontal (tapa) con el ancho de su bisagra. El lienzo dibuja la línea para no colocar contenido clave encima.
+- **Desplegar y plegar**: diseña la pantalla cerrada y la abierta como dos pantallas, conéctalas y elige la transición «Desplegar» o «Plegar»; la pantalla con pliegue se abre o se cierra en dos mitades.
+- **Área segura y marco**: cada tamaño trae el espacio que reserva el sistema y un marco de dispositivo. El lienzo marca el área segura con bandas; al presentar se ve el bisel, la barra de estado, la cámara y el indicador de inicio.
+- **Ver las dos posturas**: empareja la pantalla plegada con la desplegada en «Otra postura»; al presentar aparece un botón para alternar entre ellas.
+- **Ejemplo**: «Ejemplo iOS, Android y plegables» abre Forma recreado para 21 pantallas: iPhone, iPhone Duo, teléfono Android, Pasaporte, Flip y Tríptico en cada postura.
+- **Categorías de plegables**: iPhone Duo, y en Android Pasaporte (libro), Flip (almeja) y Tríptico (doble bisagra). Un pliegue puede tener dos o tres paneles; un tríptico tiene tres posturas enlazadas.
+- Los tamaños de Android de referencia son los de Android Studio. Los marcados con ≈ son aproximados: los del iPhone Duo salen de sus resoluciones publicadas suponiendo escala 3x, y los de plegables Android concretos se calcularon desde píxeles y densidad.
+
+## Animación
+
+- **Transiciones**: al conectar un elemento con otra pantalla, elige en «Al hacer clic» cómo se pasa de una a otra (disolver, deslizar, escalar), su duración y su curva.
+- **Ilustraciones**: «Insertar → Ilustración» sube un SVG. El editor lo sanea, lo guarda dentro del proyecto y convierte cada forma en una capa animable.
+- **Animador**: «Abrir animador» en Propiedades edita animaciones por fotogramas clave sobre una capa o el elemento entero, con vista previa en vivo y bases listas (aparecer, deslizar, latido, girar, flotar, dibujar trazo y esqueleto de carga). Cada fotograma puede cambiar el color de relleno y de borde, con HEX o tokens del tema.
+- Todo se reproduce en **Presentar** y en el **HTML exportado**. El lienzo y la exportación SVG permanecen estáticos. No se añade ninguna dependencia: se usa la API de animación del navegador.
+- Una IA puede hacer lo mismo con `./codaru apply`; consulta [CLI.md](CLI.md).
+
 ## Zoom y movimiento del lienzo
 
-- **Rueda**: acercar o alejar conservando el punto bajo el cursor. También admite **⌘/Ctrl + rueda** y pellizco de trackpad.
+- **Rueda o dos dedos en el trackpad**: mover el lienzo en vertical y horizontal. **Shift + rueda**: desplazamiento horizontal con un ratón.
+- **⌘/Ctrl + rueda** o pellizco de trackpad: acercar o alejar conservando el punto bajo el cursor.
 - **+ / −**: acercar o alejar. **0**: escala 100%. También funcionan con ⌘/Ctrl.
 - **Shift + 1**: ajustar todas las pantallas. **Shift + 2**: ajustar la selección, incluidos elementos dentro de grupos.
-- **Espacio + arrastrar**, herramienta Mano o **Espacio + rueda**: mover el lienzo. **Shift + rueda**: desplazamiento horizontal.
+- **Espacio + arrastrar** o herramienta Mano: mover el lienzo arrastrando.
 - Abajo a la derecha, escribe un porcentaje entre **10% y 800%** y pulsa Enter. Escape cancela la edición. El desplegable ofrece escalas predefinidas y ajuste de vista.
 
 El zoom cambia la vista; conserva las medidas del documento, el historial y el texto que estés editando. El pellizco nativo usa los [eventos de gesto de WebKit](https://developer.apple.com/documentation/webkitjs/gestureevent), además de Ctrl + rueda en navegadores Chromium.

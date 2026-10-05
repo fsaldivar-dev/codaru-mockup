@@ -131,4 +131,5 @@ export function validateNodeThemeRefs(p: Project, n: DesignNode) {
   if (n.fillToken && !Object.hasOwn(set.colors, n.fillToken) && !Object.hasOwn(set.gradients, n.fillToken)) throw new Error('Referencia de relleno inválida');
   for (const [field, category] of [['materialToken', 'materials'], ['typographyToken', 'typography'], ['radiusToken', 'radii']] as const) if (n[field] && !Object.hasOwn(set[category], n[field]!)) throw new Error(`Referencia de ${category} inválida`);
   for (const key of ['fill', 'color', 'stroke', 'gradientEnd'] as const) resolveColor(p, n[key], n);
+  for (const stop of n.gradientStops ?? []) resolveColor(p, stop.color, n);
 }

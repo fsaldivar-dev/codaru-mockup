@@ -15,6 +15,7 @@ const paths: Record<string, string> = {
   grid: '<rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="3" y="15" width="6" height="6" rx="1"/><rect x="15" y="15" width="6" height="6" rx="1"/>',
   link: '<path d="m10 13 4-4M8 16l-2 2a4 4 0 0 1-6-6l5-5a4 4 0 0 1 6 0M16 8l2-2a4 4 0 0 0-6-6" transform="translate(3 2)"/>',
   sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2m-3-9-1 1M5 19l-1 1m0-16 1 1m14 14 1 1"/>',
+  vector: '<path d="M5 19c2-9 6-13 14-14-1 8-5 12-14 14zM5 19l6-6"/><circle cx="12.5" cy="11.5" r="1.5"/>',
   moon: '<path d="M20 14A9 9 0 0 1 10 3a9 9 0 1 0 10 11z"/>',
   align: '<path d="M4 3v18M8 7h12M8 12h8M8 17h12"/>', center: '<path d="M12 2v20M4 7h16M7 12h10M4 17h16"/>',
   help: '<circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 5M12 17v1"/>', check: '<path d="m5 12 4 4L19 6"/>', spark: '<path d="m12 2 3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/>',

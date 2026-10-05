@@ -1,0 +1,631 @@
+{
+ "format": "codaru-figma-export",
+ "version": 1,
+ "file": "Mi app · v2",
+ "page": "Pantallas",
+ "styles": {
+  "paints": [
+   {
+    "id": "S:brand",
+    "name": "Marca/Primario",
+    "paints": [
+     {
+      "type": "SOLID",
+      "visible": true,
+      "opacity": 1,
+      "color": {
+       "r": 0.2,
+       "g": 0.4,
+       "b": 1
+      }
+     }
+    ]
+   },
+   {
+    "id": "S:glow",
+    "name": "Marca/Brillo",
+    "paints": [
+     {
+      "type": "GRADIENT_RADIAL",
+      "visible": true,
+      "opacity": 1,
+      "gradientStops": [
+       {
+        "position": 0,
+        "color": {
+         "r": 1,
+         "g": 1,
+         "b": 1,
+         "a": 1
+        }
+       },
+       {
+        "position": 1,
+        "color": {
+         "r": 0,
+         "g": 0,
+         "b": 0,
+         "a": 1
+        }
+       }
+      ],
+      "gradientTransform": [
+       [
+        1,
+        0,
+        0
+       ],
+       [
+        0,
+        1,
+        0
+       ]
+      ]
+     }
+    ]
+   }
+  ],
+  "texts": [
+   {
+    "id": "S:text-title",
+    "name": "Títulos/H1",
+    "fontFamily": "Playfair Display",
+    "fontStyle": "Bold",
+    "fontSize": 28,
+    "lineHeight": {
+     "unit": "PIXELS",
+     "value": 35
+    }
+   }
+  ]
+ },
+ "nodes": [
+  {
+   "id": "100:65200",
+   "name": "Inicio",
+   "type": "FRAME",
+   "visible": true,
+   "locked": false,
+   "x": 100,
+   "y": 200,
+   "width": 390,
+   "height": 844,
+   "rotation": 0,
+   "opacity": 1,
+   "fills": [
+    {
+     "type": "SOLID",
+     "visible": true,
+     "opacity": 1,
+     "color": {
+      "r": 1,
+      "g": 1,
+      "b": 1
+     }
+    }
+   ],
+   "strokes": [],
+   "strokeWeight": 1,
+   "radius": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "children": [
+    {
+     "id": "100:129200",
+     "name": "Rectangle 12",
+     "type": "RECTANGLE",
+     "visible": true,
+     "locked": false,
+     "x": 0,
+     "y": 0,
+     "width": 390,
+     "height": 300,
+     "rotation": 0,
+     "opacity": 1,
+     "fills": [
+      {
+       "type": "GRADIENT_LINEAR",
+       "visible": true,
+       "opacity": 1,
+       "gradientStops": [
+        {
+         "position": 0,
+         "color": {
+          "r": 1,
+          "g": 0,
+          "b": 0,
+          "a": 1
+         }
+        },
+        {
+         "position": 0.5,
+         "color": {
+          "r": 0,
+          "g": 1,
+          "b": 0,
+          "a": 1
+         }
+        },
+        {
+         "position": 1,
+         "color": {
+          "r": 0,
+          "g": 0,
+          "b": 1,
+          "a": 0.5
+         }
+        }
+       ],
+       "gradientTransform": [
+        [
+         0,
+         1,
+         0
+        ],
+        [
+         -1,
+         0,
+         1
+        ]
+       ]
+      }
+     ],
+     "strokes": [],
+     "strokeWeight": 1,
+     "radius": [
+      24,
+      24,
+      0,
+      0
+     ],
+     "effects": [
+      {
+       "type": "DROP_SHADOW",
+       "visible": true
+      }
+     ]
+    },
+    {
+     "id": "124:64240",
+     "name": "Título",
+     "type": "TEXT",
+     "visible": true,
+     "locked": false,
+     "x": 24,
+     "y": 40,
+     "width": 300,
+     "height": 40,
+     "rotation": 0,
+     "opacity": 1,
+     "fills": [
+      {
+       "type": "SOLID",
+       "visible": true,
+       "opacity": 1,
+       "color": {
+        "r": 0.1,
+        "g": 0.1,
+        "b": 0.2
+       }
+      }
+     ],
+     "strokes": [],
+     "strokeWeight": 1,
+     "text": {
+      "characters": "Hola Figma",
+      "fontSize": 28,
+      "fontFamily": "Playfair Display",
+      "fontStyle": "Bold",
+      "fontWeight": 700,
+      "lineHeight": {
+       "unit": "PIXELS",
+       "value": 35
+      },
+      "align": "CENTER",
+      "mixed": false
+     },
+     "textStyle": "S:text-title"
+    },
+    {
+     "id": "124:145300",
+     "name": "Botón primario",
+     "type": "FRAME",
+     "visible": true,
+     "locked": false,
+     "x": 24,
+     "y": 100,
+     "width": 200,
+     "height": 48,
+     "rotation": 0,
+     "opacity": 1,
+     "fills": [
+      {
+       "type": "SOLID",
+       "visible": true,
+       "opacity": 1,
+       "color": {
+        "r": 0.2,
+        "g": 0.4,
+        "b": 1
+       }
+      }
+     ],
+     "strokes": [],
+     "strokeWeight": 1,
+     "radius": [
+      12,
+      12,
+      12,
+      12
+     ],
+     "fillStyle": "S:brand",
+     "layout": {
+      "mode": "HORIZONTAL",
+      "gap": 8,
+      "padding": [
+       12,
+       12,
+       12,
+       12
+      ],
+      "primaryAlign": "MIN",
+      "counterAlign": "MIN",
+      "wrap": false
+     },
+     "grow": 0,
+     "children": [
+      {
+       "id": "136:84312",
+       "name": "Etiqueta",
+       "type": "TEXT",
+       "visible": true,
+       "locked": false,
+       "x": 12,
+       "y": 12,
+       "width": 80,
+       "height": 24,
+       "rotation": 0,
+       "opacity": 1,
+       "fills": [
+        {
+         "type": "SOLID",
+         "visible": true,
+         "opacity": 1,
+         "color": {
+          "r": 1,
+          "g": 1,
+          "b": 1
+         }
+        }
+       ],
+       "strokes": [],
+       "strokeWeight": 1,
+       "text": {
+        "characters": "Entrar",
+        "fontSize": 16,
+        "fontFamily": "Inter",
+        "fontStyle": "Semi Bold",
+        "lineHeight": {
+         "unit": "AUTO"
+        },
+        "align": "LEFT",
+        "mixed": false
+       }
+      }
+     ]
+    },
+    {
+     "id": "124:135380",
+     "name": "Fila centrada",
+     "type": "FRAME",
+     "visible": true,
+     "locked": false,
+     "x": 24,
+     "y": 180,
+     "width": 300,
+     "height": 60,
+     "rotation": 0,
+     "opacity": 1,
+     "fills": [],
+     "strokes": [],
+     "strokeWeight": 1,
+     "layout": {
+      "mode": "HORIZONTAL",
+      "gap": 8,
+      "padding": [
+       4,
+       8,
+       4,
+       8
+      ],
+      "primaryAlign": "CENTER",
+      "counterAlign": "CENTER",
+      "wrap": false
+     },
+     "children": [
+      {
+       "id": "130:97390",
+       "name": "Ellipse 1",
+       "type": "ELLIPSE",
+       "visible": true,
+       "locked": false,
+       "x": 6,
+       "y": 10,
+       "width": 40,
+       "height": 40,
+       "rotation": 15,
+       "opacity": 1,
+       "fills": [
+        {
+         "type": "SOLID",
+         "visible": true,
+         "opacity": 0.5,
+         "color": {
+          "r": 0.9,
+          "g": 0.2,
+          "b": 0.2
+         }
+        }
+       ],
+       "strokes": [],
+       "strokeWeight": 1
+      }
+     ]
+    },
+    {
+     "id": "440:86210",
+     "name": "Estrella",
+     "type": "VECTOR",
+     "visible": true,
+     "locked": false,
+     "x": 340,
+     "y": 10,
+     "width": 24,
+     "height": 24,
+     "rotation": 0,
+     "opacity": 1,
+     "fills": [],
+     "strokes": [],
+     "strokeWeight": 1,
+     "svg": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"><script>alert(1)</script><path d=\"M12 2l3 7h7l-5.500 5 2 8-6.500-4.500L5.500 22l2-8L2 9h7z\" fill=\"#FFD166\" onclick=\"x()\"/></svg>"
+    },
+    {
+     "id": "0:690",
+     "name": "Oculta",
+     "type": "RECTANGLE",
+     "visible": false,
+     "locked": false,
+     "x": -100,
+     "y": -200,
+     "width": 10,
+     "height": 10,
+     "rotation": 0,
+     "opacity": 1
+    },
+    {
+     "id": "110:75520",
+     "name": "Group 3",
+     "type": "GROUP",
+     "visible": true,
+     "locked": false,
+     "x": 10,
+     "y": 320,
+     "width": 100,
+     "height": 40,
+     "rotation": 0,
+     "opacity": 1,
+     "fills": [],
+     "strokes": [],
+     "strokeWeight": 1,
+     "children": [
+      {
+       "id": "110:49520",
+       "name": "Chip",
+       "type": "RECTANGLE",
+       "visible": true,
+       "locked": false,
+       "x": 0,
+       "y": 0,
+       "width": 100,
+       "height": 40,
+       "rotation": 0,
+       "opacity": 1,
+       "fills": [
+        {
+         "type": "SOLID",
+         "visible": true,
+         "opacity": 1,
+         "color": {
+          "r": 0.5,
+          "g": 0.5,
+          "b": 0.5
+         }
+        }
+       ],
+       "strokes": [
+        {
+         "type": "SOLID",
+         "visible": true,
+         "opacity": 1,
+         "color": {
+          "r": 0,
+          "g": 0,
+          "b": 0
+         }
+        }
+       ],
+       "strokeWeight": 2,
+       "radius": [
+        20,
+        20,
+        20,
+        20
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "600:79200",
+   "name": "Tarjeta",
+   "type": "COMPONENT",
+   "visible": true,
+   "locked": false,
+   "x": 600,
+   "y": 200,
+   "width": 160,
+   "height": 90,
+   "rotation": 0,
+   "opacity": 1,
+   "fills": [
+    {
+     "type": "SOLID",
+     "visible": true,
+     "opacity": 1,
+     "color": {
+      "r": 0.95,
+      "g": 0.95,
+      "b": 1
+     }
+    }
+   ],
+   "strokes": [],
+   "strokeWeight": 1,
+   "radius": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "children": [
+    {
+     "id": "612:64212",
+     "name": "Nombre",
+     "type": "TEXT",
+     "visible": true,
+     "locked": false,
+     "x": 12,
+     "y": 12,
+     "width": 120,
+     "height": 20,
+     "rotation": 0,
+     "opacity": 1,
+     "fills": [
+      {
+       "type": "SOLID",
+       "visible": true,
+       "opacity": 1,
+       "color": {
+        "r": 0,
+        "g": 0,
+        "b": 0
+       }
+      }
+     ],
+     "strokes": [],
+     "strokeWeight": 1,
+     "text": {
+      "characters": "Proyecto",
+      "fontSize": 14,
+      "fontFamily": "Inter",
+      "fontStyle": "Regular",
+      "lineHeight": {
+       "unit": "PERCENT",
+       "value": 140
+      },
+      "align": "LEFT",
+      "mixed": false
+     }
+    }
+   ]
+  },
+  {
+   "id": "600:413400",
+   "name": "Chip",
+   "type": "COMPONENT_SET",
+   "visible": true,
+   "locked": false,
+   "x": 600,
+   "y": 400,
+   "width": 300,
+   "height": 60,
+   "rotation": 0,
+   "opacity": 1,
+   "fills": [],
+   "strokes": [],
+   "strokeWeight": 1,
+   "children": [
+    {
+     "id": "610:139410",
+     "name": "Estado=Activo",
+     "type": "COMPONENT",
+     "visible": true,
+     "locked": false,
+     "x": 10,
+     "y": 10,
+     "width": 80,
+     "height": 32,
+     "rotation": 0,
+     "opacity": 1,
+     "fills": [
+      {
+       "type": "SOLID",
+       "visible": true,
+       "opacity": 1,
+       "color": {
+        "r": 0,
+        "g": 0.6,
+        "b": 0.3
+       }
+      }
+     ],
+     "strokes": [],
+     "strokeWeight": 1,
+     "radius": [
+      16,
+      16,
+      16,
+      16
+     ]
+    },
+    {
+     "id": "700:159410",
+     "name": "Estado=Inactivo",
+     "type": "COMPONENT",
+     "visible": true,
+     "locked": false,
+     "x": 100,
+     "y": 10,
+     "width": 80,
+     "height": 32,
+     "rotation": 0,
+     "opacity": 1,
+     "fills": [
+      {
+       "type": "SOLID",
+       "visible": true,
+       "opacity": 1,
+       "color": {
+        "r": 0.8,
+        "g": 0.8,
+        "b": 0.8
+       }
+      }
+     ],
+     "strokes": [],
+     "strokeWeight": 1,
+     "radius": [
+      16,
+      16,
+      16,
+      16
+     ]
+    }
+   ]
+  }
+ ]
+}

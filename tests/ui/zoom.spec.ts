@@ -11,18 +11,18 @@ test.beforeEach(async ({ page }) => {
   await expect(page.locator('#artboards .design-node[data-node="screen-login"]')).toBeVisible();
 });
 
-test('wheel zoom stays under the pointer and does not alter the design or undo history', async ({ page }) => {
+test('Ctrl+wheel zoom stays under the pointer and does not alter the design or undo history', async ({ page }) => {
   const beforeDoc = await documentState(page);
   const stage = (await page.locator('#stage').boundingBox())!;
   const anchor = { x: Math.round(stage.width * .35), y: Math.round(stage.height * .4) };
   const before = await camera(page);
   await page.mouse.move(stage.x + anchor.x, stage.y + anchor.y);
-  await page.mouse.wheel(0, -100);
+  await page.keyboard.down('Control'); await page.mouse.wheel(0, -100);
   await expect.poll(async () => (await camera(page)).zoom).toBeGreaterThan(before.zoom);
   const after = await camera(page);
   expect((anchor.x - after.x) / after.zoom).toBeCloseTo((anchor.x - before.x) / before.zoom, 2);
   expect((anchor.y - after.y) / after.zoom).toBeCloseTo((anchor.y - before.y) / before.zoom, 2);
-  await page.mouse.wheel(0, 100);
+  await page.mouse.wheel(0, 100); await page.keyboard.up('Control');
   await expect.poll(async () => (await camera(page)).zoom).toBeCloseTo(before.zoom, 5);
   expect(await documentState(page)).toEqual(beforeDoc);
   await expect(page.getByRole('button', { name: 'Deshacer · ⌘Z', exact: true })).toBeDisabled();
@@ -76,13 +76,17 @@ test('fit selection uses nested document bounds and fit all restores both screen
   }
 });
 
-test('space plus wheel pans, while Ctrl+wheel and WebKit pinch scale around a fixed point', async ({ page }) => {
+test('wheel pans on both axes, while Ctrl+wheel and WebKit pinch scale around a fixed point', async ({ page }) => {
   const stage = (await page.locator('#stage').boundingBox())!;
   await page.mouse.move(stage.x + 200, stage.y + 200);
   const before = await camera(page);
-  await page.keyboard.down('Space'); await page.mouse.wheel(20, 80); await page.keyboard.up('Space');
+  await page.mouse.wheel(20, 80);
   await expect.poll(async () => (await camera(page)).y).toBeCloseTo(before.y - 80, 2);
+  expect((await camera(page)).x).toBeCloseTo(before.x - 20, 2);
   expect((await camera(page)).zoom).toBe(before.zoom);
+  await page.keyboard.down('Shift'); await page.mouse.wheel(0, 60); await page.keyboard.up('Shift');
+  await expect.poll(async () => (await camera(page)).x).toBeCloseTo(before.x - 80, 2);
+  expect((await camera(page)).y).toBeCloseTo(before.y - 80, 2);
   await page.keyboard.down('Control'); await page.mouse.wheel(0, -20); await page.keyboard.up('Control');
   await expect.poll(async () => (await camera(page)).zoom).toBeGreaterThan(before.zoom);
   const beforePinch = await camera(page);
@@ -112,7 +116,7 @@ test('zoom preserves an active inline text edit and drawing remains accurate at 
   await page.keyboard.type('Nuevo texto');
   const b = (await button.boundingBox())!;
   await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2);
-  const before = await camera(page); await page.mouse.wheel(0, -80);
+  const before = await camera(page); await page.keyboard.down('Control'); await page.mouse.wheel(0, -80); await page.keyboard.up('Control');
   await expect.poll(async () => (await camera(page)).zoom).toBeGreaterThan(before.zoom);
   await expect(editor).toBeFocused(); await expect(editor).toHaveText('Nuevo texto');
   await page.keyboard.press('Escape');

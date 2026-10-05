@@ -1,0 +1,398 @@
+[
+ {
+  "id": "sol-late",
+  "name": "Sol late",
+  "target": "disco-sol",
+  "trigger": "load",
+  "duration": 2400,
+  "delay": 0,
+  "easing": "ease-in-out",
+  "iterations": 0,
+  "alternate": false,
+  "keyframes": [
+   {
+    "at": 0,
+    "scale": 1
+   },
+   {
+    "at": 50,
+    "scale": 1.08
+   },
+   {
+    "at": 100,
+    "scale": 1
+   }
+  ]
+ },
+ {
+  "id": "rayos-giran",
+  "name": "Rayos giran",
+  "target": "rayos",
+  "trigger": "load",
+  "duration": 18000,
+  "delay": 0,
+  "easing": "linear",
+  "iterations": 0,
+  "alternate": false,
+  "keyframes": [
+   {
+    "at": 0,
+    "rotate": 0
+   },
+   {
+    "at": 100,
+    "rotate": 360
+   }
+  ]
+ },
+ {
+  "id": "estrellas",
+  "name": "Estrellas titilan",
+  "target": "estrellas",
+  "trigger": "load",
+  "duration": 1800,
+  "delay": 0,
+  "easing": "ease-in-out",
+  "iterations": 0,
+  "alternate": true,
+  "keyframes": [
+   {
+    "at": 0,
+    "opacity": 100
+   },
+   {
+    "at": 100,
+    "opacity": 35
+   }
+  ]
+ },
+ {
+  "id": "nube-1",
+  "name": "Nube 1",
+  "target": "nube-1",
+  "trigger": "load",
+  "duration": 9000,
+  "delay": 0,
+  "easing": "ease-in-out",
+  "iterations": 0,
+  "alternate": true,
+  "keyframes": [
+   {
+    "at": 0,
+    "x": 0
+   },
+   {
+    "at": 100,
+    "x": 60
+   }
+  ]
+ },
+ {
+  "id": "nube-2",
+  "name": "Nube 2",
+  "target": "nube-2",
+  "trigger": "load",
+  "duration": 12000,
+  "delay": 0,
+  "easing": "ease-in-out",
+  "iterations": 0,
+  "alternate": true,
+  "keyframes": [
+   {
+    "at": 0,
+    "x": 0
+   },
+   {
+    "at": 100,
+    "x": -80
+   }
+  ]
+ },
+ {
+  "id": "nube-3",
+  "name": "Nube 3",
+  "target": "nube-3",
+  "trigger": "load",
+  "duration": 7000,
+  "delay": 0,
+  "easing": "ease-in-out",
+  "iterations": 0,
+  "alternate": true,
+  "keyframes": [
+   {
+    "at": 0,
+    "x": 0
+   },
+   {
+    "at": 100,
+    "x": 40
+   }
+  ]
+ },
+ {
+  "id": "aves",
+  "name": "Aves cruzan",
+  "target": "aves",
+  "trigger": "load",
+  "duration": 10000,
+  "delay": 0,
+  "easing": "linear",
+  "iterations": 0,
+  "alternate": false,
+  "keyframes": [
+   {
+    "at": 0,
+    "x": -260,
+    "y": 30
+   },
+   {
+    "at": 100,
+    "x": 520,
+    "y": -40
+   }
+  ]
+ },
+ {
+  "id": "globo",
+  "name": "Globo flota",
+  "target": "globo",
+  "trigger": "load",
+  "duration": 4200,
+  "delay": 0,
+  "easing": "ease-in-out",
+  "iterations": 0,
+  "alternate": true,
+  "keyframes": [
+   {
+    "at": 0,
+    "y": 0,
+    "rotate": -2
+   },
+   {
+    "at": 100,
+    "y": -22,
+    "rotate": 2
+   }
+  ]
+ },
+ {
+  "id": "coche",
+  "name": "Coche avanza",
+  "target": "coche",
+  "trigger": "load",
+  "duration": 6000,
+  "delay": 0,
+  "easing": "linear",
+  "iterations": 0,
+  "alternate": false,
+  "keyframes": [
+   {
+    "at": 0,
+    "x": -200
+   },
+   {
+    "at": 100,
+    "x": 760
+   }
+  ]
+ },
+ {
+  "id": "rueda-t",
+  "name": "Rueda trasera",
+  "target": "rueda-trasera",
+  "trigger": "load",
+  "duration": 700,
+  "delay": 0,
+  "easing": "linear",
+  "iterations": 0,
+  "alternate": false,
+  "keyframes": [
+   {
+    "at": 0,
+    "rotate": 0
+   },
+   {
+    "at": 100,
+    "rotate": 360
+   }
+  ]
+ },
+ {
+  "id": "rueda-d",
+  "name": "Rueda delantera",
+  "target": "rueda-delantera",
+  "trigger": "load",
+  "duration": 700,
+  "delay": 0,
+  "easing": "linear",
+  "iterations": 0,
+  "alternate": false,
+  "keyframes": [
+   {
+    "at": 0,
+    "rotate": 0
+   },
+   {
+    "at": 100,
+    "rotate": 360
+   }
+  ]
+ },
+ {
+  "id": "barco",
+  "name": "Barco se mece",
+  "target": "barco",
+  "trigger": "load",
+  "duration": 2600,
+  "delay": 0,
+  "easing": "ease-in-out",
+  "iterations": 0,
+  "alternate": true,
+  "keyframes": [
+   {
+    "at": 0,
+    "rotate": -3,
+    "y": 0
+   },
+   {
+    "at": 100,
+    "rotate": 3,
+    "y": 2
+   }
+  ]
+ },
+ {
+  "id": "olas",
+  "name": "Olas",
+  "target": "olas",
+  "trigger": "load",
+  "duration": 3000,
+  "delay": 0,
+  "easing": "linear",
+  "iterations": 0,
+  "alternate": false,
+  "keyframes": [
+   {
+    "at": 0,
+    "x": 0
+   },
+   {
+    "at": 100,
+    "x": -20
+   }
+  ]
+ },
+ {
+  "id": "ruta",
+  "name": "Ruta se dibuja",
+  "target": "ruta",
+  "trigger": "load",
+  "duration": 3500,
+  "delay": 0,
+  "easing": "ease-in-out",
+  "iterations": 1,
+  "alternate": false,
+  "keyframes": [
+   {
+    "at": 0,
+    "draw": 0
+   },
+   {
+    "at": 100,
+    "draw": 100
+   }
+  ]
+ },
+ {
+  "id": "ventanas",
+  "name": "Ventanas parpadean",
+  "target": "ventanas-4",
+  "trigger": "load",
+  "duration": 1600,
+  "delay": 0,
+  "easing": "ease-in-out",
+  "iterations": 0,
+  "alternate": false,
+  "keyframes": [
+   {
+    "at": 0,
+    "opacity": 100
+   },
+   {
+    "at": 60,
+    "opacity": 55
+   },
+   {
+    "at": 100,
+    "opacity": 100
+   }
+  ]
+ },
+ {
+  "id": "faro",
+  "name": "Faro del coche",
+  "target": "faro",
+  "trigger": "load",
+  "duration": 900,
+  "delay": 0,
+  "easing": "ease-in-out",
+  "iterations": 0,
+  "alternate": true,
+  "keyframes": [
+   {
+    "at": 0,
+    "fill": "#fff3b0",
+    "scale": 1
+   },
+   {
+    "at": 100,
+    "fill": "#ffd166",
+    "scale": 1.5
+   }
+  ]
+ },
+ {
+  "id": "titulo",
+  "name": "Título aparece",
+  "target": "rotulo",
+  "trigger": "load",
+  "duration": 900,
+  "delay": 300,
+  "easing": "spring",
+  "iterations": 1,
+  "alternate": false,
+  "keyframes": [
+   {
+    "at": 0,
+    "opacity": 0,
+    "y": -16
+   },
+   {
+    "at": 100,
+    "opacity": 100,
+    "y": 0
+   }
+  ]
+ },
+ {
+  "id": "monte",
+  "name": "Montaña cambia de color",
+  "target": "monte-lejano",
+  "trigger": "load",
+  "duration": 5000,
+  "delay": 0,
+  "easing": "ease-in-out",
+  "iterations": 0,
+  "alternate": true,
+  "keyframes": [
+   {
+    "at": 0,
+    "opacity": 85
+   },
+   {
+    "at": 100,
+    "opacity": 60
+   }
+  ]
+ }
+]

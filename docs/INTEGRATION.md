@@ -1,6 +1,6 @@
 # Integrar piezas de Codaru en un IDE
 
-Esta guía describe la API modular disponible desde `codaru-mockup` 0.2.0 en los puntos de entrada `codaru-mockup/core` y `codaru-mockup/modular`. Desde el repositorio, compila el paquete con `npm run package:build`.
+Esta guía describe la API modular disponible desde `codaru-mockup` 0.2.0 (medidas de la 0.3.0) en los puntos de entrada `codaru-mockup/core` y `codaru-mockup/modular`. Desde el repositorio, compila el paquete con `npm run package:build`.
 
 Codaru separa el documento de su interfaz. El IDE decide dónde monta el lienzo, qué paneles utiliza y cómo los viste. Todas las piezas de una sesión comparten selección, historial, componentes, temas del diseño y operaciones de IA. No hay iframe en la integración modular ni un servidor Node necesario para ejecutar la app.
 
@@ -162,8 +162,8 @@ Medidos sobre `packages/editor/dist` tras `npm run package:build`, sumando cada 
 
 | Entrada | Carga inicial | Gzip | Bajo demanda |
 | --- | --- | --- | --- |
-| `codaru-mockup/core` | 70,8 kB | 25,5 kB | agente de IA: 14,5 kB (5,5 kB gzip) |
-| `codaru-mockup/modular` | 205,6 kB | 63,9 kB | agente, kits e iconos: 37,5 kB (13,1 kB gzip) |
+| `codaru-mockup/core` | 111,0 kB | 36,9 kB | agente de IA e importación de Figma: 30,3 kB (11,6 kB gzip) |
+| `codaru-mockup/modular` | 289,4 kB | 87,3 kB | agente, Figma, kits, iconos, animador y ejemplo multiplataforma: 75,0 kB (27,0 kB gzip) |
 
 `modular` ya contiene a `core` y sus estilos; no carga el editor completo del iframe (`dist/editor`). Estas cifras son solo el paquete embebible: no incluyen el plugin Rust enlazado al host, el CLI opcional (0,44 MB) ni la app de ejemplo para macOS (4,96 MiB), que se miden por separado.
 

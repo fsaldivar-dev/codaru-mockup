@@ -1,6 +1,7 @@
 import { clone, tokens as baseColors, uid, type Project, type Theme } from './model';
 import { effectiveTheme, resolveColor, type TokenSet } from './themes';
 import { escape as esc } from './render';
+import { closeColorPicker, pickColorFor } from './color-picker';
 
 type Category = keyof TokenSet;
 const categories: [Category, string][] = [['colors','Colores'],['gradients','Degradados'],['materials','Materiales'],['typography','Tipografía'],['radii','Radios']];
@@ -16,6 +17,9 @@ export function openThemeEditor(options: ThemeEditorOptions) {
   const entryName = (value: unknown, id: string) => typeof value === 'object' && value ? (value as { name: string }).name : id;
   const input = (label: string, field: string, value: string | number, min?: number, max?: number, step = 1) => `<label class="full-field"><span>${label}</span><input aria-label="${label}" data-te-field="${field}" value="${esc(value)}" ${typeof value === 'number' ? `type="number" min="${min}" max="${max}" step="${step}"` : 'maxlength="200"'}/></label>`;
   const select = (label: string, field: string, value: string, choices: [string,string][]) => `<label class="full-field"><span>${label}</span><select aria-label="${label}" data-te-field="${field}">${choices.map(([id,name])=>`<option value="${id}" ${id===value?'selected':''}>${name}</option>`).join('')}</select></label>`;
+  const safe = (value: string) => { try { return color(value); } catch { return '#ffffff'; } };
+  /** A text field for HEX or @token with a chip that opens the shared picker. */
+  const colorInput = (label: string, field: string, value: string) => `<div class="picker-field"><button type="button" class="color-chip" data-pick="${label}" aria-label="${label}: selector" title="Elegir color" style="--chip:${esc(safe(value))}"></button>${input(label, field, value)}</div>`;
   function update(fn: (p: Project) => void) {
     try { commit(fn); error = ''; } catch (e) { error = e instanceof Error ? e.message : 'No se pudo guardar'; }
     draw();
@@ -31,15 +35,15 @@ export function openThemeEditor(options: ThemeEditorOptions) {
   }
   function fields(): string {
     const s = set();
-    if (category === 'colors') return `${input('Valor del color','value',s.colors[key])}<p class="field-note">HEX, transparent o referencia @primary. Las referencias se actualizan juntas.</p>`;
+    if (category === 'colors') return `${colorInput('Valor del color','value',s.colors[key])}<p class="field-note">HEX, transparent o referencia @primary. Las referencias se actualizan juntas.</p>`;
     if (category === 'radii') return input('Radio del token','value',s.radii[key],0,10000);
     if (category === 'gradients') {
       const g=s.gradients[key];
-      return `${input('Nombre del token','name',g.name)}<div class="field-grid">${select('Tipo de degradado','type',g.type,[['linear','Lineal'],['radial','Radial']])}${input('Ángulo del token','angle',g.angle,-360,360)}</div><div class="stops-heading">Paradas <span>Color / posición %</span></div>${g.stops.map((stop,i)=>`<div class="gradient-stop"><span class="stop-chip" style="background:${color(stop.color)}"></span>${input(`Color parada ${i+1}`,`stop-color-${i}`,stop.color)}${input(`Posición parada ${i+1}`,`stop-position-${i}`,stop.position,0,100,.1)}<button data-te-remove-stop="${i}" aria-label="Quitar parada ${i+1}" ${g.stops.length<=2?'disabled':''}>×</button></div>`).join('')}<button class="wide-button" data-te="add-stop" ${g.stops.length>=16?'disabled':''}>+ Añadir parada</button>`;
+      return `${input('Nombre del token','name',g.name)}<div class="field-grid">${select('Tipo de degradado','type',g.type,[['linear','Lineal'],['radial','Radial']])}${input('Ángulo del token','angle',g.angle,-360,360)}</div><div class="stops-heading">Paradas <span>Color / posición %</span></div>${g.stops.map((stop,i)=>`<div class="gradient-stop">${colorInput(`Color parada ${i+1}`,`stop-color-${i}`,stop.color)}${input(`Posición parada ${i+1}`,`stop-position-${i}`,stop.position,0,100,.1)}<button data-te-remove-stop="${i}" aria-label="Quitar parada ${i+1}" ${g.stops.length<=2?'disabled':''}>×</button></div>`).join('')}<button class="wide-button" data-te="add-stop" ${g.stops.length>=16?'disabled':''}>+ Añadir parada</button>`;
     }
     if (category === 'materials') {
       const m=s.materials[key];
-      return `${input('Nombre del token','name',m.name)}${input('Tinte','tint',m.tint)}<div class="field-grid">${input('Transparencia: tinte %','opacity',m.opacity,0,100)}${input('Desenfoque px','blur',m.blur,0,40)}${input('Saturación %','saturation',m.saturation,0,200)}${input('Sombra px','shadow',m.shadow,0,40)}</div>${input('Borde del material','stroke',m.stroke)}<p class="field-note">Simulación de vidrio. El desenfoque necesita contenido detrás; el SVG conserva tinte y borde.</p>`;
+      return `${input('Nombre del token','name',m.name)}${colorInput('Tinte','tint',m.tint)}<div class="field-grid">${input('Transparencia: tinte %','opacity',m.opacity,0,100)}${input('Desenfoque px','blur',m.blur,0,40)}${input('Saturación %','saturation',m.saturation,0,200)}${input('Sombra px','shadow',m.shadow,0,40)}</div>${colorInput('Borde del material','stroke',m.stroke)}<p class="field-note">Simulación de vidrio. El desenfoque necesita contenido detrás; el SVG conserva tinte y borde.</p>`;
     }
     const t=s.typography[key];
     return `${input('Nombre del token','name',t.name)}${select('Familia del token','fontFamily',t.fontFamily,[['system','Sistema'],['serif','Serif'],['mono','Monoespaciada']])}<div class="field-grid">${input('Tamaño del token','fontSize',t.fontSize,1,512)}${input('Peso del token','fontWeight',t.fontWeight,100,900)}${input('Interlineado del token','lineHeight',t.lineHeight,.5,5,.1)}</div>`;
@@ -51,6 +55,8 @@ export function openThemeEditor(options: ThemeEditorOptions) {
   }
   root.onclick=e=>{
     const el=(e.target as HTMLElement).closest<HTMLElement>('button');if(!el)return;
+    if(el.dataset.pick){pickColorFor(el,{resolve:safe,tokens:Object.fromEntries(Object.keys(set().colors).filter(id=>category!=='colors'||id!==key).map(id=>[id,safe('@'+id)]))});return;}
+    closeColorPicker();
     if(el.dataset.teCategory){category=el.dataset.teCategory as Category;key='';error='';draw();return;}
     if(el.dataset.teKey){key=el.dataset.teKey;error='';draw();return;}
     if(el.dataset.teRemoveStop!==undefined){const index=Number(el.dataset.teRemoveStop);update(p=>p.designThemes[profile].modes[mode].gradients[key].stops.splice(index,1));return;}

@@ -19,7 +19,7 @@ test('theme editor changes linked gradients, rejects aliases, creates modes and 
   await page.getByLabel('Identificador del nuevo token').fill('hero');await page.getByRole('button',{name:'+ Crear token',exact:true}).click();
   let doc=await state(page);expect(doc.designThemes.project.modes.light.gradients.hero).toBeDefined();expect(doc.designThemes.project.modes.dark.gradients.hero).toBeDefined();
   await page.getByRole('button',{name:'Colores',exact:true}).click();
-  await page.getByLabel('Valor del color').fill('@primary');await page.getByLabel('Valor del color').press('Tab');
+  await page.getByLabel('Valor del color',{exact:true}).fill('@primary');await page.getByLabel('Valor del color',{exact:true}).press('Tab');
   await expect(page.locator('.theme-error')).toContainText('cíclico');
   expect((await state(page)).themes.light.primary).toBe('#7955e8');
   await page.screenshot({path:'artifacts/theme-editor.png'});
@@ -70,4 +70,23 @@ test('all catalog frames render without runtime errors and legacy files migrate'
   expect((await state(page)).components).toHaveLength(100);expect(errors).toEqual([]);
   await page.locator('#import-file').setInputFiles('examples/Forma.codaru.json');await page.getByRole('button',{name:'Continuar',exact:true}).click();
   expect((await state(page)).version).toBe(2);await expect(page.locator('[data-layer="primary-button"]')).toBeVisible();
+});
+test('fill type lists the theme gradients, links one, previews it and returns to a local fill',async({page})=>{
+  await page.locator('[data-layer="primary-button"]').click();
+  const type=page.getByLabel('Tipo',{exact:true}),node=page.locator('#artboards [data-node="primary-button"]');
+  await expect(type.locator('optgroup[label="Degradados del tema"] option')).toHaveText(['Marca']);
+  await type.selectOption({label:'Marca'});
+  expect((await state(page)).nodes.find((n:any)=>n.id==='primary-button').fillToken).toBe('brand');
+  expect(await node.evaluate(el=>getComputedStyle(el).backgroundImage)).toContain('linear-gradient');
+  await expect(page.getByRole('button',{name:'Degradado del tema Marca'})).toBeVisible();
+  await expect(page.getByLabel('Relleno: valor',{exact:true})).toHaveCount(0);
+  await expect(type).toHaveValue('token:brand');
+  await expect(page.getByLabel('Token de relleno',{exact:true})).toHaveValue('brand');
+  await type.selectOption('none');
+  const solid=(await state(page)).nodes.find((n:any)=>n.id==='primary-button');
+  expect(solid.fillToken).toBeUndefined();expect(solid.gradient).toBe('none');
+  expect(await node.evaluate(el=>getComputedStyle(el).backgroundImage)).toBe('none');
+  await expect(page.getByLabel('Relleno: valor',{exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'Deshacer · ⌘Z',exact:true}).click();
+  expect((await state(page)).nodes.find((n:any)=>n.id==='primary-button').fillToken).toBe('brand');
 });

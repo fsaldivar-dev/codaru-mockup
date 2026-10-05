@@ -3,6 +3,9 @@ import { effectiveTheme, type DesignTheme } from './themes';
 import { kits, getKitItems, insertKitItem, type KitId, type KitVariant } from './kits';
 import { iconPacks, getIconItems, insertIcon } from './icon-library';
 import { exportHTML, exportSVG } from './render';
+import { sanitizeSVG, vectorLayers, vectorSize } from './motion';
+import { devicePresets, deviceSkins } from './devices';
+import { importFigma } from './figma-import';
 
 export interface AgentHost {
   project: () => Project;
@@ -29,6 +32,11 @@ export async function revision(p: Project) {
   const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(p)));
   return [...new Uint8Array(digest)].map(v=>v.toString(16).padStart(2,'0')).join('');
 }
+/** Author-named layers come first: generated capa-N ids are only useful once the artwork is known. */
+function layerSummary(svg: string) {
+  const all=vectorLayers(svg),named=all.filter(l=>!/^capa-\d+$/.test(l.id)),ordered=[...named,...all.filter(l=>!named.includes(l))];
+  return {layers:ordered.slice(0,250).map(l=>`${l.id}:${l.tag}`),...(ordered.length>250?{layersTruncated:true,layerCount:ordered.length}:{})};
+}
 function describe(p: Project,n: DesignNode) {
   const theme=effectiveTheme(p,n);
   return {id:n.id,type:n.type,name:n.name,parentId:n.parentId,bounds:{x:n.x,y:n.y,width:n.width,height:n.height},
@@ -36,7 +44,7 @@ function describe(p: Project,n: DesignNode) {
     ...(children(p,n.id).length?{childCount:children(p,n.id).length,layout:n.layout,padding:n.padding,gap:n.gap}:{}),
     appearance:{fill:n.fill,color:n.color,radius:n.radius,...(n.strokeWidth?{stroke:n.stroke,strokeWidth:n.strokeWidth}:{}),...(n.opacity!==100?{opacity:n.opacity}:{}),...(n.fillToken?{fillToken:n.fillToken}:{}),...(n.materialToken?{materialToken:n.materialToken}:{}),...(n.typographyToken?{typographyToken:n.typographyToken}:{}),...(n.radiusToken?{radiusToken:n.radiusToken}:{})},
     theme:{id:theme.id,mode:theme.mode},...(n.instanceOf?{instanceOf:n.instanceOf}:{}),...(n.componentId?{componentId:n.componentId}:{}),
-    ...(n.targetId?{targetId:n.targetId}:{}),...(n.iconPack?{icon:{pack:n.iconPack,name:n.iconName}}:{}),...(n.hidden?{hidden:true}:{}),...(n.locked?{locked:true}:{})};
+    ...(n.targetId?{targetId:n.targetId,...(n.transition?{transition:n.transition}:{})}:{}),...(n.svg?layerSummary(n.svg):{}),...(n.device?{device:n.device}:{}),...(n.fold?{fold:n.fold}:{}),...(n.foldPair?{foldPair:n.foldPair}:{}),...(n.safeArea?{safeArea:n.safeArea}:{}),...(n.skin?{skin:n.skin}:{}),...(n.animations?.length?{animations:n.animations}:{}),...(n.iconPack?{icon:{pack:n.iconPack,name:n.iconName}}:{}),...(n.hidden?{hidden:true}:{}),...(n.locked?{locked:true}:{})};
 }
 export async function context(host: AgentHost,params: Record<string,unknown> = {},document=host.project()) {
   const p=clone(document), selection=host.selection().filter(id=>p.nodes.some(n=>n.id===id));
@@ -70,10 +78,15 @@ export const agentSchema = {
     remove:{ids:['ID']},component:{id:'ID de un elemento o grupo'},instance:{componentId:'ID de definición',parentId:'ID o null',x:0,y:0},
     kit:{kit:'ios|macos|android|linux|web',item:'id obtenido de catalog',parentId:'ID o null',x:24,y:24,variant:'default|selected|disabled'},
     icon:{pack:'mac|material|linux|web',name:'id obtenido de catalog',parentId:'ID o null',x:24,y:24,size:24,color:'@primary'},
-    flow:{from:'ID de origen',to:'ID de pantalla destino o null'},group:{ids:['ID1','ID2']},ungroup:{id:'ID de grupo'},detach:{id:'ID de instancia'},
+    flow:{from:'ID de origen',to:'ID de pantalla destino o null',transition:'opcional {type:fade|slide-left|slide-right|slide-up|slide-down|scale|unfold|fold,duration:ms,easing}; null la quita. unfold/fold animan la bisagra de la pantalla que tenga fold'},
+    vector:{svg:'texto SVG; se sanea y cada forma recibe un id de capa',parentId:'ID o null',x:24,y:24,width:'opcional; conserva la proporción',name:'opcional',id:'opcional'},
+    figma:{data:'contenido del archivo .figma.codaru.json que escribe el plugin de Figma; añade sus pantallas, componentes y tokens al documento'},
+    animate:{id:'ID del elemento',animations:'lista completa que reemplaza la anterior; [] o null las quita'},group:{ids:['ID1','ID2']},ungroup:{id:'ID de grupo'},detach:{id:'ID de instancia'},
     theme:{theme:'Perfil completo {id,name,modes:{light:TokenSet,dark:TokenSet}}'},'theme.activate':{id:'ID de tema',mode:'light|dark (opcional)'},
   },
-  node:{types:['frame','group','rect','ellipse','text','button','input','card','image','icon'],geometry:['parentId','x','y','width','height'],text:['text','fontSize','fontWeight','fontFamily','lineHeight','textAlign'],style:['fill','color','stroke','strokeWidth','radius','opacity','shadow','gradient','gradientEnd','gradientAngle'],tokens:['fillToken','materialToken','typographyToken','radiusToken','themeId','themeMode'],layout:['layout','padding','gap','sizing'],visibility:['hidden','locked'],icons:['iconPack','iconName'],navigation:['targetId']},
+  node:{types:['frame','group','rect','ellipse','text','button','input','card','image','icon','vector (usa la operación vector)'],geometry:['parentId','x','y','width','height'],text:['text','fontSize','fontWeight','fontFamily','lineHeight','textAlign'],style:['fill','color','stroke','strokeWidth','radius','opacity','shadow','gradient','gradientEnd','gradientAngle','gradientStops: [{color,position:0..100}] de 2 a 16 paradas; null vuelve a fill + gradientEnd'],tokens:['fillToken','materialToken','typographyToken','radiusToken','themeId','themeMode'],layout:['layout','padding','gap','sizing'],visibility:['hidden','locked'],icons:['iconPack','iconName'],navigation:['targetId','transition'],screen:['device: id de devices','fold: {axis:vertical|horizontal,gap:0..200,panels:2|3} o null; solo pantallas (3 = tríptico con dos bisagras)','safeArea: {top,right,bottom,left} o null','skin: '+Object.keys(deviceSkins).join('|')+' o null','foldPair: id de la pantalla en la otra postura o null']},
+  devices:devicePresets.map(d=>`${d.id} ${d.width}x${d.height}${d.fold?` pliegue ${d.fold.axis}${d.fold.panels===3?' x3':''}`:''}${d.approximate?' (aprox.)':''}`),
+  motion:{note:'Las animaciones solo se reproducen en Presentar y en el HTML exportado; el lienzo y SVG son estáticos.',animation:{id:'único en el elemento',name:'texto',target:'id de capa de una ilustración (context lo lista en layers) o "" para el elemento entero',trigger:'load|click',duration:'1..20000 ms',delay:'0..20000 ms',easing:'linear|ease|ease-in|ease-out|ease-in-out|spring',iterations:'0 = infinito, hasta 100',alternate:'boolean',keyframes:'2..32 en orden creciente'},keyframe:{at:'0..100',x:'px',y:'px',scale:'0..20',rotate:'grados',opacity:'0..100',fill:'color',stroke:'color',draw:'0..100, parte visible del trazo',shine:'0..100, posición de un brillo de carga que cruza el elemento (no capas SVG)'}},
   tokens:{colors:'HEX, transparent o @alias',gradients:'{name,type:linear|radial,angle,stops:[{color,position:0..100}]}',materials:'{name,tint,opacity:0..100,blur:0..40,saturation:0..200,stroke,shadow:0..40}',typography:'{name,fontFamily:system|serif|mono,fontSize,fontWeight,lineHeight}',radii:'{id:number}'},
   limits:{operationsPerBatch:250,contextNodes:100,contextDepth:4},
   guarantees:['No se ejecuta JavaScript recibido','Cada lote es una sola entrada de Deshacer','Una revision antigua se rechaza sin modificar el documento','El documento permanece en el borrador local; exporta JSON para conservar un archivo independiente'],
@@ -84,14 +97,17 @@ export function applyOperations(p: Project,operations: unknown) {
   for(const input of operations as unknown[]) {
     const op=object(input),name=string(op.op,'op');
     switch(name){
-      case 'add':{const draft=object(op.node),type=string(draft.type,'node.type') as Kind;p.nodes.push(node(type,draft as Partial<DesignNode>));break;}
-      case 'update':{const id=string(op.id,'id');existing(p,id);const patch={...object(op.patch)};for(const key of ['fillToken','materialToken','typographyToken','radiusToken','themeId','themeMode','radiusTR','radiusBR','radiusBL'])if(patch[key]===null)patch[key]=undefined;if(['id','type','componentId','instanceOf','componentKey','overrides'].some(key=>key in patch))fail('La estructura de componentes requiere operaciones explícitas.');updateNode(p,id,patch);break;}
+      case 'add':{const draft={...object(op.node)},type=string(draft.type,'node.type') as Kind;if(typeof draft.svg==='string')draft.svg=sanitizeSVG(draft.svg);p.nodes.push(node(type,draft as Partial<DesignNode>));break;}
+      case 'update':{const id=string(op.id,'id');existing(p,id);const patch={...object(op.patch)};for(const key of ['fillToken','materialToken','typographyToken','radiusToken','themeId','themeMode','radiusTR','radiusBR','radiusBL'])if(patch[key]===null)patch[key]=undefined;if(['id','type','componentId','instanceOf','componentKey','overrides'].some(key=>key in patch))fail('La estructura de componentes requiere operaciones explícitas.');if(typeof patch.svg==='string')patch.svg=sanitizeSVG(patch.svg);for(const key of ['transition','animations','gradientStops','device','fold','foldPair','safeArea','skin'])if(patch[key]===null)patch[key]=undefined;updateNode(p,id,patch);break;}
       case 'remove':{const list=ids(op.ids);list.forEach(id=>existing(p,id));remove(p,list);break;}
       case 'component':createComponent(p,string(op.id,'id'));break;
       case 'instance':instantiate(p,string(op.componentId,'componentId'),parent(op.parentId),number(op.x,0),number(op.y,0));break;
       case 'kit':insertKitItem(p,string(op.kit,'kit') as KitId,string(op.item,'item'),parent(op.parentId),number(op.x,0),number(op.y,0),(op.variant??'default') as KitVariant);break;
       case 'icon':{const id=insertIcon(p,string(op.pack,'pack'),string(op.name,'name'),parent(op.parentId),number(op.x,0),number(op.y,0),number(op.size,24));if(op.color!==undefined)updateNode(p,id,{color:string(op.color,'color')});break;}
-      case 'flow':{const id=string(op.from,'from');existing(p,id);updateNode(p,id,{targetId:op.to===null?null:string(op.to,'to')});break;}
+      case 'flow':{const id=string(op.from,'from');existing(p,id);updateNode(p,id,{targetId:op.to===null?null:string(op.to,'to'),...(op.transition!==undefined?{transition:op.transition===null?undefined:object(op.transition) as unknown as DesignNode['transition']}:{})});break;}
+      case 'vector':{const svg=sanitizeSVG(string(op.svg,'svg')),size=vectorSize(svg),width=op.width===undefined?Math.min(size.width,320):number(op.width,160);p.nodes.push(node('vector',{...(op.id!==undefined?{id:string(op.id,'id')}:{}),name:op.name===undefined?'Ilustración':string(op.name,'name'),parentId:parent(op.parentId),x:number(op.x,0),y:number(op.y,0),width,height:Math.max(1,Math.round(width*size.height/size.width*100)/100),svg}));break;}
+      case 'figma':importFigma(p,object(op.data));break;
+      case 'animate':{const id=string(op.id,'id');existing(p,id);updateNode(p,id,{animations:op.animations===null||(Array.isArray(op.animations)&&!op.animations.length)?undefined:op.animations as DesignNode['animations']});break;}
       case 'group':group(p,ids(op.ids));break;
       case 'ungroup':{const id=string(op.id,'id');existing(p,id);ungroup(p,id);break;}
       case 'detach':{const id=string(op.id,'id');existing(p,id);detach(p,id);break;}

@@ -154,7 +154,7 @@ input[type="checkbox"] { accent-color: var(--ui-accent); }
 .kit-preview { background: var(--ui-raised); }
 .themes-button, .enter-scope { color: var(--ui-accent); border-color: var(--ui-border); }
 .component-preview, .kit-preview { border-radius: var(--ui-radius) var(--ui-radius) 0 0; }
-.color-chip, .palette label, .token-list i, .stop-chip { border-color: var(--ui-border); }
+.color-chip, .token-list i, .stop-chip { border-color: var(--ui-border); }
 .frame-label { color: var(--ui-muted); }
 .frame-label:hover { color: var(--ui-accent); background: transparent; }
 .selection-box, .selection-box.is-component, .resize-handle { border-color: var(--ui-selection); }
@@ -227,3 +227,23 @@ input[type="checkbox"] { accent-color: var(--ui-accent); }
 .mode-switch[part] { min-height: 28px; }
 :host([data-codaru-part="modes"]), :host([data-codaru-part="designTheme"]),
 :host([data-codaru-part="fit"]) { background: transparent; }
+/* Animator dialog. */
+.animator-body, .animator-list, .animator-fields, .animator-list>button { border-color: var(--ui-border); }
+.animator-list>button.active { border-color: var(--ui-accent); background: color-mix(in srgb, var(--ui-accent) 12%, transparent); }
+.animator-list small, .keyframe-head { color: var(--ui-muted); }
+.animator-preview { background: var(--ui-canvas); }
+.keyframe-row input, .keyframe-colors input:not([type=color]) { color: var(--ui-text); background: var(--ui-raised); border-color: var(--ui-border); }
+.keyframe { border-color: var(--ui-border); }
+.keyframe-colors label { color: var(--ui-muted); }
+.gradient-preview { border-color: var(--ui-border); }
+/* Color picker. */
+.color-picker { background: var(--ui-surface); border-color: var(--ui-border); color: var(--ui-text); border-radius: calc(var(--ui-radius) * 2); }
+.color-picker h4, .cp-values label, .cp-controls label { color: var(--ui-muted); }
+.cp-tabs { background: var(--ui-raised); } .cp-tabs button, .cp-segment button { color: var(--ui-muted); }
+.cp-tabs button[aria-selected=true], .cp-segment button.active { background: var(--ui-surface); color: var(--ui-text); box-shadow: 0 1px 2px #0002; }
+.cp-segment { background: var(--ui-raised); }
+.cp-values input, .cp-controls input { color: var(--ui-text); background: var(--ui-raised); border-color: var(--ui-border); }
+.cp-swatches button, .cp-preview, .cp-bar-fill, .cp-segment, .cp-remove { border-color: var(--ui-border); }
+.cp-swatches button.active { outline-color: var(--ui-accent); }
+.cp-stop.active { box-shadow: 0 0 0 2px var(--ui-accent), 0 2px 5px #0006; }
+.cp-area:focus-visible { outline-color: var(--ui-accent); }

@@ -17,3 +17,4 @@ releases/
 !.env.example
 .npmrc
 *.log
+.claude/

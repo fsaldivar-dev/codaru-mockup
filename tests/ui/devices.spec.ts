@@ -1,0 +1,162 @@
+import { test, expect, type Page } from '@playwright/test';
+
+const state=(page:Page)=>page.evaluate(()=>(window as any).codaru.getDocument());
+const screen=async(page:Page,id:string)=>(await state(page)).nodes.find((n:any)=>n.id===id);
+test.beforeEach(async({page})=>{await page.goto('/');await expect(page.locator('[data-layer="screen-login"]')).toBeVisible();});
+
+test('device presets size a screen, foldables add a hinge guide and rotating swaps the fold axis',async({page})=>{
+  await page.locator('[data-layer="screen-login"]').click();
+  const device=page.getByLabel('Tamaño de pantalla');
+  await expect(device.locator('optgroup')).toHaveCount(9);
+  await device.selectOption('iphone-16-pro');
+  expect(await screen(page,'screen-login')).toMatchObject({device:'iphone-16-pro',width:402,height:874});
+  expect((await screen(page,'screen-login')).fold).toBeUndefined();
+  await device.selectOption('android-fold-open');
+  expect(await screen(page,'screen-login')).toMatchObject({device:'android-fold-open',width:673,height:841,fold:{axis:'vertical',gap:0}});
+  const guide=page.locator('#artboards [data-node="screen-login"] > .fold-guide');
+  await expect(guide).toHaveCount(1);
+  expect(await guide.evaluate(el=>({left:el.style.left,width:el.style.width}))).toEqual({left:'336px',width:'1px'});
+  await expect(page.getByLabel('Pliegue',{exact:true})).toHaveValue('vertical');
+  await page.getByLabel('Ancho de la bisagra').fill('24');await page.getByLabel('Ancho de la bisagra').press('Tab');
+  expect(await guide.evaluate(el=>({left:el.style.left,width:el.style.width}))).toEqual({left:'324.5px',width:'24px'});
+  await page.getByRole('button',{name:'Girar ⟳'}).click();
+  expect(await screen(page,'screen-login')).toMatchObject({width:841,height:673,fold:{axis:'horizontal',gap:24}});
+  await expect(device).toHaveValue('android-fold-open');
+  await page.getByLabel('W',{exact:true}).fill('800');await page.getByLabel('W',{exact:true}).press('Tab');
+  await expect(device).toHaveValue('');
+  await page.getByLabel('Pliegue',{exact:true}).selectOption('');
+  expect((await screen(page,'screen-login')).fold).toBeUndefined();await expect(guide).toHaveCount(0);
+  for(let i=0;i<6;i++)await page.getByRole('button',{name:'Deshacer · ⌘Z',exact:true}).click();
+  expect(await screen(page,'screen-login')).toMatchObject({width:390,height:660});
+});
+
+test('unfold opens the hinged screen as two halves in the prototype and in exported HTML, and back folds it',async({page})=>{
+  await page.locator('[data-layer="screen-dashboard"]').click();
+  await page.getByLabel('Tamaño de pantalla').selectOption('android-fold-open');
+  await page.locator('[data-layer="primary-button"]').click();
+  await page.getByLabel('Transición',{exact:true}).selectOption('unfold');
+  await page.getByLabel('Duración de la transición').fill('500');await page.getByLabel('Duración de la transición').press('Tab');
+  await page.getByRole('button',{name:'Presentar',exact:true}).click();
+  await page.locator('#preview-canvas [data-node="primary-button"]').click();
+  await expect(page.locator('#preview-canvas > *')).toHaveCount(3);
+  // The outer screen turns over the hinge: its back is the first inner panel, the second lies underneath.
+  const stage=page.locator('#preview-canvas > div:not([data-node])');
+  await expect(stage.locator('> div')).toHaveCount(2);
+  expect(await stage.locator('> div').last().evaluate(el=>[el.style.transformStyle,el.style.transformOrigin,el.children.length,(el.firstElementChild!.firstElementChild as HTMLElement).dataset.node,(el.lastElementChild!.firstElementChild as HTMLElement).dataset.node])).toEqual(['preserve-3d','left center',2,'screen-login','screen-dashboard']);
+  expect(await page.locator('#preview-canvas > [data-node]').evaluateAll(els=>els.map(el=>(el as HTMLElement).style.visibility))).toEqual(['hidden','hidden']);
+  await expect(page.locator('#preview-canvas > *')).toHaveCount(1);
+  await expect(page.locator('#preview-canvas > [data-node="screen-dashboard"]')).toBeVisible();
+  await expect(page.locator('#preview-canvas .fold-guide')).toHaveCount(1);
+  await page.getByRole('button',{name:'Pantalla anterior'}).click();
+  await expect(page.locator('#preview-canvas > *')).toHaveCount(3);await expect(page.locator('#preview-canvas > *')).toHaveCount(1);
+  await expect(page.locator('#preview-canvas > [data-node="screen-login"]')).toBeVisible();
+  await page.keyboard.press('Escape');
+  const html=await page.evaluate(()=>(window as any).codaru.exportHTML());
+  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.setContent(html);
+  await page.locator('[data-node="primary-button"]').first().click();
+  await expect(page.locator('#viewport > *')).toHaveCount(4);await expect(page.locator('#viewport > *')).toHaveCount(2);
+  await expect(page.locator('#screen-dashboard')).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
+test('presets bring safe areas and a device frame; the canvas shows guides and the prototype shows the bezel',async({page})=>{
+  await page.locator('[data-layer="screen-login"]').click();
+  await page.getByLabel('Tamaño de pantalla').selectOption('iphone-16-pro');
+  expect(await screen(page,'screen-login')).toMatchObject({skin:'iphone',safeArea:{top:62,right:0,bottom:34,left:0}});
+  const frame=page.locator('#artboards .design-node[data-node="screen-login"]');
+  expect(await frame.locator('> .safe-guide').evaluateAll(els=>els.map(el=>[(el as HTMLElement).dataset.edge,(el as HTMLElement).style.height]))).toEqual([['top','62px'],['bottom','34px']]);
+  await expect(frame.locator('> .device-chrome .device-cutout')).toHaveCount(1);await expect(frame.locator('> .device-chrome .device-home')).toHaveCount(1);
+  await expect(frame.locator('> .device-chrome .device-status')).toContainText('9:41');
+  expect(await frame.evaluate(el=>[el.style.borderRadius,el.style.boxShadow])).toEqual(['50px','none']);
+  await page.getByLabel('Área segura izquierda').fill('12');await page.getByLabel('Área segura izquierda').press('Tab');
+  expect((await screen(page,'screen-login')).safeArea.left).toBe(12);await expect(frame.locator('> .safe-guide')).toHaveCount(3);
+  await page.getByRole('button',{name:'Presentar',exact:true}).click();
+  const shown=page.locator('#preview-canvas > [data-node="screen-login"]');
+  await expect(shown.locator('.safe-guide')).toHaveCount(0);await expect(shown.locator('.device-chrome')).toHaveCount(1);
+  expect(await shown.evaluate(el=>el.style.boxShadow)).toContain('0px 0px 0px 11px');
+  await page.keyboard.press('Escape');
+  await page.getByLabel('Marco del dispositivo').selectOption('android');
+  await expect(frame.locator('> .device-chrome .device-status')).toContainText('12:30');
+  await page.getByLabel('Marco del dispositivo').selectOption('');
+  await expect(frame.locator('> .device-chrome')).toHaveCount(0);expect((await screen(page,'screen-login')).skin).toBeUndefined();
+  for(const edge of ['superior','inferior','izquierda']){await page.getByLabel('Área segura '+edge).fill('0');await page.getByLabel('Área segura '+edge).press('Tab');}
+  expect((await screen(page,'screen-login')).safeArea).toBeUndefined();
+});
+
+test('paired postures can be switched while presenting and in exported HTML',async({page})=>{
+  await page.locator('[data-layer="screen-dashboard"]').click();
+  await page.getByLabel('Tamaño de pantalla').selectOption('android-fold-open');
+  await page.getByLabel('Pantalla en la otra postura').selectOption('screen-login');
+  expect((await screen(page,'screen-dashboard')).foldPair).toBe('screen-login');expect((await screen(page,'screen-login')).foldPair).toBe('screen-dashboard');
+  await page.locator('[data-layer="screen-login"]').click();
+  await expect(page.getByLabel('Pantalla en la otra postura')).toHaveValue('screen-dashboard');
+  await page.getByRole('button',{name:'Presentar',exact:true}).click();
+  await page.getByRole('button',{name:'Desplegar ⇄'}).click();
+  await expect(page.locator('#preview-select')).toHaveValue('screen-dashboard');
+  await expect(page.locator('#preview-canvas > *')).toHaveCount(3);await expect(page.locator('#preview-canvas > *')).toHaveCount(1);
+  await page.getByRole('button',{name:'Plegar ⇄'}).click();
+  await expect(page.locator('#preview-select')).toHaveValue('screen-login');await expect(page.locator('#preview-canvas > *')).toHaveCount(1);
+  await page.keyboard.press('Escape');
+  await page.getByLabel('Pantalla en la otra postura').selectOption('');
+  expect((await screen(page,'screen-dashboard')).foldPair).toBeUndefined();
+  await page.getByRole('button',{name:'Deshacer · ⌘Z',exact:true}).click();
+  const html=await page.evaluate(()=>(window as any).codaru.exportHTML());
+  await page.setContent(html);
+  await expect(page.locator('#posture')).toBeVisible();await page.locator('#posture').click();
+  await expect(page.locator('#screen-dashboard')).toBeVisible();await expect(page.locator('#viewport > *')).toHaveCount(2);
+  await expect(page.locator('#posture')).toBeVisible();
+});
+
+test('the multi-device example covers iPhone Duo and the three Android foldable families in every posture',async({page})=>{
+  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.locator('#stage').click({position:{x:5,y:5}});
+  await page.getByRole('button',{name:'Ejemplo iOS, Android y plegables'}).click();
+  await page.getByRole('button',{name:'Continuar',exact:true}).click();
+  await expect.poll(async()=>(await state(page)).nodes.filter((n:any)=>n.type==='frame').length).toBe(21);
+  const frames=(await state(page)).nodes.filter((n:any)=>n.type==='frame');
+  expect(frames.every((f:any)=>f.skin&&f.safeArea&&f.device)).toBe(true);
+  expect(frames.filter((f:any)=>f.fold)).toHaveLength(10);expect(frames.filter((f:any)=>f.foldPair)).toHaveLength(16);
+  expect(frames.find((f:any)=>f.id==='duo-abierto-espacio')).toMatchObject({width:890,height:626,skin:'iphone-duo',fold:{axis:'vertical'}});
+  expect(frames.find((f:any)=>f.id==='flip-abierto-espacio').fold.axis).toBe('horizontal');
+  expect(frames.find((f:any)=>f.id==='triptico-abierto-espacio').fold.panels).toBe(3);
+  await expect(page.locator('#artboards .device-chrome')).toHaveCount(21);
+  await expect(page.locator('#artboards [data-node="triptico-abierto-espacio"] > .fold-guide')).toHaveCount(2);
+  await expect(page.locator('#artboards [data-node="duo-abierto-espacio"] .device-cutout')).toHaveCount(0);
+  await expect(page.locator('#artboards [data-node="duo-cerrado-espacio"] .device-cutout')).toHaveCount(1);
+  await page.locator('[data-layer="pasaporte-cerrado-bienvenida"]').click();
+  await page.getByRole('button',{name:'Presentar',exact:true}).click();
+  await page.locator('#preview-canvas [data-target="pasaporte-cerrado-espacio"]').click();
+  await expect(page.locator('#preview-select')).toHaveValue('pasaporte-cerrado-espacio');
+  await page.getByRole('button',{name:'Desplegar ⇄'}).click();
+  await expect(page.locator('#preview-select')).toHaveValue('pasaporte-abierto-espacio');
+  await expect(page.locator('#preview-canvas > *')).toHaveCount(1);
+  await page.locator('#preview-select').selectOption('triptico-cerrado-espacio');
+  await expect(page.getByRole('button',{name:'Dos paneles ⇄'})).toBeVisible();
+  await page.getByRole('button',{name:'Abierto ⇄'}).click();
+  await expect(page.locator('#preview-select')).toHaveValue('triptico-abierto-espacio');
+  await expect(page.locator('#preview-canvas > div:not([data-node]) > div')).toHaveCount(3);await expect(page.locator('#preview-canvas > *')).toHaveCount(1);
+  await expect(page.locator('#preview-canvas .fold-guide')).toHaveCount(2);
+  await page.getByRole('button',{name:'Dos paneles ⇄'}).click();
+  await expect(page.locator('#preview-select')).toHaveValue('triptico-dos-paneles-espacio');
+  await page.locator('#preview-select').selectOption('flip-exterior');
+  await page.getByRole('button',{name:'Desplegar ⇄'}).click();
+  await expect(page.locator('#preview-select')).toHaveValue('flip-abierto-espacio');
+  expect(errors).toEqual([]);
+});
+
+test('a file exported by the Figma plugin is added to the document with a report of what was simplified',async({page})=>{
+  const before=(await state(page)).nodes.length;
+  await page.locator('#import-file').setInputFiles('examples/ejemplo.figma.codaru.json');
+  const dialog=page.getByRole('dialog',{name:'Importación de Figma'});
+  await expect(dialog).toContainText('2 pantallas');await expect(dialog).toContainText('3 componentes');await expect(dialog).toContainText('Capas ocultas descartadas');
+  await dialog.getByRole('button',{name:'Entendido'}).click();await expect(dialog).toHaveCount(0);
+  const doc=await state(page);
+  expect(doc.nodes.length).toBeGreaterThan(before);expect(doc.nodes.some((n:any)=>n.id==='screen-login')).toBe(true);
+  const imported=doc.nodes.find((n:any)=>n.name==='Inicio');
+  await expect(page.locator(`#artboards .design-node[data-node="${imported.id}"]`)).toBeVisible();
+  await expect(page.locator('#artboards [data-node] svg path')).not.toHaveCount(0);
+  expect(doc.components.map((c:any)=>c.name)).toContain('Tarjeta');
+  await page.getByRole('button',{name:'Deshacer · ⌘Z',exact:true}).click();
+  expect((await state(page)).nodes.length).toBe(before);
+});

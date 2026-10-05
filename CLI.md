@@ -60,7 +60,45 @@ Sustituye `REVISION_DEL_CONTEXTO` por el valor leído en `context.revision`:
 
 Para conectar una interacción con otra pantalla usa `{"op":"flow","from":"ID_ORIGEN","to":"ID_PANTALLA"}`. El contexto devuelve estas conexiones explícitamente como acciones de clic. `to:null` quita la conexión. Usa `update` para editar propiedades y `null` para quitar vínculos opcionales como `fillToken`.
 
+Un degradado propio de varios colores se define con `gradient` (`linear` o `radial`), `gradientAngle` y `gradientStops`: `[{"color":"#2a7b9b","position":0},{"color":"#57c785","position":50},{"color":"#eddd53","position":100}]`, de 2 a 16 paradas en orden creciente. Sin `gradientStops` se usan `fill` y `gradientEnd` como extremos.
+
 Los tokens y los iconos se resuelven con el tema del elemento o de su pantalla. Los materiales conservan su simulación en HTML; SVG simplifica el vidrio a tinte y borde.
+
+## Ilustraciones, animaciones y transiciones
+
+Las animaciones son datos declarativos: no se ejecuta ningún script del SVG ni del lote. Se reproducen en «Presentar» y en el HTML exportado; el lienzo y la exportación SVG son estáticos.
+
+```json
+{"expectedRevision":"REVISION","operations":[
+  {"op":"vector","id":"sol","svg":"<svg viewBox=\"0 0 120 120\"><g id=\"rayos\"><path d=\"M60 8V24\" stroke=\"#f5a524\" stroke-width=\"6\"/></g><circle cx=\"60\" cy=\"60\" r=\"26\" fill=\"#f5a524\"/></svg>","parentId":"pantalla-inicio","x":24,"y":24,"width":120},
+  {"op":"animate","id":"sol","animations":[
+    {"id":"giro","name":"Girar","target":"rayos","trigger":"load","duration":4000,"delay":0,"easing":"linear","iterations":0,"alternate":false,
+     "keyframes":[{"at":0,"rotate":0},{"at":100,"rotate":360}]}]},
+  {"op":"flow","from":"boton-entrar","to":"pantalla-detalle","transition":{"type":"slide-left","duration":300,"easing":"ease-out"}}
+]}
+```
+
+- **`vector`** importa un SVG. El editor lo reconstruye desde una lista permitida: descarta scripts, estilos, eventos, imágenes, filtros y referencias externas, y asigna un id (`capa-N`) a cada forma que no lo tenga. Límite: 400 kB y 3000 elementos.
+- **`context`** devuelve en `layers` los ids animables de cada ilustración (`id:etiqueta`), primero los que traía el SVG y después los generados, hasta 250; `layerCount` indica el total si hay más. Nombra en el SVG los grupos que quieras animar. Úsalos como `target`; `""` anima el elemento entero. Cualquier elemento, no solo las ilustraciones, admite animaciones con `target` vacío.
+- **`animate`** reemplaza la lista completa de animaciones del elemento; `[]` o `null` las quita. Cada fotograma clave indica `at` (0 a 100) y solo las propiedades que cambian: `x`, `y`, `scale`, `rotate`, `opacity`, `fill`, `stroke`, `draw` (porcentaje visible del trazo) y `shine` (brillo de carga que cruza el elemento). Los colores admiten HEX y tokens como `@muted`; un esqueleto de carga es `fill` alternando entre dos tonos, o `shine` de 0 a 100.
+- **`flow`** acepta `transition` con `fade`, `slide-left`, `slide-right`, `slide-up`, `slide-down` o `scale`; `null` la quita. «Atrás» reproduce la transición invertida.
+- `iterations: 0` repite sin fin. `trigger` es `load` (al entrar en la pantalla) o `click`. `./codaru schema` lista rangos y curvas.
+
+## Importar un archivo de Figma
+
+El plugin de `packages/figma-plugin` escribe un `.figma.codaru.json`. Su contenido se aplica con `{"op":"figma","data":{…}}`: añade pantallas, componentes y tokens en un solo paso de deshacer. El archivo se trata como entrada no confiable: se valida, los SVG se sanean y no se descarga nada.
+
+## Dispositivos y plegables
+
+`./codaru schema` lista en `devices` los tamaños disponibles (`id anchoxalto`). Una pantalla los adopta con `update`:
+
+```json
+{"op":"update","id":"pantalla-abierta","patch":{"device":"android-fold-open","width":673,"height":841,"fold":{"axis":"vertical","gap":0}}}
+```
+
+Las pantallas admiten además `safeArea` (`{top,right,bottom,left}`), `skin` (marco: `iphone`, `ipad`, `android`, `android-tablet`, `foldable`, `iphone-duo-cover`, `iphone-duo`, `iphone-classic`) y `foldPair` (id de la misma pantalla en otra postura; las pantallas enlazadas forman un grupo entre el que se alterna al presentar, de dos o, en un tríptico, de tres).
+
+`fold` solo se admite en pantallas: `axis` es `vertical` (libro) u `horizontal` (tapa), `gap` el ancho de la bisagra, de 0 a 200, y `panels` es 2 (por defecto) o 3 para un tríptico con dos bisagras. `null` lo quita. Para animar la apertura, conecta la pantalla cerrada con la abierta usando `flow` y `transition.type: "unfold"`; `fold` hace el recorrido contrario.
 
 ## Mantener el contexto pequeño
 

@@ -1,6 +1,8 @@
 import { defaultDesignTheme, effectiveTheme, resolveColor, safeColor, validateDesignThemes, validateNodeThemeRefs, type DesignTheme } from './themes';
 import { isIconReference } from './icon-data';
-export type Kind = 'frame' | 'rect' | 'ellipse' | 'text' | 'button' | 'input' | 'card' | 'group' | 'image' | 'icon';
+import { deviceSkins } from './devices';
+import { isSanitizedSVG, validateAnimations, validateTransition, vectorLayers, type NodeAnimation, type Transition } from './motion';
+export type Kind = 'frame' | 'rect' | 'ellipse' | 'text' | 'button' | 'input' | 'card' | 'group' | 'image' | 'icon' | 'vector';
 export type Layout = 'free' | 'vertical' | 'horizontal';
 export type Theme = 'light' | 'dark';
 export interface DesignNode {
@@ -10,6 +12,8 @@ export interface DesignNode {
   radius: number; radiusTR?: number; radiusBR?: number; radiusBL?: number;
   opacity: number; shadow: boolean;
   gradient: 'none' | 'linear' | 'radial'; gradientEnd: string; gradientAngle: number;
+  /** Custom gradient with any number of stops. Without it, fill and gradientEnd are the two stops. */
+  gradientStops?: Array<{ color: string; position: number }>;
   text: string; fontSize: number; fontWeight: number; fontFamily: string; lineHeight: number;
   textAlign: 'left' | 'center' | 'right';
   layout: Layout; padding: number; gap: number; sizing: 'fixed' | 'fill';
@@ -19,6 +23,23 @@ export interface DesignNode {
   componentId?: string; instanceOf?: string; componentKey?: string; overrides?: string[];
   fillToken?: string; materialToken?: string; typographyToken?: string; radiusToken?: string;
   themeId?: string; themeMode?: 'inherit' | Theme; kitId?: string;
+  /** Sanitized SVG of an illustration (type vector). */
+  svg?: string;
+  /** Keyframe animations, played in the prototype only. */
+  animations?: NodeAnimation[];
+  /** How the prototype moves to targetId. */
+  transition?: Transition;
+  /** Device preset a screen was sized from (see devices.ts); informative. */
+  device?: string;
+  /** Hinge of a foldable screen: where it runs and how wide the physical gap is. */
+  /** Hinges of a foldable screen; three panels have two hinges. */
+  fold?: { axis: 'vertical' | 'horizontal'; gap: number; panels?: 2 | 3 };
+  /** Screen of the same design in the other posture (folded or unfolded); the prototype can switch between them. */
+  foldPair?: string;
+  /** Space reserved by the system on a screen. */
+  safeArea?: { top: number; right: number; bottom: number; left: number };
+  /** Device frame of a screen; an id of deviceSkins. */
+  skin?: string;
 }
 export interface Component { id: string; name: string; masterId: string; template: DesignNode[]; }
 export interface Project {
@@ -28,18 +49,18 @@ export interface Project {
   nodes: DesignNode[]; components: Component[];
 }
 export const tokens = ['primary', 'surface', 'background', 'text', 'muted', 'border', 'accent'] as const;
-export const labels: Record<Kind, string> = { frame: 'Pantalla', rect: 'Rectángulo', ellipse: 'Elipse', text: 'Texto', button: 'Botón', input: 'Campo', card: 'Tarjeta', group: 'Grupo', image: 'Imagen', icon: 'Icono' };
+export const labels: Record<Kind, string> = { frame: 'Pantalla', rect: 'Rectángulo', ellipse: 'Elipse', text: 'Texto', button: 'Botón', input: 'Campo', card: 'Tarjeta', group: 'Grupo', image: 'Imagen', icon: 'Icono', vector: 'Ilustración' };
 export const containerKinds: Kind[] = ['frame', 'card', 'group'];
 export function uid() { return crypto.randomUUID(); }
 export function clone<T>(v: T): T { return structuredClone(v); }
 export function node(type: Kind, patch: Partial<DesignNode> = {}): DesignNode {
   return {
     id: uid(), type, name: labels[type], parentId: null, x: 0, y: 0,
-    width: type === 'icon' ? 24 : type === 'frame' ? 390 : type === 'text' ? 230 : 180,
-    height: type === 'icon' ? 24 : type === 'frame' ? 660 : type === 'text' ? 40 : type === 'card' ? 160 : 48,
-    fill: type === 'text' || type === 'group' || type === 'icon' ? 'transparent' : type === 'button' || type === 'rect' || type === 'ellipse' ? '@primary' : '@surface',
+    width: type === 'icon' ? 24 : type === 'frame' ? 390 : type === 'text' ? 230 : type === 'vector' ? 160 : 180,
+    height: type === 'icon' ? 24 : type === 'frame' ? 660 : type === 'text' ? 40 : type === 'card' || type === 'vector' ? 160 : 48,
+    fill: type === 'text' || type === 'group' || type === 'icon' || type === 'vector' ? 'transparent' : type === 'button' || type === 'rect' || type === 'ellipse' ? '@primary' : '@surface',
     color: type === 'button' ? '#ffffff' : '@text', stroke: '@border', strokeWidth: type === 'input' || type === 'card' ? 1 : 0,
-    radius: type === 'frame' || type === 'text' || type === 'group' || type === 'icon' ? 0 : type === 'card' ? 16 : 10,
+    radius: type === 'frame' || type === 'text' || type === 'group' || type === 'icon' || type === 'vector' ? 0 : type === 'card' ? 16 : 10,
     opacity: 100, shadow: false, gradient: 'none', gradientEnd: '#a78bfa', gradientAngle: 135,
     text: type === 'button' ? 'Continuar' : type === 'input' ? 'Escribe aquí…' : type === 'text' ? 'Tu texto aquí' : '',
     fontSize: 16, fontWeight: type === 'button' ? 600 : 400, fontFamily: 'system', lineHeight: 1.4,
@@ -54,6 +75,17 @@ export function blank(): Project {
     designThemes: { project: theme }, activeThemeId: 'project', nodes: [], components: [] };
 }
 export function color(p: Project, value: string, n?: DesignNode): string { return resolveColor(p, value, n); }
+/** Number of panels of a screen: 1 when it has no hinge. */
+export const panelsOf = (n: DesignNode) => n.fold ? n.fold.panels ?? 2 : 1;
+/** Screens showing the same design in other postures, linked through foldPair, from most folded to most open. */
+export function postureGroup(p: Project, id: string): DesignNode[] {
+  const frames = p.nodes.filter(n => n.type === 'frame'), group = new Set([id]);
+  for (let grew = true; grew;) {
+    grew = false;
+    for (const n of frames) if (!group.has(n.id) ? (n.foldPair !== undefined && group.has(n.foldPair)) : (n.foldPair !== undefined && !group.has(n.foldPair) && frames.some(f => f.id === n.foldPair))) { group.add(group.has(n.id) ? n.foldPair! : n.id); grew = true; }
+  }
+  return frames.filter(n => group.has(n.id)).sort((a, b) => panelsOf(a) - panelsOf(b) || a.width - b.width);
+}
 export function children(p: Project, parentId: string | null) { return p.nodes.filter(n => n.parentId === parentId); }
 export function subtree(p: Project, id: string): DesignNode[] {
   const n = p.nodes.find(n => n.id === id); if (!n) return [];
@@ -179,7 +211,7 @@ export function validate(input: unknown): Project {
     p.version = 2; p.designThemes = { project: theme }; p.activeThemeId = 'project';
   }
   validateDesignThemes(p);
-  const overrideKeys = new Set([...Object.keys(node('rect')), 'radiusTR', 'radiusBR', 'radiusBL', 'componentId', 'instanceOf', 'componentKey', 'overrides', 'fillToken', 'materialToken', 'typographyToken', 'radiusToken', 'themeId', 'themeMode', 'kitId', 'iconPack', 'iconName']);
+  const overrideKeys = new Set([...Object.keys(node('rect')), 'radiusTR', 'radiusBR', 'radiusBL', 'componentId', 'instanceOf', 'componentKey', 'overrides', 'fillToken', 'materialToken', 'typographyToken', 'radiusToken', 'themeId', 'themeMode', 'kitId', 'iconPack', 'iconName', 'svg', 'animations', 'transition', 'gradientStops', 'device', 'fold', 'foldPair', 'safeArea', 'skin']);
   function validateNodes(ns: DesignNode[]) {
     const ids = new Set<string>();
     for (const n of ns) {
@@ -193,6 +225,22 @@ export function validate(input: unknown): Project {
       for (const key of ['fill', 'color', 'stroke', 'gradientEnd'] as const) if (!safeColor(n[key])) throw new Error('Color inválido');
       if (!['none', 'linear', 'radial'].includes(n.gradient) || !['free', 'vertical', 'horizontal'].includes(n.layout) || !['fixed', 'fill'].includes(n.sizing) || !['left', 'center', 'right'].includes(n.textAlign) || !['system', 'serif', 'mono'].includes(n.fontFamily)) throw new Error('Estilo inválido');
       if (n.image && !/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(n.image)) throw new Error('Solo se admiten imágenes locales PNG, JPEG, WebP o GIF');
+      if (n.device !== undefined && (typeof n.device !== 'string' || !/^[a-z0-9][a-z0-9-]{0,63}$/.test(n.device))) throw new Error('Dispositivo inválido');
+      if (n.fold !== undefined && (n.type !== 'frame' || !n.fold || typeof n.fold !== 'object' || Object.keys(n.fold).some(key => key !== 'axis' && key !== 'gap' && key !== 'panels') || (n.fold.panels !== undefined && n.fold.panels !== 2 && n.fold.panels !== 3) || !['vertical', 'horizontal'].includes(n.fold.axis) || !Number.isFinite(n.fold.gap) || n.fold.gap < 0 || n.fold.gap > 200)) throw new Error('Pliegue inválido: solo pantallas, axis vertical u horizontal y gap de 0 a 200.');
+      if (n.foldPair !== undefined && (n.type !== 'frame' || typeof n.foldPair !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(n.foldPair) || n.foldPair === n.id)) throw new Error('Pantalla emparejada inválida.');
+      if (n.skin !== undefined && (n.type !== 'frame' || !Object.hasOwn(deviceSkins, n.skin))) throw new Error('Marco de dispositivo desconocido.');
+      if (n.safeArea !== undefined && (n.type !== 'frame' || !n.safeArea || typeof n.safeArea !== 'object' || Object.keys(n.safeArea).sort().join() !== 'bottom,left,right,top' || Object.values(n.safeArea).some(v => !Number.isFinite(v) || v < 0 || v > 400))) throw new Error('Área segura inválida: top, right, bottom y left de 0 a 400, solo en pantallas.');
+      if (n.gradientStops !== undefined) {
+        if (!Array.isArray(n.gradientStops) || n.gradientStops.length < 2 || n.gradientStops.length > 16) throw new Error('Un degradado necesita entre 2 y 16 paradas.');
+        let previous = -1;
+        for (const stop of n.gradientStops) {
+          if (!stop || typeof stop !== 'object' || Object.keys(stop).some(key => key !== 'color' && key !== 'position') || !safeColor(stop.color) || !Number.isFinite(stop.position) || stop.position < 0 || stop.position > 100 || stop.position < previous) throw new Error('Parada de degradado inválida: color y position de 0 a 100 en orden creciente.');
+          previous = stop.position;
+        }
+      }
+      if ((n.type === 'vector') !== (n.svg !== undefined) || (n.svg !== undefined && !isSanitizedSVG(n.svg))) throw new Error('Ilustración inválida: importa el SVG desde el editor o con la operación vector.');
+      if (n.transition !== undefined) validateTransition(n.transition);
+      if (n.animations !== undefined) validateAnimations(n.animations, n.svg ? vectorLayers(n.svg).map(layer => layer.id) : []);
       if (n.overrides && (!Array.isArray(n.overrides) || n.overrides.some(k => typeof k !== 'string' || !overrideKeys.has(k)))) throw new Error('Propiedades de instancia inválidas');
     }
     for (const n of ns) {

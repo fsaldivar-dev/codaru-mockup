@@ -1,10 +1,13 @@
-import { node, blank, clone, uid, validate, children, subtree, ancestors, topSelected, frameOf, absolute, isUnavailable, color, tokens, labels, containerKinds, layoutProject, updateNode, createComponent, instantiate, detach, duplicate, remove, group, ungroup, type Project, type DesignNode, type Kind } from './model';
+import { node, blank, clone, uid, validate, children, subtree, ancestors, topSelected, frameOf, absolute, isUnavailable, color, tokens, labels, containerKinds, layoutProject, updateNode, createComponent, instantiate, detach, duplicate, remove, group, ungroup, type Project, type DesignNode, type Kind, panelsOf, postureGroup } from './model';
 import { demo } from './demo';
 import { effectiveTheme } from './themes';
 import { openThemeEditor } from './theme-editor';
 import type { KitId, KitVariant } from './kits';
 import { element, escape as esc, exportHTML, exportSVG } from './render';
 import { icon } from './icons';
+import { devicePresets, deviceSkins, presetSafeArea, sizeClass } from './devices';
+import { closeColorPicker, openColorPicker, pickColorFor, type GradientValue } from './color-picker';
+import { easingLabels, easings, sanitizeSVG, startMotion, transitionLabels, transitionScreens, transitionTypes, vectorLayers, vectorSize, type Transition } from './motion';
 import { atScope, commonScope, scopeAtPoint, inMarquee, type Scope } from './selection';
 import type { EmbeddedOptions } from './embed';
 
@@ -42,7 +45,7 @@ let iconModule: typeof import('./icon-library') | undefined, iconPack='mac', ico
 let space = false;
 const MIN_ZOOM = .1, MAX_ZOOM = 8;
 let collapsed = new Set<string>(); let saveTimer: ReturnType<typeof setTimeout>; let toastTimer: ReturnType<typeof setTimeout>;
-let lastPoint = { x: 90, y: 120 }; let previewFrame: string | null = null; let previewHistory: string[] = [];
+let lastPoint = { x: 90, y: 120 }; let previewFrame: string | null = null; let previewHistory: { id: string; transition?: Transition }[] = []; let previewRatio = 1;
 const p = () => store.project;
 const find = (id: string) => p().nodes.find(n => n.id === id);
 const app = options.app;
@@ -57,7 +60,7 @@ app.innerHTML = `
     <button class="new-screen" data-action="add-frame">${icon('plus', 14)} Nueva pantalla</button></section>
     <div class="sidebar-tabs"><button data-tab="layers" class="active">Capas</button><button data-tab="components">Componentes</button></div>
     <div id="layers" class="layer-list"></div><div id="components" class="component-list" hidden></div>
-    <section class="insert-panel"><div class="section-heading"><span>INSERTAR</span><span class="hint-key">arrastrar</span></div><div class="insert-grid">${(['text','button','input','card','rect','image'] as Kind[]).map(k => `<button draggable="true" data-insert="${k}" title="Insertar ${labels[k]}">${icon(k, 17)}<span>${labels[k]}</span></button>`).join('')}</div></section>
+    <section class="insert-panel"><div class="section-heading"><span>INSERTAR</span><span class="hint-key">arrastrar</span></div><div class="insert-grid">${(['text','button','input','card','rect','image','vector'] as Kind[]).map(k => `<button draggable="true" data-insert="${k}" title="Insertar ${labels[k]}">${icon(k, 17)}<span>${labels[k]}</span></button>`).join('')}</div></section>
     <div class="sidebar-footer"><span class="local-dot"></span> Guardado en tu dispositivo${btn('help', 'Atajos de teclado', 'help', 'icon-button tiny')}</div>
   </aside>
   <main class="canvas-area"><div class="canvas-top"><div class="mode-switch"><button data-mode="design" class="active">Diseño</button><button data-mode="flow">Flujos <span id="flow-count">2</span></button></div><div class="canvas-top-right"><span class="theme-switch"><span id="theme-name">Tema claro</span><button data-action="theme" class="icon-button" aria-label="Cambiar tema del diseño">${icon('sun',16)}</button></span><span class="divider"></span><button data-action="fit" class="fit-button" title="Ajustar pantallas · ⇧1">Ajustar</button></div></div>
@@ -67,7 +70,7 @@ app.innerHTML = `
     <div class="toolbar" role="toolbar" aria-label="Herramientas de dibujo">${([['cursor','Seleccionar · V'],['frame','Pantalla · F'],['rect','Rectángulo · R'],['ellipse','Elipse · O'],['text','Texto · T'],['button','Botón · B'],['hand','Mover lienzo · Espacio']] as const).map(([k,l]) => `<button data-tool="${k}" class="${k === 'cursor' ? 'active' : ''}" title="${l}" aria-label="${l}">${icon(k,19)}</button>`).join('')}<span class="divider"></span>${btn('undo','Deshacer · ⌘Z','undo')}${btn('redo','Rehacer · ⇧⌘Z','redo')}</div>
   </main>
   <aside class="sidebar right-panel"><div class="inspector-title"><span>Propiedades</span><span class="inspector-badge">${icon('rect',13)}</span></div><div id="inspector"></div></aside></div>
-  <div id="toast" role="status"></div><div id="modal-root"></div><input type="file" id="import-file" accept=".json" hidden/><input type="file" id="image-file" accept="image/png,image/jpeg,image/webp,image/gif" hidden/>`;
+  <div id="toast" role="status"></div><div id="modal-root"></div><input type="file" id="import-file" accept=".json" hidden/><input type="file" id="image-file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,.svg" hidden/>`;
 const dom = createViewDOM(app, !!options.modular);
 document = dom.document;
 const events = dom.events;
@@ -99,6 +102,7 @@ function change(fn: (project: Project) => void, message?: string) {
   catch (e) { render(); toast(e instanceof Error ? e.message : 'No se pudo realizar el cambio'); }
 }
 function select(ids: string[], scope?: Scope) {
+  closeColorPicker();
   if (disposed) return;
   state.selected = [...new Set(ids)].filter(id => !!find(id));
   state.selectionScope = scope === undefined ? state.selected.length ? commonScope(p(), state.selected) : state.selectionScope : scope;
@@ -213,7 +217,7 @@ function renderSelection() {
     selectionOverlay.append(outline);
   }
   session.notify(false);
-  byId('selection-info').textContent = ns.length === 1 ? `${labels[ns[0].type]} / ${ns[0].name}` : ns.length ? `${ns.length} elementos seleccionados` : state.tool === 'cursor' ? 'Rueda: zoom · Espacio: mover · ⇧1: ajustar' : `Arrastra para dibujar ${state.tool === 'hand' ? 'el lienzo' : labels[state.tool]}`;
+  byId('selection-info').textContent = ns.length === 1 ? `${labels[ns[0].type]} / ${ns[0].name}` : ns.length ? `${ns.length} elementos seleccionados` : state.tool === 'cursor' ? 'Rueda: mover · ⌘ + rueda: zoom · ⇧1: ajustar' : `Arrastra para dibujar ${state.tool === 'hand' ? 'el lienzo' : labels[state.tool]}`;
 }
 function renderConnections() {
   session.notify(false);
@@ -290,20 +294,60 @@ function numField(label: string, key: keyof DesignNode, value: number, min = 0, 
 function selectField(label: string, field: keyof DesignNode, value: string, options: [string,string][]) { return `<label class="full-field"><span>${label}</span><select data-field="${field}" aria-label="${esc(label)}">${options.map(([v,l])=>`<option value="${v}" ${v===value?'selected':''}>${l}</option>`).join('')}</select></label>`; }
 function colorField(label: string, field: keyof DesignNode, value: string) {
   const n=state.selected.length===1?find(state.selected[0]):undefined; const resolved=color(p(),value,n); const keys=Object.keys(effectiveTheme(p(),n).tokens.colors);
-  return `<div class="color-field"><label class="color-chip" style="background:${esc(resolved)}"><input type="color" aria-label="${label}: color" data-field="${field}" value="${resolved==='transparent'?'#ffffff':esc(resolved)}"/></label><input class="hex-input" aria-label="${label}: valor" data-field="${field}" value="${esc(value)}"/><select aria-label="${label}: estilo" data-field="${field}"><option value="${esc(value)}">${value.startsWith('@')?value.slice(1):label}</option>${keys.filter(t=>'@'+t!==value).map(t=>`<option value="@${t}">${t}</option>`).join('')}<option value="transparent">Sin relleno</option></select></div>`;
+  return `<div class="color-field"><button type="button" class="color-chip" data-pick="${label}: valor" aria-label="${label}: color" title="Elegir color" style="--chip:${esc(resolved)}"></button><input class="hex-input" aria-label="${label}: valor" data-field="${field}" value="${esc(value)}"/><select aria-label="${label}: estilo" data-field="${field}"><option value="${esc(value)}">${value.startsWith('@')?value.slice(1):label}</option>${keys.filter(t=>'@'+t!==value).map(t=>`<option value="@${t}">${t}</option>`).join('')}<option value="transparent">Sin relleno</option></select></div>`;
+}
+/** Fill type offers the theme's gradients next to the local solid/linear/radial fills. */
+function fillFields(n: DesignNode) {
+  const gradients=effectiveTheme(p(),n).tokens.gradients, linked=n.fillToken&&Object.hasOwn(gradients,n.fillToken)?gradients[n.fillToken]:undefined;
+  const option=(value:string,label:string,selected:boolean)=>`<option value="${esc(value)}" ${selected?'selected':''}>${esc(label)}</option>`;
+  const themed=Object.entries(gradients).map(([id,g])=>option('token:'+id,g.name,n.fillToken===id)).join('');
+  const type=`<label class="full-field"><span>Tipo</span><select data-fill-type aria-label="Tipo">${option('none','Sólido',!linked&&n.gradient==='none')}${option('linear','Gradiente lineal',!linked&&n.gradient==='linear')}${option('radial','Gradiente radial',!linked&&n.gradient==='radial')}${themed?`<optgroup label="Degradados del tema">${themed}</optgroup>`:''}</select></label>`;
+  const custom=!linked&&n.gradient!=='none'&&n.gradientStops, shown=linked??(custom?{type:n.gradient,angle:n.gradientAngle,stops:n.gradientStops!,name:''}:undefined);
+  if(shown){
+    const stops=shown.stops.map(stop=>`${color(p(),stop.color,n)} ${stop.position}%`).join(',');
+    const bar=`<button type="button" class="gradient-preview" data-pick-fill aria-label="${linked?`Degradado del tema ${esc(linked.name)}`:'Editar degradado'}" title="Editar degradado" style="--chip:${shown.type==='linear'?`linear-gradient(90deg,${stops})`:`radial-gradient(circle,${stops})`}"></button>`;
+    if(linked)return `${type}${bar}<p class="field-note">«${esc(linked.name)}» viene del tema: ${linked.stops.length} colores${linked.type==='linear'?`, ${linked.angle}°`:', radial'}. Cambia con el tema y el modo. <button class="text-button" data-action="themes">Editar en Temas</button></p>`;
+    return `${type}${bar}${n.gradient==='linear'?numField('Ángulo','gradientAngle',n.gradientAngle,0,360):''}<p class="field-note">${n.gradientStops!.length} colores. Pulsa la barra para editar las paradas.</p>`;
+  }
+  return `${type}${colorField('Relleno','fill',n.fill)}${n.gradient!=='none'?`${colorField('Segundo color','gradientEnd',n.gradientEnd)}${n.gradient==='linear'?numField('Ángulo','gradientAngle',n.gradientAngle,0,360):''}`:''}`;
+}
+function pickerContext(n?: DesignNode) {
+  const theme=effectiveTheme(p(),n).tokens, resolve=(value:string)=>{try{return color(p(),value,n);}catch{return '#ffffff';}};
+  return {resolve,tokens:Object.fromEntries(Object.keys(theme.colors).map(key=>[key,resolve('@'+key)]))};
+}
+/** The fill picker owns solid colors, theme gradients and custom multi-stop gradients. */
+function openFillPicker(anchor: HTMLElement, n: DesignNode) {
+  const theme=effectiveTheme(p(),n).tokens, linked=n.fillToken&&Object.hasOwn(theme.gradients,n.fillToken)?n.fillToken:undefined, id=n.id;
+  const own:GradientValue|undefined=n.gradient==='none'?undefined:{type:n.gradient,angle:n.gradientAngle,stops:n.gradientStops??[{color:n.fill,position:0},{color:n.gradientEnd,position:100}]};
+  const value=({type,angle,stops}:GradientValue):GradientValue=>({type,angle,stops:stops.map(stop=>({...stop}))});
+  openColorPicker({...pickerContext(n),anchor,value:n.fill,
+    commit:fill=>change(pr=>updateNode(pr,id,{fill,gradient:'none',gradientStops:undefined,fillToken:undefined})),
+    gradient:{value:linked?value(theme.gradients[linked]):own,themeId:linked,theme:Object.entries(theme.gradients).map(([token,g])=>({id:token,name:g.name,value:value(g)})),
+      // fill and gradientEnd mirror the ends so older readers still show a two-color gradient.
+      commit:g=>change(pr=>updateNode(pr,id,{gradient:g.type,gradientAngle:g.angle,gradientStops:g.stops,fill:g.stops[0].color,gradientEnd:g.stops.at(-1)!.color,fillToken:undefined})),
+      pickTheme:token=>change(pr=>updateNode(pr,id,{fillToken:token}))}});
 }
 function themePanel() {
-  return `<section class="inspector-section"><div class="section-heading"><span>TEMA DEL PROYECTO</span><button data-action="theme" class="text-button">${p().theme==='light'?'Claro':'Oscuro'}</button></div><div class="palette">${tokens.map(t=>`<label title="${t}" style="background:${color(p(),'@'+t)}"><input type="color" data-token="${t}" value="${esc(color(p(),'@'+t))}" aria-label="Color del tema ${t}"/></label>`).join('')}</div><p class="palette-note">${esc(p().designThemes[p().activeThemeId].name)} · colores y estilos compartidos.</p><button class="wide-button" data-action="themes">Configurar temas y tokens →</button></section>`;
+  return `<section class="inspector-section"><div class="section-heading"><span>TEMA DEL PROYECTO</span><button data-action="theme" class="text-button">${p().theme==='light'?'Claro':'Oscuro'}</button></div><div class="palette">${tokens.map(t=>`<button type="button" class="color-chip" data-pick-token="${t}" title="${t}" aria-label="Color del tema ${t}" style="--chip:${esc(color(p(),'@'+t))}"></button>`).join('')}</div><p class="palette-note">${esc(p().designThemes[p().activeThemeId].name)} · colores y estilos compartidos.</p><button class="wide-button" data-action="themes">Configurar temas y tokens →</button></section>`;
+}
+function devicePanel(n: DesignNode) {
+  const groups=[...new Set(devicePresets.map(d=>d.group))], current=devicePresets.find(d=>d.id===n.device&&((d.width===n.width&&d.height===n.height)||(d.width===n.height&&d.height===n.width)));
+  return `<section class="inspector-section"><div class="section-heading"><span>DISPOSITIVO</span><button class="text-button" data-action="rotate-frame" title="Intercambiar ancho y alto">Girar ⟳</button></div>
+    <label class="full-field"><span>Tamaño de pantalla</span><select data-device aria-label="Tamaño de pantalla"><option value="">Personalizado · ${Math.round(n.width)} × ${Math.round(n.height)}</option>${groups.map(group=>`<optgroup label="${group}">${devicePresets.filter(d=>d.group===group).map(d=>`<option value="${d.id}" ${current?.id===d.id?'selected':''}>${d.name} · ${d.width} × ${d.height}${d.approximate?' ≈':''}</option>`).join('')}</optgroup>`).join('')}</select></label>
+    <div class="field-grid"><label class="full-field"><span>Pliegue</span><select data-fold="axis" aria-label="Pliegue"><option value="">Sin pliegue</option><option value="vertical" ${n.fold?.axis==='vertical'?'selected':''}>Vertical · libro</option><option value="horizontal" ${n.fold?.axis==='horizontal'?'selected':''}>Horizontal · tapa</option></select></label>${n.fold?`<label class="number-field"><span>Bisagra</span><input type="number" aria-label="Ancho de la bisagra" data-fold="gap" value="${n.fold.gap}" min="0" max="200" step="1"/></label><label class="full-field"><span>Paneles</span><select data-fold="panels" aria-label="Paneles del plegable"><option value="2" ${panelsOf(n)===2?'selected':''}>2 · una bisagra</option><option value="3" ${panelsOf(n)===3?'selected':''}>3 · tríptico</option></select></label>`:''}</div>
+    <div class="field-grid"><label class="full-field"><span>Marco</span><select data-frame-field="skin" aria-label="Marco del dispositivo"><option value="">Sin marco</option>${Object.entries(deviceSkins).map(([id,skin])=>`<option value="${id}" ${n.skin===id?'selected':''}>${skin.name}</option>`).join('')}</select></label><label class="full-field"><span>Otra postura</span><select data-frame-field="foldPair" aria-label="Pantalla en la otra postura"><option value="">Ninguna</option>${p().nodes.filter(f=>f.type==='frame'&&f.id!==n.id).map(f=>`<option value="${f.id}" ${n.foldPair===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}</select></label></div>
+    <div class="stops-heading">Área segura <span>sup. · der. · inf. · izq.</span></div><div class="field-grid safe-fields">${(['top','right','bottom','left'] as const).map(edge=>`<label class="number-field"><span>${{top:'↑',right:'→',bottom:'↓',left:'←'}[edge]}</span><input type="number" aria-label="Área segura ${{top:'superior',right:'derecha',bottom:'inferior',left:'izquierda'}[edge]}" data-safe="${edge}" value="${n.safeArea?.[edge]??0}" min="0" max="400" step="1"/></label>`).join('')}</div>
+    <p class="field-note">Ancho ${sizeClass(n.width)} (${Math.round(n.width)}).${current?.approximate?' Medidas aproximadas (≈): ajústalas si conoces las oficiales.':''}${n.safeArea?' Las bandas rosas marcan el área del sistema; no aparecen al presentar.':''}${n.skin?' El marco del dispositivo se ve completo en Presentar.':''}${n.fold?' Evita colocar contenido clave sobre la línea del pliegue.':''}${postureGroup(p(),n.id).length>1?` Al presentar podrás alternar entre sus ${postureGroup(p(),n.id).length} posturas.`:''}</p></section>`;
 }
 function tokenPanel(n: DesignNode) {
   const theme=effectiveTheme(p(),n),s=theme.tokens;
   const choices=(values:Record<string,unknown>):[string,string][]=>[['','Sin vínculo'],...Object.entries(values).map(([id,value]):[string,string]=>[id,typeof value==='object'&&value?(value as {name:string}).name:id])];
-  return `${n.type==='frame'?`<section class="inspector-section"><div class="section-heading"><span>TEMA DE ESTA PANTALLA</span></div>${selectField('Tema de pantalla','themeId',n.themeId??'',[['','Heredar documento'],...Object.values(p().designThemes).map(t=>[t.id,t.name] as [string,string])])}${selectField('Modo de pantalla','themeMode',n.themeMode??'inherit',[['inherit','Heredar documento'],['light','Claro'],['dark','Oscuro']])}<label class="full-field"><span>Estilo de plataforma</span><select aria-label="Aplicar tema de kit" id="frame-kit"><option value="">Elegir kit…</option>${[['ios','iOS'],['macos','macOS'],['android','Android'],['linux','Linux / GNOME'],['web','Web']].map(([id,name])=>`<option value="${id}">${name}</option>`).join('')}</select></label></section>`:''}<section class="inspector-section"><div class="section-heading"><span>TOKENS</span><button class="text-button" data-action="themes">Editar</button></div><p class="field-note">${esc(p().designThemes[theme.id].name)} · ${theme.mode==='light'?'Claro':'Oscuro'}</p>${selectField('Token de relleno','fillToken',n.fillToken??'',choices({...s.colors,...s.gradients}))}${selectField('Material','materialToken',n.materialToken??'',choices(s.materials))}${selectField('Token de radio','radiusToken',n.radiusToken??'',choices(s.radii))}${['text','button','input'].includes(n.type)?selectField('Token de tipografía','typographyToken',n.typographyToken??'',choices(s.typography)):''}<p class="field-note">Un vínculo controla esa propiedad. «Sin vínculo» permite usar el valor manual.</p></section>`;
+  return `${n.type==='frame'?`${devicePanel(n)}<section class="inspector-section"><div class="section-heading"><span>TEMA DE ESTA PANTALLA</span></div>${selectField('Tema de pantalla','themeId',n.themeId??'',[['','Heredar documento'],...Object.values(p().designThemes).map(t=>[t.id,t.name] as [string,string])])}${selectField('Modo de pantalla','themeMode',n.themeMode??'inherit',[['inherit','Heredar documento'],['light','Claro'],['dark','Oscuro']])}<label class="full-field"><span>Estilo de plataforma</span><select aria-label="Aplicar tema de kit" id="frame-kit"><option value="">Elegir kit…</option>${[['ios','iOS'],['macos','macOS'],['android','Android'],['linux','Linux / GNOME'],['web','Web']].map(([id,name])=>`<option value="${id}">${name}</option>`).join('')}</select></label></section>`:''}<section class="inspector-section"><div class="section-heading"><span>TOKENS</span><button class="text-button" data-action="themes">Editar</button></div><p class="field-note">${esc(p().designThemes[theme.id].name)} · ${theme.mode==='light'?'Claro':'Oscuro'}</p>${selectField('Token de relleno','fillToken',n.fillToken??'',choices({...s.colors,...s.gradients}))}${selectField('Material','materialToken',n.materialToken??'',choices(s.materials))}${selectField('Token de radio','radiusToken',n.radiusToken??'',choices(s.radii))}${['text','button','input'].includes(n.type)?selectField('Token de tipografía','typographyToken',n.typographyToken??'',choices(s.typography)):''}<p class="field-note">Un vínculo controla esa propiedad. «Sin vínculo» permite usar el valor manual.</p></section>`;
 }
 function renderInspector() {
   const n = state.selected.length === 1 ? find(state.selected[0]) : undefined;
   if (!n) {
-    inspector.innerHTML = `<section class="inspector-section selection-summary"><span class="summary-icon">${icon(state.selected.length?'layers':'frame',24)}</span><h3>${state.selected.length?state.selected.length+' elementos':'Un espacio para crear'}</h3><p>${state.selected.length?'Alinea, agrupa o convierte tu selección en un componente.':'Selecciona un elemento para editarlo, o arrastra una herramienta al lienzo.'}</p>${state.selected.length?`<div class="button-row"><button data-action="group">Agrupar</button><button data-action="duplicate">Duplicar</button></div><div class="button-row"><button data-action="align-left">Alinear izquierda</button><button data-action="align-center">Centrar</button></div><button class="wide-button" data-action="distribute">Distribuir horizontalmente</button>`:''}</section>${themePanel()}<section class="inspector-section"><div class="section-heading"><span>DOCUMENTO</span></div><button class="wide-button" data-action="save">${icon('download',16)} Guardar proyecto .json</button><button class="wide-button" data-action="export-html">${icon('play',16)} Exportar prototipo HTML</button><button class="wide-button" data-action="new">${icon('plus',16)} Nuevo proyecto</button><button class="wide-button" data-action="example">${icon('grid',16)} Abrir ejemplo Forma</button></section><div class="inspector-tip">Dibuja primero.<br/><strong>Dale forma a tu idea.</strong></div>`; return;
+    inspector.innerHTML = `<section class="inspector-section selection-summary"><span class="summary-icon">${icon(state.selected.length?'layers':'frame',24)}</span><h3>${state.selected.length?state.selected.length+' elementos':'Un espacio para crear'}</h3><p>${state.selected.length?'Alinea, agrupa o convierte tu selección en un componente.':'Selecciona un elemento para editarlo, o arrastra una herramienta al lienzo.'}</p>${state.selected.length?`<div class="button-row"><button data-action="group">Agrupar</button><button data-action="duplicate">Duplicar</button></div><div class="button-row"><button data-action="align-left">Alinear izquierda</button><button data-action="align-center">Centrar</button></div><button class="wide-button" data-action="distribute">Distribuir horizontalmente</button>`:''}</section>${themePanel()}<section class="inspector-section"><div class="section-heading"><span>DOCUMENTO</span></div><button class="wide-button" data-action="save">${icon('download',16)} Guardar proyecto .json</button><button class="wide-button" data-action="export-html">${icon('play',16)} Exportar prototipo HTML</button><button class="wide-button" data-action="new">${icon('plus',16)} Nuevo proyecto</button><button class="wide-button" data-action="open">${icon('folder',16)} Importar de Figma o abrir .json</button><button class="wide-button" data-action="example">${icon('grid',16)} Abrir ejemplo Forma</button><button class="wide-button" data-action="example-devices">${icon('frame',16)} Ejemplo iOS, Android y plegables</button></section><div class="inspector-tip">Dibuja primero.<br/><strong>Dale forma a tu idea.</strong></div>`; return;
   }
   const isText = ['text','button','input'].includes(n.type); const isContainer = containerKinds.includes(n.type);
   inspector.innerHTML = `
@@ -314,10 +358,11 @@ function renderInspector() {
     ${isText?`<section class="inspector-section"><div class="section-heading"><span>TEXTO</span></div><textarea aria-label="Contenido del texto" data-field="text" rows="2">${esc(n.text)}</textarea>${selectField('Fuente','fontFamily',n.fontFamily,[['system','Sistema / Sans'],['serif','Georgia / Serif'],['mono','Monoespaciada']])}<div class="field-grid">${numField('Tamaño','fontSize',n.fontSize,1,200)}${numField('Peso','fontWeight',n.fontWeight,100,900,50)}${numField('Línea','lineHeight',n.lineHeight,.5,4,.1)}${selectField('Alinear','textAlign',n.textAlign,[['left','Izquierda'],['center','Centro'],['right','Derecha']])}</div>${colorField('Texto','color',n.color)}</section>`:''}
     ${isContainer?`<section class="inspector-section"><div class="section-heading"><span>DISTRIBUCIÓN</span></div>${selectField('Organización','layout',n.layout,[['free','Libre'],['vertical','Columna ↕'],['horizontal','Fila ↔']])}${n.layout!=='free'?`<div class="field-grid">${numField('Padding','padding',n.padding,0,300)}${numField('Espacio','gap',n.gap,0,300)}</div><p class="field-note">Los hijos siguen el orden de las capas. «Llenar» reparte el espacio disponible.</p>`:''}</section>`:''}
     ${n.parentId&&find(n.parentId)?.layout!=='free'?`<section class="inspector-section">${selectField('Tamaño en contenedor','sizing',n.sizing,[['fixed','Fijo'],['fill','Llenar espacio']])}</section>`:''}
-    <section class="inspector-section"><div class="section-heading"><span>RELLENO</span></div>${selectField('Tipo','gradient',n.gradient,[['none','Sólido'],['linear','Gradiente lineal'],['radial','Gradiente radial']])}${colorField('Relleno','fill',n.fill)}${n.gradient!=='none'?`${colorField('Segundo color','gradientEnd',n.gradientEnd)}${n.gradient==='linear'?numField('Ángulo','gradientAngle',n.gradientAngle,0,360):''}`:''}<div class="field-grid">${numField('Opacidad','opacity',n.opacity,0,100)}${numField('Radio','radius',n.radius,0,500)}</div><details class="corner-details"><summary>Radios por esquina</summary><div class="field-grid">${numField('Sup. der.','radiusTR',n.radiusTR??n.radius,0,500)}${numField('Inf. der.','radiusBR',n.radiusBR??n.radius,0,500)}${numField('Inf. izq.','radiusBL',n.radiusBL??n.radius,0,500)}</div></details></section>
+    <section class="inspector-section"><div class="section-heading"><span>RELLENO</span></div>${fillFields(n)}<div class="field-grid">${numField('Opacidad','opacity',n.opacity,0,100)}${numField('Radio','radius',n.radius,0,500)}</div><details class="corner-details"><summary>Radios por esquina</summary><div class="field-grid">${numField('Sup. der.','radiusTR',n.radiusTR??n.radius,0,500)}${numField('Inf. der.','radiusBR',n.radiusBR??n.radius,0,500)}${numField('Inf. izq.','radiusBL',n.radiusBL??n.radius,0,500)}</div></details></section>
     <section class="inspector-section"><div class="section-heading"><span>BORDE Y EFECTOS</span></div>${colorField('Borde','stroke',n.stroke)}<div class="field-grid">${numField('Grosor','strokeWidth',n.strokeWidth,0,50)}<label class="check-field"><input type="checkbox" data-field="shadow" ${n.shadow?'checked':''}/> Sombra</label></div></section>
     ${n.type==='image'?'<section class="inspector-section"><button class="wide-button" data-action="image">Cambiar imagen local</button></section>':''}
-    <section class="inspector-section"><div class="section-heading"><span>AL HACER CLIC</span>${icon('link',14)}</div><select data-field="targetId" aria-label="Navegar a pantalla"><option value="">Sin navegación</option>${p().nodes.filter(f=>f.type==='frame'&&f.id!==frameOf(p(),n.id)?.id).map(f=>`<option value="${f.id}" ${n.targetId===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}</select><p class="field-note">Prueba la conexión en Presentar.</p></section>
+    <section class="inspector-section"><div class="section-heading"><span>AL HACER CLIC</span>${icon('link',14)}</div><select data-field="targetId" aria-label="Navegar a pantalla"><option value="">Sin navegación</option>${p().nodes.filter(f=>f.type==='frame'&&f.id!==frameOf(p(),n.id)?.id).map(f=>`<option value="${f.id}" ${n.targetId===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}</select>${n.targetId?`<label class="full-field"><span>Transición</span><select data-transition="type" aria-label="Transición">${[['','Sin animación'],...transitionTypes.map(t=>[t,transitionLabels[t]])].map(([v,l])=>`<option value="${v}" ${(n.transition?.type??'')===v?'selected':''}>${l}</option>`).join('')}</select></label>${n.transition?`<div class="field-grid"><label class="number-field"><span>Duración</span><input type="number" aria-label="Duración de la transición" data-transition="duration" value="${n.transition.duration}" min="0" max="5000" step="50"/></label><label class="full-field"><span>Curva</span><select data-transition="easing" aria-label="Curva de la transición">${easings.map(e=>`<option value="${e}" ${n.transition!.easing===e?'selected':''}>${easingLabels[e]}</option>`).join('')}</select></label></div>`:''}`:''}<p class="field-note">Prueba la conexión en Presentar.</p></section>
+    <section class="inspector-section"><div class="section-heading"><span>ANIMACIÓN</span>${icon('play',14)}</div><p class="field-note">${n.animations?.length?`${n.animations.length} ${n.animations.length===1?'animación':'animaciones'}: ${esc(n.animations.map(a=>a.name).join(', '))}.`:'Sin animaciones.'}${n.svg?` ${vectorLayers(n.svg).length} capas animables.`:''} Se reproducen en Presentar.</p><button class="wide-button" data-action="animator">${icon('spark',16)} Abrir animador</button>${n.type==='vector'?'<button class="wide-button" data-action="image">Cambiar SVG</button>':''}</section>
     <section class="inspector-section"><div class="button-row">${n.type!=='frame'&&!n.componentId&&!n.instanceOf?'<button class="component-button" data-action="make-component">◇ Crear componente</button>':''}${n.instanceOf?'<button data-action="master">Editar maestro</button><button data-action="detach">Desvincular</button>':''}${n.componentId?'<button class="component-button" data-action="insert-instance">◇ Insertar instancia</button>':''}${n.type==='group'&&!n.componentId&&!n.instanceOf?'<button data-action="ungroup">Desagrupar</button>':''}</div>${n.type==='frame'?'<button class="wide-button" data-action="export-svg">Exportar pantalla SVG</button>':''}</section></fieldset>${themePanel()}`;
 }
 
@@ -330,7 +375,7 @@ function parentAt(x: number, y: number) {
   return [...p().nodes].reverse().find(n=>n.type==='frame'&&!n.hidden&&x>=n.x&&y>=n.y&&x<=n.x+n.width&&y<=n.y+n.height);
 }
 function insert(kind: Kind, position?: {x:number;y:number}) {
-  if (kind==='image') { byId<HTMLInputElement>('image-file').click(); return; }
+  if (kind==='image'||kind==='vector') { byId<HTMLInputElement>('image-file').click(); return; }
   if (kind==='frame') { addFrame(); return; }
   let parent: DesignNode | undefined;
   if (position) parent = parentAt(position.x,position.y);
@@ -368,29 +413,41 @@ async function saveProject() { try {if(await saveFile(JSON.stringify(p(),null,2)
 async function openFile() {
   try {if(nativeInvoke){const data=await nativeInvoke<string|null>('plugin:codaru|open_document');if(data)await loadProject(data);}else byId<HTMLInputElement>('import-file').click();}catch(e){toast(e instanceof Error?e.message:'No se pudo abrir el archivo');}
 }
-async function loadProject(data: string) { if(disposed)return; try {const next=validate(JSON.parse(data));if(await confirmReplace('Abrir proyecto','El proyecto actual se conservará en Deshacer. Guarda un archivo si quieres mantener una copia independiente.'))replace(next);}catch(e){toast(e instanceof Error?e.message:'Archivo inválido');} }
+async function importFromFigma(data: unknown) {
+  const {importFigma}=await import('./figma-import');if(disposed)return;
+  let report:import('./figma-import').FigmaReport|undefined;const before=new Set(p().nodes.map(n=>n.id));
+  change(pr=>{report=importFigma(pr,data);});
+  if(!report)return;
+  // Imported screens are added to the document, so they are shown selected and in view.
+  select(p().nodes.filter(n=>!before.has(n.id)&&n.parentId===null).map(n=>n.id));fit(true);
+  byId('modal-root').innerHTML=`<div class="modal-backdrop"><section class="dialog" role="dialog" aria-modal="true" aria-label="Importación de Figma"><button data-action="close-preview" class="dialog-close icon-button" aria-label="Cerrar">${icon('close')}</button><span class="eyebrow">FIGMA</span><h2>Importación completada</h2><p>${report.screens} ${report.screens===1?'pantalla':'pantallas'}, ${report.layers} capas, ${report.components} componentes, ${report.tokens} tokens y ${report.illustrations} ilustraciones. Se añadieron a la derecha de tu documento; Deshacer las quita.</p>${report.notes.length?`<div class="import-notes"><strong>Qué se simplificó</strong><ul>${report.notes.map(note=>`<li>${esc(note)}</li>`).join('')}</ul></div>`:'<p>No hubo nada que simplificar.</p>'}<div class="dialog-actions"><button class="primary" data-action="close-preview">Entendido</button></div></section></div>`;
+}
+async function loadProject(data: string) { if(disposed)return; try {const parsed=JSON.parse(data);if(parsed&&parsed.format==='codaru-figma-export'){await importFromFigma(parsed);return;}const next=validate(parsed);if(await confirmReplace('Abrir proyecto','El proyecto actual se conservará en Deshacer. Guarda un archivo si quieres mantener una copia independiente.'))replace(next);}catch(e){toast(e instanceof Error?e.message:'Archivo inválido');} }
 function replace(next: Project){if(disposed)return;change(pr=>Object.assign(pr,next));state.selected=[];state.selectionScope=null;collapsed.clear();fit();render();}
 let pendingConfirmation: ((value: boolean) => void) | undefined;
 function confirmReplace(title: string, detail: string): Promise<boolean> {
   return new Promise(resolve=>{byId('modal-root').innerHTML=`<div class="modal-backdrop"><section class="dialog" role="dialog" aria-modal="true" aria-label="${esc(title)}"><h2>${esc(title)}</h2><p>${esc(detail)}</p><div class="dialog-actions"><button id="confirm-cancel">Cancelar</button><button class="primary" id="confirm-ok">Continuar</button></div></section></div>`;const finish=(value:boolean)=>{pendingConfirmation=undefined;byId('modal-root').replaceChildren();resolve(value);};pendingConfirmation=finish;byId('confirm-cancel').onclick=()=>finish(false);byId('confirm-ok').onclick=()=>finish(true);byId('confirm-cancel').focus();});
 }
-function preview(id?: string, reset = true) {
+function preview(id?: string, reset = true, transition?: Transition, reverse = false) {
+  const ghost = transition ? byId('preview-canvas')?.firstElementChild?.cloneNode(true) as HTMLElement | undefined : undefined;
   const frame = find(id||'') || frameOf(p(),state.selected[0]) || p().nodes.find(n=>n.type==='frame'&&!n.hidden);
   if(!frame||frame.type!=='frame'){toast('Crea una pantalla para presentar.');return;}if(reset)previewHistory=[];previewFrame=frame.id;
-  byId('modal-root').innerHTML=`<div class="preview-backdrop"><header class="preview-header"><span class="preview-brand">${icon('play',16)} Prototipo</span><select id="preview-select" aria-label="Pantalla del prototipo">${p().nodes.filter(n=>n.type==='frame'&&!n.hidden).map(n=>`<option value="${n.id}" ${n.id===frame.id?'selected':''}>${esc(n.name)}</option>`).join('')}</select><div>${btn('preview-back','Pantalla anterior','undo','icon-button')}${btn('close-preview','Cerrar presentación · Escape','close','icon-button')}</div></header><div id="preview-viewport"><div id="preview-sizer"><div id="preview-canvas"></div></div></div><div class="preview-footnote">Haz clic en los elementos conectados para navegar <span>ESC para volver al editor</span></div></div>`;
+  byId('modal-root').innerHTML=`<div class="preview-backdrop"><header class="preview-header"><span class="preview-brand">${icon('play',16)} Prototipo</span><select id="preview-select" aria-label="Pantalla del prototipo">${p().nodes.filter(n=>n.type==='frame'&&!n.hidden).map(n=>`<option value="${n.id}" ${n.id===frame.id?'selected':''}>${esc(n.name)}</option>`).join('')}</select><div>${(()=>{const others=postureGroup(p(),frame.id).filter(f=>f.id!==frame.id);return others.length===1?`<button data-posture="${others[0].id}" class="posture-button" title="Ver esta pantalla en la otra postura">${panelsOf(others[0])>panelsOf(frame)?'Desplegar':'Plegar'} ⇄</button>`:others.map(f=>`<button data-posture="${f.id}" class="posture-button" title="Ver esta pantalla en otra postura">${esc(f.name.split('·').at(-2)?.trim()||f.name)} ⇄</button>`).join('');})()}${btn('preview-back','Pantalla anterior','undo','icon-button')}${btn('close-preview','Cerrar presentación · Escape','close','icon-button')}</div></header><div id="preview-viewport"><div id="preview-sizer"><div id="preview-canvas"></div></div></div><div class="preview-footnote">Haz clic en los elementos conectados para navegar <span>ESC para volver al editor</span></div></div>`;
   const el=element(p(),frame,true);el.style.left='0';el.style.top='0';el.style.position='relative';byId('preview-canvas').append(el);
-  const ratio=Math.min(1,(window.innerWidth-120)/frame.width,(window.innerHeight-160)/frame.height);byId('preview-canvas').style.transform=`scale(${ratio})`;byId('preview-sizer').style.width=`${frame.width*ratio}px`;byId('preview-sizer').style.height=`${frame.height*ratio}px`;
-  dom.listen(byId('preview-canvas'),'click',e=>{const hit=(e.target as HTMLElement).closest<HTMLElement>('[data-target]');if(hit){previewHistory.push(frame.id);preview(hit.dataset.target,false);}});
+  const bezel=frame.skin?deviceSkins[frame.skin].bezel*2+4:0,ratio=Math.min(1,(window.innerWidth-120-bezel)/frame.width,(window.innerHeight-160-bezel)/frame.height);if(ghost)ghost.dataset.scale=String(previewRatio/ratio);previewRatio=ratio;byId('preview-canvas').style.transform=`scale(${ratio})`;byId('preview-sizer').style.width=`${frame.width*ratio}px`;byId('preview-sizer').style.height=`${frame.height*ratio}px`;
+  if(ghost){Object.assign(ghost.style,{position:'absolute',left:'0',top:'0'});if(!frame.skin&&!ghost.dataset.skin&&transition!.type!=='fold'&&transition!.type!=='unfold')byId('preview-sizer').style.overflow='hidden';byId('preview-canvas').append(ghost);transitionScreens(ghost,el,transition!,reverse);}
+  startMotion(el);
+  dom.listen(byId('preview-canvas'),'click',e=>{const hit=(e.target as HTMLElement).closest<HTMLElement>('[data-target]');if(hit){const t=find(hit.dataset.node||'')?.transition;previewHistory.push({id:frame.id,transition:t});preview(hit.dataset.target,false,t);}});
   dom.listen(byId('preview-canvas'),'keydown',e=>{if((e.key==='Enter'||e.key===' ')&&(e.target as HTMLElement).matches('[data-target]')){e.preventDefault();(e.target as HTMLElement).click();}});
-  byId<HTMLSelectElement>('preview-select').onchange=e=>{previewHistory.push(frame.id);preview((e.target as HTMLSelectElement).value,false);};
+  byId<HTMLSelectElement>('preview-select').onchange=e=>{previewHistory.push({id:frame.id});preview((e.target as HTMLSelectElement).value,false);};
   (document.querySelector('[data-action="close-preview"]') as HTMLButtonElement).focus();
 }
-function closePreview(){const modal=byId('modal-root');modal.onclick=null;modal.onchange=null;modal.onkeydown=null;previewFrame=null;byId('modal-root').replaceChildren();stage.focus();}
-function help(){byId('modal-root').innerHTML=`<div class="modal-backdrop"><section class="dialog help-dialog" role="dialog" aria-modal="true" aria-label="Atajos"><button data-action="close-preview" class="dialog-close icon-button">${icon('close')}</button><span class="eyebrow">HECHO PARA DIBUJAR</span><h2>Menos vueltas. Más ideas.</h2><div class="shortcut-list">${[['Seleccionar / dibujar','V / R / T / B'],['Crear pantalla / elipse','F / O'],['Mover lienzo','Espacio + arrastrar'],['Zoom','Rueda / pellizco / + / −'],['Escala 100%','0'],['Mover con rueda','Espacio + rueda'],['Ajustar pantallas / selección','⇧1 / ⇧2'],['Selección múltiple','Arrastrar / ⇧ + clic'],['Entrar en pantalla o grupo','Doble clic / Enter'],['Salir un nivel','Escape'],['Seleccionar hijos del nivel','⌘A'],['Agrupar','⌘G'],['Crear componente','⌥⌘K'],['Duplicar','⌘D'],['Deshacer / rehacer','⌘Z / ⇧⌘Z'],['Mover 1 / 10 px','Flechas / ⇧ + flechas'],['Editar texto','Doble clic'],['Guardar proyecto','⌘S']].map(([l,k])=>`<div><span>${l}</span><kbd>${k}</kbd></div>`).join('')}</div></section></div>`;}
+function closePreview(){closeColorPicker();const modal=byId('modal-root');modal.onclick=null;modal.onchange=null;modal.onkeydown=null;previewFrame=null;byId('modal-root').replaceChildren();stage.focus();}
+function help(){byId('modal-root').innerHTML=`<div class="modal-backdrop"><section class="dialog help-dialog" role="dialog" aria-modal="true" aria-label="Atajos"><button data-action="close-preview" class="dialog-close icon-button">${icon('close')}</button><span class="eyebrow">HECHO PARA DIBUJAR</span><h2>Menos vueltas. Más ideas.</h2><div class="shortcut-list">${[['Seleccionar / dibujar','V / R / T / B'],['Crear pantalla / elipse','F / O'],['Mover lienzo','Espacio + arrastrar'],['Zoom','⌘ + rueda / pellizco / + / −'],['Escala 100%','0'],['Mover con rueda','Rueda / ⇧ + rueda'],['Ajustar pantallas / selección','⇧1 / ⇧2'],['Selección múltiple','Arrastrar / ⇧ + clic'],['Entrar en pantalla o grupo','Doble clic / Enter'],['Salir un nivel','Escape'],['Seleccionar hijos del nivel','⌘A'],['Agrupar','⌘G'],['Crear componente','⌥⌘K'],['Duplicar','⌘D'],['Deshacer / rehacer','⌘Z / ⇧⌘Z'],['Mover 1 / 10 px','Flechas / ⇧ + flechas'],['Editar texto','Doble clic'],['Guardar proyecto','⌘S']].map(([l,k])=>`<div><span>${l}</span><kbd>${k}</kbd></div>`).join('')}</div></section></div>`;}
 
 async function action(act: string) {
   assertActive();
-  if(options.modular && !dom.parts.dialogs.isConnected && ['themes','preview','help','agent-help','new','example','open'].includes(act)) throw new Error('Monta la parte dialogs para usar esta acción, o usa los diálogos y la API de tu IDE.');
+  if(options.modular && !dom.parts.dialogs.isConnected && ['themes','animator','preview','help','agent-help','new','example','example-devices','open'].includes(act)) throw new Error('Monta la parte dialogs para usar esta acción, o usa los diálogos y la API de tu IDE.');
   switch(act){
     case 'enter-scope':if(state.selected.length===1)enterScope(state.selected[0]);break;
     case 'add-frame':addFrame();break;
@@ -401,13 +458,16 @@ async function action(act: string) {
     case 'zoom-out':zoomAt(state.zoom/1.2);break;
     case 'agent-help':agentHelp();break;
     case 'themes':openThemeEditor({root:byId('modal-root'),get:p,commit:fn=>{store.commit(fn);render();persist();},undo:()=>{store.undo();render();persist();},close:closePreview});break;
+    case 'animator':{const id=state.selected[0];if(state.selected.length!==1||!find(id)){toast('Selecciona un solo elemento para animarlo.');break;}const {openAnimator}=await import('./animator');if(disposed)break;openAnimator({root:byId('modal-root'),get:p,nodeId:id,commit:fn=>{store.commit(fn);render();persist();},undo:()=>{store.undo();render();persist();},close:closePreview});break;}
+    case 'rotate-frame':{const n=find(state.selected[0]);if(n?.type==='frame')change(pr=>updateNode(pr,n.id,{width:n.height,height:n.width,...(n.fold?{fold:{...n.fold,axis:n.fold.axis==='vertical'?'horizontal':'vertical'}}:{}),...(n.safeArea?{safeArea:{top:n.safeArea.left,right:n.safeArea.top,bottom:n.safeArea.right,left:n.safeArea.bottom}}:{})}));fit(true);break;}
     case 'theme':change(pr=>pr.theme=pr.theme==='light'?'dark':'light');break;
     case 'save':await saveProject();break;
     case 'open':await openFile();break;
     case 'preview':preview();break;
     case 'close-preview':closePreview();break;
-    case 'preview-back':{const id=previewHistory.pop();if(id)preview(id,false);break;}
+    case 'preview-back':{const last=previewHistory.pop();if(last)preview(last.id,false,last.transition,true);break;}
     case 'new':if(await confirmReplace('Crear proyecto','El proyecto actual se conservará en Deshacer. También puedes guardarlo como archivo.'))replace(blank());break;
+    case 'example-devices':if(await confirmReplace('Abrir ejemplo multiplataforma','El proyecto actual se conservará en Deshacer.')){const {demoDevices}=await import('./demo-devices');if(!disposed){replace(demoDevices());fit();}}break;
     case 'example':if(await confirmReplace('Abrir ejemplo Forma','El proyecto actual se conservará en Deshacer.'))replace(demo());break;
     case 'duplicate':{let ids:string[]=[];change(pr=>ids=duplicate(pr,editableIds()));select(ids);break;}
     case 'delete':change(pr=>remove(pr,editableIds()));break;
@@ -431,6 +491,9 @@ async function action(act: string) {
 events.addEventListener('click',e=>{
   const el=(e.target as HTMLElement).closest<HTMLElement>('button,[data-layer]');if(!el)return;
   if('scope' in el.dataset){enterScope(el.dataset.scope||null);return;}
+  if((el.dataset.pick||'pickFill' in el.dataset)&&el.closest('#inspector')){const n=state.selected.length===1?find(state.selected[0]):undefined;if(n&&('pickFill' in el.dataset||el.dataset.pick==='Relleno: valor'))openFillPicker(el,n);else pickColorFor(el,pickerContext(n));return;}
+  if(el.dataset.pickToken&&el.closest('#inspector')){const token=el.dataset.pickToken;openColorPicker({...pickerContext(),anchor:el,value:p().designThemes[p().activeThemeId].modes[p().theme].colors[token],commit:value=>change(pr=>{pr.designThemes[pr.activeThemeId].modes[pr.theme].colors[token]=value;if(pr.activeThemeId==='project')pr.themes[pr.theme][token]=value;})});return;}
+  if(el.dataset.posture){const current=find(previewFrame||''),other=find(el.dataset.posture);if(current&&other){const t:Transition={type:panelsOf(other)>panelsOf(current)?'unfold':'fold',duration:700,easing:'ease-in-out'};previewHistory.push({id:current.id,transition:t});preview(other.id,false,t);}return;}
   if(el.dataset.action){void action(el.dataset.action).catch(err=>toast(String(err)));return;}
   if(el.dataset.library){libraryTab=el.dataset.library as typeof libraryTab;renderComponents();if(libraryTab==='kits')void loadKits().catch(err=>toast(String(err)));if(libraryTab==='icons')void loadIcons().catch(err=>toast(String(err)));return;}
   if(el.dataset.iconItem){void insertLibraryIcon(el.dataset.iconItem).catch(err=>toast(String(err)));return;}
@@ -469,6 +532,36 @@ events.addEventListener('change',e=>{
   if(el.id==='kit-search'){kitSearch=el.value;renderComponents();return;}
   if(el.id==='frame-kit'&&el.value&&state.selected.length===1){const id=state.selected[0],kit=el.value as KitId;void loadKits().then(kits=>change(pr=>{const themeId=kits.ensureKitTheme(pr,kit);updateNode(pr,id,{themeId,kitId:kit});})).catch(err=>toast(String(err)));return;}
   if(el.dataset.token){change(pr=>{pr.designThemes[pr.activeThemeId].modes[pr.theme].colors[el.dataset.token!]=el.value;if(pr.activeThemeId==='project')pr.themes[pr.theme][el.dataset.token!]=el.value;});return;}
+  if((el.dataset.frameField||el.dataset.safe)&&state.selected.length===1){
+    const n=find(state.selected[0]);if(!n||n.type!=='frame'||isUnavailable(p(),n))return;
+    if(el.dataset.safe){
+      if(!(el as HTMLInputElement).checkValidity()){toast('Introduce un valor dentro del rango permitido.');renderInspector();return;}
+      const next={top:0,right:0,bottom:0,left:0,...n.safeArea,[el.dataset.safe]:Number(el.value)};
+      change(pr=>updateNode(pr,n.id,{safeArea:Object.values(next).some(Boolean)?next:undefined}));return;
+    }
+    if(el.dataset.frameField==='skin'){change(pr=>updateNode(pr,n.id,{skin:el.value||undefined}));return;}
+    // Linking joins this screen to the other one's posture group; a tri-fold has three screens in it.
+    change(pr=>{if(!el.value)for(const other of pr.nodes)if(other.foldPair===n.id)updateNode(pr,other.id,{foldPair:undefined});updateNode(pr,n.id,{foldPair:el.value||undefined});const target=pr.nodes.find(other=>other.id===el.value);if(target&&!pr.nodes.some(other=>other.id===target.foldPair&&other.type==='frame'))updateNode(pr,target.id,{foldPair:n.id});});return;
+  }
+  if((el.dataset.device!==undefined||el.dataset.fold)&&state.selected.length===1){
+    const n=find(state.selected[0]);if(!n||n.type!=='frame'||isUnavailable(p(),n))return;
+    if(el.dataset.device!==undefined){const d=devicePresets.find(d=>d.id===el.value);change(pr=>updateNode(pr,n.id,d?{device:d.id,width:d.width,height:d.height,fold:d.fold?{...d.fold}:undefined,skin:d.skin,safeArea:presetSafeArea(d)}:{device:undefined}));fit(true);return;}
+    if(el instanceof HTMLInputElement&&!el.checkValidity()){toast('Introduce un valor dentro del rango permitido.');renderInspector();return;}
+    change(pr=>updateNode(pr,n.id,{fold:el.dataset.fold==='axis'?el.value?{...n.fold,axis:el.value as 'vertical'|'horizontal',gap:n.fold?.gap??0}:undefined:el.dataset.fold==='panels'?{axis:n.fold!.axis,gap:n.fold!.gap,...(el.value==='3'?{panels:3 as const}:{})}:{...n.fold!,gap:Number(el.value)}}));return;
+  }
+  if(el.dataset.transition&&state.selected.length===1){
+    const n=find(state.selected[0]);if(!n||isUnavailable(p(),n))return;
+    if(el instanceof HTMLInputElement&&!el.checkValidity()){toast('Introduce un valor dentro del rango permitido.');renderInspector();return;}
+    const base:Transition=n.transition??{type:'fade',duration:300,easing:'ease-out'},key=el.dataset.transition;
+    change(pr=>updateNode(pr,n.id,{transition:key==='type'&&!el.value?undefined:{...base,[key]:key==='duration'?Number(el.value):el.value}}));return;
+  }
+  if(el.dataset.fillType!==undefined&&state.selected.length===1){
+    const n=find(state.selected[0]);if(!n||isUnavailable(p(),n))return;
+    const token=el.value.startsWith('token:')?el.value.slice(6):undefined;
+    // A local gradient replaces any fill link; a solid fill only drops a link to a theme gradient.
+    const keep=!token&&el.value==='none'&&n.fillToken&&Object.hasOwn(effectiveTheme(p(),n).tokens.colors,n.fillToken);
+    change(pr=>updateNode(pr,n.id,token?{fillToken:token}:{gradient:el.value as DesignNode['gradient'],fillToken:keep?n.fillToken:undefined,...(el.value==='none'?{gradientStops:undefined}:{})}));return;
+  }
   if(el.dataset.field&&state.selected.length===1){const n=find(state.selected[0]);if(!n||isUnavailable(p(),n))return;const field=el.dataset.field as keyof DesignNode;let value:unknown=el.value;if(el instanceof HTMLInputElement&&el.type==='number'){if(!el.checkValidity()){toast('Introduce un valor dentro del rango permitido.');renderInspector();return;}value=Number(el.value);}if(el instanceof HTMLInputElement&&el.type==='checkbox')value=el.checked;if(field==='targetId'&&!value)value=null;if(['fillToken','materialToken','typographyToken','radiusToken','themeId'].includes(field)&&!value)value=undefined;change(pr=>updateNode(pr,n.id,{[field]:value}));}
 });
 dom.listen(byId<HTMLInputElement>('zoom-value'),'focus', e => (e.target as HTMLInputElement).select());
@@ -480,7 +573,18 @@ events.addEventListener('dragstart',e=>{const el=(e.target as HTMLElement).close
 dom.listen(stage,'dragover',e=>{e.preventDefault();if(e.dataTransfer)e.dataTransfer.dropEffect='copy';});
 dom.listen(stage,'drop',e=>{e.preventDefault();try{const data=JSON.parse(e.dataTransfer?.getData('application/codaru')||'{}');const pos=point(e.clientX,e.clientY);if(data.iconItem)void insertLibraryIcon(data.iconItem,pos).catch(err=>toast(String(err)));else if(data.kitItem)void insertKit(data.kitItem,pos).catch(err=>toast(String(err)));else if(data.component)insertComponent(data.component,pos);else if(data.kind)insert(data.kind,pos);}catch{toast('No se pudo insertar este elemento.');}});
 byId<HTMLInputElement>('import-file').onchange=async e=>{const el=e.target as HTMLInputElement;const f=el.files?.[0];if(f){if(f.size>20_000_000)toast('El archivo supera 20 MB.');else await loadProject(await f.text());}el.value='';};
-byId<HTMLInputElement>('image-file').onchange=async e=>{const el=e.target as HTMLInputElement;const file=el.files?.[0];if(!file)return;if(file.size>3_000_000){toast('Usa una imagen de menos de 3 MB para mantener ligero el proyecto.');el.value='';return;}
+byId<HTMLInputElement>('image-file').onchange=async e=>{const el=e.target as HTMLInputElement;const file=el.files?.[0];if(!file)return;
+  if(file.type==='image/svg+xml'||/\.svg$/i.test(file.name)){
+    el.value='';
+    try{
+      const svg=sanitizeSVG(await file.text());if(disposed)return;
+      const current=find(state.selected[0]),layers=vectorLayers(svg).map(l=>l.id);
+      // Replacing the artwork keeps the animations whose layers still exist.
+      if(current?.type==='vector')change(pr=>updateNode(pr,current.id,{svg,animations:current.animations?.filter(a=>!a.target||layers.includes(a.target))}),'Ilustración actualizada');
+      else{const parent=current?frameOf(p(),current.id):p().nodes.find(n=>n.type==='frame'),size=vectorSize(svg),width=Math.min(240,size.width);const n=node('vector',{parentId:parent?.id||null,x:32,y:32,width,height:Math.max(1,Math.round(width*size.height/size.width)),svg,name:file.name.replace(/\.svg$/i,'')});change(pr=>pr.nodes.push(n),'Ilustración añadida · anímala en Propiedades');select([n.id]);}
+    }catch(error){toast(error instanceof Error?error.message:'No se pudo importar el SVG.');}
+    return;
+  }if(file.size>3_000_000){toast('Usa una imagen de menos de 3 MB para mantener ligero el proyecto.');el.value='';return;}
   const reader=new FileReader();reader.onload=()=>{if(disposed)return;const image=String(reader.result);const current=find(state.selected[0]);if(current?.type==='image')change(pr=>updateNode(pr,current.id,{image}));else{const parent=current?frameOf(p(),current.id):p().nodes.find(n=>n.type==='frame');const n=node('image',{parentId:parent?.id||null,x:32,y:32,width:240,height:180,image,name:file.name});change(pr=>pr.nodes.push(n));select([n.id]);}};reader.readAsDataURL(file);el.value='';};
 
 // Pointer gestures make one history entry, regardless of how many pointer moves occur.
@@ -570,13 +674,14 @@ dom.listen(stage,'wheel', e => {
   e.preventDefault(); if (gesture || pinch) return;
   const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? stage.clientHeight : 1;
   const dx = e.deltaX * unit, dy = e.deltaY * unit;
-  if (!(e.ctrlKey || e.metaKey) && (space || state.tool === 'hand' || e.shiftKey)) {
-    state.pan.x -= e.shiftKey && !dx ? dy : dx; state.pan.y -= e.shiftKey ? 0 : dy; setTransform(); return;
+  // Scrolling moves the canvas on both axes; Ctrl/Cmd + wheel (and trackpad pinch) zooms.
+  if (!(e.ctrlKey || e.metaKey)) {
+    const sideways = e.shiftKey && !dx;
+    state.pan.x -= sideways ? dy : dx; state.pan.y -= sideways ? 0 : dy; setTransform(); return;
   }
   const r = stage.getBoundingClientRect();
   // Bound large wheel deltas while retaining smooth trackpad/pinch increments.
   zoomAt(state.zoom * Math.exp(-Math.max(-240, Math.min(240, dy)) * (e.ctrlKey ? .01 : .0025)), e.clientX-r.left, e.clientY-r.top);
-  if (dx && !e.ctrlKey && !e.metaKey) { state.pan.x -= dx; setTransform(); }
 }, { passive: false });
 // WKWebView sends GestureEvents for trackpad pinch; Chromium sends Ctrl+wheel.
 dom.listen(stage,'gesturestart', event => {
