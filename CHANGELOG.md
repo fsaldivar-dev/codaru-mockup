@@ -2,9 +2,11 @@
 
 ## Sin publicar
 
+- Exportación SVG: las ilustraciones que usan `currentColor` toman el color del elemento, como en Presentar y en HTML; antes salían en negro.
+- Campos: al enfocarlos muestran un borde de 1 px en el color principal del tema, en Presentar, en las vistas previas de Markdown y en el HTML exportado. Sustituye el contorno genérico del navegador.
 - Revisión de diseño: contraste en claro y oscuro contra el fondo real, zonas táctiles, texto pequeño o que no cabe, recortes, área segura, pliegue, acciones superpuestas, colores fuera del tema, desalineaciones y escalas. Lista por pantalla y mapa de calor en el lienzo.
 - CLI: comando `lint [--frame ID]`, también disponible para la IA.
-- Plugin de Claude Code en `packages/claude-plugin` con los skills `codaru-design` y `codaru-review`.
+- Plugin de Claude Code en `packages/claude-plugin` con los skills `codaru-design` y `codaru-review`. El skill de diseño incluye `references/ios-hig.md`, una síntesis de las Human Interface Guidelines de Apple (Liquid Glass, barras, búsqueda, hojas, tipografía, color, controles, movimiento) con una lista de comprobación para pantallas de iPhone.
 - Ejemplos Forma y multiplataforma: el texto sobre color de marca usa tokens, de modo que pasan la revisión sin errores en claro y en oscuro.
 - Markdown: bloque ```` ```codaru-mockup ```` y entrada `codaru-mockup/preview` para que un cliente muestre pantallas en vivo dentro de un documento, como prototipo o estáticas, sin cargar el editor.
 - Auto layout: padding por lado, reparto (inicio, centro, final, repartido), alineación transversal (estirar, inicio, centro, final), salto de línea, ajuste del contenedor al contenido y tamaño mínimo y máximo de los hijos. Sin estos campos el comportamiento es el anterior.

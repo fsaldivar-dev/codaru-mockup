@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 
 const state=(page:Page)=>page.evaluate(()=>(window as any).codaru.getDocument());
 const art=`<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" onload="window.pwned=1"><script>window.pwned=1</script>
@@ -12,6 +13,11 @@ test('an uploaded SVG becomes an illustration whose layers are animated in the a
   let node=(await state(page)).nodes.find((n:any)=>n.type==='vector');
   expect(node.svg).not.toContain('script');expect(node.svg).not.toContain('onload');expect(await page.evaluate(()=>(window as any).pwned)).toBeUndefined();
   await expect(page.locator(`#artboards [data-node="${node.id}"] svg [data-layer="sun"]`)).toHaveCount(1);
+  const ink=await page.locator(`#artboards [data-node="${node.id}"]`).evaluate(el=>getComputedStyle(el).color);
+  await page.locator('[data-layer="screen-login"]').click();const download=page.waitForEvent('download');await page.getByRole('button',{name:'Exportar pantalla SVG',exact:true}).click();
+  const exported=await readFile((await (await download).path())!,'utf8');await page.locator(`[data-layer="${node.id}"]`).click();
+  const shown=await page.evaluate(svg=>{const host=document.createElement('div');host.innerHTML=svg;document.body.append(host);const value=getComputedStyle(host.querySelector('svg svg')!).color;host.remove();return value;},exported);
+  expect(shown).toBe(ink);
   await page.getByRole('button',{name:'Abrir animador'}).click();
   const dialog=page.getByRole('dialog',{name:'Animador'});await expect(dialog).toBeVisible();
   await dialog.getByLabel('Añadir animación').selectOption('spin');

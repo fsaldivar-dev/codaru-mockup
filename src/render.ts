@@ -4,6 +4,9 @@ import { iconLicenseNotice, iconSVG } from './icon-data';
 import { scopeSVG, startMotion, transitionScreens } from './motion';
 import { deviceSkins } from './devices';
 export const fonts: Record<string, string> = { system: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', serif: 'Georgia, "Times New Roman", serif', mono: 'ui-monospace, SFMono-Regular, Menlo, monospace' };
+/** Focused fields get a 1 px ring in the theme's primary color. It travels inside each previewed screen,
+ * so Presentar, Markdown previews (shadow DOM) and exported HTML share it without their own stylesheets. */
+const fieldFocusCSS = '.design-node[data-kind="input"]:focus-within{outline:1px solid var(--field-focus);outline-offset:-1px}.design-node[data-kind="input"] input:focus{outline:none}';
 
 function gradientFor(p: Project, n: DesignNode): GradientToken | undefined {
   const set = effectiveTheme(p, n).tokens;
@@ -67,7 +70,8 @@ export function element(p: Project, n: DesignNode, preview = false): HTMLElement
   }
   if (n.type === 'input' && preview) {
     const input = document.createElement('input'); input.placeholder = n.text; input.setAttribute('aria-label', n.name); input.type = /contraseña/i.test(n.name) ? 'password' : 'text';
-    Object.assign(input.style, { boxSizing: 'border-box', width: '100%', height: '100%', border: 'none', background: 'transparent', color: 'inherit', font: 'inherit', padding: '0 14px', outlineOffset: '-3px', borderRadius: 'inherit' }); el.append(input);
+    Object.assign(input.style, { boxSizing: 'border-box', width: '100%', height: '100%', border: 'none', background: 'transparent', color: 'inherit', font: 'inherit', padding: '0 14px', borderRadius: 'inherit' }); el.append(input);
+    el.style.setProperty('--field-focus', color(p, '@primary', n));
   } else if (n.text) {
     const text = document.createElement('div'); text.className = 'node-text'; text.textContent = n.text;
     Object.assign(text.style, { whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', boxSizing: 'border-box', width: '100%', height: '100%', overflow: 'hidden', pointerEvents: 'none' });
@@ -76,7 +80,7 @@ export function element(p: Project, n: DesignNode, preview = false): HTMLElement
   }
   if (preview && n.targetId) { el.dataset.target = n.targetId; if (n.transition) el.dataset.transition = JSON.stringify(n.transition); el.tabIndex = 0; el.setAttribute('role', 'button'); el.style.cursor = 'pointer'; }
   for (const child of children(p, n.id)) el.append(element(p, child, preview));
-  if (n.type === 'frame' && preview) { const group = postureGroup(p, n.id); if (group.length > 1) el.dataset.postures = group.map(f => f.id).join(' '); el.dataset.panels = String(panelsOf(n)); }
+  if (n.type === 'frame' && preview) { const style = document.createElement('style'); style.textContent = fieldFocusCSS; el.prepend(style); const group = postureGroup(p, n.id); if (group.length > 1) el.dataset.postures = group.map(f => f.id).join(' '); el.dataset.panels = String(panelsOf(n)); }
   if (n.type === 'frame' && n.safeArea && !preview) {
     // Editing aid only: the bands the system keeps for the status bar, cutout and home indicator.
     const { top, right, bottom, left } = n.safeArea, edge = '1px dashed rgba(236, 72, 120, .7)', tint = 'rgba(236, 72, 120, .07)';
@@ -154,7 +158,8 @@ export function exportSVG(p: Project, frame: DesignNode): string {
       pieces.push(`<path d="M${x+r[0]},${y} H${x+n.width-r[1]} Q${x+n.width},${y} ${x+n.width},${y+r[1]} V${y+n.height-r[2]} Q${x+n.width},${y+n.height} ${x+n.width-r[2]},${y+n.height} H${x+r[3]} Q${x},${y+n.height} ${x},${y+n.height-r[3]} V${y+r[0]} Q${x},${y} ${x+r[0]},${y} Z" ${style}${n.shadow ? ' filter="url(#shadow)"' : ''}/>`);
     }
     if (n.image) pieces.push(`<image href="${n.image}" x="${x}" y="${y}" width="${n.width}" height="${n.height}" preserveAspectRatio="xMidYMid slice"/>`);
-    if (n.type === 'vector') pieces.push(scopeSVG(n.svg!, n.id).replace('<svg ', `<svg x="${x}" y="${y}" width="${n.width}" height="${n.height}" `));
+    // `color` feeds currentColor, as the element's CSS color does in Presentar and HTML.
+    if (n.type === 'vector') pieces.push(scopeSVG(n.svg!, n.id).replace('<svg ', `<svg x="${x}" y="${y}" width="${n.width}" height="${n.height}" color="${color(p, n.color, n)}" `));
     if (n.type === 'icon') pieces.push(iconSVG(n.iconPack!, n.iconName!, color(p, n.color, n), n.width).replace('<svg ', `<svg x="${x}" y="${y}" `).replace(`height="${n.width}"`, `height="${n.height}"`));
     if (n.text) {
       const centered = n.type === 'button' || n.type === 'input'; const inset = centered ? 14 : 0;

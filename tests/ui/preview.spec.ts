@@ -31,6 +31,12 @@ test('codaru-mockup blocks in rendered Markdown become live previews and bad blo
   await expect(previews.nth(3)).toContainText('no contiene JSON válido');
   await expect(previews.nth(4)).toContainText('Línea no reconocida');
   expect(await page.locator('#host-button').evaluate(el=>getComputedStyle(el).borderTopWidth)).toBe('3px');
+  await prototype.getByLabel('Pantalla',{exact:true}).selectOption('ios-bienvenida');
+  const field=prototype.locator('[data-kind="input"]').first(),ring=(el:Element)=>{const s=getComputedStyle(el),probe=document.createElement('i');probe.style.color=s.getPropertyValue('--field-focus');el.append(probe);const primary=getComputedStyle(probe).color;probe.remove();return [s.outlineStyle,s.outlineWidth,s.outlineColor===primary];};
+  expect((await field.evaluate(ring))[0]).toBe('none');
+  await field.locator('input').focus();
+  expect(await field.evaluate(ring)).toEqual(['solid','1px',true]);
+  expect(await field.locator('input').evaluate(el=>getComputedStyle(el).outlineStyle)).toBe('none');
   expect(await page.evaluate(()=>{const p=(window as any).markdownTest.previews[0];p.show('ios-bienvenida');const id=p.screen();p.destroy();return [id,document.querySelectorAll('[data-codaru-mockup]').length];})).toEqual(['ios-bienvenida',4]);
   expect(errors).toEqual([]);
 });

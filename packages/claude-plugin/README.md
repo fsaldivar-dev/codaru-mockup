@@ -2,7 +2,7 @@
 
 Dos skills para que un agente diseñe y revise en Codaru Mockup con criterio profesional. Son instrucciones propias de este proyecto, bajo su misma licencia BSD-3-Clause; no incluyen skills de terceros.
 
-- **codaru-design** — flujo con el CLI y principios de diseño: jerarquía, espaciado, tipografía, color con tokens, plataformas, plegables y movimiento.
+- **codaru-design** — flujo con el CLI y principios de diseño: jerarquía, espaciado, tipografía, color con tokens, plataformas, plegables y movimiento. Incluye `references/ios-hig.md`, una síntesis de las Human Interface Guidelines de Apple (Liquid Glass, barras, tipografía, color, controles) leída de la documentación oficial.
 - **codaru-review** — revisión con `./codaru lint` y cómo corregir cada tipo de hallazgo.
 
 ## Usarlo
