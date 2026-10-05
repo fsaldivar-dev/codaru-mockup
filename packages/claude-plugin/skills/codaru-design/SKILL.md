@@ -1,6 +1,6 @@
 ---
 name: codaru-design
-description: Diseñar o modificar pantallas en Codaru Mockup con criterio profesional. Úsalo cuando pidan crear una maqueta, una pantalla, un flujo, adaptar un diseño a iOS, Android o plegables, o elevar, pulir o hacer más premium un diseño abierto en Codaru que se ve genérico.
+description: Diseñar o modificar pantallas en Codaru Mockup con criterio profesional. Úsalo cuando pidan crear una maqueta, una pantalla, un flujo, adaptar un diseño a iOS, Android o plegables, o mejorar el aspecto de un diseño abierto en Codaru.
 ---
 
 # Diseñar en Codaru Mockup
@@ -68,40 +68,6 @@ Lee `references/ios-hig.md` de este skill antes de diseñar una pantalla de iPho
 - No cruces el pliegue con texto ni acciones: un panel, un bloque de contenido. `fold.panels: 3` para tríptico.
 - Al abrir no agrandes lo mismo: añade lo que en teléfono quedaba tras otra pestaña (lista y detalle, actividad).
 - Usa `transition.type: "unfold"` entre la pantalla cerrada y la abierta.
-
-## Elevar un diseño que se ve genérico
-
-«Genérico» no se arregla añadiendo cosas: se arregla decidiendo. Antes de tocar nada, escribe una **dirección** en dos frases: qué debe sentir quien lo usa y qué hace a esta app distinta de otra del mismo tipo. Toda decisión posterior se justifica con esa dirección; si no la sirve, no se hace.
-
-Después, en este orden:
-
-1. **Un momento de marca por flujo.** Elige el elemento que la pantalla hará suyo (la bienvenida, el destacado, el estado vacío) y dale un tratamiento que el resto no tiene: un degradado del tema con 3 o 4 paradas, una ilustración animada, un título grande con un peso inesperado. Un solo momento; dos compiten.
-2. **Tipografía con contraste.** Título de 28 a 34 con peso 700 o más y `lineHeight` de 1,1 a 1,2; cuerpo de 14 a 16 con peso 400; apoyos de 12 a 13 en `@muted`. Que el salto entre niveles se note; dos tamaños a 2 px de distancia es ruido.
-3. **Profundidad en lugar de bordes.** Fondo `@background`, superficies `@surface`, lo elevado con sombra suave o con el material de vidrio del tema. Reserva el borde de 1 px para campos de formulario; el resto se separa con color de superficie y espacio.
-4. **Un acento y neutros.** El color de marca va solo en la acción principal, el elemento activo y el momento de marca. Lo demás en neutros del tema. Si hay un segundo acento, es para estados (éxito, aviso), no para decorar.
-5. **Ritmo.** Separación 24 a 32 entre bloques, 8 a 12 dentro de ellos; márgenes laterales iguales en toda la pantalla. Deja aire alrededor del momento de marca: el espacio es parte de él.
-6. **Radios con intención.** Dos valores: uno para contenedores (16 a 24) y otro para controles (10 a 14). Botones de píldora solo en Android o cuando sea una decisión de marca.
-7. **Detalle en lo pequeño.** Iconos del catálogo junto a las etiquetas de navegación, miniaturas con el tono de marca, un indicador de estado con color, textos de apoyo con contenido real en lugar de «Lorem» o «Texto».
-8. **Movimiento contenido.** Entrada escalonada del contenido al llegar y una animación en el momento de marca. Nada más se mueve.
-9. **Lo que se repite, componente.** Tarjetas, filas, botones: una definición, instancias con sobrescritura de texto.
-
-**Lo que delata una plantilla, aunque esté bien hecho.** Evítalo salvo que la dirección lo pida por escrito:
-
-- Degradado morado-rosa-naranja «de tendencia» como fondo del destacado.
-- Destellos, estrellas y brillos como decoración; anillos y blobs abstractos como «ilustración».
-- Animar todos los elementos. Si se mueve todo, nada importa: animan la entrada del bloque principal y el momento de marca, y poco más.
-- Un segundo y tercer acento añadidos al tema «para dar vida». Si hace falta otro color, es un estado.
-
-Evitarlos significa sustituirlos por algo propio, no borrarlos y dejar el hueco: si quitas una ilustración de catálogo, pon una propia; si quitas un degradado de tendencia, pon profundidad con material o con dos tonos cercanos del acento.
-- Texto de relleno o genérico («Algo increíble está por tomar forma») donde cabe contenido real del producto.
-- Pantallas del mismo flujo con tamaños o marcos distintos entre sí, o pantallas sueltas usadas como borrador y dejadas en el lienzo.
-- Botones de navegación («Volver») flotando en un hueco en lugar de en la cabecera o en la barra.
-
-Lo que sí distingue: una decisión tipográfica clara (por ejemplo, serif solo en títulos y marca), una paleta corta y segura, asimetría con intención, contenido verosímil, y un detalle propio repetido con constancia (una forma, un radio, una manera de marcar lo activo).
-
-Comprueba al final: ¿se puede señalar en la pantalla lo que la hace distinta? ¿Hay una sola acción principal? ¿Cada elemento tiene un tamaño o peso que explica su importancia? Si una respuesta es no, vuelve a la dirección.
-
-Explica a la persona cada decisión en una línea y qué alternativa descartaste. Lo premium se nota también en que las decisiones se pueden defender.
 
 ## Movimiento
 
