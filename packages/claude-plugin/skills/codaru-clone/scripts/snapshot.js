@@ -6,10 +6,11 @@
  *
  *   codaruSnapshot()                      → objeto con la instantánea
  *   codaruSnapshot({ maxHeight: 4000 })   → limita la altura capturada (6000 px por defecto)
+ *   codaruSnapshot({ images: false })     → sin imágenes (quedan como cajas); por defecto se reducen a 2× su tamaño en pantalla
  *   codaruSnapshot({ download: true })    → además descarga <título>.dom.codaru.json
  */
 (function () {
-  const MAX_ELEMENTS = 2500, MAX_TEXT = 2000, MAX_SVG = 60, MAX_SVG_CHARS = 60000, MAX_IMAGES = 24, MAX_IMAGE_CHARS = 420000;
+  const MAX_ELEMENTS = 2500, MAX_TEXT = 2000, MAX_SVG = 60, MAX_SVG_CHARS = 60000, MAX_IMAGES = 24, MAX_IMAGE_CHARS = 300000, IMAGE_BUDGET = 1500000;
   const SKIP = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE', 'HEAD', 'META', 'LINK', 'TITLE', 'IFRAME', 'CANVAS', 'VIDEO', 'AUDIO', 'OBJECT', 'EMBED', 'MAP', 'AREA', 'BR']);
   const BLOCK = new Set(['block', 'flex', 'grid', 'table', 'list-item', 'flow-root', 'table-row', 'table-cell', 'inline-block', 'inline-flex', 'inline-grid']);
 
@@ -40,7 +41,7 @@
     const maxHeight = options.maxHeight || 6000;
     const vw = window.innerWidth, height = Math.min(document.documentElement.scrollHeight || document.body.scrollHeight || window.innerHeight, maxHeight);
     const elements = [], notes = {}, note = m => { notes[m] = (notes[m] || 0) + 1; };
-    let images = 0, svgs = 0;
+    let images = 0, svgs = 0, imageBytes = 0;
     const bodyStyle = getComputedStyle(document.body), htmlStyle = getComputedStyle(document.documentElement);
     const bodyBg = parseColor(bodyStyle.backgroundColor) || parseColor(htmlStyle.backgroundColor);
 
@@ -72,10 +73,18 @@
       }
       if (tag === 'img') {
         let image = '';
-        if (images < MAX_IMAGES) {
-          try { const c = document.createElement('canvas'); c.width = el.naturalWidth || r.width; c.height = el.naturalHeight || r.height; c.getContext('2d').drawImage(el, 0, 0); const data = c.toDataURL('image/png'); if (data.length <= MAX_IMAGE_CHARS) { image = data; images++; } else note('Imágenes de más de 300 KB: se importaron como caja.'); }
-          catch (e) { note('Imágenes de otro dominio: el navegador no deja leerlas; se importaron como caja.'); }
-        } else note('Más de 24 imágenes: el resto se importó como caja.');
+        if (options.images === false) note('Imágenes omitidas por opción: quedan como caja.');
+        else if (images >= MAX_IMAGES || imageBytes >= IMAGE_BUDGET) note('Más de 24 imágenes o 1,5 MB: el resto se importó como caja.');
+        else {
+          // Images are re-encoded at up to twice their on-screen size, so a 4000 px photo in a 120 px slot stays small.
+          try {
+            const scale = Math.min(1, (2 * r.width) / (el.naturalWidth || r.width), (2 * r.height) / (el.naturalHeight || r.height));
+            const c = document.createElement('canvas'); c.width = Math.max(1, Math.round((el.naturalWidth || r.width) * scale)); c.height = Math.max(1, Math.round((el.naturalHeight || r.height) * scale));
+            c.getContext('2d').drawImage(el, 0, 0, c.width, c.height);
+            let data = c.toDataURL('image/webp', .85); if (!data.startsWith('data:image/webp')) data = c.toDataURL('image/png');
+            if (data.length <= MAX_IMAGE_CHARS) { image = data; images++; imageBytes += data.length; } else note('Imágenes de más de 300 KB tras reducirlas: se importaron como caja.');
+          } catch (e) { note('Imágenes de otro dominio: el navegador no deja leerlas; se importaron como caja.'); }
+        }
         elements.push({ ...base, kind: 'img', image, src: (el.currentSrc || el.src || '').slice(0, 500), alt: normalize(el.alt), radius, ...(box || {}) }); return;
       }
       if (tag === 'input' || tag === 'textarea' || tag === 'select') {
@@ -84,7 +93,11 @@
       const role = el.getAttribute('role');
       const isButton = tag === 'button' || role === 'button' || ((tag === 'a' || role === 'link') && (bg || gradient || (borderWidth && borderColor)));
       if (isButton) {
-        elements.push({ ...base, kind: 'button', text: normalize(el.innerText), font, color, href: tag === 'a' ? (el.getAttribute('href') || '').slice(0, 300) : undefined, ...(box || { radius }) }); return;
+        const label = normalize(el.innerText);
+        elements.push({ ...base, kind: 'button', text: label, font, color, href: tag === 'a' ? (el.getAttribute('href') || '').slice(0, 300) : undefined, ...(box || { radius }) });
+        // An icon button has no label: keep its icon (SVG or image) as a child instead of swallowing it.
+        if (!label) for (const child of el.children) walk(child, base.i);
+        return;
       }
       const direct = normalize(Array.from(el.childNodes).filter(n => n.nodeType === 3).map(n => n.textContent).join(' '));
       const blockChild = Array.from(el.children).some(c => BLOCK.has(getComputedStyle(c).display) || c instanceof SVGSVGElement || c.tagName === 'IMG');

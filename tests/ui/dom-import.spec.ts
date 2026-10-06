@@ -14,7 +14,7 @@ test('snapshot.js captures a page and the editor imports it as a screen with its
   expect(snap.elements.some((e: any) => e.text === 'oculta' || e.alt === 'oculta')).toBe(false);
   const badge = snap.elements.find((e: any) => e.kind === 'box' && e.gradient); expect(badge.gradient.stops.length).toBe(2);
   const cta = snap.elements.find((e: any) => e.text === 'Reservar la mía'); expect(cta.kind).toBe('button'); expect(cta.bg).toBe('#1d1b16'); expect(cta.radius[0]).toBeGreaterThanOrEqual(22);
-  expect(snap.elements.filter((e: any) => e.kind === 'img')[0].image.startsWith('data:image/png')).toBe(true);
+  expect(snap.elements.filter((e: any) => e.kind === 'img')[0].image).toMatch(/^data:image\/(webp|png)/);
 
   await page.setViewportSize({ width: 1512, height: 940 });
   await page.goto('/'); await expect(page.locator('[data-layer="screen-login"]')).toBeVisible();
