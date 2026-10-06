@@ -77,6 +77,10 @@ Los tokens y los iconos se resuelven con el tema del elemento o de su pantalla. 
 
 `variant.define {componentId, variant:{eje:valor}, setName?}` pone un componente en un conjunto con esos ejes (los demás miembros reciben «Base» en los ejes nuevos); `variant.create {componentId, variant}` duplica el maestro junto al original como otra definición del conjunto; `variant.switch {id, variant}` cambia una instancia a la variante que coincida y conserva sus sobrescrituras por nombre de capa. `context` lista `components` con `set`, `setName` y `variant`, y cada instancia o maestro muestra los suyos. En kits, el eje es `Estado` con Normal, Seleccionado y Deshabilitado, y la definición que falte se crea al cambiar.
 
+### Sistema de diseño
+
+`designSystem.set {summary?, brand?, principles?}` guarda la narrativa del sistema (qué es el producto y para quién, por qué la marca funciona para ese negocio, principios); `component.doc {componentId, usage?, do?, dont?}` documenta un componente o todo su conjunto (cuándo usarlo, buenas y malas prácticas, una por línea). Textos de hasta 4000 caracteres; `null` borra un campo. `context` devuelve `designSystem` y marca cada componente con `documented`. Todo se ve y se edita en la pestaña Sistema.
+
 ### Importar una página web
 
 `{ "op": "dom", "data": <instantánea> }` dentro de `apply`. La instantánea la produce `packages/claude-plugin/skills/codaru-clone/scripts/snapshot.js` ejecutado en la página (formato `codaru-dom-snapshot`, versión 1). Crea una pantalla del tamaño del viewport a la derecha de las existentes, un tema `Importado · dominio` con los colores y las tipografías más usados, y capas vinculadas a esos tokens; SVG saneados como ilustraciones, imágenes del mismo dominio como imágenes, el resto como cajas. Límite: 3000 capas por instantánea.

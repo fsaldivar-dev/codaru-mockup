@@ -141,7 +141,11 @@ El formato editable ahora es v2. Los borradores y archivos v1 se migran al abrir
 
 ## Variantes de componente
 
-Un componente puede tener **variantes**: estados o tamaños que comparten estructura (Normal, Seleccionado, Deshabilitado; Pequeño, Grande). En el inspector de un maestro, **◇ Nueva variante** duplica el maestro junto al original como otra definición del mismo conjunto; cada eje (Estado, Tamaño…) tiene su valor y **+ Eje** añade otro a todas las variantes. Una instancia muestra un selector por eje en **Variante** y cambia de definición conservando los textos y colores que hayas sobrescrito, emparejados por nombre de capa. Los kits forman un conjunto por elemento con el eje Estado, así que una instancia de kit pasa de Normal a Seleccionado desde el inspector. En Componentes, cada conjunto aparece agrupado con sus variantes.
+Un componente puede tener **variantes**: estados o tamaños que comparten estructura (Normal, Seleccionado, Deshabilitado; Pequeño, Grande). En el inspector de un maestro, **◇ Nueva variante** duplica el maestro junto al original como otra definición del mismo conjunto; cada eje (Estado, Tamaño…) tiene su valor y **+ Eje** añade otro a todas las variantes. Una instancia muestra un selector por eje en **Variante** y cambia de definición conservando los textos y colores que hayas sobrescrito, emparejados por nombre de capa. Los kits forman un conjunto por elemento con el eje Estado, así que una instancia de kit pasa de Normal a Seleccionado desde el inspector. En Componentes, cada conjunto aparece agrupado con sus variantes y una vista previa real de cada una; las variantes de un conjunto viven juntas en un contenedor «Nombre · variantes» en el lienzo.
+
+## Sistema de diseño
+
+La pestaña **Sistema** (en el panel izquierdo o junto a Diseño y Flujos) muestra el sistema de diseño del documento: **por qué funciona** (producto, negocio y nicho; marca y dirección visual; principios), los **tokens** del tema en claro y oscuro con su tipografía y radios, y cada **componente** con sus variantes dibujadas y su documentación: cuándo usarlo, buenas prácticas y malas prácticas. Todo se edita ahí mismo, viaja con el JSON y la IA lo lee en `codaru context` y lo escribe con `designSystem.set` y `component.doc`.
 
 ## Componentes prefabricados
 

@@ -8,7 +8,7 @@ import { exportHTML, exportSVG } from './render';
 import type { AgentResponse, EditorOperation } from './embed';
 
 export type EditorTool = Kind | 'cursor' | 'hand';
-export type EditorMode = 'design' | 'flow';
+export type EditorMode = 'design' | 'flow' | 'system';
 export interface EditorState {
   document: Project;
   selection: string[];
@@ -259,7 +259,7 @@ export function createEditor(options: CreateEditorOptions = {}): CodaruEditor {
     },
     setMode(mode) {
       assertActive();
-      if (mode !== 'design' && mode !== 'flow') throw new Error('Modo de editor inválido.');
+      if (mode !== 'design' && mode !== 'flow' && mode !== 'system') throw new Error('Modo de editor inválido.');
       if (state.mode === mode) return;
       assertWritable();
       state.mode = mode; render();

@@ -105,4 +105,6 @@ Antes de dar por terminado un flujo, comprueba que tiene:
 - **Instancias** de los componentes que definiste; definir componentes y luego dibujar copias es trabajo perdido.
 - `./codaru lint` sin errores ni avisos de `palette`.
 
+Escribe el sistema de diseño en el documento, no solo en el chat: `designSystem.set` con qué es el producto y para quién, por qué la marca y la dirección visual funcionan para ese negocio o nicho, y los principios; y `component.doc` en cada conjunto con cuándo usarlo y sus buenas y malas prácticas. La persona lo ve en la pestaña Sistema.
+
 Di qué pantallas creaste o cambiaste, qué decisiones de diseño tomaste y por qué, la tabla de rasgos si hubo referencias, y el resumen de `./codaru lint` final. Si dejaste algún aviso sin corregir, explica el motivo.

@@ -57,12 +57,18 @@ export interface Component {
   id: string; name: string; masterId: string; template: DesignNode[];
   /** Variant set this definition belongs to, its display name and this member's axis values (Estado=Activo, Tamaño=M). */
   set?: string; setName?: string; variant?: Record<string, string>;
+  /** Design-system notes: when to use it, good and bad practice. Shared by every member of a set. */
+  doc?: ComponentDoc;
 }
+export interface ComponentDoc { usage?: string; do?: string; dont?: string; }
+/** The design system's narrative: what the product is, why the brand works for it, and the principles to keep. */
+export interface DesignSystemNotes { summary?: string; brand?: string; principles?: string; }
 export interface Project {
   format: 'codaru-mockup'; version: 2; name: string;
   theme: Theme; themes: Record<Theme, Record<string, string>>;
   designThemes: Record<string, DesignTheme>; activeThemeId: string;
   nodes: DesignNode[]; components: Component[];
+  designSystem?: DesignSystemNotes;
 }
 export const tokens = ['primary', 'surface', 'background', 'text', 'muted', 'border', 'accent'] as const;
 export const labels: Record<Kind, string> = { frame: 'Pantalla', rect: 'Rectángulo', ellipse: 'Elipse', text: 'Texto', button: 'Botón', input: 'Campo', card: 'Tarjeta', group: 'Grupo', image: 'Imagen', icon: 'Icono', vector: 'Ilustración' };
@@ -212,6 +218,25 @@ export function cleanVariant(variant: unknown): Record<string, string> {
   for (const [axis, value] of entries) if (!variantText(axis) || !variantText(value) || ['__proto__', 'constructor', 'prototype'].includes(axis)) throw new Error('Ejes y valores de variante: texto de 1 a 40 caracteres, sin "=" ni ","');
   return Object.fromEntries(entries.map(([axis, value]) => [axis.trim(), (value as string).trim()]));
 }
+const NOTE_KEYS = { designSystem: ['summary', 'brand', 'principles'], doc: ['usage', 'do', 'dont'] } as const;
+/** Merge free-text notes: strings up to 4000 characters, null or empty removes a field, nothing else gets in. */
+export function mergeNotes<T extends object>(current: T | undefined, patch: unknown, kind: keyof typeof NOTE_KEYS): T | undefined {
+  if (!patch || typeof patch !== 'object' || Array.isArray(patch)) throw new Error('Se esperaba un objeto con textos');
+  const next: Record<string, string> = { ...(current ?? {}) } as Record<string, string>;
+  for (const [key, value] of Object.entries(patch as Record<string, unknown>)) {
+    if (!(NOTE_KEYS[kind] as readonly string[]).includes(key)) throw new Error(`Campo desconocido: ${key}. Admitidos: ${NOTE_KEYS[kind].join(', ')}`);
+    if (value === null || value === '' || value === undefined) { delete next[key]; continue; }
+    if (typeof value !== 'string' || value.length > 4000) throw new Error(`${key} debe ser texto de hasta 4000 caracteres`);
+    next[key] = value;
+  }
+  return Object.keys(next).length ? next as unknown as T : undefined;
+}
+export const setDesignSystemNotes = (p: Project, patch: unknown) => { p.designSystem = mergeNotes(p.designSystem, patch, 'designSystem'); };
+/** Document a component; members of a set share the same notes. */
+export function setComponentDoc(p: Project, componentId: string, patch: unknown) {
+  const c = componentOf(p, componentId), doc = mergeNotes(c.doc, patch, 'doc');
+  for (const member of c.set ? variantSet(p, c.set) : [c]) member.doc = doc ? { ...doc } : undefined;
+}
 export const variantLabel = (variant: Record<string, string> | undefined) => variant ? Object.entries(variant).map(([axis, value]) => `${axis}=${value}`).join(', ') : '';
 export function variantSet(p: Project, setId: string) { return p.components.filter(c => c.set === setId); }
 /** Axes of a set and the values its members use, in first-seen order. */
@@ -243,16 +268,25 @@ export function createVariant(p: Project, componentId: string, variant: Record<s
   if (!c.set || !c.variant) defineVariant(p, c.id, Object.fromEntries(Object.keys(values).map(axis => [axis, c.variant?.[axis] ?? 'Base'])));
   const target = { ...c.variant, ...values };
   if (variantSet(p, c.set!).some(s => variantLabel(s.variant) === variantLabel(target))) throw new Error(`Ya existe la variante ${variantLabel(target)}`);
+  // The set lives in one container that lays its masters out in a row, so variants never scatter across the canvas.
+  const containerId = `variants-${c.set}`;
+  let container = p.nodes.find(n => n.id === containerId);
+  if (!container) {
+    container = node('group', { id: containerId, name: `${c.setName} · variantes`, parentId: master.parentId, x: master.x, y: master.y, width: master.width + 48, height: master.height + 48, layout: 'horizontal', gap: 24, padding: 24, align: 'start', hugWidth: true, hugHeight: true, fill: 'transparent', stroke: '@border', strokeWidth: 1, radius: 12 });
+    p.nodes.splice(p.nodes.findIndex(n => n.id === master.id), 0, container);
+    master.parentId = containerId; master.x = 24; master.y = 24;
+  }
   const ns = subtree(p, master.id), map = new Map(ns.map(n => [n.id, uid()]));
   for (const original of ns) {
     const n = clone(original); n.id = map.get(original.id)!; n.parentId = map.get(original.parentId!) ?? original.parentId; delete n.componentId; delete n.overrides;
     if (n.targetId && map.has(n.targetId)) n.targetId = map.get(n.targetId)!;
-    if (original.id === master.id) { n.x = master.x + master.width + 24; n.name = `${c.setName} / ${variantLabel(target)}`; }
+    if (original.id === master.id) { n.parentId = containerId; n.x = master.x + master.width + 24; n.name = `${c.setName} / ${variantLabel(target)}`; }
     p.nodes.push(n);
   }
+  layoutNode(p, container);
   const created = createComponent(p, map.get(master.id)!);
   created.set = c.set; created.setName = c.setName; created.variant = target;
-  return { componentId: created.id, masterId: created.masterId };
+  return { componentId: created.id, masterId: created.masterId, containerId };
 }
 /** Point an instance at the member of its set that matches these values, keeping overrides by layer name and the instance id. */
 export function switchVariant(p: Project, instanceId: string, variant: Record<string, string>) {
@@ -318,6 +352,7 @@ export function validate(input: unknown): Project {
   if (source.format !== 'codaru-mockup' || ![1, 2].includes(source.version as number) || !Array.isArray(source.nodes) || !Array.isArray(source.components) || source.nodes.length > 3000 || source.components.length > 300) throw new Error('Formato o versión de proyecto no compatible');
   const p = clone(input) as Project;
   if (typeof p.name !== 'string' || p.name.length > 200 || !['light', 'dark'].includes(p.theme)) throw new Error('Nombre o tema inválido');
+  if (p.designSystem !== undefined) { const notes = mergeNotes(undefined, p.designSystem, 'designSystem'); if (notes) p.designSystem = notes; else delete p.designSystem; }
   for (const t of ['light', 'dark'] as const) {
     if (!p.themes?.[t] || typeof p.themes[t] !== 'object' || Array.isArray(p.themes[t]) || Object.keys(p.themes[t]).length > 128 || Object.keys(p.themes[t]).some(key => !/^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(key) || ['constructor', 'prototype', '__proto__'].includes(key))) throw new Error('Paleta inválida');
     for (const key of tokens) if (!safeColor(p.themes[t][key])) throw new Error('Paleta inválida');
@@ -378,6 +413,7 @@ export function validate(input: unknown): Project {
     if (c.set !== undefined && (typeof c.set !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(c.set))) throw new Error('Conjunto de variantes inválido');
     if (c.setName !== undefined && (typeof c.setName !== 'string' || c.setName.length > 80)) throw new Error('Nombre de conjunto inválido');
     if (c.variant !== undefined) cleanVariant(c.variant);
+    if (c.doc !== undefined) mergeNotes(undefined, c.doc, 'doc');
     componentIds.add(c.id); validateNodes(c.template);
     if (c.template.filter(n => !n.parentId).length !== 1) throw new Error('Plantilla de componente inválida');
     const master = p.nodes.find(n => n.id === c.masterId);

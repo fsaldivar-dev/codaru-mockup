@@ -153,7 +153,7 @@ test('viewbar controls mount on their own, act exactly once and return to the ba
  expect((await state(page)).viewport.zoom).toBeLessThan(3);
  await page.evaluate(()=>{const r=(window as any).modularTest.records.a;r.handles.modes.destroy();r.handles.fit.destroy();});
  await expect(page.locator('.own-modes [data-codaru-part]')).toHaveCount(0);
- await expect(bar.locator('.mode-switch button')).toHaveCount(2);await expect(bar.locator('.divider')).toBeVisible();
+ await expect(bar.locator('.mode-switch button')).toHaveCount(3);await expect(bar.locator('.divider')).toBeVisible();
  await bar.getByRole('button',{name:'Diseño',exact:true}).click();expect((await state(page)).mode).toBe('design');
  await bar.getByRole('button',{name:'Cambiar tema del diseño'}).click();
  expect((await state(page)).document.theme).toBe('light');

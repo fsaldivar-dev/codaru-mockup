@@ -1,4 +1,4 @@
-import { node, blank, clone, uid, validate, children, subtree, ancestors, topSelected, frameOf, absolute, isUnavailable, color, tokens, labels, containerKinds, layoutProject, updateNode, createComponent, instantiate, detach, duplicate, remove, group, ungroup, defineVariant, createVariant, switchVariant, renameVariantSet, variantAxes, variantLabel, variantSet, type Project, type DesignNode, type Kind, panelsOf, postureGroup } from './model';
+import { node, blank, clone, uid, validate, children, subtree, ancestors, topSelected, frameOf, absolute, isUnavailable, color, tokens, labels, containerKinds, layoutProject, updateNode, createComponent, instantiate, detach, duplicate, remove, group, ungroup, defineVariant, createVariant, switchVariant, renameVariantSet, variantAxes, variantLabel, variantSet, setDesignSystemNotes, setComponentDoc, type Project, type DesignNode, type Kind, type Component, panelsOf, postureGroup } from './model';
 import { demo } from './demo';
 import { effectiveTheme, resolveNodeStyle } from './themes';
 import { openThemeEditor } from './theme-editor';
@@ -40,7 +40,7 @@ const session = getEditorSession(editor), store = session.store, state = session
 let lastNotified = JSON.stringify(store.project);
 
 
-let tab: 'layers' | 'components' = 'layers';
+let tab: 'layers' | 'components' | 'system' = 'layers';
 let libraryTab: 'local' | 'kits' | 'icons' = 'local', kitId: KitId = 'ios', kitVariant: KitVariant = 'default', kitSearch = '';
 let kitModule: typeof import('./kits') | undefined;
 let iconModule: typeof import('./icon-library') | undefined, iconPack='mac', iconSearch='';
@@ -62,14 +62,14 @@ app.innerHTML = `
   <div class="workspace"><aside class="sidebar left-panel">
     <section class="project-panel"><div class="section-heading"><span>PROYECTO</span><button class="icon-button tiny" data-action="add-frame" aria-label="Añadir pantalla">${icon('plus', 15)}</button></div><div class="page-active">${icon('layers', 16)}<span>Pantallas y flujos</span><span id="frame-count" class="count">2</span></div>
     <button class="new-screen" data-action="add-frame">${icon('plus', 14)} Nueva pantalla</button></section>
-    <div class="sidebar-tabs"><button data-tab="layers" class="active">Capas</button><button data-tab="components">Componentes</button></div>
-    <div id="layers" class="layer-list"></div><div id="components" class="component-list" hidden></div>
+    <div class="sidebar-tabs"><button data-tab="layers" class="active">Capas</button><button data-tab="components">Componentes</button><button data-tab="system">Sistema</button></div>
+    <div id="layers" class="layer-list"></div><div id="components" class="component-list" hidden></div><div id="system-index" class="system-index" hidden></div>
     <section class="insert-panel"><div class="section-heading"><span>INSERTAR</span><span class="hint-key">arrastrar</span></div><div class="insert-grid">${(['text','button','input','card','rect','image','vector'] as Kind[]).map(k => `<button draggable="true" data-insert="${k}" title="Insertar ${labels[k]}">${icon(k, 17)}<span>${labels[k]}</span></button>`).join('')}</div></section>
     <div class="sidebar-footer"><span class="local-dot"></span> Guardado en tu dispositivo${btn('help', 'Atajos de teclado', 'help', 'icon-button tiny')}</div>
   </aside>
-  <main class="canvas-area"><div class="canvas-top"><div class="mode-switch"><button data-mode="design" class="active">Diseño</button><button data-mode="flow">Flujos <span id="flow-count">2</span></button></div><div class="canvas-top-right"><span class="theme-switch"><span id="theme-name">Tema claro</span><button data-action="theme" class="icon-button" aria-label="Cambiar tema del diseño">${icon('sun',16)}</button></span><span class="divider"></span><button data-action="fit" class="fit-button" title="Ajustar pantallas · ⇧1">Ajustar</button></div></div>
+  <main class="canvas-area"><div class="canvas-top"><div class="mode-switch"><button data-mode="design" class="active">Diseño</button><button data-mode="flow">Flujos <span id="flow-count">2</span></button><button data-mode="system">Sistema</button></div><div class="canvas-top-right"><span class="theme-switch"><span id="theme-name">Tema claro</span><button data-action="theme" class="icon-button" aria-label="Cambiar tema del diseño">${icon('sun',16)}</button></span><span class="divider"></span><button data-action="fit" class="fit-button" title="Ajustar pantallas · ⇧1">Ajustar</button></div></div>
     <div class="scope-bar"><nav id="scope-path" aria-label="Nivel de selección"></nav><span id="scope-hint"></span></div>
-    <div id="stage" class="stage" tabindex="0" aria-label="Lienzo de diseño"><div id="world"><svg id="connections" class="connections"></svg><div id="artboards"></div><div id="selection-overlay"></div><div id="drawing-overlay"></div></div><div id="empty-canvas" hidden><span class="empty-icon">${icon('frame',30)}</span><h2>Tu próxima idea empieza aquí.</h2><p>Crea una pantalla y dibuja sobre ella.</p><button class="primary" data-action="add-frame">Crear pantalla</button></div></div>
+    <div id="stage" class="stage" tabindex="0" aria-label="Lienzo de diseño"><div id="world"><svg id="connections" class="connections"></svg><div id="artboards"></div><div id="selection-overlay"></div><div id="drawing-overlay"></div></div><div id="system-view" class="system-view" hidden></div><div id="empty-canvas" hidden><span class="empty-icon">${icon('frame',30)}</span><h2>Tu próxima idea empieza aquí.</h2><p>Crea una pantalla y dibuja sobre ella.</p><button class="primary" data-action="add-frame">Crear pantalla</button></div></div>
     <div class="canvas-bottom"><div id="selection-info">Listo para crear</div><div class="zoom-controls" role="group" aria-label="Zoom del lienzo"><span class="zoom-caption">Zoom</span>${btn('zoom-out','Alejar','minus','icon-button')}<input id="zoom-value" type="text" inputmode="decimal" aria-label="Porcentaje de zoom" value="70%" title="Zoom entre 10% y 800% · Enter para aplicar" autocomplete="off" spellcheck="false"/>${btn('zoom-in','Acercar','plus','icon-button')}<select id="zoom-options" aria-label="Opciones de zoom" title="Ajustar vista o elegir escala"><option value="">▾</option><option value="fit">Ajustar pantallas · ⇧1</option><option value="selection">Ajustar selección · ⇧2</option>${[25,50,100,200,400,800].map(value=>`<option value="${value}">${value}%</option>`).join('')}</select></div></div>
     <div class="toolbar" role="toolbar" aria-label="Herramientas de dibujo">${([['cursor','Seleccionar · V'],['frame','Pantalla · F'],['rect','Rectángulo · R'],['ellipse','Elipse · O'],['text','Texto · T'],['button','Botón · B'],['hand','Mover lienzo · Espacio']] as const).map(([k,l]) => `<button data-tool="${k}" class="${k === 'cursor' ? 'active' : ''}" title="${l}" aria-label="${l}">${icon(k,19)}</button>`).join('')}<span class="divider"></span>${btn('undo','Deshacer · ⌘Z','undo')}${btn('redo','Rehacer · ⇧⌘Z','redo')}</div>
   </main>
@@ -152,7 +152,7 @@ function render() {
   document.querySelector('[data-action="theme"]')!.innerHTML = icon(p().theme === 'light' ? 'sun' : 'moon', 16);
   (document.querySelector('[data-action="undo"]') as HTMLButtonElement).disabled = !store.undoStack.length;
   (document.querySelector('[data-action="redo"]') as HTMLButtonElement).disabled = !store.redoStack.length;
-  renderCanvas(); renderLayers(); renderInspector(); renderComponents();
+  renderCanvas(); renderLayers(); renderInspector(); renderComponents(); renderSystem();
 }
 function renderCanvas() {
   const artboards = byId('artboards'); artboards.replaceChildren();
@@ -270,8 +270,9 @@ function renderComponents() {
   const tabs=`<div class="library-tabs"><button data-library="local" aria-pressed="${libraryTab==='local'}">Locales</button><button data-library="kits" aria-pressed="${libraryTab==='kits'}">Kits de diseño</button><button data-library="icons" aria-pressed="${libraryTab==='icons'}">Iconos</button></div>`;
   if(libraryTab==='local') {
     const comps=p().components, loose=comps.filter(c=>!c.set), sets=new Map<string,typeof comps>(); for(const c of comps.filter(c=>c.set)) sets.set(c.set!,[...(sets.get(c.set!)??[]),c]);
-    const tile=(c:typeof comps[number],label:string)=>`<button class="component-tile" data-component="${c.id}" draggable="true"><span class="component-preview">${icon('component',24)}</span><strong>${esc(label)}</strong><small>Arrastra al lienzo o haz clic</small></button>`;
+    const tile=(c:typeof comps[number],label:string)=>`<button class="component-tile" data-component="${c.id}" draggable="true"><span class="component-preview" data-tile-preview="${c.id}"></span><strong>${esc(label)}</strong><small>Arrastra al lienzo o haz clic</small></button>`;
     target.innerHTML = tabs+`<div class="component-caption">Tu biblioteca local <span>${comps.length}</span></div>${loose.map(c=>tile(c,c.name)).join('')}${[...sets].map(([,list])=>`<div class="component-caption variant-caption">${esc(list[0].setName??list[0].name)} <span>${list.length} ${list.length===1?'variante':'variantes'}</span></div>${list.map(c=>tile(c,variantLabel(c.variant)||c.name)).join('')}`).join('')}${comps.length?'':'<p class="empty-note">Selecciona un elemento o grupo y pulsa «Crear componente».</p>'}`;
+    for(const slot of target.querySelectorAll<HTMLElement>('[data-tile-preview]')){const c=comps.find(c=>c.id===slot.dataset.tilePreview);if(c)slot.append(componentPreview(c,170,70));}
     return;
   }
   if(libraryTab==='icons'){
@@ -409,6 +410,36 @@ function renderInspector() {
     <section class="inspector-section"><div class="button-row">${n.type!=='frame'&&!n.componentId&&!n.instanceOf?'<button class="component-button" data-action="make-component">◇ Crear componente</button>':''}${n.instanceOf?'<button data-action="master">Editar maestro</button><button data-action="detach">Desvincular</button>':''}${n.componentId?'<button class="component-button" data-action="insert-instance">◇ Insertar instancia</button>':''}${n.type==='group'&&!n.componentId&&!n.instanceOf?'<button data-action="ungroup">Desagrupar</button>':''}</div>${n.type==='frame'?'<button class="wide-button" data-action="export-svg">Exportar pantalla SVG</button>':''}</section></fieldset>${themePanel()}`;
 }
 
+function setTab(next: typeof tab) { tab=next; document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',(b as HTMLElement).dataset.tab===tab)); layersEl.hidden=tab!=='layers'; byId('components').hidden=tab!=='components'; byId('system-index').hidden=tab!=='system'; }
+function setMode(next: typeof state.mode) { state.mode=next; document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',(b as HTMLElement).dataset.mode===state.mode)); renderConnections(); renderSystem(); }
+/** A component template drawn small enough to fit a tile, on the theme background it would sit on. */
+function componentPreview(c: Component, maxWidth: number, maxHeight: number) {
+  const root = c.template[0], scale = Math.min(1, maxWidth / Math.max(1, root.width), maxHeight / Math.max(1, root.height));
+  const wrap = document.createElement('div'); wrap.className = 'sys-preview'; wrap.style.width = `${Math.round(root.width * scale)}px`; wrap.style.height = `${Math.round(root.height * scale)}px`;
+  const inner = document.createElement('div'); inner.style.cssText = `position:absolute;left:0;top:0;width:${root.width}px;height:${root.height}px;transform:scale(${scale});transform-origin:0 0;pointer-events:none`;
+  try { const proj = { ...p(), nodes: c.template }; inner.append(element(proj, root, true)); wrap.style.background = color(proj, '@background', root); } catch { inner.textContent = '·'; }
+  wrap.append(inner); return wrap;
+}
+const lines = (text: string | undefined) => (text ?? '').split('\n').map(l => l.trim()).filter(Boolean);
+// The design system tab: the narrative, the tokens in use and every component with its variants and notes.
+function renderSystem() {
+  const view = byId('system-view'); view.hidden = state.mode !== 'system';
+  if (state.mode !== 'system') return;
+  const scroll = view.scrollTop, project = p(), theme = project.designThemes[project.activeThemeId], notes = project.designSystem ?? {};
+  const sets = new Map<string, Component[]>(); for (const c of project.components) sets.set(c.set ?? c.id, [...(sets.get(c.set ?? c.id) ?? []), c]);
+  const note = (key: keyof NonNullable<Project['designSystem']>, label: string, hint: string) => `<label class="sys-field"><span>${label}</span><textarea data-system="${key}" rows="3" placeholder="${esc(hint)}" aria-label="${esc(label)}">${esc(notes[key] ?? '')}</textarea></label>`;
+  const swatches = (mode: 'light' | 'dark') => Object.entries(theme.modes[mode].colors).map(([k, v]) => `<div class="sys-swatch"><i style="background:${esc(v)}"></i><b>@${esc(k)}</b><small>${esc(v)}</small></div>`).join('');
+  const typo = Object.entries(theme.modes.light.typography).map(([k, t]) => `<div class="sys-type" style="font-family:${t.fontFamily === 'serif' ? 'Georgia,serif' : t.fontFamily === 'mono' ? 'ui-monospace,monospace' : 'inherit'};font-size:${Math.min(28, t.fontSize)}px;font-weight:${t.fontWeight}">${esc(t.name)} <small>${esc(k)} · ${t.fontSize}/${t.fontWeight}</small></div>`).join('');
+  const docField = (c: Component, key: 'usage' | 'do' | 'dont', label: string, hint: string) => `<label class="sys-field"><span>${label}</span><textarea data-doc="${key}" data-doc-component="${esc(c.id)}" rows="2" placeholder="${esc(hint)}" aria-label="${esc(label)} · ${esc(c.setName ?? c.name)}">${esc(c.doc?.[key] ?? '')}</textarea></label>`;
+  view.innerHTML = `<article class="system-doc">
+    <header><span class="eyebrow">SISTEMA DE DISEÑO</span><h1>${esc(project.name)}</h1><p>Tema «${esc(theme.name)}» · ${project.components.length} ${project.components.length === 1 ? 'componente' : 'componentes'} en ${sets.size} ${sets.size === 1 ? 'conjunto' : 'conjuntos'}. Lo que escribas aquí viaja con el documento y la IA lo lee en <code>codaru context</code>.</p></header>
+    <section id="sys-why"><h2>Por qué funciona</h2>${note('summary', 'Producto, negocio y nicho', 'Qué es la app, para quién y qué problema resuelve.')}${note('brand', 'Marca y dirección visual', 'Por qué esta paleta, esta tipografía y este tono funcionan para ese negocio, y qué los haría fallar.')}${note('principles', 'Principios', 'Una regla por línea: una acción principal por pantalla, el oro solo en detalles…')}</section>
+    <section id="sys-tokens"><h2>Tokens</h2><h3>Claro</h3><div class="sys-swatches">${swatches('light')}</div><h3>Oscuro</h3><div class="sys-swatches">${swatches('dark')}</div>${typo ? `<h3>Tipografía</h3><div class="sys-types">${typo}</div>` : ''}${Object.keys(theme.modes.light.radii).length ? `<h3>Radios</h3><p class="sys-inline">${Object.entries(theme.modes.light.radii).map(([k, v]) => `<code>${esc(k)}</code> ${v}`).join(' · ')}</p>` : ''}</section>
+    <section id="sys-components"><h2>Componentes</h2>${project.components.length ? '' : '<p class="empty-note">Aún no hay componentes. Crea uno desde el inspector con «Crear componente».</p>'}${[...sets.values()].map(list => { const c = list[0], isSet = !!c.set; return `<div class="sys-card" id="sys-${esc(c.set ?? c.id)}"><div class="sys-card-head"><h3>${esc(isSet ? c.setName ?? c.name : c.name)}</h3><span>${isSet ? `${list.length} ${list.length === 1 ? 'variante' : 'variantes'}` : 'componente'}</span></div><div class="sys-variants" data-previews="${esc(c.set ?? c.id)}">${list.map(m => `<figure data-preview-of="${esc(m.id)}"><figcaption>${esc(isSet ? variantLabel(m.variant) || m.name : m.name)}</figcaption></figure>`).join('')}</div>${docField(c, 'usage', 'Cuándo usarlo', 'Para qué sirve y cuándo no es la pieza adecuada.')}<div class="sys-two">${docField(c, 'do', 'Buenas prácticas', 'Una por línea.')}${docField(c, 'dont', 'Malas prácticas', 'Una por línea.')}</div>${lines(c.doc?.do).length || lines(c.doc?.dont).length ? `<div class="sys-two sys-lists"><ul>${lines(c.doc?.do).map(l => `<li class="do">${esc(l)}</li>`).join('')}</ul><ul>${lines(c.doc?.dont).map(l => `<li class="dont">${esc(l)}</li>`).join('')}</ul></div>` : ''}</div>`; }).join('')}</section></article>`;
+  for (const fig of view.querySelectorAll<HTMLElement>('figure[data-preview-of]')) { const c = project.components.find(c => c.id === fig.dataset.previewOf); if (c) fig.prepend(componentPreview(c, 260, 160)); }
+  byId('system-index').innerHTML = `<button class="sys-link" data-system-section="sys-why">Por qué funciona</button><button class="sys-link" data-system-section="sys-tokens">Tokens</button><button class="sys-link" data-system-section="sys-components">Componentes</button>${[...sets.values()].map(list => `<button class="sys-link sub" data-system-section="sys-${esc(list[0].set ?? list[0].id)}">${esc(list[0].set ? list[0].setName ?? list[0].name : list[0].name)}</button>`).join('')}`;
+  view.scrollTop = scroll;
+}
 // Variants: a master shows its set and axis values; an instance picks the member it points at.
 function variantPanel(n: DesignNode) {
   const c=p().components.find(c=>c.id===(n.componentId??n.instanceOf)); if(!c)return '';
@@ -563,8 +594,9 @@ events.addEventListener('click',e=>{
   if(el.dataset.tool){setTool(el.dataset.tool as typeof state.tool);return;}
   if(el.dataset.insert){insert(el.dataset.insert as Kind);return;}
   if(el.dataset.component){insertComponent(el.dataset.component);return;}
-  if(el.dataset.tab){tab=el.dataset.tab as typeof tab;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',(b as HTMLElement).dataset.tab===tab));layersEl.hidden=tab!=='layers';byId('components').hidden=tab!=='components';return;}
-  if(el.dataset.mode){state.mode=el.dataset.mode as typeof state.mode;document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',(b as HTMLElement).dataset.mode===state.mode));renderConnections();if(state.mode==='flow')toast('Selecciona un elemento y elige su destino en «Al hacer clic».');return;}
+  if(el.dataset.tab){setTab(el.dataset.tab as typeof tab);if(tab==='system'&&state.mode!=='system')setMode('system');else if(tab!=='system'&&state.mode==='system')setMode('design');return;}
+  if(el.dataset.mode){setMode(el.dataset.mode as typeof state.mode);if(state.mode==='system'&&tab!=='system')setTab('system');else if(state.mode!=='system'&&tab==='system')setTab('layers');if(state.mode==='flow')toast('Selecciona un elemento y elige su destino en «Al hacer clic».');return;}
+  if(el.dataset.systemSection){document.getElementById(el.dataset.systemSection)?.scrollIntoView({behavior:'smooth',block:'start'});return;}
   if(el.dataset.collapse){const id=el.dataset.collapse;collapsed.has(id)?collapsed.delete(id):collapsed.add(id);renderLayers();return;}
   if(el.dataset.lock){change(pr=>{const n=pr.nodes.find(n=>n.id===el.dataset.lock)!;n.locked=!n.locked;});return;}
   if(el.dataset.hide){change(pr=>{const n=pr.nodes.find(n=>n.id===el.dataset.hide)!;n.hidden=!n.hidden;});return;}
@@ -575,6 +607,8 @@ events.addEventListener('input',e=>{const el=e.target as HTMLInputElement;if(!['
 dom.listen(layersEl,'dblclick',e=>{const el=(e.target as HTMLElement).closest<HTMLElement>('[data-layer]');if(el&&!(e.target as HTMLElement).closest('button'))enterScope(el.dataset.layer!);});
 events.addEventListener('change',e=>{
   const el=e.target as HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement;
+  if(el.dataset.system!==undefined){const key=el.dataset.system;change(pr=>setDesignSystemNotes(pr,{[key]:el.value}));return;}
+  if(el.dataset.doc!==undefined&&el.dataset.docComponent){const key=el.dataset.doc,id=el.dataset.docComponent;change(pr=>setComponentDoc(pr,id,{[key]:el.value}));return;}
   if(state.selected.length===1&&(el.dataset.variantAxis!==undefined||el.dataset.variantSet!==undefined||el.dataset.variantSwitch!==undefined)){
     const n=find(state.selected[0]); const c=p().components.find(c=>c.id===(n?.componentId??n?.instanceOf)); if(!n||!c)return;
     if(el.dataset.variantSet!==undefined){change(pr=>renameVariantSet(pr,c.set!,el.value));return;}
@@ -676,6 +710,7 @@ let gesture:Gesture|null=null;
 function point(clientX:number,clientY:number){const r=stage.getBoundingClientRect();return{x:(clientX-r.left-state.pan.x)/state.zoom,y:(clientY-r.top-state.pan.y)/state.zoom};}
 function hitNode(target:HTMLElement):DesignNode|undefined{const hit=target.closest<HTMLElement>('[data-node]');return hit?find(hit.dataset.node!):undefined;}
 dom.listen(stage,'pointerdown',e=>{
+  if((e.target as HTMLElement).closest('#system-view'))return;
   if(e.button!==0&&e.button!==1)return;if((e.target as HTMLElement).closest('[contenteditable="true"]'))return;
   stage.focus();e.preventDefault();const pos=point(e.clientX,e.clientY);lastPoint=pos;
   const g:Gesture={kind:'marquee',pointerId:e.pointerId,start:pos,screen:{x:e.clientX,y:e.clientY},before:clone(p()),ids:[],pan:{...state.pan},moved:false,shift:e.shiftKey,scope:state.selectionScope,scopeBefore:state.selectionScope,selectionBefore:[...state.selected]};
@@ -754,6 +789,7 @@ let pinch: { zoom: number; x: number; y: number } | null = null;
 let cursor = { x: 0, y: 0 };
 dom.listen(stage,'pointermove', e => { const r = stage.getBoundingClientRect(); cursor = { x: e.clientX-r.left, y: e.clientY-r.top }; });
 dom.listen(stage,'wheel', e => {
+  if((e.target as HTMLElement).closest('#system-view'))return;
   e.preventDefault(); if (gesture || pinch) return;
   const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? stage.clientHeight : 1;
   const dx = e.deltaX * unit, dy = e.deltaY * unit;

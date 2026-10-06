@@ -2,6 +2,9 @@
 
 ## Sin publicar
 
+- Pestaña **Sistema**: el sistema de diseño del documento en una vista propia: por qué funciona (producto y nicho, marca, principios), tokens en claro y oscuro con tipografía y radios, y cada componente con sus variantes dibujadas y su documentación (cuándo usarlo, buenas y malas prácticas). Se edita ahí mismo, se guarda en el JSON y la IA lo lee en `context` y lo escribe con `designSystem.set` y `component.doc`.
+- Panel izquierdo: la barra de inserción pasa a una fila compacta de iconos y el panel es más ancho, así Capas y Componentes tienen el espacio; las fichas de Componentes muestran una vista previa real de cada definición.
+- Variantes: las definiciones de un conjunto viven juntas en un contenedor «Nombre · variantes» con auto layout en fila, en lugar de quedar sueltas en el lienzo.
 - Variantes de componente: un conjunto agrupa definiciones por ejes (Estado, Tamaño…). Desde el inspector de un maestro, «Nueva variante» duplica el maestro junto al original como otra definición del conjunto y «+ Eje» añade un eje a todas; una instancia elige la variante por eje y conserva sus sobrescrituras por nombre de capa, manteniendo su id, posición y flujos. Los kits forman un conjunto por elemento con el eje Estado y materializan la definición que falte al cambiar. Figma importa los conjuntos de variantes como conjuntos con sus ejes. CLI: `variant.define`, `variant.create`, `variant.switch`; `context` lista los componentes con su conjunto.
 
 ## 0.4.0 — 2026-10-06
