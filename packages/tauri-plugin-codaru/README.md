@@ -8,13 +8,13 @@ undo/redo, rendering, and interpreting agent operations.
 
 ## Add to an existing host
 
-Version `0.4.0` is distributed through the repository's `v0.4.0` tag and a
+Version `0.5.0` is distributed through the repository's `v0.5.0` tag and a
 self-contained `.crate` source archive. It is not published on crates.io.
 In the host's `src-tauri/Cargo.toml`, pin the Git tag:
 
 ```toml
 [dependencies]
-tauri-plugin-codaru = { git = "https://github.com/fsaldivar-dev/codaru-mockup", tag = "v0.4.0" }
+tauri-plugin-codaru = { git = "https://github.com/fsaldivar-dev/codaru-mockup", tag = "v0.5.0" }
 ```
 
 Cargo finds the `tauri-plugin-codaru` package inside the repository. No dependency
@@ -23,7 +23,7 @@ or after extracting the `.crate` archive, use the corresponding package director
 
 ```toml
 [dependencies]
-tauri-plugin-codaru = { path = "../path/to/tauri-plugin-codaru-0.4.0" }
+tauri-plugin-codaru = { path = "../path/to/tauri-plugin-codaru-0.5.0" }
 ```
 
 Register the plugin on the existing Tauri builder:
@@ -173,8 +173,8 @@ metadata while generating the archive.
 To verify an extracted archive independently of this repository:
 
 ```sh
-tar -xzf tauri-plugin-codaru-0.4.0.crate
-cd tauri-plugin-codaru-0.4.0
+tar -xzf tauri-plugin-codaru-0.5.0.crate
+cd tauri-plugin-codaru-0.5.0
 cargo check --lib
 cargo test --lib
 ```

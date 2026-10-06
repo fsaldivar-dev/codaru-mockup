@@ -72,7 +72,7 @@ En el `Cargo.toml` de la app anfitriona:
 
 ```toml
 [dependencies]
-tauri-plugin-codaru = { git = "https://github.com/fsaldivar-dev/codaru-mockup", tag = "v0.4.0" }
+tauri-plugin-codaru = { git = "https://github.com/fsaldivar-dev/codaru-mockup", tag = "v0.5.0" }
 ```
 
 Registra el plugin sobre tu builder existente:

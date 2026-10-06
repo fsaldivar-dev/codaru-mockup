@@ -1,14 +1,28 @@
 # Changelog
 
-## Sin publicar
+## 0.5.0 — 2026-10-06
 
-- Operación `component.remove {componentId}`: elimina una definición sin instancias junto con su maestro, incluidas las que ya no tienen maestro en el lienzo; con instancias se rechaza. El skill `codaru-design` la usa en la comprobación «sin componentes huérfanos».
-- Skill `codaru-design`: sección «Higiene del documento» con seis comprobaciones que toda pasada deja hechas: variantes en su contenedor, capas con nombre, sin componentes huérfanos, colores por token (sin `off-theme`), documentación sellada y sin pantallas sueltas; `codaru-review` las repasa.
-- Documentación viva: cada ficha del sistema recuerda cómo era el componente (y los fundamentos, el tema) cuando se escribió. Si cambian después, Sistema lo marca en ámbar con «por revisar» y un contador en la pestaña, `lint` lo lista como `docs`, `context` lo expone (`docStale`, `designSystemStale`, `docsToReview`) y el plugin de Claude Code añade un hook que recuerda al agente actualizar la documentación tras cada `apply`. «Marcar como revisada» o un patch vacío dan la ficha por vigente.
-- Pestaña **Sistema**: la documentación del sistema de diseño dentro del documento, como un sitio: índice con el avance, páginas de fundamentos (principios, color con contrastes medidos, tipografía dibujada, espaciado y radios, movimiento, voz) y una página por componente que responde qué es, por qué, cuándo y cómo, con variantes por eje, anatomía numerada y buenas y malas prácticas que pueden mostrar una capa del documento (`[ejemplo: ID]`). Modo lectura y botón Editar. Se guarda en el JSON; la IA lo lee en `context` y lo escribe con `designSystem.set` y `component.doc`.
-- Panel izquierdo: la barra de inserción pasa a una fila compacta de iconos y el panel es más ancho, así Capas y Componentes tienen el espacio; las fichas de Componentes muestran una vista previa real de cada definición.
-- Variantes: las definiciones de un conjunto viven juntas en un contenedor «Nombre · variantes» con auto layout en fila, en lugar de quedar sueltas en el lienzo.
-- Variantes de componente: un conjunto agrupa definiciones por ejes (Estado, Tamaño…). Desde el inspector de un maestro, «Nueva variante» duplica el maestro junto al original como otra definición del conjunto y «+ Eje» añade un eje a todas; una instancia elige la variante por eje y conserva sus sobrescrituras por nombre de capa, manteniendo su id, posición y flujos. Los kits forman un conjunto por elemento con el eje Estado y materializan la definición que falte al cambiar. Figma importa los conjuntos de variantes como conjuntos con sus ejes. CLI: `variant.define`, `variant.create`, `variant.switch`; `context` lista los componentes con su conjunto.
+### Variantes de componente
+
+- Un conjunto agrupa definiciones por ejes (Estado, Tamaño…). Desde el inspector de un maestro, «Nueva variante» duplica el maestro como otra definición del conjunto y «+ Eje» añade un eje a todas; una instancia elige la variante por eje y conserva sus sobrescrituras por nombre de capa, manteniendo su id, posición y flujos.
+- Las definiciones de un conjunto viven juntas en un contenedor «Nombre · variantes» con auto layout en fila.
+- Los kits forman un conjunto por elemento con el eje Estado (Normal, Seleccionado, Deshabilitado) y materializan la definición que falte al cambiar. Figma importa los conjuntos de variantes como conjuntos con sus ejes.
+- CLI: `variant.define`, `variant.create`, `variant.switch` y `component.remove` (definiciones sin instancias, con su maestro); `context` lista los componentes con su conjunto.
+
+### Pestaña Sistema: la documentación del sistema de diseño
+
+- Un sitio de documentación dentro del documento: índice con el avance, páginas de fundamentos (principios, color con los contrastes medidos, tipografía dibujada, espaciado y radios, movimiento, voz) y una página por componente que responde qué es, por qué, cuándo y cómo, con las variantes dibujadas por eje, la anatomía numerada de sus capas y buenas y malas prácticas que pueden mostrar una capa del documento (`[ejemplo: ID]`). Modo lectura y botón Editar.
+- Documentación viva: cada ficha recuerda cómo era el componente (y los fundamentos, el tema) cuando se escribió. Si cambian después, Sistema lo marca en ámbar con «por revisar» y un contador en la pestaña, `lint` lo lista como `docs` y `context` lo expone (`docStale`, `designSystemStale`, `docsToReview`). «Marcar como revisada» o un patch vacío dan la ficha por vigente.
+- CLI: `designSystem.set` (summary, brand, principles, color, typography, spacing, motion, voice) y `component.doc` (description, why, when, how, do, dont).
+
+### Editor
+
+- Panel izquierdo más ancho con la barra de inserción en una fila compacta de iconos; las fichas de Componentes muestran una vista previa real de cada definición y agrupan los conjuntos.
+
+### Plugin de Claude Code
+
+- Hook `PostToolUse`: tras cada `codaru apply` real, recuerda al agente las fichas desactualizadas, los fundamentos escritos para un tema que cambió y los conjuntos propios sin documentar, sin repetirse mientras la situación no cambie.
+- `codaru-design`: cómo escribir cada página del sistema (cuatro preguntas, prácticas con ejemplo dibujado, prioridad por uso) y la sección «Higiene del documento» con seis comprobaciones que toda pasada deja hechas; `codaru-review` las repasa y documenta la regla `docs`.
 
 ## 0.4.0 — 2026-10-06
 
