@@ -140,11 +140,11 @@ test('the modular IDE example shares selection, undo and appearance between host
 test('viewbar controls mount on their own, act exactly once and return to the bar when destroyed',async ({page})=>{
  await mount(page,'a',['canvas','viewbar','dialogs']);
  const bar=part(page,'viewbar');
- await bar.getByRole('button',{name:'Cambiar tema del diseño'}).click();
+ await bar.getByRole('button',{name:'Cambiar entre claro y oscuro'}).click();
  expect((await state(page)).document.theme).toBe('dark');
  await page.evaluate(()=>{const r=(window as any).modularTest.records.a;for(const name of ['modes','fit']){const slot=document.createElement('div');slot.className='slot own-'+name;r.host.before(slot);r.handles[name]=r.view.mount(name,slot);}});
  await expect(bar.locator('.mode-switch')).toHaveCount(0);await expect(bar.locator('.fit-button')).toHaveCount(0);
- await expect(bar.locator('.divider')).toBeHidden();await expect(bar.locator('#theme-name')).toBeVisible();
+ await expect(bar.locator('.divider')).toBeHidden();await expect(bar.locator('#theme-select')).toBeVisible();
  await page.locator('.own-modes [data-codaru-part="modes"]').getByRole('button',{name:/Flujos/}).click();
  expect((await state(page)).mode).toBe('flow');
  await expect(page.locator('.own-modes [data-codaru-part="modes"]').getByRole('button',{name:/Flujos/})).toHaveClass(/active/);
@@ -155,6 +155,6 @@ test('viewbar controls mount on their own, act exactly once and return to the ba
  await expect(page.locator('.own-modes [data-codaru-part]')).toHaveCount(0);
  await expect(bar.locator('.mode-switch button')).toHaveCount(3);await expect(bar.locator('.divider')).toBeVisible();
  await bar.getByRole('button',{name:'Diseño',exact:true}).click();expect((await state(page)).mode).toBe('design');
- await bar.getByRole('button',{name:'Cambiar tema del diseño'}).click();
+ await bar.getByRole('button',{name:'Cambiar entre claro y oscuro'}).click();
  expect((await state(page)).document.theme).toBe('light');
 });

@@ -29,7 +29,7 @@ test('master styling updates instance while its content stays customized',async(
   expect(await page.locator('#artboards [data-node="primary-button"]').evaluate(el=>getComputedStyle(el).backgroundImage)).toContain('linear-gradient');
 });
 test('theme changes, clickable prototype and keyboard navigation',async({page})=>{
-  await page.getByRole('button',{name:'Cambiar tema del diseño',exact:true}).click();expect((await state(page)).theme).toBe('dark');
+  await page.getByRole('button',{name:'Cambiar entre claro y oscuro',exact:true}).click();expect((await state(page)).theme).toBe('dark');
   await page.getByRole('button',{name:'Presentar',exact:true}).click();
   await page.locator('#preview-canvas [data-node="primary-button"]').click();await expect(page.locator('#preview-select')).toHaveValue('screen-dashboard');
   const back=page.locator('#preview-canvas [data-target="screen-login"]');await back.focus();await page.keyboard.press('Enter');await expect(page.locator('#preview-select')).toHaveValue('screen-login');
