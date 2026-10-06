@@ -41,7 +41,8 @@ let lastNotified = JSON.stringify(store.project);
 
 
 let tab: 'layers' | 'components' | 'system' = 'layers';
-let libraryTab: 'local' | 'kits' | 'icons' = 'local', kitId: KitId = 'ios', kitVariant: KitVariant = 'default', kitSearch = '';
+let resourceSource: import('./resources').ResourceSource = 'iconify', resourceQuery = '', resourceHits: import('./resources').ResourceHit[] = [], resourceState: 'idle' | 'loading' | 'error' | 'done' = 'idle', resourceError = '', resourceSeed = 'codaru', resourceTimer: ReturnType<typeof setTimeout> | undefined, resourceAbort: AbortController | undefined, resourceModule: typeof import('./resources') | undefined;
+let libraryTab: 'local' | 'kits' | 'icons' | 'resources' = 'local', kitId: KitId = 'ios', kitVariant: KitVariant = 'default', kitSearch = '';
 let kitModule: typeof import('./kits') | undefined;
 let iconModule: typeof import('./icon-library') | undefined, iconPack='mac', iconSearch='';
 let space = false;
@@ -268,7 +269,7 @@ async function loadKits() {
 }
 function renderComponents() {
   const target=byId('components');
-  const tabs=`<div class="library-tabs"><button data-library="local" aria-pressed="${libraryTab==='local'}">Locales</button><button data-library="kits" aria-pressed="${libraryTab==='kits'}">Kits de diseño</button><button data-library="icons" aria-pressed="${libraryTab==='icons'}">Iconos</button></div>`;
+  const tabs=`<div class="library-tabs"><button data-library="local" aria-pressed="${libraryTab==='local'}">Locales</button><button data-library="kits" aria-pressed="${libraryTab==='kits'}">Kits de diseño</button><button data-library="icons" aria-pressed="${libraryTab==='icons'}">Iconos</button><button data-library="resources" aria-pressed="${libraryTab==='resources'}">Recursos</button></div>`;
   if(libraryTab==='local') {
     const comps=p().components, loose=comps.filter(c=>!c.set), sets=new Map<string,typeof comps>(); for(const c of comps.filter(c=>c.set)) sets.set(c.set!,[...(sets.get(c.set!)??[]),c]);
     const tile=(c:typeof comps[number],label:string)=>`<button class="component-tile" data-component="${c.id}" draggable="true"><span class="component-preview" data-tile-preview="${c.id}"></span><strong>${esc(label)}</strong><small>Arrastra al lienzo o haz clic</small></button>`;
@@ -276,6 +277,7 @@ function renderComponents() {
     for(const slot of target.querySelectorAll<HTMLElement>('[data-tile-preview]')){const c=comps.find(c=>c.id===slot.dataset.tilePreview);if(c)slot.append(componentPreview(c,170,70));}
     return;
   }
+  if(libraryTab==='resources'){ renderResources(target, tabs); return; }
   if(libraryTab==='icons'){
     if(!iconModule){target.innerHTML=tabs+'<p class="empty-note">Cargando iconos…</p>';return;}
     const pack=iconModule.iconPacks.find(k=>k.id===iconPack)!;
@@ -303,6 +305,56 @@ async function insertKit(itemId: string,position?:{x:number;y:number}) {
   const siblings=children(p(),parent?.id??null).filter(n=>n.kitId);const offset=(siblings.length%8)*20;
   change(pr=>{id=kits.insertKitItem(pr,kitId,itemId,parent?.id??null,position?position.x-pos.x:32+offset,position?position.y-pos.y:32+offset,kitVariant);},'Componente añadido · sus hijos son editables');
   if(id){select([id]);setTool('cursor');}
+}
+// Free resource bank: searches run only when the person types; results carry their license and credit.
+function renderResources(target: HTMLElement, tabs: string) {
+  const sources = resourceModule?.resourceSources ?? [{ id: 'iconify' as const, name: 'Iconos e ilustraciones · Iconify', hint: '', terms: '' }];
+  const source = sources.find(s => s.id === resourceSource) ?? sources[0];
+  const tile = (h: import('./resources').ResourceHit) => `<button class="resource-tile ${h.kind}" draggable="true" data-resource="${esc(h.id)}" title="${esc(creditLine(h))}"><img src="${esc(h.thumb)}" alt="" loading="lazy" decoding="async"/><span>${esc(h.title)}</span>${h.kind === 'image' ? `<small>${esc(h.creator ?? '')}${h.creator ? ' · ' : ''}${esc(h.license)}</small>` : `<small>${esc(h.set ?? '')} · ${esc(h.license)}</small>`}</button>`;
+  const body = resourceState === 'loading' ? '<p class="empty-note">Buscando…</p>' : resourceState === 'error' ? `<p class="empty-note resource-error">${esc(resourceError)}</p>` : resourceState === 'done' && !resourceHits.length ? '<p class="empty-note">Sin resultados. Prueba en inglés: «piano», «music», «teacher».</p>' : resourceState === 'idle' && resourceSource !== 'picsum' ? '<p class="empty-note">Escribe qué buscas. Los recursos se descargan solo cuando los pides; el editor no necesita conexión para lo demás.</p>' : `<div class="resource-grid ${resourceSource}">${resourceHits.map(tile).join('')}</div>`;
+  target.innerHTML = tabs + `<label class="full-field"><span>Fuente</span><select id="resource-source" aria-label="Fuente de recursos">${sources.map(s => `<option value="${s.id}" ${s.id === resourceSource ? 'selected' : ''}>${esc(s.name)}</option>`).join('')}</select></label>${resourceSource === 'picsum' ? `<div class="resource-row"><input id="resource-seed" aria-label="Semilla de fotos" placeholder="Semilla" value="${esc(resourceSeed)}"/><button class="text-button" data-action="resource-reseed">Otras fotos</button></div>` : `<input id="resource-search" aria-label="Buscar recursos" placeholder="${resourceSource === 'iconify' ? 'Buscar iconos e ilustraciones…' : 'Buscar fotos…'}" value="${esc(resourceQuery)}"/>`}<p class="kit-description">${esc(source.hint)}${source.terms ? ` <a href="${esc(source.terms)}" target="_blank" rel="noreferrer">Licencia</a>` : ''}</p>${body}<p class="field-note">Al insertar, el nombre de la capa guarda el crédito y la licencia. Las fotos CC BY y CC BY-SA requieren atribución en el producto final.</p>`;
+}
+function creditLine(h: import('./resources').ResourceHit) { return resourceModule ? resourceModule.creditName(h) : h.title; }
+async function loadResources() { if (!resourceModule) { resourceModule = await import('./resources'); if (resourceSource === 'picsum') resourceHits = resourceModule.picsumHits(resourceSeed); renderComponents(); } return resourceModule; }
+function searchResources(immediate = false) {
+  clearTimeout(resourceTimer);
+  const run = async () => {
+    const lib = await loadResources(); if (disposed) return;
+    resourceAbort?.abort(); const controller = new AbortController(); resourceAbort = controller;
+    if (resourceSource === 'picsum') { resourceHits = lib.picsumHits(resourceSeed); resourceState = 'done'; renderComponents(); return; }
+    if (!resourceQuery.trim()) { resourceHits = []; resourceState = 'idle'; renderComponents(); return; }
+    resourceState = 'loading'; renderComponents();
+    try {
+      const url = resourceSource === 'iconify' ? lib.iconifySearchURL(resourceQuery) : lib.openverseSearchURL(resourceQuery);
+      const response = await fetch(url, { signal: controller.signal }); if (!response.ok) throw new Error(`El servicio respondió ${response.status}`);
+      const json = await response.json(); if (controller.signal.aborted || disposed) return;
+      resourceHits = resourceSource === 'iconify' ? lib.parseIconify(json) : lib.parseOpenverse(json); resourceState = 'done';
+    } catch (error) { if (controller.signal.aborted) return; resourceState = 'error'; resourceError = /fetch|network|Failed/i.test(String(error)) ? 'Sin conexión o servicio no disponible. El banco de recursos necesita internet; el resto del editor no.' : String(error instanceof Error ? error.message : error); }
+    renderComponents();
+  };
+  if (immediate) void run(); else resourceTimer = setTimeout(() => void run(), 350);
+}
+async function insertResource(id: string, position?: { x: number; y: number }) {
+  const lib = await loadResources(); const hit = resourceHits.find(h => h.id === id); if (!hit) return;
+  const current = find(state.selected[0]);
+  let parent = position ? parentAt(position.x, position.y) : current && (containerKinds.includes(current.type) ? current : find(current.parentId!)) || find(state.selectionScope!) || p().nodes.find(n => n.type === 'frame');
+  while (parent && (parent.instanceOf || ancestors(p(), parent.id).some(n => n.instanceOf))) parent = find(parent.parentId!);
+  if (parent && isUnavailable(p(), parent)) { toast('Desbloquea el contenedor para insertar elementos.'); return; }
+  const pos = parent ? absolute(p(), parent) : { x: 0, y: 0 }, x = position ? position.x - pos.x : 32, y = position ? position.y - pos.y : 32;
+  toast('Descargando…');
+  try {
+    let created: DesignNode;
+    if (hit.kind === 'vector') {
+      const svg = sanitizeSVG(await lib.fetchSVGText(hit.svgUrl!)); if (disposed) return;
+      const size = vectorSize(svg), width = Math.min(96, size.width || 64);
+      created = node('vector', { parentId: parent?.id ?? null, x, y, width, height: Math.max(1, Math.round(width * (size.height || 64) / (size.width || 64))), svg, name: lib.creditName(hit), color: '@text' });
+    } else {
+      const image = await lib.fetchImageDataURL(hit.imageUrl!, { maxSize: 1200 }); if (disposed) return;
+      const width = Math.min(300, image.width);
+      created = node('image', { parentId: parent?.id ?? null, x, y, width, height: Math.max(1, Math.round(width * image.height / image.width)), image: image.data, name: lib.creditName(hit) });
+    }
+    change(pr => pr.nodes.push(created), `Añadido · ${lib.creditName(hit)}`); select([created.id]); setTool('cursor');
+  } catch (error) { toast(error instanceof Error ? error.message : 'No se pudo descargar el recurso.'); }
 }
 async function loadIcons(){if(!iconModule){iconModule=await import('./icon-library');renderComponents();}return iconModule;}
 async function insertLibraryIcon(name:string,position?:{x:number;y:number}){
@@ -667,7 +719,9 @@ events.addEventListener('click',e=>{
   if(el.dataset.lintNode){const n=find(el.dataset.lintNode);if(n){select([n.id]);fit(true);}else if(p().designThemes[el.dataset.lintNode])void action('themes');return;}
   if(el.dataset.posture){const current=find(previewFrame||''),other=find(el.dataset.posture);if(current&&other){const t:Transition={type:panelsOf(other)>panelsOf(current)?'unfold':'fold',duration:700,easing:'ease-in-out'};previewHistory.push({id:current.id,transition:t});preview(other.id,false,t);}return;}
   if(el.dataset.action){void action(el.dataset.action).catch(err=>toast(String(err)));return;}
-  if(el.dataset.library){libraryTab=el.dataset.library as typeof libraryTab;renderComponents();if(libraryTab==='kits')void loadKits().catch(err=>toast(String(err)));if(libraryTab==='icons')void loadIcons().catch(err=>toast(String(err)));return;}
+  if(el.dataset.library){libraryTab=el.dataset.library as typeof libraryTab;renderComponents();if(libraryTab==='kits')void loadKits().catch(err=>toast(String(err)));if(libraryTab==='icons')void loadIcons().catch(err=>toast(String(err)));if(libraryTab==='resources')void loadResources().catch(err=>toast(String(err)));return;}
+  if(el.dataset.resource){void insertResource(el.dataset.resource).catch(err=>toast(String(err)));return;}
+  if(el.dataset.action==='resource-reseed'){resourceSeed=`${resourceSeed.replace(/-\d+$/,'')}-${Math.floor(Math.random()*9000+1000)}`;searchResources(true);return;}
   if(el.dataset.iconItem){void insertLibraryIcon(el.dataset.iconItem).catch(err=>toast(String(err)));return;}
   if(el.dataset.kitItem){void insertKit(el.dataset.kitItem).catch(err=>toast(String(err)));return;}
   if(el.dataset.tool){setTool(el.dataset.tool as typeof state.tool);return;}
@@ -684,7 +738,7 @@ events.addEventListener('click',e=>{
   if(el.dataset.layer){const id=el.dataset.layer;const siblings=find(id)?.parentId===state.selectionScope;select((e as MouseEvent).shiftKey&&siblings?(state.selected.includes(id)?state.selected.filter(x=>x!==id):[...state.selected,id]):[id]);return;}
   if(el.dataset.palette){const values:Record<string,[string,string,string,string]>={violet:['#7955e8','#eee8fd','#a28af6','#36304f'],ocean:['#227c9d','#e1f2f7','#6cc4df','#213e4a'],forest:['#33876c','#e4f2eb','#78c6a3','#233f34']};const [primary,accent,darkPrimary,darkAccent]=values[el.dataset.palette];change(pr=>{pr.themes.light.primary=primary;pr.themes.light.accent=accent;pr.themes.dark.primary=darkPrimary;pr.themes.dark.accent=darkAccent;});}
 });
-events.addEventListener('input',e=>{const el=e.target as HTMLInputElement;if(!['icon-search','kit-search'].includes(el.id))return;const id=el.id,pos=el.selectionStart;if(id==='icon-search')iconSearch=el.value;else kitSearch=el.value;renderComponents();const next=byId<HTMLInputElement>(id);next.focus();next.setSelectionRange(pos,pos);});
+events.addEventListener('input',e=>{const el=e.target as HTMLInputElement;if(el.id==='resource-search'){resourceQuery=el.value;searchResources();return;}if(el.id==='resource-seed'){resourceSeed=el.value;return;}if(!['icon-search','kit-search'].includes(el.id))return;const id=el.id,pos=el.selectionStart;if(id==='icon-search')iconSearch=el.value;else kitSearch=el.value;renderComponents();const next=byId<HTMLInputElement>(id);next.focus();next.setSelectionRange(pos,pos);});
 dom.listen(layersEl,'dblclick',e=>{const el=(e.target as HTMLElement).closest<HTMLElement>('[data-layer]');if(el&&!(e.target as HTMLElement).closest('button'))enterScope(el.dataset.layer!);});
 events.addEventListener('change',e=>{
   const el=e.target as HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement;
@@ -698,6 +752,7 @@ events.addEventListener('change',e=>{
     void (async()=>{if(c.set!.startsWith('kit-')){const mod=kitModule??await import('./kits');if(disposed)return;change(pr=>{mod.ensureKitVariant(pr,c.set!,{...(c.variant??{}),[axis]:value});switchVariant(pr,n.id,{[axis]:value});});}else change(pr=>switchVariant(pr,n.id,{[axis]:value}));})();
     return;
   }
+  if(el.id==='resource-source'){resourceSource=el.value as typeof resourceSource;resourceHits=[];resourceState='idle';searchResources(true);return;}
   if(el.id==='zoom-value') {
     const raw = el.value.trim().replace(/%$/, '').trim().replace(',', '.'); const value = Number(raw);
     if (raw && Number.isFinite(value) && value > 0) zoomAt(value / 100);
@@ -767,9 +822,9 @@ dom.listen(byId<HTMLInputElement>('zoom-value'),'keydown', e => {
   if(e.key === 'Escape') { e.stopPropagation(); (e.target as HTMLInputElement).value = `${Math.round(state.zoom * 100)}%`; stage.focus(); }
   if(e.key === 'Enter') { e.preventDefault(); stage.focus(); }
 });
-events.addEventListener('dragstart',e=>{const el=(e.target as HTMLElement).closest<HTMLElement>('[data-insert],[data-component],[data-kit-item],[data-icon-item]');if(el){e.dataTransfer?.setData('application/codaru',JSON.stringify({kind:el.dataset.insert,component:el.dataset.component,kitItem:el.dataset.kitItem,iconItem:el.dataset.iconItem}));if(e.dataTransfer)e.dataTransfer.effectAllowed='copy';}});
+events.addEventListener('dragstart',e=>{const el=(e.target as HTMLElement).closest<HTMLElement>('[data-insert],[data-component],[data-kit-item],[data-icon-item],[data-resource]');if(el){e.dataTransfer?.setData('application/codaru',JSON.stringify({kind:el.dataset.insert,component:el.dataset.component,kitItem:el.dataset.kitItem,iconItem:el.dataset.iconItem,resource:el.dataset.resource}));if(e.dataTransfer)e.dataTransfer.effectAllowed='copy';}});
 dom.listen(stage,'dragover',e=>{e.preventDefault();if(e.dataTransfer)e.dataTransfer.dropEffect='copy';});
-dom.listen(stage,'drop',e=>{e.preventDefault();try{const data=JSON.parse(e.dataTransfer?.getData('application/codaru')||'{}');const pos=point(e.clientX,e.clientY);if(data.iconItem)void insertLibraryIcon(data.iconItem,pos).catch(err=>toast(String(err)));else if(data.kitItem)void insertKit(data.kitItem,pos).catch(err=>toast(String(err)));else if(data.component)insertComponent(data.component,pos);else if(data.kind)insert(data.kind,pos);}catch{toast('No se pudo insertar este elemento.');}});
+dom.listen(stage,'drop',e=>{e.preventDefault();try{const data=JSON.parse(e.dataTransfer?.getData('application/codaru')||'{}');const pos=point(e.clientX,e.clientY);if(data.resource)void insertResource(data.resource,pos).catch(err=>toast(String(err)));else if(data.iconItem)void insertLibraryIcon(data.iconItem,pos).catch(err=>toast(String(err)));else if(data.kitItem)void insertKit(data.kitItem,pos).catch(err=>toast(String(err)));else if(data.component)insertComponent(data.component,pos);else if(data.kind)insert(data.kind,pos);}catch{toast('No se pudo insertar este elemento.');}});
 byId<HTMLInputElement>('import-file').onchange=async e=>{const el=e.target as HTMLInputElement;const f=el.files?.[0];if(f){if(f.size>20_000_000)toast('El archivo supera 20 MB.');else await loadProject(await f.text());}el.value='';};
 byId<HTMLInputElement>('image-file').onchange=async e=>{const el=e.target as HTMLInputElement;const file=el.files?.[0];if(!file)return;
   if(file.type==='image/svg+xml'||/\.svg$/i.test(file.name)){

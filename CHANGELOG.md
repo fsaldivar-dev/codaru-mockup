@@ -1,5 +1,9 @@
 # Changelog
 
+## Sin publicar
+
+- Banco de recursos gratuitos en Componentes → Recursos: iconos e ilustraciones de Iconify (colecciones de código abierto, insertados como ilustración editable en el color de texto), fotos Creative Commons de Openverse (uso comercial y modificación) y fotos de relleno de Lorem Picsum. Búsqueda bajo demanda con arrastrar o clic; cada capa guarda en su nombre título, autor y licencia. Sin conexión, la pestaña lo indica y el resto del editor sigue igual. La app nativa permite esos tres dominios en su CSP.
+
 ## 0.5.0 — 2026-10-06
 
 ### Variantes de componente

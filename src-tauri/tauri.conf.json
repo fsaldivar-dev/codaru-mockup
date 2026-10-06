@@ -22,7 +22,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; connect-src 'self' ipc: http://ipc.localhost; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self'; object-src 'none'"
+      "csp": "default-src 'self'; connect-src 'self' ipc: http://ipc.localhost https://api.iconify.design https://api.openverse.org https://picsum.photos https://fastly.picsum.photos; img-src 'self' data: blob: https://api.iconify.design https://api.openverse.org https://picsum.photos https://fastly.picsum.photos; style-src 'self' 'unsafe-inline'; font-src 'self'; object-src 'none'"
     }
   },
   "bundle": {

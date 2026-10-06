@@ -147,6 +147,16 @@ Un componente puede tener **variantes**: estados o tamaños que comparten estruc
 
 La pestaña **Sistema** (en el panel izquierdo o junto a Diseño y Flujos) es la documentación del sistema de diseño, dentro del documento. Un índice con el avance (qué está documentado y qué no), páginas de **fundamentos** (principios, color con los contrastes medidos, tipografía con la escala dibujada, espaciado y radios, movimiento, voz) y una página por **componente** que responde qué es, por qué, cuándo y cómo, con sus variantes dibujadas por eje, la anatomía numerada de sus capas y las buenas y malas prácticas; una práctica puede señalar una capa del documento con `[ejemplo: ID]` y se muestra al lado. Se lee como documentación y se edita con **Editar**; todo viaja con el JSON y la IA lo lee en `codaru context` y lo escribe con `designSystem.set` y `component.doc`. Cada ficha recuerda cómo era el componente cuando se escribió: si el componente o el tema cambian después, Sistema lo marca en ámbar («por revisar»), la pestaña muestra cuántas fichas esperan, `codaru lint` lo lista como `docs` y el plugin de Claude Code se lo recuerda al agente tras cada `apply`. «Marcar como revisada» da la ficha por vigente sin tocar el texto.
 
+## Banco de recursos gratuitos
+
+En **Componentes → Recursos** hay tres fuentes, todas gratuitas y con licencia clara, que se consultan solo cuando buscas (el resto del editor no necesita conexión):
+
+- **Iconos e ilustraciones · Iconify**: más de 200 000 iconos y emojis de colecciones de código abierto (Lucide, Material Symbols, Tabler, Phosphor, OpenMoji, Twemoji, Noto…). Se insertan como ilustración editable y animable, en el color de texto del tema. Las colecciones no comerciales o con licencia GPL se ocultan.
+- **Fotos · Openverse**: fotografías Creative Commons aptas para uso comercial y modificación (CC0, CC BY, CC BY-SA), a través del proxy de miniaturas de Openverse.
+- **Fotos de relleno · Lorem Picsum**: fotos de Unsplash para maquetar, con semilla para cambiarlas.
+
+Cada capa insertada lleva en su nombre el título, el autor y la licencia («piano baru · apaan · CC BY-SA 2.0»), de modo que el crédito sobrevive a exportaciones y entregas; las licencias con atribución la exigen en el producto final.
+
 ## Componentes prefabricados
 
 En **Componentes → Kits de diseño**, elige iOS, macOS, Android, Linux o Web. Cada kit contiene 20 componentes originales editables: botones, campos, búsqueda, interruptores, casillas, opciones, deslizadores, progreso, etiquetas, avatares, listas, tarjetas, pestañas, navegación, barras, diálogos, avisos, paneles laterales, ventanas y menús. Linux toma referencias visuales de GNOME/Adwaita; no representa todas las distribuciones.

@@ -82,6 +82,16 @@ Lee `references/ios-hig.md` de este skill antes de diseñar una pantalla de iPho
 
 **En Codaru.** El material `glass` del tema es una simulación (tinte, desenfoque, saturación, borde, sombra), sin refracción ni reacción al contenido: úsalo solo en la capa funcional y dilo cuando expliques el resultado. Inserta al menos un control con `{"op":"kit","kit":"ios",…}` para que exista el tema `kit-ios-v1`, y asigna `themeId: "kit-ios-v1"` y `kitId: "ios"` a cada pantalla. Los controles del kit (`./codaru catalog --kind kits --kit ios`) sustituyen a dibujar botones, campos, interruptores, segmentos, barras y hojas a mano.
 
+## Recursos gratuitos
+
+Cuando una pantalla necesita un icono, una ilustración o una foto, no dibujes un sustituto ni dejes una caja gris: usa el banco de recursos. En la app está en Componentes → Recursos; desde el CLI, descarga tú el recurso y aplícalo:
+
+- **Iconos e ilustraciones**: `https://api.iconify.design/search?query=<término en inglés>&limit=48` devuelve `icons` («lucide:music») y `collections` con la licencia de cada conjunto. El SVG está en `https://api.iconify.design/<prefijo>/<nombre>.svg?width=256&height=256&color=<HEX>`; insértalo con la operación `vector` y pon como nombre «nombre · colección · licencia». Evita conjuntos no comerciales o GPL.
+- **Fotos**: `https://api.openverse.org/v1/images/?q=<término>&page_size=12&license_type=commercial,modification` devuelve fotos CC0, CC BY y CC BY-SA con `creator`, `license` y `foreign_landing_url`. Descarga `https://api.openverse.org/v1/images/<id>/thumb/` (≈ 600 px, suficiente para una maqueta), conviértela a data URL y añade un nodo `image`; el nombre lleva «título · autor · CC BY-SA 2.0».
+- **Relleno**: `https://picsum.photos/seed/<semilla>/<ancho>/<alto>` para fotos de maqueta sin significado (licencia Unsplash).
+
+Las licencias con atribución (CC BY, CC BY-SA, OpenMoji) la exigen en el producto final: dilo en la entrega y deja el crédito en el nombre de la capa. Nunca uses imágenes cuya licencia no conozcas.
+
 ## Plegables
 
 - Diseña cada postura como una pantalla y enlázalas con `foldPair`: cerrado, abierto y, en un tríptico, dos paneles.
