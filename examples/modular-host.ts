@@ -23,10 +23,9 @@ view.mount('library', el('library-panel'));
 view.mount('system', el('system-panel'));
 view.mount('insert', el('insert-slot'));
 view.mount('toolbar', el('toolbar-slot'));
-// The view bar is split: each control sits where this IDE wants it.
+// The view bar is split: the mode switch and the theme indicator sit where this IDE wants them; fit, themes and export live in the editor itself.
 view.mount('modes', el('modes-slot'));
 view.mount('designTheme', el('design-theme-slot'));
-view.mount('fit', el('fit-slot'));
 view.mount('breadcrumb', el('breadcrumb-slot'));
 view.mount('status', el('status-slot'));
 // Dialogs are deliberately mounted in a zero-footprint overlay container.
@@ -42,8 +41,6 @@ async function run(action: () => void | Promise<void>, message?: string) {
 }
 undo.onclick = () => { void run(() => editor.undo()); };
 redo.onclick = () => { void run(() => editor.redo()); };
-el('theme-tokens').onclick = () => { void run(() => editor.command('themes')); };
-el('export-html').onclick = () => { void run(() => editor.command('export-html')); };
 
 let dark = false;
 el('appearance-toggle').onclick = () => {

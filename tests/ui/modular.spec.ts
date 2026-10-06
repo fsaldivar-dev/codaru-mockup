@@ -131,7 +131,7 @@ test('the modular IDE example shares selection, undo and appearance between host
  await expect(page.locator('#canvas-slot [data-codaru-part="canvas"]')).toHaveAttribute('data-codaru-theme','dark');
  expect(JSON.stringify((await demo()).document.themes)).toBe(themes);expect((await demo()).selection).toEqual([id]);
  await page.locator('#library-tab').click();await expect(page.locator('#library-panel')).toBeVisible();await expect(page.locator('#layers-panel')).toBeHidden();
- await page.locator('#theme-tokens').click();
+ await page.locator('#inspector-slot [data-codaru-part="inspector"]').getByRole('button',{name:/Configurar temas/}).click();
  await expect(page.locator('#dialogs-slot').getByRole('dialog',{name:'Editor de temas'})).toBeVisible();
  await page.keyboard.press('Escape');await expect(page.locator('#dialogs-slot').getByRole('dialog')).toHaveCount(0);
  expect(errors).toEqual([]);
