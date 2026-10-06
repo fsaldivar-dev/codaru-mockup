@@ -326,6 +326,18 @@ export function switchVariant(p: Project, instanceId: string, variant: Record<st
   return next.id;
 }
 export function detach(p: Project, id: string) { for (const n of subtree(p, id)) { delete n.instanceOf; delete n.componentKey; delete n.overrides; } }
+/** Delete a definition nobody uses, with its master; a variants container left empty goes with it. Instances keep a definition alive. */
+export function removeComponent(p: Project, componentId: string) {
+  const c = componentOf(p, componentId), used = p.nodes.filter(n => n.instanceOf === c.id).length;
+  if (used) throw new Error(`«${c.name}» tiene ${used} ${used === 1 ? 'instancia' : 'instancias'}: sepáralas o elimínalas antes de borrar el componente`);
+  const master = p.nodes.find(n => n.id === c.masterId && n.componentId === c.id);
+  if (master) {
+    const container = c.set ? p.nodes.find(n => n.id === master.parentId && n.id === `variants-${c.set}`) : undefined;
+    remove(p, [master.id]);
+    if (container && !children(p, container.id).length) remove(p, [container.id]);
+  }
+  p.components = p.components.filter(other => other.id !== c.id);
+}
 export function duplicate(p: Project, ids: string[]) {
   const result: string[] = [];
   for (const id of topSelected(p, ids)) {

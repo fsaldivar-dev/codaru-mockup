@@ -1,4 +1,4 @@
-import { Store, clone, node, updateNode, remove, createComponent, instantiate, group, ungroup, detach, children, tokens, defineVariant, createVariant, switchVariant, setDesignSystemNotes, setComponentDoc, docStale, designSystemStale, type Project, type DesignNode, type Kind } from './model';
+import { Store, clone, node, updateNode, remove, createComponent, instantiate, group, ungroup, detach, children, tokens, defineVariant, createVariant, switchVariant, setDesignSystemNotes, setComponentDoc, removeComponent, docStale, designSystemStale, type Project, type DesignNode, type Kind } from './model';
 import { effectiveTheme, type DesignTheme } from './themes';
 import { kits, getKitItems, insertKitItem, ensureKitVariant, type KitId, type KitVariant } from './kits';
 import { iconPacks, getIconItems, insertIcon } from './icon-library';
@@ -90,6 +90,7 @@ export const agentSchema = {
     dom:{data:'instantánea codaru-dom-snapshot v1 de una página web (scripts/snapshot.js del skill codaru-clone); añade la página como pantalla, con un tema derivado de sus colores y tipografías, y capas vinculadas a esos tokens'},
     'designSystem.set':{summary:'qué es el producto, para quién y en qué negocio o nicho',brand:'por qué esta marca y esta dirección visual funcionan para ese producto',principles:'una regla por línea',color:'cómo se usa cada token y qué no se hace con el color',typography:'escala, jerarquía y usos de cada estilo',spacing:'escala de espaciado, márgenes y radios',motion:'cuándo se anima y cómo',voice:'tono y reglas de contenido; cada campo texto de hasta 4000 caracteres, null lo borra. Es la pestaña Sistema'},
     'component.doc':{componentId:'ID de definición (en un conjunto se documenta el conjunto entero); un patch vacío {} marca la ficha como revisada tras un cambio',description:'qué es y qué hace, una frase',why:'por qué este y no otro parecido',when:'cuándo usarlo y cuándo no',how:'cómo se usa: opciones, contenido, comportamiento',do:'buenas prácticas, una por línea; termina una línea con [ejemplo: ID] para mostrar esa capa del documento al lado',dont:'malas prácticas, una por línea, mismo [ejemplo: ID]'},
+    'component.remove':{componentId:'ID de definición sin instancias; la elimina junto con su maestro (y el contenedor de variantes si queda vacío). Con instancias se rechaza: sepáralas con detach o elimínalas antes'},
     'variant.define':{componentId:'ID de definición',variant:'{eje:valor}; crea o amplía el conjunto de variantes de ese componente; los demás miembros reciben "Base" en los ejes nuevos',setName:'opcional, nombre del conjunto'},
     'variant.create':{componentId:'ID de definición existente',variant:'{eje:valor} de la variante nueva: duplica el maestro junto al original como otra definición del mismo conjunto'},
     'variant.switch':{id:'ID de instancia',variant:'{eje:valor}; cambia la instancia a la variante que coincida y conserva sus sobrescrituras por nombre de capa. En kits, Estado: Normal|Seleccionado|Deshabilitado'},
@@ -126,6 +127,7 @@ export function applyOperations(p: Project,operations: unknown) {
       case 'detach':{const id=string(op.id,'id');existing(p,id);detach(p,id);break;}
       case 'designSystem.set':{const {op:_name,notes,...rest}=op;setDesignSystemNotes(p,object(notes??rest));break;}
       case 'component.doc':{const {op:_name,componentId,doc,...rest}=op;setComponentDoc(p,string(componentId,'componentId'),object(doc??rest));break;}
+      case 'component.remove':removeComponent(p,string(op.componentId,'componentId'));break;
       case 'variant.define':defineVariant(p,string(op.componentId,'componentId'),object(op.variant) as Record<string,string>,op.setName===undefined?undefined:string(op.setName,'setName'));break;
       case 'variant.create':createVariant(p,string(op.componentId,'componentId'),object(op.variant) as Record<string,string>);break;
       case 'variant.switch':{const id=string(op.id,'id');existing(p,id);const inst=p.nodes.find(n=>n.id===id)!,c=p.components.find(c=>c.id===inst.instanceOf);const values=object(op.variant) as Record<string,string>;if(c?.set)ensureKitVariant(p,c.set,{...(c.variant??{}),...values});switchVariant(p,id,values);break;}

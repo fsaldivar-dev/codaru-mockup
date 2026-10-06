@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { demo } from '../src/demo';
-import { Store, blank, clone, node, validate, updateNode, createVariant, defineVariant, switchVariant, variantAxes, variantLabel, renameVariantSet, setDesignSystemNotes, setComponentDoc } from '../src/model';
+import { Store, blank, clone, node, validate, updateNode, remove, removeComponent, createVariant, defineVariant, switchVariant, variantAxes, variantLabel, renameVariantSet, setDesignSystemNotes, setComponentDoc } from '../src/model';
 import { ensureKitVariant, getKitItems, insertKitItem } from '../src/kits';
 import { applyOperations, handleAgentRequest, type AgentHost } from '../src/agent';
 
@@ -113,4 +113,29 @@ test('notes remember the template and theme they were written for, and report wh
   assert.equal(s.project.components.find(x => x.id === c.id)!.doc!.description, 'La acción principal'); assert.equal(s.project.designSystem!.summary, 'Forma');
   assert.equal(lintProject(s.project, { frame: 'screen-login' }).filter(i => i.rule === 'docs').length, 0, 'per-frame lint stays about the frame');
   validate(s.project);
+});
+
+test('an unused definition is removed with its master, instances keep it alive, and an emptied variants container goes too', () => {
+  const s = new Store(demo());
+  const master = s.project.nodes.find(n => n.componentId)!, id = master.componentId!, instances = s.project.nodes.filter(n => n.instanceOf === id).map(n => n.id);
+  assert.ok(instances.length);
+  assert.throws(() => applyOperations(clone(s.project), [{ op: 'component.remove', componentId: id }]), /instancia/);
+  assert.throws(() => applyOperations(clone(s.project), [{ op: 'component.remove', componentId: 'nope' }]), /Componente no encontrado/);
+  let created!: { componentId: string; masterId: string; containerId: string };
+  s.commit(p => { created = createVariant(p, id, { Estado: 'Cargando' }); });
+  // a member without instances leaves the set; the container stays while it still holds a master
+  s.commit(p => applyOperations(p, [{ op: 'component.remove', componentId: created.componentId }]));
+  assert.ok(!s.project.components.some(c => c.id === created.componentId)); assert.ok(!s.project.nodes.some(n => n.id === created.masterId));
+  assert.ok(s.project.nodes.some(n => n.id === created.containerId)); assert.ok(s.project.components.some(c => c.id === id));
+  s.undo(); assert.ok(s.project.components.some(c => c.id === created.componentId)); assert.ok(s.project.nodes.some(n => n.id === created.masterId)); s.redo();
+  // the last member takes the emptied container with it
+  s.commit(p => { remove(p, instances); removeComponent(p, id); });
+  assert.ok(!s.project.components.some(c => c.id === id)); assert.ok(!s.project.nodes.some(n => n.id === master.id || n.id === created.containerId));
+  validate(clone(s.project));
+  // a definition whose master was deleted from the canvas can still be removed
+  const q = demo(), orphan = q.nodes.find(n => n.componentId)!, orphanId = orphan.componentId!;
+  remove(q, [orphan.id, ...q.nodes.filter(n => n.instanceOf === orphanId).map(n => n.id)]);
+  assert.ok(q.components.some(c => c.id === orphanId));
+  applyOperations(q, [{ op: 'component.remove', componentId: orphanId }]);
+  assert.ok(!q.components.some(c => c.id === orphanId)); validate(q);
 });
