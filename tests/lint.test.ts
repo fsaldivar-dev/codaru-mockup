@@ -120,9 +120,11 @@ test('a gradient from a dark neutral to a warm accent is flagged as muddy, tonal
     { id: 'gold', type: 'card', x: 24, y: 300, width: 340, height: 140, gradient: 'linear', gradientStops: [{ color: '#f3dd8e', position: 0 }, { color: '#d4af37', position: 55 }, { color: '#c19a2e', position: 100 }] },
     { id: 'violet', type: 'card', x: 24, y: 500, width: 340, height: 140, gradient: 'linear', fill: '#5b3df5', gradientEnd: '#a99bff' },
     { id: 'smoke', type: 'card', x: 24, y: 700, width: 340, height: 60, gradient: 'linear', fill: '#111111', gradientEnd: '#3a3a3a' },
+    { id: 'olive-stop', type: 'card', x: 24, y: 780, width: 340, height: 60, gradient: 'linear', gradientStops: [{ color: '#000000', position: 0 }, { color: '#3a2b05', position: 81 }, { color: '#221703', position: 92 }, { color: '#000000', position: 100 }] },
+    { id: 'brown', type: 'card', x: 24, y: 860, width: 340, height: 60, gradient: 'linear', fill: '#7a5438', gradientEnd: '#5c4a3a' },
   ]);
   const flagged = lintProject(p).filter(i => i.rule === 'gradient');
-  assert.deepEqual(flagged.map(i => i.node), ['mud']);
+  assert.deepEqual(flagged.map(i => i.node).sort(), ['mud', 'olive-stop']);
   assert.match(flagged[0].message, /oliva/);
   assert.equal(lintProject(demo()).filter(i => i.rule === 'gradient').length, 0);
   assert.equal(lintProject(demoDevices()).filter(i => i.rule === 'gradient').length, 0);

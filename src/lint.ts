@@ -184,8 +184,9 @@ export function lintProject(input: Project, options: { frame?: string } = {}): L
       }
     }
   }
-  // Gradients: a ramp from a dark neutral to a warm accent (black to gold) passes through olive and mud halfway,
-  // whatever the two ends look like. Tones of one color, or neighbours on the wheel, never do that.
+  // Gradients: a ramp that passes through olive or khaki (a warm hue with little chroma at mid-to-low lightness)
+  // reads as mud, whether that tone is one of the stops or the halfway point between a dark neutral and a gold.
+  const muddy = (c: RGBA) => { const o = oklch(c); return o.hue >= 70 && o.hue <= 130 && o.chroma >= .03 && o.chroma < .09 && o.lightness >= .18 && o.lightness <= .55; };
   for (const n of nodes) {
     if (n.type === 'text' || n.type === 'frame') continue;
     for (const [mode, p] of [['light', light], ['dark', dark]] as const) {
@@ -193,9 +194,9 @@ export function lintProject(input: Project, options: { frame?: string } = {}): L
       const stops = token?.stops ?? (n.gradient !== 'none' ? n.gradientStops ?? [{ color: n.fill, position: 0 }, { color: n.gradientEnd, position: 100 }] : undefined);
       if (!stops || stops.length < 2) continue;
       const colors = stops.map(stop => parse(color(p, stop.color, n))); if (colors.some(c => c[3] < 1)) continue;
-      const bad = colors.slice(1).findIndex((c, i) => { const a = oklch(colors[i]), b = oklch(c); const dark = a.chroma < .06 && a.lightness < .35 ? a : b.chroma < .06 && b.lightness < .35 ? b : undefined, warm = a.chroma >= .08 && a.hue >= 40 && a.hue <= 120 ? a : b.chroma >= .08 && b.hue >= 40 && b.hue <= 120 ? b : undefined; return !!dark && !!warm && dark !== warm; });
-      if (bad < 0) continue;
-      add({ rule: 'gradient', severity: 'warning', node: n.id, frame: frameId(n), mode, message: `${name(n)}: el degradado pasa de ${toHex(colors[bad])} a ${toHex(colors[bad + 1])}${mode === 'dark' ? ' en modo oscuro' : ''} y a mitad de camino se vuelve oliva: un neutro oscuro y un acento cálido no se funden, se embarran.`, fix: 'Haz el degradado con tonos de un mismo color (oro claro a oro oscuro, negro a gris) o separa el negro y el oro con una línea o un borde; el acento metálico va en texto, líneas y aros.' });
+      const samples = colors.flatMap((c, i) => i ? [[0, 1, 2, 3].map(k => (colors[i - 1][k] + c[k]) / 2) as RGBA, c] : [c]);
+      const mud = samples.find(muddy); if (!mud) continue;
+      add({ rule: 'gradient', severity: 'warning', node: n.id, frame: frameId(n), mode, message: `${name(n)}: el degradado pasa por ${toHex(mud)}${mode === 'dark' ? ' en modo oscuro' : ''}, un tono oliva: un neutro oscuro y un acento cálido no se funden, se embarran.`, fix: 'Haz el degradado con tonos de un mismo color (oro claro a oro oscuro, negro a gris carbón) o separa el negro y el oro con una línea o un borde; el acento metálico va en texto, líneas y aros.' });
       break;
     }
   }
