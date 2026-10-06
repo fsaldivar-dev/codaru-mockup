@@ -5,7 +5,7 @@ import { effectiveTheme } from './themes';
  * Design review: finds what a careful designer would flag, in both light and dark mode, without
  * drawing anything. Each issue points at one element so it can be shown as a heat map or fixed by an AI.
  */
-export type LintRule = 'contrast' | 'target' | 'text-size' | 'text-fit' | 'overflow' | 'safe-area' | 'hinge' | 'overlap' | 'off-theme' | 'alignment' | 'scale' | 'palette' | 'accent-fill';
+export type LintRule = 'contrast' | 'target' | 'text-size' | 'text-fit' | 'overflow' | 'safe-area' | 'hinge' | 'overlap' | 'off-theme' | 'alignment' | 'scale' | 'palette' | 'accent-fill' | 'gradient';
 export interface LintIssue {
   rule: LintRule; severity: 'error' | 'warning' | 'info';
   /** Element to look at, and the screen it belongs to. */
@@ -18,7 +18,7 @@ export interface LintIssue {
 }
 export const lintRules: Record<LintRule, string> = {
   contrast: 'Contraste de texto', target: 'Zona táctil pequeña', 'text-size': 'Texto pequeño', 'text-fit': 'Texto que no cabe', overflow: 'Contenido fuera de la pantalla',
-  'safe-area': 'Contenido bajo el área del sistema', hinge: 'Contenido sobre el pliegue', overlap: 'Acciones superpuestas', 'off-theme': 'Color fuera del tema', alignment: 'Casi alineados', palette: 'Paleta sin acento', 'accent-fill': 'Acento como fondo de un chip', scale: 'Demasiadas variantes',
+  'safe-area': 'Contenido bajo el área del sistema', hinge: 'Contenido sobre el pliegue', overlap: 'Acciones superpuestas', 'off-theme': 'Color fuera del tema', alignment: 'Casi alineados', palette: 'Paleta sin acento', 'accent-fill': 'Acento como fondo de un chip', gradient: 'Degradado embarrado', scale: 'Demasiadas variantes',
 };
 
 type RGBA = [number, number, number, number];
@@ -182,6 +182,21 @@ export function lintProject(input: Project, options: { frame?: string } = {}): L
         add({ rule: 'accent-fill', severity: 'info', node: host.id, frame: frameId(host), mode, message: `${name(host)}: chip de ${Math.round(host.width)} × ${Math.round(host.height)} con el acento ${toHex(paint)} de fondo y texto oscuro encima${mode === 'dark' ? ' en modo oscuro' : ''}: contrasta, pero parece una señal de aviso.`, fix: 'En elementos pequeños el acento va como texto, icono o borde, o como tinte (12–15 % sobre la superficie) con el texto en el acento oscurecido. El acento sólido con texto encima queda para la acción principal y las superficies grandes.' });
         break;
       }
+    }
+  }
+  // Gradients: a ramp from a dark neutral to a warm accent (black to gold) passes through olive and mud halfway,
+  // whatever the two ends look like. Tones of one color, or neighbours on the wheel, never do that.
+  for (const n of nodes) {
+    if (n.type === 'text' || n.type === 'frame') continue;
+    for (const [mode, p] of [['light', light], ['dark', dark]] as const) {
+      const tokens = effectiveTheme(p, n).tokens, token = n.fillToken && Object.hasOwn(tokens.gradients, n.fillToken) ? tokens.gradients[n.fillToken] : undefined;
+      const stops = token?.stops ?? (n.gradient !== 'none' ? n.gradientStops ?? [{ color: n.fill, position: 0 }, { color: n.gradientEnd, position: 100 }] : undefined);
+      if (!stops || stops.length < 2) continue;
+      const colors = stops.map(stop => parse(color(p, stop.color, n))); if (colors.some(c => c[3] < 1)) continue;
+      const bad = colors.slice(1).findIndex((c, i) => { const a = oklch(colors[i]), b = oklch(c); const dark = a.chroma < .06 && a.lightness < .35 ? a : b.chroma < .06 && b.lightness < .35 ? b : undefined, warm = a.chroma >= .08 && a.hue >= 40 && a.hue <= 120 ? a : b.chroma >= .08 && b.hue >= 40 && b.hue <= 120 ? b : undefined; return !!dark && !!warm && dark !== warm; });
+      if (bad < 0) continue;
+      add({ rule: 'gradient', severity: 'warning', node: n.id, frame: frameId(n), mode, message: `${name(n)}: el degradado pasa de ${toHex(colors[bad])} a ${toHex(colors[bad + 1])}${mode === 'dark' ? ' en modo oscuro' : ''} y a mitad de camino se vuelve oliva: un neutro oscuro y un acento cálido no se funden, se embarran.`, fix: 'Haz el degradado con tonos de un mismo color (oro claro a oro oscuro, negro a gris) o separa el negro y el oro con una línea o un borde; el acento metálico va en texto, líneas y aros.' });
+      break;
     }
   }
   // Palette: a theme whose primary color is a muddy mid tone neither reads as an accent nor anchors as a dark

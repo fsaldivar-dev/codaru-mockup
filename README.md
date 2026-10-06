@@ -60,6 +60,7 @@ Sin nada seleccionado, «Revisar el diseño» analiza todas las pantallas y list
 - **Zonas táctiles** de menos de 44 × 44, **texto** de menos de 11 px o que no cabe en su caja.
 - Contenido **recortado**, bajo el **área del sistema** o cruzando el **pliegue**, y acciones superpuestas.
 - **Coherencia**: colores casi iguales a un token sin vincular, bordes casi alineados y demasiados tamaños o radios.
+- **Degradado embarrado**: una rampa de un neutro oscuro a un acento cálido (negro a oro) pasa por oliva a mitad de camino; usa tonos de un mismo color.
 - **Acento como fondo**: un chip pequeño relleno con un acento cálido (oro, ámbar) y texto oscuro encima parece una señal de aviso aunque contraste; en pequeño el acento va como texto, icono, borde o tinte.
 - **Paleta**: el color principal del tema debe contrastar 3:1 con el fondo y ser un acento saturado o un neutro oscuro; un tono medio apagado (marrón, ocre, gris) deja todo el diseño en una sola banda tonal.
 

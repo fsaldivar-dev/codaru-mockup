@@ -113,3 +113,17 @@ test('a small chip filled with a warm accent and dark text is flagged, large sur
   assert.equal(lintProject(demo()).filter(i => i.rule === 'accent-fill').length, 0);
   assert.equal(lintProject(demoDevices()).filter(i => i.rule === 'accent-fill').length, 0);
 });
+
+test('a gradient from a dark neutral to a warm accent is flagged as muddy, tonal ramps are not', () => {
+  const p = project([
+    { id: 'mud', type: 'card', x: 24, y: 100, width: 340, height: 140, gradient: 'linear', gradientStops: [{ color: '#111111', position: 0 }, { color: '#c5a23e', position: 100 }] },
+    { id: 'gold', type: 'card', x: 24, y: 300, width: 340, height: 140, gradient: 'linear', gradientStops: [{ color: '#f3dd8e', position: 0 }, { color: '#d4af37', position: 55 }, { color: '#c19a2e', position: 100 }] },
+    { id: 'violet', type: 'card', x: 24, y: 500, width: 340, height: 140, gradient: 'linear', fill: '#5b3df5', gradientEnd: '#a99bff' },
+    { id: 'smoke', type: 'card', x: 24, y: 700, width: 340, height: 60, gradient: 'linear', fill: '#111111', gradientEnd: '#3a3a3a' },
+  ]);
+  const flagged = lintProject(p).filter(i => i.rule === 'gradient');
+  assert.deepEqual(flagged.map(i => i.node), ['mud']);
+  assert.match(flagged[0].message, /oliva/);
+  assert.equal(lintProject(demo()).filter(i => i.rule === 'gradient').length, 0);
+  assert.equal(lintProject(demoDevices()).filter(i => i.rule === 'gradient').length, 0);
+});

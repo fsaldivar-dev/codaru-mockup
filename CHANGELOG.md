@@ -2,6 +2,8 @@
 
 ## Sin publicar
 
+- Revisión de diseño: regla `gradient`. Un degradado entre un neutro oscuro y un acento cálido (negro a oro) se avisa: a mitad de camino se vuelve oliva. Tonos de un mismo color o vecinos no se marcan.
+- Skill `codaru-design`: principios «El blanco manda» (la superficie clara o el ancla oscura es el protagonista; el acento metálico va en texto, líneas y aros; una tarjeta de pago en oro es la excepción deliberada y única) y «Degradados que no embarran».
 - Revisión de diseño: regla `accent-fill`. Un chip pequeño (≤ 80 px) relleno con un acento cálido saturado (oro, ámbar, amarillo) y texto oscuro encima se señala como nota: contrasta, pero se lee como señal de aviso. Superficies grandes, iconos y acentos sobre oscuro no se marcan.
 - Skill `codaru-design`: principios «El acento como fondo» e «Indicadores» (3:1 para elementos no textuales), degradados que se noten, sin HEX fijos en superficies, protagonista que sobreviva al modo oscuro y opciones de color dentro de la paleta.
 - Revisión de diseño: regla `palette`. Error si `@primary` no contrasta 3:1 con `@background`; aviso si es un tono medio apagado (croma OKLCH < 0,08) que ni destaca como acento ni ancla como neutro oscuro. También avisa si `@primary` es un neutro (negro o blanco) y `@accent` tampoco tiene color. Se evalúa por tema en uso y en ambos modos; en el panel aparece bajo «Paleta del tema» y al pulsarlo se abre Temas.
