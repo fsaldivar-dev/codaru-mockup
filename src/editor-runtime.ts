@@ -1,4 +1,4 @@
-import { node, blank, clone, uid, validate, children, subtree, ancestors, topSelected, frameOf, absolute, isUnavailable, color, tokens, labels, containerKinds, layoutProject, updateNode, createComponent, instantiate, detach, duplicate, remove, group, ungroup, defineVariant, createVariant, switchVariant, renameVariantSet, variantAxes, variantLabel, variantSet, setDesignSystemNotes, setComponentDoc, type Project, type DesignNode, type Kind, type Component, panelsOf, postureGroup } from './model';
+import { node, blank, clone, uid, validate, children, subtree, ancestors, topSelected, frameOf, absolute, isUnavailable, color, tokens, labels, containerKinds, layoutProject, updateNode, createComponent, instantiate, detach, duplicate, remove, group, ungroup, defineVariant, createVariant, switchVariant, renameVariantSet, variantAxes, variantLabel, variantSet, setDesignSystemNotes, setComponentDoc, docStale, designSystemStale, type Project, type DesignNode, type Kind, type Component, panelsOf, postureGroup } from './model';
 import { demo } from './demo';
 import { effectiveTheme, resolveNodeStyle } from './themes';
 import { openThemeEditor } from './theme-editor';
@@ -62,7 +62,7 @@ app.innerHTML = `
   <div class="workspace"><aside class="sidebar left-panel">
     <section class="project-panel"><div class="section-heading"><span>PROYECTO</span><button class="icon-button tiny" data-action="add-frame" aria-label="Añadir pantalla">${icon('plus', 15)}</button></div><div class="page-active">${icon('layers', 16)}<span>Pantallas y flujos</span><span id="frame-count" class="count">2</span></div>
     <button class="new-screen" data-action="add-frame">${icon('plus', 14)} Nueva pantalla</button></section>
-    <div class="sidebar-tabs"><button data-tab="layers" class="active">Capas</button><button data-tab="components">Componentes</button><button data-tab="system">Sistema</button></div>
+    <div class="sidebar-tabs"><button data-tab="layers" class="active">Capas</button><button data-tab="components">Componentes</button><button data-tab="system">Sistema<span id="system-stale" class="stale-badge" hidden></span></button></div>
     <div id="layers" class="layer-list"></div><div id="components" class="component-list" hidden></div><div id="system-index" class="system-index" hidden></div>
     <section class="insert-panel"><div class="section-heading"><span>INSERTAR</span><span class="hint-key">arrastrar</span></div><div class="insert-grid">${(['text','button','input','card','rect','image','vector'] as Kind[]).map(k => `<button draggable="true" data-insert="${k}" title="Insertar ${labels[k]}">${icon(k, 17)}<span>${labels[k]}</span></button>`).join('')}</div></section>
     <div class="sidebar-footer"><span class="local-dot"></span> Guardado en tu dispositivo${btn('help', 'Atajos de teclado', 'help', 'icon-button tiny')}</div>
@@ -153,6 +153,7 @@ function render() {
   (document.querySelector('[data-action="undo"]') as HTMLButtonElement).disabled = !store.undoStack.length;
   (document.querySelector('[data-action="redo"]') as HTMLButtonElement).disabled = !store.redoStack.length;
   renderCanvas(); renderLayers(); renderInspector(); renderComponents(); renderSystem();
+  const pending = p().components.filter(docStale).length + (designSystemStale(p()) ? 1 : 0), badge = byId('system-stale'); badge.hidden = !pending; badge.textContent = `${pending}`; badge.title = `${pending} ${pending === 1 ? 'ficha' : 'fichas'} por revisar`;
 }
 function renderCanvas() {
   const artboards = byId('artboards'); artboards.replaceChildren();
@@ -452,6 +453,8 @@ function renderSystem() {
   const sets = new Map<string, Component[]>(); for (const c of project.components) sets.set(c.set ?? c.id, [...(sets.get(c.set ?? c.id) ?? []), c]);
   const setKey = (c: Component) => c.set ?? c.id, title = (list: Component[]) => list[0].set ? list[0].setName ?? list[0].name : list[0].name;
   const documented = (list: Component[]) => !!(list[0].doc?.description || list[0].doc?.when || list[0].doc?.usage || list[0].doc?.how);
+  const stale = (list: Component[]) => documented(list) && docStale(list[0]), dsStale = designSystemStale(project);
+  const dot = (done: boolean, old: boolean) => `<i class="${old ? 'stale' : done ? 'done' : ''}" title="${old ? 'Desactualizada' : done ? 'Documentada' : 'Pendiente'}"></i>`;
   const done = [...sets.values()].filter(documented).length, pages = [...sets.keys()];
   if (systemPage.startsWith('c:') && !sets.has(systemPage.slice(2))) systemPage = 'inicio';
   const field = (scope: 'system' | 'doc', key: string, label: string, hint: string, value: string | undefined, componentId?: string, rows = 3) => systemEditing || !value
@@ -464,8 +467,8 @@ function renderSystem() {
     body = head('SISTEMA DE DISEÑO', project.name, `Tema «${esc(theme.name)}» · ${project.components.length} ${project.components.length === 1 ? 'componente' : 'componentes'} en ${sets.size} ${sets.size === 1 ? 'conjunto' : 'conjuntos'}`)
       + field('system', 'summary', 'Producto, negocio y nicho', 'Qué es la app, para quién y qué problema resuelve.', notes.summary)
       + field('system', 'brand', 'Por qué la marca funciona', 'Por qué esta paleta, esta tipografía y este tono funcionan para ese negocio, y qué los haría fallar.', notes.brand, undefined, 5)
-      + `<section><h2>Avance</h2><p class="sys-progress"><b>${done} de ${sets.size}</b> componentes documentados · ${foundationPages.filter(([, , key]) => notes[key]).length} de ${foundationPages.length} fundamentos</p><div class="sys-progress-bar"><i style="width:${sets.size ? Math.round(done / sets.size * 100) : 0}%"></i></div><p class="field-note">Empieza por lo que más se usa o más dudas genera; cada página responde qué es, por qué, cuándo y cómo.</p></section>
-      <section><h2>Contenido</h2><div class="sys-toc"><div><h3>Fundamentos</h3>${foundationPages.map(([id, label, key]) => `<button class="sys-toc-item" data-system-page="${id}"><span>${esc(label)}</span><i class="${notes[key] ? 'done' : ''}"></i></button>`).join('')}</div><div><h3>Componentes</h3>${[...sets.values()].map(list => `<button class="sys-toc-item" data-system-page="c:${esc(setKey(list[0]))}"><span>${esc(title(list))}</span><small>${list[0].set ? `${list.length} var.` : ''}</small><i class="${documented(list) ? 'done' : ''}"></i></button>`).join('') || '<p class="empty-note">Aún no hay componentes.</p>'}</div></div></section>`;
+      + `<section><h2>Avance</h2><p class="sys-progress"><b>${done} de ${sets.size}</b> componentes documentados · ${foundationPages.filter(([, , key]) => notes[key]).length} de ${foundationPages.length} fundamentos${[...sets.values()].filter(stale).length || dsStale ? ` · <b class="stale-text">${[...sets.values()].filter(stale).length + (dsStale ? 1 : 0)} por revisar</b>` : ''}</p><div class="sys-progress-bar"><i style="width:${sets.size ? Math.round(done / sets.size * 100) : 0}%"></i></div><p class="field-note">Empieza por lo que más se usa o más dudas genera; cada página responde qué es, por qué, cuándo y cómo.</p></section>
+      <section><h2>Contenido</h2><div class="sys-toc"><div><h3>Fundamentos</h3>${foundationPages.map(([id, label, key]) => `<button class="sys-toc-item" data-system-page="${id}"><span>${esc(label)}</span>${dot(!!notes[key], !!notes[key] && dsStale)}</button>`).join('')}</div><div><h3>Componentes</h3>${[...sets.values()].map(list => `<button class="sys-toc-item" data-system-page="c:${esc(setKey(list[0]))}"><span>${esc(title(list))}</span><small>${list[0].set ? `${list.length} var.` : ''}</small>${dot(documented(list), stale(list))}</button>`).join('') || '<p class="empty-note">Aún no hay componentes.</p>'}</div></div></section>`;
   } else if (foundationPages.some(([id]) => id === systemPage)) {
     const [, label, key] = foundationPages.find(([id]) => id === systemPage)!;
     let extra = '';
@@ -484,7 +487,7 @@ function renderSystem() {
     } else if (systemPage === 'principios' && notes.principles && !systemEditing) {
       extra = '';
     }
-    body = head('FUNDAMENTOS', label, '') + (systemPage === 'principios' ? field('system', key, 'Principios', 'Una regla por línea: una acción principal por pantalla, el oro solo en detalles…', notes[key], undefined, 8) : extra + field('system', key, `Notas de ${label.toLowerCase()}`, 'Cómo se usa y qué no se hace.', notes[key], undefined, 5));
+    body = head('FUNDAMENTOS', label, '') + (dsStale && notes[key] ? `<div class="sys-notice"><span>El tema cambió después de escribir estas notas. Revísalas o márcalas como vigentes.</span><button data-doc-reviewed="system">Marcar como revisadas</button></div>` : '') + (systemPage === 'principios' ? field('system', key, 'Principios', 'Una regla por línea: una acción principal por pantalla, el oro solo en detalles…', notes[key], undefined, 8) : extra + field('system', key, `Notas de ${label.toLowerCase()}`, 'Cómo se usa y qué no se hace.', notes[key], undefined, 5));
   } else {
     const list = sets.get(systemPage.slice(2))!, c = list[0], isSet = !!c.set, doc = c.doc ?? {}, axes = isSet ? variantAxes(project, c.set!) : {};
     const master = project.nodes.find(n => n.id === c.masterId && n.componentId === c.id);
@@ -493,6 +496,7 @@ function renderSystem() {
     const guides = (kind: 'do' | 'dont') => lines(doc[kind]).map(l => { const g = guideline(l); return `<li class="${kind}"><span>${esc(g.text)}</span>${g.ids.map(id => `<span class="sys-example" data-example="${esc(id)}"></span>`).join('')}</li>`; }).join('');
     const i = pages.indexOf(systemPage.slice(2)), prev = i > 0 ? pages[i - 1] : undefined, next = i < pages.length - 1 ? pages[i + 1] : undefined;
     body = head(isSet ? `COMPONENTE · ${list.length} ${list.length === 1 ? 'VARIANTE' : 'VARIANTES'}` : 'COMPONENTE', title(list), systemEditing || !doc.description ? '' : esc(doc.description))
+      + (stale(list) ? `<div class="sys-notice"><span>El componente cambió después de documentarse. Revisa la ficha o márcala como vigente.</span><button data-doc-reviewed="${esc(c.id)}">Marcar como revisada</button></div>` : '')
       + (systemEditing || !doc.description ? field('doc', 'description', 'Qué es y qué hace', 'Una frase: «La acción que hace avanzar la pantalla».', doc.description, c.id, 2) : '')
       + `<section><h2>Opciones</h2>${options}${master ? `<p class="field-note">Maestro en «${esc(frameOf(project, master.id)?.name ?? 'el lienzo')}» · <button class="text-button" data-select-master="${esc(master.id)}">Ir al maestro</button></p>` : '<p class="field-note">El maestro fue eliminado.</p>'}</section>`
       + (parts.length ? `<section><h2>Anatomía</h2><div class="sys-anatomy"><figure data-anatomy-of="${esc(c.id)}"></figure><ol>${parts.map(n => `<li>${esc(n.name)}<small> · ${esc(labels[n.type])}</small></li>`).join('')}</ol></div></section>` : '')
@@ -511,7 +515,7 @@ function renderSystem() {
     fig.append(preview);
   }
   for (const slot of view.querySelectorAll<HTMLElement>('.sys-example')) { const pv = nodePreview(slot.dataset.example!, 220, 120); if (pv) slot.append(pv); else slot.innerHTML = `<small class="sys-missing">ejemplo «${esc(slot.dataset.example!)}» no encontrado</small>`; }
-  byId('system-index').innerHTML = `<button class="sys-link ${systemPage === 'inicio' ? 'active' : ''}" data-system-page="inicio">Inicio · ${done}/${sets.size}</button><h5>Fundamentos</h5>${foundationPages.map(([id, label, key]) => `<button class="sys-link sub ${systemPage === id ? 'active' : ''}" data-system-page="${id}">${esc(label)}<i class="${notes[key] ? 'done' : ''}"></i></button>`).join('')}<h5>Componentes</h5>${[...sets.values()].map(list => `<button class="sys-link sub ${systemPage === `c:${setKey(list[0])}` ? 'active' : ''}" data-system-page="c:${esc(setKey(list[0]))}">${esc(title(list))}<i class="${documented(list) ? 'done' : ''}"></i></button>`).join('')}`;
+  byId('system-index').innerHTML = `<button class="sys-link ${systemPage === 'inicio' ? 'active' : ''}" data-system-page="inicio">Inicio · ${done}/${sets.size}</button><h5>Fundamentos</h5>${foundationPages.map(([id, label, key]) => `<button class="sys-link sub ${systemPage === id ? 'active' : ''}" data-system-page="${id}">${esc(label)}${dot(!!notes[key], !!notes[key] && dsStale)}</button>`).join('')}<h5>Componentes</h5>${[...sets.values()].map(list => `<button class="sys-link sub ${systemPage === `c:${setKey(list[0])}` ? 'active' : ''}" data-system-page="c:${esc(setKey(list[0]))}">${esc(title(list))}${dot(documented(list), stale(list))}</button>`).join('')}`;
   view.scrollTop = systemPage === lastSystemPage ? scroll : 0; lastSystemPage = systemPage;
 }
 let lastSystemPage = 'inicio';
@@ -673,6 +677,7 @@ events.addEventListener('click',e=>{
   if(el.dataset.mode){setMode(el.dataset.mode as typeof state.mode);if(state.mode==='system'&&tab!=='system')setTab('system');else if(state.mode!=='system'&&tab==='system')setTab('layers');if(state.mode==='flow')toast('Selecciona un elemento y elige su destino en «Al hacer clic».');return;}
   if(el.dataset.systemPage){systemPage=el.dataset.systemPage;renderSystem();return;}
   if(el.dataset.systemEdit!==undefined){systemEditing=!systemEditing;renderSystem();return;}
+  if(el.dataset.docReviewed){const id=el.dataset.docReviewed;change(pr=>{if(id==='system')setDesignSystemNotes(pr,{});else setComponentDoc(pr,id,{});},'Documentación marcada como vigente');return;}
   if(el.dataset.collapse){const id=el.dataset.collapse;collapsed.has(id)?collapsed.delete(id):collapsed.add(id);renderLayers();return;}
   if(el.dataset.lock){change(pr=>{const n=pr.nodes.find(n=>n.id===el.dataset.lock)!;n.locked=!n.locked;});return;}
   if(el.dataset.hide){change(pr=>{const n=pr.nodes.find(n=>n.id===el.dataset.hide)!;n.hidden=!n.hidden;});return;}

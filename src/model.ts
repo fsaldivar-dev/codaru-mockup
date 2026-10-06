@@ -59,6 +59,8 @@ export interface Component {
   set?: string; setName?: string; variant?: Record<string, string>;
   /** Design-system notes: when to use it, good and bad practice. Shared by every member of a set. */
   doc?: ComponentDoc;
+  /** Signature of the template when the notes were last saved; a different signature means the notes may be stale. */
+  docHash?: string;
 }
 /** A component page answers four questions: what it is, why, when and how. Guideline lines may end in `[ejemplo: ID]` to show a layer of the document beside them. */
 export interface ComponentDoc { description?: string; why?: string; when?: string; how?: string; do?: string; dont?: string; /** Older documents: when + why in one field. */ usage?: string; }
@@ -70,6 +72,8 @@ export interface Project {
   designThemes: Record<string, DesignTheme>; activeThemeId: string;
   nodes: DesignNode[]; components: Component[];
   designSystem?: DesignSystemNotes;
+  /** Signature of the active theme when the notes were last saved. */
+  designSystemHash?: string;
 }
 export const tokens = ['primary', 'surface', 'background', 'text', 'muted', 'border', 'accent'] as const;
 export const labels: Record<Kind, string> = { frame: 'Pantalla', rect: 'Rectángulo', ellipse: 'Elipse', text: 'Texto', button: 'Botón', input: 'Campo', card: 'Tarjeta', group: 'Grupo', image: 'Imagen', icon: 'Icono', vector: 'Ilustración' };
@@ -232,11 +236,19 @@ export function mergeNotes<T extends object>(current: T | undefined, patch: unkn
   }
   return Object.keys(next).length ? next as unknown as T : undefined;
 }
-export const setDesignSystemNotes = (p: Project, patch: unknown) => { p.designSystem = mergeNotes(p.designSystem, patch, 'designSystem'); };
+/** Small stable hash (FNV-1a) so documents can tell whether a component or theme changed after being documented. */
+export function signature(value: unknown): string { const text = JSON.stringify(value); let h = 0x811c9dc5; for (let i = 0; i < text.length; i++) { h ^= text.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); }
+export const templateSignature = (c: Component) => signature(c.template.map(n => [n.type, n.name, n.text, n.fill, n.color, n.stroke, n.strokeWidth, Math.round(n.width), Math.round(n.height), n.radius, n.fontSize, n.fontWeight, n.fontFamily, n.layout, n.gap, n.padding, n.opacity, n.shadow, n.gradient, n.svg?.length ?? 0, n.animations?.length ?? 0, n.iconName]));
+export const themeSignature = (p: Project) => { const t = p.designThemes[p.activeThemeId]; return signature(t ? [t.id, t.modes.light.colors, t.modes.dark.colors, t.modes.light.typography, t.modes.light.radii, Object.keys(t.modes.light.gradients)] : null); };
+/** True when the component changed after its notes were written. */
+export const docStale = (c: Component) => !!c.doc && !!c.docHash && c.docHash !== templateSignature(c);
+export const designSystemStale = (p: Project) => !!p.designSystem && !!p.designSystemHash && p.designSystemHash !== themeSignature(p);
+/** Saving notes, even an empty patch, stamps them as current for the theme as it is now. */
+export const setDesignSystemNotes = (p: Project, patch: unknown) => { p.designSystem = mergeNotes(p.designSystem, patch, 'designSystem'); if (p.designSystem) p.designSystemHash = themeSignature(p); else delete p.designSystemHash; };
 /** Document a component; members of a set share the same notes. */
 export function setComponentDoc(p: Project, componentId: string, patch: unknown) {
   const c = componentOf(p, componentId), doc = mergeNotes(c.doc, patch, 'doc');
-  for (const member of c.set ? variantSet(p, c.set) : [c]) member.doc = doc ? { ...doc } : undefined;
+  for (const member of c.set ? variantSet(p, c.set) : [c]) { member.doc = doc ? { ...doc } : undefined; if (doc) member.docHash = templateSignature(member); else delete member.docHash; }
 }
 export const variantLabel = (variant: Record<string, string> | undefined) => variant ? Object.entries(variant).map(([axis, value]) => `${axis}=${value}`).join(', ') : '';
 export function variantSet(p: Project, setId: string) { return p.components.filter(c => c.set === setId); }
@@ -354,6 +366,7 @@ export function validate(input: unknown): Project {
   const p = clone(input) as Project;
   if (typeof p.name !== 'string' || p.name.length > 200 || !['light', 'dark'].includes(p.theme)) throw new Error('Nombre o tema inválido');
   if (p.designSystem !== undefined) { const notes = mergeNotes(undefined, p.designSystem, 'designSystem'); if (notes) p.designSystem = notes; else delete p.designSystem; }
+  if (p.designSystemHash !== undefined && (typeof p.designSystemHash !== 'string' || p.designSystemHash.length > 64)) throw new Error('Firma de documentación inválida');
   for (const t of ['light', 'dark'] as const) {
     if (!p.themes?.[t] || typeof p.themes[t] !== 'object' || Array.isArray(p.themes[t]) || Object.keys(p.themes[t]).length > 128 || Object.keys(p.themes[t]).some(key => !/^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(key) || ['constructor', 'prototype', '__proto__'].includes(key))) throw new Error('Paleta inválida');
     for (const key of tokens) if (!safeColor(p.themes[t][key])) throw new Error('Paleta inválida');
@@ -415,6 +428,7 @@ export function validate(input: unknown): Project {
     if (c.setName !== undefined && (typeof c.setName !== 'string' || c.setName.length > 80)) throw new Error('Nombre de conjunto inválido');
     if (c.variant !== undefined) cleanVariant(c.variant);
     if (c.doc !== undefined) mergeNotes(undefined, c.doc, 'doc');
+    if (c.docHash !== undefined && (typeof c.docHash !== 'string' || c.docHash.length > 64)) throw new Error('Firma de documentación inválida');
     componentIds.add(c.id); validateNodes(c.template);
     if (c.template.filter(n => !n.parentId).length !== 1) throw new Error('Plantilla de componente inválida');
     const master = p.nodes.find(n => n.id === c.masterId);

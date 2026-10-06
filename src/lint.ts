@@ -1,11 +1,11 @@
-import { absolute, ancestors, children, color, frameOf, labels, panelsOf, type DesignNode, type Project, type Theme } from './model';
+import { docStale, designSystemStale, absolute, ancestors, children, color, frameOf, labels, panelsOf, type DesignNode, type Project, type Theme } from './model';
 import { effectiveTheme } from './themes';
 
 /**
  * Design review: finds what a careful designer would flag, in both light and dark mode, without
  * drawing anything. Each issue points at one element so it can be shown as a heat map or fixed by an AI.
  */
-export type LintRule = 'contrast' | 'target' | 'text-size' | 'text-fit' | 'overflow' | 'safe-area' | 'hinge' | 'overlap' | 'off-theme' | 'alignment' | 'scale' | 'palette' | 'accent-fill' | 'gradient';
+export type LintRule = 'contrast' | 'target' | 'text-size' | 'text-fit' | 'overflow' | 'safe-area' | 'hinge' | 'overlap' | 'off-theme' | 'alignment' | 'scale' | 'palette' | 'accent-fill' | 'gradient' | 'docs';
 export interface LintIssue {
   rule: LintRule; severity: 'error' | 'warning' | 'info';
   /** Element to look at, and the screen it belongs to. */
@@ -18,7 +18,7 @@ export interface LintIssue {
 }
 export const lintRules: Record<LintRule, string> = {
   contrast: 'Contraste de texto', target: 'Zona táctil pequeña', 'text-size': 'Texto pequeño', 'text-fit': 'Texto que no cabe', overflow: 'Contenido fuera de la pantalla',
-  'safe-area': 'Contenido bajo el área del sistema', hinge: 'Contenido sobre el pliegue', overlap: 'Acciones superpuestas', 'off-theme': 'Color fuera del tema', alignment: 'Casi alineados', palette: 'Paleta sin acento', 'accent-fill': 'Acento como fondo de un chip', gradient: 'Degradado embarrado', scale: 'Demasiadas variantes',
+  'safe-area': 'Contenido bajo el área del sistema', hinge: 'Contenido sobre el pliegue', overlap: 'Acciones superpuestas', 'off-theme': 'Color fuera del tema', alignment: 'Casi alineados', palette: 'Paleta sin acento', 'accent-fill': 'Acento como fondo de un chip', gradient: 'Degradado embarrado', docs: 'Documentación desactualizada', scale: 'Demasiadas variantes',
 };
 
 type RGBA = [number, number, number, number];
@@ -199,6 +199,14 @@ export function lintProject(input: Project, options: { frame?: string } = {}): L
       add({ rule: 'gradient', severity: 'warning', node: n.id, frame: frameId(n), mode, message: `${name(n)}: el degradado pasa por ${toHex(mud)}${mode === 'dark' ? ' en modo oscuro' : ''}, un tono oliva: un neutro oscuro y un acento cálido no se funden, se embarran.`, fix: 'Haz el degradado con tonos de un mismo color (oro claro a oro oscuro, negro a gris carbón) o separa el negro y el oro con una línea o un borde; el acento metálico va en texto, líneas y aros.' });
       break;
     }
+  }
+  // Docs: a documented component that changed afterwards, or notes written for a theme that has since changed.
+  if (!options.frame) {
+    for (const c in Object.fromEntries(input.components.filter(docStale).map(c => [c.id, c]))) {
+      const comp = input.components.find(x => x.id === c)!, master = input.nodes.find(n => n.id === comp.masterId);
+      add({ rule: 'docs', severity: 'info', node: master?.id ?? comp.id, frame: master ? frameOf(input, master.id)?.id ?? null : null, message: `«${comp.setName ?? comp.name}»: el componente cambió después de documentarse; revisa su ficha en Sistema.`, fix: 'Actualiza component.doc (description, why, when, how, do, dont) o envía {} para marcarla como revisada si sigue siendo válida.' });
+    }
+    if (designSystemStale(input)) add({ rule: 'docs', severity: 'info', node: input.activeThemeId, frame: null, message: 'El tema cambió después de escribir los fundamentos del sistema; revisa Color, Tipografía y Espaciado en Sistema.', fix: 'Actualiza designSystem.set o envía {} para marcar los fundamentos como revisados.' });
   }
   // Palette: a theme whose primary color is a muddy mid tone neither reads as an accent nor anchors as a dark
   // neutral; the whole design ends up as one tonal band. Checked per theme in use, in both modes.

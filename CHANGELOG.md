@@ -2,6 +2,7 @@
 
 ## Sin publicar
 
+- Documentación viva: cada ficha del sistema recuerda cómo era el componente (y los fundamentos, el tema) cuando se escribió. Si cambian después, Sistema lo marca en ámbar con «por revisar» y un contador en la pestaña, `lint` lo lista como `docs`, `context` lo expone (`docStale`, `designSystemStale`, `docsToReview`) y el plugin de Claude Code añade un hook que recuerda al agente actualizar la documentación tras cada `apply`. «Marcar como revisada» o un patch vacío dan la ficha por vigente.
 - Pestaña **Sistema**: la documentación del sistema de diseño dentro del documento, como un sitio: índice con el avance, páginas de fundamentos (principios, color con contrastes medidos, tipografía dibujada, espaciado y radios, movimiento, voz) y una página por componente que responde qué es, por qué, cuándo y cómo, con variantes por eje, anatomía numerada y buenas y malas prácticas que pueden mostrar una capa del documento (`[ejemplo: ID]`). Modo lectura y botón Editar. Se guarda en el JSON; la IA lo lee en `context` y lo escribe con `designSystem.set` y `component.doc`.
 - Panel izquierdo: la barra de inserción pasa a una fila compacta de iconos y el panel es más ancho, así Capas y Componentes tienen el espacio; las fichas de Componentes muestran una vista previa real de cada definición.
 - Variantes: las definiciones de un conjunto viven juntas en un contenedor «Nombre · variantes» con auto layout en fila, en lugar de quedar sueltas en el lienzo.

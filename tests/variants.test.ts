@@ -85,3 +85,32 @@ test('design-system notes and component docs are bounded, shared across a set an
   const bad = clone(p); (bad.components[0] as any).doc = { usage: 1 }; assert.throws(() => validate(bad), /texto/);
   const stale = clone(p); (stale as any).designSystem = { summary: '' }; assert.equal(validate(stale).designSystem, undefined);
 });
+
+test('notes remember the template and theme they were written for, and report when those changed', async () => {
+  const { docStale, designSystemStale, templateSignature } = await import('../src/model');
+  const { lintProject } = await import('../src/lint');
+  const p = demo();
+  const master = p.nodes.find(n => n.componentId)!;
+  applyOperations(p, [{ op: 'component.doc', componentId: master.componentId, description: 'La acción principal' }, { op: 'designSystem.set', summary: 'Forma' }]);
+  const c = p.components.find(c => c.id === master.componentId)!;
+  assert.equal(c.docHash, templateSignature(c)); assert.equal(docStale(c), false); assert.equal(designSystemStale(p), false);
+  // changing the master makes the notes stale; a theme change makes the foundations stale
+  const s = new Store(p);
+  s.commit(q => updateNode(q, master.id, { radius: 4, text: 'Otra etiqueta' }));
+  const after = s.project.components.find(x => x.id === c.id)!;
+  assert.equal(docStale(after), true);
+  s.commit(q => { q.designThemes[q.activeThemeId].modes.light.colors.primary = '#ff0000'; q.themes.light.primary = '#ff0000'; });
+  assert.equal(designSystemStale(s.project), true);
+  const issues = lintProject(s.project).filter(i => i.rule === 'docs');
+  assert.equal(issues.length, 2); assert.equal(issues[0].severity, 'info'); assert.ok(issues.some(i => /cambió después de documentarse/.test(i.message))); assert.ok(issues.some(i => /tema cambió/.test(i.message)));
+  const host: AgentHost = { project: () => s.project, selection: () => [], scope: () => null, busy: () => false, commit: edit => edit(s.project), select: () => {}, undo: () => {}, redo: () => {} };
+  const ctx = await handleAgentRequest(host, { command: 'context', params: { depth: 0 } }) as any;
+  assert.equal(ctx.context.designSystemStale, true); assert.deepEqual(ctx.context.docsToReview, ['designSystem', c.id]);
+  assert.ok(ctx.context.components.find((x: any) => x.id === c.id).docStale);
+  // an empty patch marks notes as reviewed without touching the text
+  applyOperations(s.project, [{ op: 'component.doc', componentId: c.id }, { op: 'designSystem.set' }]);
+  assert.equal(docStale(s.project.components.find(x => x.id === c.id)!), false); assert.equal(designSystemStale(s.project), false);
+  assert.equal(s.project.components.find(x => x.id === c.id)!.doc!.description, 'La acción principal'); assert.equal(s.project.designSystem!.summary, 'Forma');
+  assert.equal(lintProject(s.project, { frame: 'screen-login' }).filter(i => i.rule === 'docs').length, 0, 'per-frame lint stays about the frame');
+  validate(s.project);
+});

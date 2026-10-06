@@ -79,7 +79,7 @@ Los tokens y los iconos se resuelven con el tema del elemento o de su pantalla. 
 
 ### Sistema de diseño
 
-`designSystem.set {summary?, brand?, principles?, color?, typography?, spacing?, motion?, voice?}` guarda la narrativa y los fundamentos del sistema; `component.doc {componentId, description?, why?, when?, how?, do?, dont?}` documenta un componente o todo su conjunto (qué es, por qué, cuándo, cómo, y buenas y malas prácticas una por línea; una línea puede terminar en `[ejemplo: ID]` para mostrar esa capa al lado). Textos de hasta 4000 caracteres; `null` borra un campo. `context` devuelve `designSystem` y marca cada componente con `documented`. Todo se ve y se edita en la pestaña Sistema.
+`designSystem.set {summary?, brand?, principles?, color?, typography?, spacing?, motion?, voice?}` guarda la narrativa y los fundamentos del sistema; `component.doc {componentId, description?, why?, when?, how?, do?, dont?}` documenta un componente o todo su conjunto (qué es, por qué, cuándo, cómo, y buenas y malas prácticas una por línea; una línea puede terminar en `[ejemplo: ID]` para mostrar esa capa al lado). Textos de hasta 4000 caracteres; `null` borra un campo. `context` devuelve `designSystem`, marca cada componente con `documented` y, si cambió después de documentarse, `docStale`; `designSystemStale` y `docsToReview` resumen lo que hay que revisar. Un patch vacío (`{}`) marca la ficha o los fundamentos como revisados sin cambiar el texto. `lint` lo lista como `docs`. Todo se ve y se edita en la pestaña Sistema.
 
 ### Importar una página web
 

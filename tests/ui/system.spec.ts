@@ -43,6 +43,15 @@ test('the Sistema tab is a documentation site: contents with progress, foundatio
   await view.getByRole('button',{name:'Terminar edición'}).click();
   await page.locator('#system-index').getByRole('button',{name:/Inicio/}).click();
   await expect(view.locator('.sys-progress')).toContainText('1 de 1 componentes documentados');
+  // editing the master afterwards flags the page, the tab and the index; "Marcar como revisada" clears it
+  await page.evaluate(async()=>{const api=(window as any).codaru;const m=api.getDocument().nodes.find((n:any)=>n.componentId);const c=await api.agent('context');await api.agent('apply',{expectedRevision:c.context.revision,operations:[{op:'update',id:m.id,patch:{radius:4}}]});});
+  await expect(page.locator('#system-stale')).toHaveText('1');
+  await expect(view.locator('.sys-progress')).toContainText('1 por revisar');
+  await page.locator('#system-index').getByRole('button',{name:/Botón principal/}).click();
+  await expect(view.locator('.sys-notice')).toContainText('cambió después de documentarse');
+  await view.getByRole('button',{name:'Marcar como revisada'}).click();
+  await expect(view.locator('.sys-notice')).toHaveCount(0);
+  await expect(page.locator('#system-stale')).toBeHidden();
   await page.locator('.mode-switch [data-mode="design"]').click();
   await expect(view).toBeHidden();
   await expect(page.locator('.sidebar-tabs [data-tab="layers"]')).toHaveClass(/active/);

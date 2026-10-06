@@ -1,4 +1,4 @@
-import { Store, clone, node, updateNode, remove, createComponent, instantiate, group, ungroup, detach, children, tokens, defineVariant, createVariant, switchVariant, setDesignSystemNotes, setComponentDoc, type Project, type DesignNode, type Kind } from './model';
+import { Store, clone, node, updateNode, remove, createComponent, instantiate, group, ungroup, detach, children, tokens, defineVariant, createVariant, switchVariant, setDesignSystemNotes, setComponentDoc, docStale, designSystemStale, type Project, type DesignNode, type Kind } from './model';
 import { effectiveTheme, type DesignTheme } from './themes';
 import { kits, getKitItems, insertKitItem, ensureKitVariant, type KitId, type KitVariant } from './kits';
 import { iconPacks, getIconItems, insertIcon } from './icon-library';
@@ -67,8 +67,9 @@ export async function context(host: AgentHost,params: Record<string,unknown> = {
     counts:{nodes:p.nodes.length,frames:p.nodes.filter(n=>n.type==='frame').length,components:p.components.length},
     frames:p.nodes.filter(n=>n.type==='frame').map(n=>({id:n.id,name:n.name,themeId:effectiveTheme(p,n).id,mode:effectiveTheme(p,n).mode})),
     themes:Object.values(p.designThemes).map(t=>({id:t.id,name:t.name})),activeThemeId:p.activeThemeId,mode:p.theme,
-    components:p.components.slice(0,100).map(c=>({id:c.id,name:c.name,masterId:c.masterId,...(c.set?{set:c.set,setName:c.setName,variant:c.variant}:{}),documented:!!c.doc})),...(p.components.length>100?{componentsTruncated:true}:{}),
-    designSystem:p.designSystem?Object.fromEntries(Object.entries(p.designSystem).map(([k,v])=>[k,String(v).slice(0,600)])):null,
+    components:p.components.slice(0,100).map(c=>({id:c.id,name:c.name,masterId:c.masterId,...(c.set?{set:c.set,setName:c.setName,variant:c.variant}:{}),documented:!!c.doc,...(docStale(c)?{docStale:true}:{})})),...(p.components.length>100?{componentsTruncated:true}:{}),
+    designSystem:p.designSystem?Object.fromEntries(Object.entries(p.designSystem).map(([k,v])=>[k,String(v).slice(0,600)])):null,...(designSystemStale(p)?{designSystemStale:true}:{}),
+    docsToReview:[...(designSystemStale(p)?['designSystem']:[]),...p.components.filter(docStale).map(c=>c.id)],
     nodes,flows:flows.slice(0,100),flowsTruncated:flows.length>100,truncated,
     next:truncated?'Acota con codaru context --scope ID --depth 1.':'Usa los IDs y revision de este contexto en codaru apply. Consulta codaru schema o codaru catalog para descubrir operaciones y recursos.'};
 }
@@ -88,7 +89,7 @@ export const agentSchema = {
     figma:{data:'contenido del archivo .figma.codaru.json que escribe el plugin de Figma; añade sus pantallas, componentes y tokens al documento'},
     dom:{data:'instantánea codaru-dom-snapshot v1 de una página web (scripts/snapshot.js del skill codaru-clone); añade la página como pantalla, con un tema derivado de sus colores y tipografías, y capas vinculadas a esos tokens'},
     'designSystem.set':{summary:'qué es el producto, para quién y en qué negocio o nicho',brand:'por qué esta marca y esta dirección visual funcionan para ese producto',principles:'una regla por línea',color:'cómo se usa cada token y qué no se hace con el color',typography:'escala, jerarquía y usos de cada estilo',spacing:'escala de espaciado, márgenes y radios',motion:'cuándo se anima y cómo',voice:'tono y reglas de contenido; cada campo texto de hasta 4000 caracteres, null lo borra. Es la pestaña Sistema'},
-    'component.doc':{componentId:'ID de definición (en un conjunto se documenta el conjunto entero)',description:'qué es y qué hace, una frase',why:'por qué este y no otro parecido',when:'cuándo usarlo y cuándo no',how:'cómo se usa: opciones, contenido, comportamiento',do:'buenas prácticas, una por línea; termina una línea con [ejemplo: ID] para mostrar esa capa del documento al lado',dont:'malas prácticas, una por línea, mismo [ejemplo: ID]'},
+    'component.doc':{componentId:'ID de definición (en un conjunto se documenta el conjunto entero); un patch vacío {} marca la ficha como revisada tras un cambio',description:'qué es y qué hace, una frase',why:'por qué este y no otro parecido',when:'cuándo usarlo y cuándo no',how:'cómo se usa: opciones, contenido, comportamiento',do:'buenas prácticas, una por línea; termina una línea con [ejemplo: ID] para mostrar esa capa del documento al lado',dont:'malas prácticas, una por línea, mismo [ejemplo: ID]'},
     'variant.define':{componentId:'ID de definición',variant:'{eje:valor}; crea o amplía el conjunto de variantes de ese componente; los demás miembros reciben "Base" en los ejes nuevos',setName:'opcional, nombre del conjunto'},
     'variant.create':{componentId:'ID de definición existente',variant:'{eje:valor} de la variante nueva: duplica el maestro junto al original como otra definición del mismo conjunto'},
     'variant.switch':{id:'ID de instancia',variant:'{eje:valor}; cambia la instancia a la variante que coincida y conserva sus sobrescrituras por nombre de capa. En kits, Estado: Normal|Seleccionado|Deshabilitado'},
@@ -124,7 +125,7 @@ export function applyOperations(p: Project,operations: unknown) {
       case 'ungroup':{const id=string(op.id,'id');existing(p,id);ungroup(p,id);break;}
       case 'detach':{const id=string(op.id,'id');existing(p,id);detach(p,id);break;}
       case 'designSystem.set':{const {op:_name,notes,...rest}=op;setDesignSystemNotes(p,object(notes??rest));break;}
-      case 'component.doc':setComponentDoc(p,string(op.componentId,'componentId'),object(op.doc??{usage:op.usage,do:op.do,dont:op.dont}));break;
+      case 'component.doc':{const {op:_name,componentId,doc,...rest}=op;setComponentDoc(p,string(componentId,'componentId'),object(doc??rest));break;}
       case 'variant.define':defineVariant(p,string(op.componentId,'componentId'),object(op.variant) as Record<string,string>,op.setName===undefined?undefined:string(op.setName,'setName'));break;
       case 'variant.create':createVariant(p,string(op.componentId,'componentId'),object(op.variant) as Record<string,string>);break;
       case 'variant.switch':{const id=string(op.id,'id');existing(p,id);const inst=p.nodes.find(n=>n.id===id)!,c=p.components.find(c=>c.id===inst.instanceOf);const values=object(op.variant) as Record<string,string>;if(c?.set)ensureKitVariant(p,c.set,{...(c.variant??{}),...values});switchVariant(p,id,values);break;}
