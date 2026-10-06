@@ -57,6 +57,8 @@ Nombra el tema con la marca y entrega una tabla rasgo → dónde está en el dis
 
 **Auto layout.** Prefiere `layout: vertical|horizontal` con `padding`, `gap`, `justify` y `align` a posiciones absolutas. Usa `sizing: fill` y `hugWidth`/`hugHeight` para que el diseño aguante cambios de texto y de tamaño.
 
+**Páginas.** Un documento se organiza en páginas (módulos): Alta, Pagos, Onboarding… Crea una página por flujo (`page.add`) y pon ahí sus pantallas (`pageId`); solo la página activa se dibuja, así el documento sigue ágil. Para enlazar una pantalla que ya existe en otra página, apunta el flujo a ella: no la dupliques. Antes de un cambio grande guarda una versión (`version.save`) con un nombre que diga qué entregas.
+
 **Componentes.** Lo que se repite es un componente (`component`, `instance`), no copias. Los estados de un control (normal, seleccionado, deshabilitado, cargando) son **variantes** del mismo conjunto (`variant.define`, `variant.create`), y una instancia cambia de estado con `variant.switch` sin perder su texto; no dibujes un botón distinto por estado. Los kits ya traen el eje Estado.
 
 ## Por plataforma

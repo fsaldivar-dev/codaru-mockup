@@ -81,6 +81,8 @@ export function element(p: Project, n: DesignNode, preview = false): HTMLElement
   if (preview && n.targetId) { el.dataset.target = n.targetId; if (n.transition) el.dataset.transition = JSON.stringify(n.transition); el.tabIndex = 0; el.setAttribute('role', 'button'); el.style.cursor = 'pointer'; }
   for (const child of children(p, n.id)) el.append(element(p, child, preview));
   if (n.type === 'frame' && preview) { const style = document.createElement('style'); style.textContent = fieldFocusCSS; el.prepend(style); const group = postureGroup(p, n.id); if (group.length > 1) el.dataset.postures = group.map(f => f.id).join(' '); el.dataset.panels = String(panelsOf(n)); }
+  // Screens far from the viewport are skipped by the browser until they come into view.
+  if (n.type === 'frame' && !preview && n.parentId === null) { el.style.setProperty('content-visibility', 'auto'); el.style.setProperty('contain-intrinsic-size', `${n.width}px ${n.height}px`); }
   if (n.type === 'frame' && n.safeArea && !preview) {
     // Editing aid only: the bands the system keeps for the status bar, cutout and home indicator.
     const { top, right, bottom, left } = n.safeArea, edge = '1px dashed rgba(236, 72, 120, .7)', tint = 'rgba(236, 72, 120, .07)';

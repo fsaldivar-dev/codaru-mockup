@@ -33,6 +33,8 @@ export interface DesignNode {
   image: string;
   iconPack?: string; iconName?: string;
   componentId?: string; instanceOf?: string; componentKey?: string; overrides?: string[];
+  /** Page a root node belongs to; ignored on nested nodes. */
+  pageId?: string;
   fillToken?: string; materialToken?: string; typographyToken?: string; radiusToken?: string;
   themeId?: string; themeMode?: 'inherit' | Theme; kitId?: string;
   /** Sanitized SVG of an illustration (type vector). */
@@ -74,6 +76,85 @@ export interface Project {
   designSystem?: DesignSystemNotes;
   /** Signature of the active theme when the notes were last saved. */
   designSystemHash?: string;
+  /** Pages (modules) group root nodes; only the active page is drawn. Documents without pages get one called «Principal». */
+  pages?: Page[]; activePageId?: string;
+  /** Named snapshots of the design, compressed, kept inside the document. */
+  versions?: Version[];
+}
+export interface Page { id: string; name: string; }
+export interface Version { id: string; name: string; at: string; note?: string; /** gzip + base64 of the version payload */ data: string; screens: number; nodes: number; }
+export const PAGE_ID = /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/;
+export function pagesOf(p: Project): Page[] { return p.pages?.length ? p.pages : [{ id: 'principal', name: 'Principal' }]; }
+export function activePage(p: Project): Page { const pages = pagesOf(p); return pages.find(page => page.id === p.activePageId) ?? pages[0]; }
+/** Roots without pageId belong to «principal» when it exists, else to the first page; validate() stamps them so reordering pages never moves screens. */
+export function defaultPageId(p: Project) { const pages = pagesOf(p); return (pages.find(page => page.id === 'principal') ?? pages[0]).id; }
+export function rootsOnPage(p: Project, pageId: string) { const fallback = defaultPageId(p); return p.nodes.filter(n => n.parentId === null && (n.pageId ?? fallback) === pageId); }
+/** The id of the top-level ancestor of every node, in one pass. */
+export function rootIds(p: Project): Map<string, string> {
+  const parent = new Map(p.nodes.map(n => [n.id, n.parentId])), roots = new Map<string, string>();
+  const top = (id: string): string => { const cached = roots.get(id); if (cached) return cached; const up = parent.get(id); const value = up ? top(up) : id; roots.set(id, value); return value; };
+  for (const n of p.nodes) top(n.id);
+  return roots;
+}
+/** The document as seen from one page: its roots and their descendants, everything else left out. */
+export function pageView(p: Project, pageId: string): Project {
+  const fallback = defaultPageId(p), tops = rootIds(p), byId = new Map(p.nodes.map(n => [n.id, n]));
+  return { ...p, nodes: p.nodes.filter(n => { const root = byId.get(tops.get(n.id)!); return !!root && (root.pageId ?? fallback) === pageId; }) };
+}
+export function addPage(p: Project, name: string, id?: string): Page {
+  const pages = [...pagesOf(p)], clean = (name ?? '').trim().slice(0, 60) || `Página ${pages.length + 1}`;
+  let pageId = id ?? `pagina-${uid().slice(0, 8)}`; if (!PAGE_ID.test(pageId)) throw new Error('ID de página inválido');
+  if (pages.some(page => page.id === pageId)) throw new Error('Ya existe una página con ese id');
+  const fallback = defaultPageId(p);
+  for (const n of p.nodes) if (n.parentId === null && !n.pageId) n.pageId = fallback;
+  const page = { id: pageId, name: clean }; p.pages = [...pages, page]; return page;
+}
+export function renamePage(p: Project, id: string, name: string) { const pages = [...pagesOf(p)], page = pages.find(page => page.id === id); if (!page) throw new Error('Página no encontrada'); const clean = (name ?? '').trim().slice(0, 60); if (!clean) throw new Error('Nombre de página vacío'); page.name = clean; p.pages = pages; }
+/** A page can go only when nothing lives on it; its screens must be moved or deleted first. */
+export function removePage(p: Project, id: string) {
+  const pages = pagesOf(p); if (!pages.some(page => page.id === id)) throw new Error('Página no encontrada'); if (pages.length === 1) throw new Error('El documento necesita al menos una página');
+  const left = rootsOnPage(p, id).length; if (left) throw new Error(`La página tiene ${left} ${left === 1 ? 'elemento' : 'elementos'}: muévelos a otra página o elimínalos antes`);
+  p.pages = pages.filter(page => page.id !== id); if (p.activePageId === id) p.activePageId = p.pages[0].id;
+}
+export function movePage(p: Project, id: string, index: number) { const pages = [...pagesOf(p)], i = pages.findIndex(page => page.id === id); if (i < 0) throw new Error('Página no encontrada'); const [page] = pages.splice(i, 1); pages.splice(Math.max(0, Math.min(pages.length, index)), 0, page); p.pages = pages; }
+
+// Versions: the whole design (not the version list) packed with gzip into one string.
+const VERSION_KEYS = ['name', 'theme', 'themes', 'designThemes', 'activeThemeId', 'nodes', 'components', 'designSystem', 'designSystemHash', 'pages', 'activePageId'] as const;
+async function pipeString(text: string, stream: GenericTransformStream) { const chunks: Uint8Array[] = []; const reader = new Blob([text]).stream().pipeThrough(stream).getReader(); for (;;) { const { done, value } = await reader.read(); if (done) break; chunks.push(value); } const out = new Uint8Array(chunks.reduce((n, c) => n + c.length, 0)); let offset = 0; for (const c of chunks) { out.set(c, offset); offset += c.length; } return out; }
+const toBase64 = (bytes: Uint8Array) => { let bin = ''; for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000)); return btoa(bin); };
+const fromBase64 = (text: string) => Uint8Array.from(atob(text), c => c.charCodeAt(0));
+export async function packVersion(p: Project): Promise<string> {
+  const payload = Object.fromEntries(VERSION_KEYS.filter(k => p[k] !== undefined).map(k => [k, p[k]]));
+  return toBase64(await pipeString(JSON.stringify(payload), new CompressionStream('gzip')));
+}
+export async function unpackVersion(data: string): Promise<Partial<Project>> {
+  const bytes = fromBase64(data), chunks: Uint8Array[] = []; const reader = new Blob([bytes as unknown as BlobPart]).stream().pipeThrough(new DecompressionStream('gzip')).getReader();
+  for (;;) { const { done, value } = await reader.read(); if (done) break; chunks.push(value); }
+  const text = new TextDecoder().decode(await new Blob(chunks as unknown as BlobPart[]).arrayBuffer()), payload = JSON.parse(text) as Partial<Project>;
+  if (!Array.isArray(payload.nodes) || !Array.isArray(payload.components)) throw new Error('Versión dañada');
+  return payload;
+}
+/** Build a version of the current design; the caller stores it inside a commit. */
+export async function buildVersion(p: Project, name: string, note?: string): Promise<Version> {
+  const clean = (name ?? '').trim().slice(0, 80) || `Versión ${(p.versions?.length ?? 0) + 1}`;
+  return { id: `v-${uid().slice(0, 8)}`, name: clean, at: new Date().toISOString(), ...(note?.trim() ? { note: note.trim().slice(0, 2000) } : {}), data: await packVersion(p), screens: p.nodes.filter(n => n.type === 'frame').length, nodes: p.nodes.length };
+}
+export function addVersion(p: Project, version: Version) { const list = [...(p.versions ?? []), version]; if (list.length > 30) throw new Error('Máximo 30 versiones por documento: elimina alguna antes'); p.versions = list; }
+export function removeVersion(p: Project, id: string) { if (!p.versions?.some(v => v.id === id)) throw new Error('Versión no encontrada'); p.versions = p.versions.filter(v => v.id !== id); if (!p.versions.length) delete p.versions; }
+/** Replace the design with a version's payload, keeping the version list itself. */
+export function applyVersion(p: Project, payload: Partial<Project>) {
+  const versions = p.versions;
+  for (const key of VERSION_KEYS) { if (payload[key] !== undefined) (p as unknown as Record<string, unknown>)[key] = clone(payload[key]); else if (key !== 'name' && key !== 'nodes' && key !== 'components') delete (p as unknown as Record<string, unknown>)[key]; }
+  if (versions) p.versions = versions;
+}
+/** What changed between a version payload and the current design, by screen. */
+export function compareVersion(current: Project, payload: Partial<Project>) {
+  const sig = (p: Project, frame: DesignNode) => signature(subtree(p, frame.id).map(n => [n.id, n.type, n.name, n.text, n.x, n.y, n.width, n.height, n.fill, n.color, n.radius, n.fontSize]));
+  const old = { ...current, nodes: payload.nodes ?? [], components: payload.components ?? [] } as Project;
+  const oldFrames = new Map(old.nodes.filter(n => n.type === 'frame').map(n => [n.id, n])), newFrames = new Map(current.nodes.filter(n => n.type === 'frame').map(n => [n.id, n]));
+  const added = [...newFrames.values()].filter(n => !oldFrames.has(n.id)).map(n => n.name), removed = [...oldFrames.values()].filter(n => !newFrames.has(n.id)).map(n => n.name);
+  const changed = [...newFrames.values()].filter(n => oldFrames.has(n.id) && sig(current, n) !== sig(old, oldFrames.get(n.id)!)).map(n => n.name);
+  return { added, removed, changed, nodesBefore: old.nodes.length, nodesAfter: current.nodes.length };
 }
 export const tokens = ['primary', 'surface', 'background', 'text', 'muted', 'border', 'accent'] as const;
 export const labels: Record<Kind, string> = { frame: 'Pantalla', rect: 'Rectángulo', ellipse: 'Elipse', text: 'Texto', button: 'Botón', input: 'Campo', card: 'Tarjeta', group: 'Grupo', image: 'Imagen', icon: 'Icono', vector: 'Ilustración' };
@@ -379,6 +460,16 @@ export function validate(input: unknown): Project {
   if (typeof p.name !== 'string' || p.name.length > 200 || !['light', 'dark'].includes(p.theme)) throw new Error('Nombre o tema inválido');
   if (p.designSystem !== undefined) { const notes = mergeNotes(undefined, p.designSystem, 'designSystem'); if (notes) p.designSystem = notes; else delete p.designSystem; }
   if (p.designSystemHash !== undefined && (typeof p.designSystemHash !== 'string' || p.designSystemHash.length > 64)) throw new Error('Firma de documentación inválida');
+  if (p.pages !== undefined) {
+    if (!Array.isArray(p.pages) || p.pages.length > 100 || p.pages.some(page => !page || typeof page.id !== 'string' || !PAGE_ID.test(page.id) || typeof page.name !== 'string' || page.name.length > 60) || new Set(p.pages.map(page => page.id)).size !== p.pages.length) throw new Error('Páginas inválidas');
+    if (!p.pages.length) delete p.pages;
+  }
+  if (p.activePageId !== undefined && !pagesOf(p).some(page => page.id === p.activePageId)) p.activePageId = defaultPageId(p);
+  if (p.pages) { const ids = new Set(p.pages.map(page => page.id)), fallback = defaultPageId(p); for (const n of p.nodes) if (n.parentId === null && (!n.pageId || !ids.has(n.pageId))) n.pageId = fallback; }
+  if (p.versions !== undefined) {
+    if (!Array.isArray(p.versions) || p.versions.length > 30 || p.versions.some(v => !v || typeof v.id !== 'string' || !/^[A-Za-z0-9_-]{1,40}$/.test(v.id) || typeof v.name !== 'string' || v.name.length > 80 || typeof v.at !== 'string' || typeof v.data !== 'string' || v.data.length > 12_000_000 || (v.note !== undefined && (typeof v.note !== 'string' || v.note.length > 2000)))) throw new Error('Versiones inválidas');
+    if (!p.versions.length) delete p.versions;
+  }
   for (const t of ['light', 'dark'] as const) {
     if (!p.themes?.[t] || typeof p.themes[t] !== 'object' || Array.isArray(p.themes[t]) || Object.keys(p.themes[t]).length > 128 || Object.keys(p.themes[t]).some(key => !/^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(key) || ['constructor', 'prototype', '__proto__'].includes(key))) throw new Error('Paleta inválida');
     for (const key of tokens) if (!safeColor(p.themes[t][key])) throw new Error('Paleta inválida');
@@ -396,6 +487,7 @@ export function validate(input: unknown): Project {
       if (!n || typeof n.id !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(n.id) || ids.has(n.id) || !Object.keys(labels).includes(n.type)) throw new Error('Elemento inválido o identificador repetido');
       ids.add(n.id);
       for (const key of ['x', 'y', 'width', 'height', 'strokeWidth', 'radius', 'opacity', 'gradientAngle', 'fontSize', 'fontWeight', 'lineHeight', 'padding', 'gap'] as const) if (!Number.isFinite(n[key]) || Math.abs(n[key]) > 100000) throw new Error('Geometría inválida');
+      if (n.pageId !== undefined && (typeof n.pageId !== 'string' || !PAGE_ID.test(n.pageId))) throw new Error('Página de pantalla inválida');
       for (const key of ['radiusTR', 'radiusBR', 'radiusBL'] as const) if (n[key] !== undefined && (!Number.isFinite(n[key]) || n[key]! < 0 || n[key]! > 10000)) throw new Error('Radio inválido');
       if (n.width < 1 || n.height < 1 || n.fontSize < 1 || n.opacity < 0 || n.opacity > 100 || n.padding < 0 || n.gap < 0) throw new Error('Tamaño inválido');
       for (const key of ['name', 'text', 'image'] as const) if (typeof n[key] !== 'string') throw new Error('Contenido inválido');
@@ -461,6 +553,8 @@ export class Store {
   private cache = ''; private cacheFor: Project | undefined;
   constructor(project: unknown) { this.project = validate(project); }
   /** The document as JSON, computed once per committed version: every commit produces a new object, so identity is the cache key. */
+  /** Forget the cached serialization after an in-place change that is not a commit (view state kept in the document). */
+  touch() { this.cacheFor = undefined; }
   serialize() { if (this.cacheFor !== this.project) { this.cache = JSON.stringify(this.project); this.cacheFor = this.project; } return this.cache; }
   commit(edit: (p: Project) => void) {
     const before = this.project, beforeSerialized = this.serialize(), draft = clone(before);

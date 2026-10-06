@@ -2,7 +2,7 @@
 export const partSelectors = {
   canvas: '#stage', layers: '#layers', inspector: '#inspector', library: '#components',
   toolbar: '.toolbar', header: '.topbar', viewbar: '.canvas-top', breadcrumb: '.scope-bar',
-  status: '.canvas-bottom', insert: '.insert-panel',
+  status: '.canvas-bottom', insert: '.insert-panel', pages: '.project-panel', system: '#system-index',
   modes: '.mode-switch', designTheme: '.theme-switch', fit: '.fit-button',
 } as const;
 export type EditorPart = keyof typeof partSelectors | 'dialogs';

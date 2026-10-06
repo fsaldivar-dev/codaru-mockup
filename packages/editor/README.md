@@ -64,7 +64,7 @@ view.mount('modes', document.querySelector('#tabs')!); // Solo las pestañas Dis
 view.mount('dialogs', document.querySelector('#overlays')!);
 ```
 
-Piezas: `canvas`, `layers`, `inspector`, `library`, `toolbar`, `header`, `viewbar` (y sus controles `modes`, `designTheme`, `fit`), `breadcrumb`, `status`, `insert` y `dialogs`. Omite las que quieras sustituir por controles propios sobre `editor`. La [guía modular](https://github.com/fsaldivar-dev/codaru-mockup/blob/v0.3.0/docs/INTEGRATION.md) describe apariencia, tokens CSS, ciclo de vida y tamaños.
+Piezas: `canvas`, `layers`, `inspector`, `library`, `pages`, `system`, `toolbar`, `header`, `viewbar` (y sus controles `modes`, `designTheme`, `fit`), `breadcrumb`, `status`, `insert` y `dialogs`. Omite las que quieras sustituir por controles propios sobre `editor`. La [guía modular](https://github.com/fsaldivar-dev/codaru-mockup/blob/v0.3.0/docs/INTEGRATION.md) describe apariencia, tokens CSS, ciclo de vida y tamaños.
 
 ## Conectar Rust/Tauri
 

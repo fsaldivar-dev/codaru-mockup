@@ -1,4 +1,4 @@
-import { node, blank, clone, uid, validate, children, subtree, ancestors, topSelected, frameOf, absolute, isUnavailable, color, tokens, labels, containerKinds, layoutProject, updateNode, createComponent, instantiate, detach, duplicate, remove, group, ungroup, defineVariant, createVariant, switchVariant, renameVariantSet, variantAxes, variantLabel, variantSet, setDesignSystemNotes, setComponentDoc, docStale, designSystemStale, templateSignature, type Project, type DesignNode, type Kind, type Component, panelsOf, postureGroup } from './model';
+import { node, blank, clone, uid, validate, children, subtree, ancestors, topSelected, frameOf, absolute, isUnavailable, color, tokens, labels, containerKinds, layoutProject, updateNode, createComponent, instantiate, detach, duplicate, remove, group, ungroup, defineVariant, createVariant, switchVariant, renameVariantSet, variantAxes, variantLabel, variantSet, setDesignSystemNotes, setComponentDoc, docStale, designSystemStale, templateSignature, pagesOf, activePage, rootsOnPage, pageView, addPage, renamePage, removePage, buildVersion, addVersion, removeVersion, applyVersion, unpackVersion, compareVersion, type Project, type DesignNode, type Kind, type Component, panelsOf, postureGroup } from './model';
 import { demo } from './demo';
 import { effectiveTheme, resolveNodeStyle } from './themes';
 import { openThemeEditor } from './theme-editor';
@@ -58,10 +58,10 @@ const btn = (act: string, label: string, ico?: string, cls = '') => `<button cla
 app.innerHTML = `
   <header class="topbar"><div class="brand"><span class="brand-mark">${icon('frame', 21)}</span><strong>codaru<span> / mockup</span></strong><span class="alpha">01</span></div>
     <div class="project-title"><span class="breadcrumb">Proyectos</span><span class="slash">/</span><input id="project-name" aria-label="Nombre del proyecto" maxlength="200"/><span id="save-state" class="save-dot" title="Guardado local"></span></div>
-    <div class="top-actions"><button data-action="agent-help" class="agent-button">IA / CLI</button><button data-action="themes" class="themes-button">Temas</button>${btn('open', 'Abrir proyecto', 'folder', 'icon-button')}${btn('save', 'Guardar archivo · ⌘S', 'download', 'icon-button')}<span class="divider"></span><button data-action="preview" class="preview-button">${icon('play', 14)}<span>Presentar</span></button></div>
+    <div class="top-actions"><button data-action="agent-help" class="agent-button">IA / CLI</button><button data-action="versions" class="themes-button">Versiones</button><button data-action="themes" class="themes-button">Temas</button>${btn('open', 'Abrir proyecto', 'folder', 'icon-button')}${btn('save', 'Guardar archivo · ⌘S', 'download', 'icon-button')}<span class="divider"></span><button data-action="preview" class="preview-button">${icon('play', 14)}<span>Presentar</span></button></div>
   </header>
   <div class="workspace"><aside class="sidebar left-panel">
-    <section class="project-panel"><div class="section-heading"><span>PROYECTO</span><button class="icon-button tiny" data-action="add-frame" aria-label="Añadir pantalla">${icon('plus', 15)}</button></div><div class="page-active">${icon('layers', 16)}<span>Pantallas y flujos</span><span id="frame-count" class="count">2</span></div>
+    <section class="project-panel"><div class="section-heading"><span>PÁGINAS</span><span class="count" id="frame-count" title="Pantallas en el documento">2</span><button class="icon-button tiny" data-action="add-page" aria-label="Nueva página" title="Nueva página">${icon('plus', 15)}</button></div><div id="pages" class="page-list"></div>
     <button class="new-screen" data-action="add-frame">${icon('plus', 14)} Nueva pantalla</button></section>
     <div class="sidebar-tabs"><button data-tab="layers" class="active">Capas</button><button data-tab="components">Componentes</button><button data-tab="system">Sistema<span id="system-stale" class="stale-badge" hidden></span></button></div>
     <div id="layers" class="layer-list"></div><div id="components" class="component-list" hidden></div><div id="system-index" class="system-index" hidden></div>
@@ -86,6 +86,18 @@ let touchedByAgent: string[] = [];
 const layersEl = document.querySelector<HTMLDivElement>('#layers')!, inspector = document.querySelector<HTMLDivElement>('#inspector')!;
 const selectionOverlay = document.querySelector<HTMLDivElement>('#selection-overlay')!;
 const byId = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+// Pages: only the active page is drawn, hit-tested and listed; the page view is cached per document version.
+const pageId = () => activePage(p()).id;
+let pageViewCache: { doc: Project; id: string; view: Project; ids: Set<string> } | undefined;
+function pv() { const doc = p(), id = pageId(); if (!pageViewCache || pageViewCache.doc !== doc || pageViewCache.id !== id) { const view = pageView(doc, id); pageViewCache = { doc, id, view, ids: new Set(view.nodes.map(n => n.id)) }; } return pageViewCache.view; }
+const onPage = (id: string) => { pv(); return pageViewCache!.ids.has(id); };
+const firstFrame = (): DesignNode | undefined => rootsOnPage(p(), pageId()).find(n => n.type === 'frame' && !n.hidden) ?? p().nodes.find(node => node.type === 'frame');
+function renderPages() {
+  const target = byId('pages'); if (!target) return;
+  const pages = pagesOf(p()), active = pageId();
+  target.innerHTML = pages.map(page => { const count = rootsOnPage(p(), page.id).filter(n => n.type === 'frame').length; return `<div class="page-row ${page.id === active ? 'active' : ''}" data-page="${esc(page.id)}"><button class="page-name" data-page="${esc(page.id)}" title="${esc(page.name)}">${icon('layers', 14)}<span>${esc(page.name)}</span></button><span class="count">${count}</span><button class="icon-button tiny page-tool" data-page-rename="${esc(page.id)}" aria-label="Renombrar página ${esc(page.name)}">✎</button>${pages.length > 1 ? `<button class="icon-button tiny page-tool" data-page-remove="${esc(page.id)}" aria-label="Eliminar página ${esc(page.name)}">×</button>` : ''}</div>`; }).join('');
+}
+function setPage(id: string) { if (!pagesOf(p()).some(page => page.id === id) || id === pageId()) return; p().activePageId = id; store.touch(); state.selected = []; state.selectionScope = null; render(); fit(); persist(); }
 
 function toast(message: string) { byId('toast').textContent = message; byId('toast').classList.add('visible'); clearTimeout(toastTimer); toastTimer = setTimeout(() => byId('toast').classList.remove('visible'), 3500); }
 function persist() {
@@ -153,12 +165,12 @@ function render() {
   document.querySelector('[data-action="theme"]')!.innerHTML = icon(p().theme === 'light' ? 'sun' : 'moon', 16);
   (document.querySelector('[data-action="undo"]') as HTMLButtonElement).disabled = !store.undoStack.length;
   (document.querySelector('[data-action="redo"]') as HTMLButtonElement).disabled = !store.redoStack.length;
-  renderCanvas(); if (tab === 'layers') renderLayers(); renderInspector(); if (tab === 'components') renderComponents(); renderSystem();
+  renderPages(); renderCanvas(); if (tab === 'layers') renderLayers(); renderInspector(); if (tab === 'components') renderComponents(); renderSystem();
   const pending = p().components.filter(docStale).length + (designSystemStale(p()) ? 1 : 0), badge = byId('system-stale'); badge.hidden = !pending; badge.textContent = `${pending}`; badge.title = `${pending} ${pending === 1 ? 'ficha' : 'fichas'} por revisar`;
 }
 function renderCanvas() {
   const artboards = byId('artboards'); artboards.replaceChildren();
-  for (const n of children(p(), null)) {
+  for (const n of rootsOnPage(p(), pageId())) {
     if (n.hidden) continue;
     if (n.type === 'frame') {
       const label = document.createElement('button'); label.className = 'frame-label'; label.dataset.node = n.id; label.style.left = `${n.x}px`; label.style.top = `${n.y - 30 / state.zoom}px`; label.style.fontSize = `${11 / state.zoom}px`; label.style.height = `${24 / state.zoom}px`; label.innerHTML = `${icon('frame', 13 / state.zoom)}<span>${esc(n.name)}</span><small>${Math.round(n.width)} × ${Math.round(n.height)}</small>`;
@@ -170,7 +182,7 @@ function renderCanvas() {
     // One soft spot per issue: red for errors, amber for warnings, blue for notes. Overlaps add up.
     const layer = document.createElement('div'); layer.className = 'heat-layer'; layer.setAttribute('aria-hidden', 'true');
     for (const issue of review.issues) {
-      const n = find(issue.node); if (!n || n.type === 'frame') continue;
+      const n = find(issue.node); if (!n || n.type === 'frame' || !onPage(n.id)) continue;
       const at = absolute(p(), n), spot = document.createElement('div'), grow = Math.max(18, Math.min(n.width, n.height) * .35);
       spot.className = `heat-spot ${issue.severity}`; spot.dataset.heat = issue.node;
       Object.assign(spot.style, { left: `${at.x - grow}px`, top: `${at.y - grow}px`, width: `${n.width + grow * 2}px`, height: `${n.height + grow * 2}px` });
@@ -215,7 +227,7 @@ function renderCamera() {
 }
 function fit(selectionOnly = false) {
   if (gesture) return;
-  const nodes = (selectionOnly ? topSelected(p(), state.selected).map(find).filter((n): n is DesignNode => !!n) : children(p(), null)).filter(n => !n.hidden);
+  const nodes = (selectionOnly ? topSelected(p(), state.selected).map(find).filter((n): n is DesignNode => !!n) : rootsOnPage(p(), pageId())).filter(n => !n.hidden);
   if (!nodes.length) {
     if (selectionOnly) { toast('Selecciona un elemento para ajustar la vista.'); return; }
     state.pan = { x: 80, y: 60 }; state.zoom = 1; renderCamera(); return;
@@ -259,7 +271,7 @@ function renderConnections() {
   const svg = document.querySelector<SVGSVGElement>('#connections')!; svg.style.display = state.mode === 'flow' ? 'block' : 'none';
   svg.innerHTML = `<defs><marker id="arrowhead" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="#ab8aff"/></marker></defs>`;
   if (state.mode !== 'flow') return;
-  for (const n of p().nodes.filter(n => n.targetId && !n.hidden)) {
+  for (const n of p().nodes.filter(n => n.targetId && !n.hidden && onPage(n.id) && onPage(n.targetId!))) {
     const target = find(n.targetId!); if (!target || target.hidden) continue;
     const a = absolute(p(), n), b = absolute(p(), target); const toRight = b.x > a.x;
     const x1 = a.x + (toRight ? n.width : 0), y1 = a.y + n.height / 2, x2 = b.x + (toRight ? 0 : target.width), y2 = b.y + 42;
@@ -268,7 +280,7 @@ function renderConnections() {
   }
 }
 function renderLayers() {
-  const visit = (parentId: string | null, depth: number): string => children(p(), parentId).map(n => {
+  const visit = (parentId: string | null, depth: number): string => (parentId === null ? rootsOnPage(p(), pageId()) : children(p(), parentId)).map(n => {
     const kids = children(p(), n.id); const selectedClass = state.selected.includes(n.id) ? ' selected' : ''; const collapsedClass = collapsed.has(n.id) ? ' closed' : '';
     return `<div class="layer${selectedClass}${n.hidden ? ' is-hidden' : ''}${n.type === 'frame' ? ' frame-layer' : ''}" data-layer="${esc(n.id)}" style="--depth:${depth}"><button class="collapse${collapsedClass}" data-collapse="${esc(n.id)}" aria-label="${collapsed.has(n.id)?'Expandir':'Contraer'} ${esc(n.name)}" ${!kids.length?'style="visibility:hidden"':''}>${icon('chevron',10)}</button><span class="layer-icon ${n.componentId || n.instanceOf ? 'purple' : ''}">${icon(n.componentId || n.instanceOf ? 'component' : n.type,14)}</span><span class="layer-name">${esc(n.name)}</span><button class="layer-action ${n.locked?'on':''}" data-lock="${n.id}" aria-label="${n.locked?'Desbloquear':'Bloquear'} ${esc(n.name)}">${icon('lock',12)}</button><button class="layer-action ${n.hidden?'on':''}" data-hide="${n.id}" aria-label="${n.hidden?'Mostrar':'Ocultar'} ${esc(n.name)}">${icon('eye',12)}</button></div>${!collapsed.has(n.id)?visit(n.id,depth+1):''}`;
   }).join('');
@@ -310,7 +322,7 @@ function renderComponents() {
 }
 async function insertKit(itemId: string,position?:{x:number;y:number}) {
   const kits=await loadKits();const current=find(state.selected[0]);
-  let parent=position?parentAt(position.x,position.y):current&&(containerKinds.includes(current.type)?current:find(current.parentId!))||find(state.selectionScope!)||p().nodes.find(n=>n.type==='frame');
+  let parent=position?parentAt(position.x,position.y):current&&(containerKinds.includes(current.type)?current:find(current.parentId!))||find(state.selectionScope!)||firstFrame();
   // Repeated insertions go beside the selected instance, never inside a component.
   while(parent&&(parent.instanceOf||parent.componentId||ancestors(p(),parent.id).some(n=>n.instanceOf||n.componentId)))parent=find(parent.parentId!);
   if(parent&&isUnavailable(p(),parent)){toast('Desbloquea el contenedor para insertar elementos.');return;}
@@ -350,7 +362,7 @@ function searchResources(immediate = false) {
 async function insertResource(id: string, position?: { x: number; y: number }) {
   const lib = await loadResources(); const hit = resourceHits.find(h => h.id === id); if (!hit) return;
   const current = find(state.selected[0]);
-  let parent = position ? parentAt(position.x, position.y) : current && (containerKinds.includes(current.type) ? current : find(current.parentId!)) || find(state.selectionScope!) || p().nodes.find(n => n.type === 'frame');
+  let parent = position ? parentAt(position.x, position.y) : current && (containerKinds.includes(current.type) ? current : find(current.parentId!)) || find(state.selectionScope!) || firstFrame();
   while (parent && (parent.instanceOf || ancestors(p(), parent.id).some(n => n.instanceOf))) parent = find(parent.parentId!);
   if (parent && isUnavailable(p(), parent)) { toast('Desbloquea el contenedor para insertar elementos.'); return; }
   const pos = parent ? absolute(p(), parent) : { x: 0, y: 0 }, x = position ? position.x - pos.x : 32, y = position ? position.y - pos.y : 32;
@@ -372,7 +384,7 @@ async function insertResource(id: string, position?: { x: number; y: number }) {
 async function loadIcons(){if(!iconModule){iconModule=await import('./icon-library');renderComponents();}return iconModule;}
 async function insertLibraryIcon(name:string,position?:{x:number;y:number}){
   const library=await loadIcons(),current=find(state.selected[0]);
-  let parent=position?parentAt(position.x,position.y):current&&(containerKinds.includes(current.type)?current:find(current.parentId!))||find(state.selectionScope!)||p().nodes.find(n=>n.type==='frame');
+  let parent=position?parentAt(position.x,position.y):current&&(containerKinds.includes(current.type)?current:find(current.parentId!))||find(state.selectionScope!)||firstFrame();
   while(parent&&(parent.instanceOf||ancestors(p(),parent.id).some(n=>n.instanceOf)))parent=find(parent.parentId!);
   if(parent&&isUnavailable(p(),parent)){toast('Desbloquea el contenedor para insertar elementos.');return;}
   const pos=parent?absolute(p(),parent):{x:0,y:0};let id='';
@@ -442,7 +454,7 @@ function devicePanel(n: DesignNode) {
 function tokenPanel(n: DesignNode) {
   const theme=effectiveTheme(p(),n),s=theme.tokens;
   const choices=(values:Record<string,unknown>):[string,string][]=>[['','Sin vínculo'],...Object.entries(values).map(([id,value]):[string,string]=>[id,typeof value==='object'&&value?(value as {name:string}).name:id])];
-  return `${n.type==='frame'?`${devicePanel(n)}<section class="inspector-section"><div class="section-heading"><span>TEMA DE ESTA PANTALLA</span></div>${selectField('Tema de pantalla','themeId',n.themeId??'',[['','Heredar documento'],...Object.values(p().designThemes).map(t=>[t.id,t.name] as [string,string])])}${selectField('Modo de pantalla','themeMode',n.themeMode??'inherit',[['inherit','Heredar documento'],['light','Claro'],['dark','Oscuro']])}<label class="full-field"><span>Estilo de plataforma</span><select aria-label="Aplicar tema de kit" id="frame-kit"><option value="">Elegir kit…</option>${[['ios','iOS'],['macos','macOS'],['android','Android'],['linux','Linux / GNOME'],['web','Web']].map(([id,name])=>`<option value="${id}">${name}</option>`).join('')}</select></label></section>`:''}<section class="inspector-section"><div class="section-heading"><span>TOKENS</span><button class="text-button" data-action="themes">Editar</button></div><p class="field-note">${esc(p().designThemes[theme.id].name)} · ${theme.mode==='light'?'Claro':'Oscuro'}</p>${selectField('Token de relleno','fillToken',n.fillToken??'',choices({...s.colors,...s.gradients}))}${selectField('Material','materialToken',n.materialToken??'',choices(s.materials))}${selectField('Token de radio','radiusToken',n.radiusToken??'',choices(s.radii))}${['text','button','input'].includes(n.type)?selectField('Token de tipografía','typographyToken',n.typographyToken??'',choices(s.typography)):''}<p class="field-note">Un vínculo controla esa propiedad. «Sin vínculo» permite usar el valor manual.</p></section>`;
+  return `${n.type==='frame'?`${n.parentId===null&&pagesOf(p()).length>1?`<section class="inspector-section"><div class="section-heading"><span>PÁGINA</span></div>${selectField('Página de esta pantalla','pageId',n.pageId??pagesOf(p())[0].id,pagesOf(p()).map(page=>[page.id,page.name] as [string,string]))}</section>`:''}${devicePanel(n)}<section class="inspector-section"><div class="section-heading"><span>TEMA DE ESTA PANTALLA</span></div>${selectField('Tema de pantalla','themeId',n.themeId??'',[['','Heredar documento'],...Object.values(p().designThemes).map(t=>[t.id,t.name] as [string,string])])}${selectField('Modo de pantalla','themeMode',n.themeMode??'inherit',[['inherit','Heredar documento'],['light','Claro'],['dark','Oscuro']])}<label class="full-field"><span>Estilo de plataforma</span><select aria-label="Aplicar tema de kit" id="frame-kit"><option value="">Elegir kit…</option>${[['ios','iOS'],['macos','macOS'],['android','Android'],['linux','Linux / GNOME'],['web','Web']].map(([id,name])=>`<option value="${id}">${name}</option>`).join('')}</select></label></section>`:''}<section class="inspector-section"><div class="section-heading"><span>TOKENS</span><button class="text-button" data-action="themes">Editar</button></div><p class="field-note">${esc(p().designThemes[theme.id].name)} · ${theme.mode==='light'?'Claro':'Oscuro'}</p>${selectField('Token de relleno','fillToken',n.fillToken??'',choices({...s.colors,...s.gradients}))}${selectField('Material','materialToken',n.materialToken??'',choices(s.materials))}${selectField('Token de radio','radiusToken',n.radiusToken??'',choices(s.radii))}${['text','button','input'].includes(n.type)?selectField('Token de tipografía','typographyToken',n.typographyToken??'',choices(s.typography)):''}<p class="field-note">Un vínculo controla esa propiedad. «Sin vínculo» permite usar el valor manual.</p></section>`;
 }
 function renderInspector() {
   const n = state.selected.length === 1 ? find(state.selected[0]) : undefined;
@@ -470,13 +482,13 @@ function renderInspector() {
     <section class="inspector-section"><div class="section-heading"><span>RELLENO</span></div>${fillFields(n)}<div class="field-grid">${numField('Opacidad','opacity',n.opacity,0,100)}${numField('Radio','radius',r.radius,0,500)}</div><details class="corner-details"><summary>Radios por esquina</summary><div class="field-grid">${numField('Sup. der.','radiusTR',n.radiusTR??n.radius,0,500)}${numField('Inf. der.','radiusBR',n.radiusBR??n.radius,0,500)}${numField('Inf. izq.','radiusBL',n.radiusBL??n.radius,0,500)}</div></details></section>
     <section class="inspector-section"><div class="section-heading"><span>BORDE Y EFECTOS</span></div>${colorField('Borde','stroke',n.stroke)}<div class="field-grid">${numField('Grosor','strokeWidth',n.strokeWidth,0,50)}<label class="check-field"><input type="checkbox" data-field="shadow" ${n.shadow?'checked':''}/> Sombra</label></div></section>
     ${n.type==='image'?'<section class="inspector-section"><button class="wide-button" data-action="image">Cambiar imagen local</button></section>':''}
-    <section class="inspector-section"><div class="section-heading"><span>AL HACER CLIC</span>${icon('link',14)}</div><select data-field="targetId" aria-label="Navegar a pantalla"><option value="">Sin navegación</option>${p().nodes.filter(f=>f.type==='frame'&&f.id!==frameOf(p(),n.id)?.id).map(f=>`<option value="${f.id}" ${n.targetId===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}</select>${n.targetId?`<label class="full-field"><span>Transición</span><select data-transition="type" aria-label="Transición">${[['','Sin animación'],...transitionTypes.map(t=>[t,transitionLabels[t]])].map(([v,l])=>`<option value="${v}" ${(n.transition?.type??'')===v?'selected':''}>${l}</option>`).join('')}</select></label>${n.transition?`<div class="field-grid"><label class="number-field"><span>Duración</span><input type="number" aria-label="Duración de la transición" data-transition="duration" value="${n.transition.duration}" min="0" max="5000" step="50"/></label><label class="full-field"><span>Curva</span><select data-transition="easing" aria-label="Curva de la transición">${easings.map(e=>`<option value="${e}" ${n.transition!.easing===e?'selected':''}>${easingLabels[e]}</option>`).join('')}</select></label></div>`:''}`:''}<p class="field-note">Prueba la conexión en Presentar.</p></section>
+    <section class="inspector-section"><div class="section-heading"><span>AL HACER CLIC</span>${icon('link',14)}</div><select data-field="targetId" aria-label="Navegar a pantalla"><option value="">Sin navegación</option>${pagesOf(p()).map(page=>{const frames=rootsOnPage(p(),page.id).filter(f=>f.type==='frame'&&f.id!==frameOf(p(),n.id)?.id);return frames.length?`<optgroup label="${esc(page.name)}">${frames.map(f=>`<option value="${f.id}" ${n.targetId===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}</optgroup>`:'';}).join('')}</select>${n.targetId&&!onPage(n.targetId)?`<p class="field-note">La pantalla de destino está en otra página.</p>`:''}${n.targetId?`<label class="full-field"><span>Transición</span><select data-transition="type" aria-label="Transición">${[['','Sin animación'],...transitionTypes.map(t=>[t,transitionLabels[t]])].map(([v,l])=>`<option value="${v}" ${(n.transition?.type??'')===v?'selected':''}>${l}</option>`).join('')}</select></label>${n.transition?`<div class="field-grid"><label class="number-field"><span>Duración</span><input type="number" aria-label="Duración de la transición" data-transition="duration" value="${n.transition.duration}" min="0" max="5000" step="50"/></label><label class="full-field"><span>Curva</span><select data-transition="easing" aria-label="Curva de la transición">${easings.map(e=>`<option value="${e}" ${n.transition!.easing===e?'selected':''}>${easingLabels[e]}</option>`).join('')}</select></label></div>`:''}`:''}<p class="field-note">Prueba la conexión en Presentar.</p></section>
     <section class="inspector-section"><div class="section-heading"><span>ANIMACIÓN</span>${icon('play',14)}</div><p class="field-note">${n.animations?.length?`${n.animations.length} ${n.animations.length===1?'animación':'animaciones'}: ${esc(n.animations.map(a=>a.name).join(', '))}.`:'Sin animaciones.'}${n.svg?` ${vectorLayers(n.svg).length} capas animables.`:''} Se reproducen en Presentar.</p><button class="wide-button" data-action="animator">${icon('spark',16)} Abrir animador</button>${n.type==='vector'?'<button class="wide-button" data-action="image">Cambiar SVG</button>':''}</section>
     ${variantPanel(n)}
     <section class="inspector-section"><div class="button-row">${n.type!=='frame'&&!n.componentId&&!n.instanceOf?'<button class="component-button" data-action="make-component">◇ Crear componente</button>':''}${n.instanceOf?'<button data-action="master">Editar maestro</button><button data-action="detach">Desvincular</button>':''}${n.componentId?'<button class="component-button" data-action="insert-instance">◇ Insertar instancia</button>':''}${n.type==='group'&&!n.componentId&&!n.instanceOf?'<button data-action="ungroup">Desagrupar</button>':''}</div>${n.type==='frame'?'<button class="wide-button" data-action="export-svg">Exportar pantalla SVG</button>':''}</section></fieldset>${themePanel()}`;
 }
 
-function setTab(next: typeof tab) { tab=next; document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',(b as HTMLElement).dataset.tab===tab)); layersEl.hidden=tab!=='layers'; byId('components').hidden=tab!=='components'; byId('system-index').hidden=tab!=='system'; if(tab==='layers')renderLayers(); if(tab==='components')renderComponents(); }
+function setTab(next: typeof tab) { tab=next; document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',(b as HTMLElement).dataset.tab===tab)); if(!options.modular){layersEl.hidden=tab!=='layers'; byId('components').hidden=tab!=='components'; byId('system-index').hidden=tab!=='system';} if(tab==='layers')renderLayers(); if(tab==='components')renderComponents(); }
 function setMode(next: typeof state.mode) { state.mode=next; document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',(b as HTMLElement).dataset.mode===state.mode)); renderConnections(); renderSystem(); }
 /** A component template drawn small enough to fit a tile, on the theme background it would sit on. */
 const previewCache = new Map<string, { key: string; el: HTMLElement }>();
@@ -603,26 +615,26 @@ function variantPanel(n: DesignNode) {
   return `<section class="inspector-section"><div class="section-heading"><span>VARIANTE</span></div><p class="field-note">${esc(c.setName??c.name)}</p>${Object.entries(axes).map(([axis,values])=>`<label class="full-field"><span>${esc(axis)}</span><select data-variant-switch="${esc(axis)}" aria-label="Variante · ${esc(axis)}">${values.map(v=>`<option value="${esc(v)}" ${(c.variant?.[axis]??'')===v?'selected':''}>${esc(v)}</option>`).join('')}</select></label>`).join('')}</section>`;
 }
 function addFrame() {
-  const ns = children(p(),null); const x = ns.length ? Math.max(...ns.map(n=>n.x+n.width))+80 : 60;
-  const f = node('frame',{x,y:100,name:`${String(p().nodes.filter(n=>n.type==='frame').length+1).padStart(2,'0')} · Nueva pantalla`});
+  const ns = rootsOnPage(p(), pageId()); const x = ns.length ? Math.max(...ns.map(n=>n.x+n.width))+80 : 60;
+  const f = node('frame',{x,y:100,pageId:pageId(),name:`${String(p().nodes.filter(n=>n.type==='frame').length+1).padStart(2,'0')} · Nueva pantalla`});
   change(pr=>pr.nodes.push(f)); select([f.id]); fit();
 }
 function parentAt(x: number, y: number) {
-  return [...p().nodes].reverse().find(n=>n.type==='frame'&&!n.hidden&&x>=n.x&&y>=n.y&&x<=n.x+n.width&&y<=n.y+n.height);
+  return [...pv().nodes].reverse().find(n=>n.type==='frame'&&!n.hidden&&n.parentId===null&&x>=n.x&&y>=n.y&&x<=n.x+n.width&&y<=n.y+n.height);
 }
 function insert(kind: Kind, position?: {x:number;y:number}) {
   if (kind==='image'||kind==='vector') { byId<HTMLInputElement>('image-file').click(); return; }
   if (kind==='frame') { addFrame(); return; }
   let parent: DesignNode | undefined;
   if (position) parent = parentAt(position.x,position.y);
-  else { const n = find(state.selected[0]); parent = n && containerKinds.includes(n.type) ? n : n ? find(n.parentId!) : find(state.selectionScope!) || p().nodes.find(n=>n.type==='frame'); }
+  else { const n = find(state.selected[0]); parent = n && containerKinds.includes(n.type) ? n : n ? find(n.parentId!) : find(state.selectionScope!) || firstFrame(); }
   if (parent && isUnavailable(p(),parent)) { toast('Desbloquea el contenedor para insertar elementos.'); return; }
   const pos = parent ? absolute(p(),parent) : {x:0,y:0};
   const n = node(kind,{parentId:parent?.id||null,x:position?position.x-pos.x:32,y:position?position.y-pos.y:32});
   change(pr=>pr.nodes.push(n)); select([n.id]); setTool('cursor');
 }
 function insertComponent(componentId: string, position?: {x:number;y:number}) {
-  const n = find(state.selected[0]); let parent = position ? parentAt(position.x,position.y) : n ? (containerKinds.includes(n.type)?n:find(n.parentId!)) : p().nodes.find(n=>n.type==='frame');
+  const n = find(state.selected[0]); let parent = position ? parentAt(position.x,position.y) : n ? (containerKinds.includes(n.type)?n:find(n.parentId!)) : firstFrame();
   if (parent && (isUnavailable(p(),parent) || parent.instanceOf || parent.componentId || ancestors(p(),parent.id).some(n=>n.instanceOf||n.componentId))) { toast('Inserta la instancia en una pantalla o grupo independiente.'); return; }
   const pos = parent ? absolute(p(),parent) : {x:0,y:0}; let id = '';
   change(pr=>{id=instantiate(pr,componentId,parent?.id||null,position?position.x-pos.x:32,position?position.y-pos.y:32);}); if(id)select([id]);
@@ -716,6 +728,8 @@ async function action(act: string) {
     case 'insert-instance':{const n=find(state.selected[0]);if(n?.componentId)insertComponent(n.componentId,{x:absolute(p(),n).x,y:absolute(p(),n).y+n.height+20});break;}
     case 'master':{const n=find(state.selected[0]);const c=p().components.find(c=>c.id===n?.instanceOf);if(c&&find(c.masterId)){select([c.masterId]);focusFrame(c.masterId);}else toast('El maestro fue eliminado; puedes desvincular esta instancia.');break;}
     case 'detach':change(pr=>detach(pr,state.selected[0]));break;
+    case 'add-page':{let id='';change(pr=>{id=addPage(pr,`Página ${pagesOf(pr).length+1}`).id;},'Página creada');setPage(id);break;}
+    case 'versions':openVersions();break;
     case 'variant-create':{const n=find(state.selected[0]);const c=p().components.find(c=>c.id===n?.componentId);if(!c)break;const axes=c.set?variantAxes(p(),c.set):{};const axis=Object.keys(axes)[0]??'Estado';const taken=new Set(axes[axis]??[]);let value='Variante 2';for(let i=2;taken.has(value);i++)value=`Variante ${i}`;let masterId='';change(pr=>{masterId=createVariant(pr,c.id,{[axis]:value}).masterId;},'Variante creada junto al maestro');if(masterId){select([masterId]);focusFrame(masterId);}break;}
     case 'variant-axis':{const n=find(state.selected[0]);const c=p().components.find(c=>c.id===n?.componentId);if(!c)break;const existing=c.set?Object.keys(variantAxes(p(),c.set)):[];let axis='Eje 2';for(let i=2;existing.includes(axis);i++)axis=`Eje ${i}`;change(pr=>defineVariant(pr,c.id,{[axis]:'Base'}));break;}
     case 'align-left':align('left');break;
@@ -739,6 +753,9 @@ events.addEventListener('click',e=>{
   if(el.dataset.posture){const current=find(previewFrame||''),other=find(el.dataset.posture);if(current&&other){const t:Transition={type:panelsOf(other)>panelsOf(current)?'unfold':'fold',duration:700,easing:'ease-in-out'};previewHistory.push({id:current.id,transition:t});preview(other.id,false,t);}return;}
   if(el.dataset.action){void action(el.dataset.action).catch(err=>toast(String(err)));return;}
   if(el.dataset.library){libraryTab=el.dataset.library as typeof libraryTab;renderComponents();if(libraryTab==='kits')void loadKits().catch(err=>toast(String(err)));if(libraryTab==='icons')void loadIcons().catch(err=>toast(String(err)));if(libraryTab==='resources')void loadResources().catch(err=>toast(String(err)));return;}
+  if(el.dataset.pageRename){const id=el.dataset.pageRename,row=el.closest<HTMLElement>('.page-row')!,page=pagesOf(p()).find(page=>page.id===id)!;row.innerHTML=`<input class="page-input" data-page-name="${esc(id)}" aria-label="Nombre de la página" value="${esc(page.name)}" maxlength="60"/>`;const input=row.querySelector<HTMLInputElement>('input')!;input.focus();input.select();input.onkeydown=ev=>{if(ev.key==='Escape'){ev.stopPropagation();renderPages();}if(ev.key==='Enter'){ev.preventDefault();input.blur();}};return;}
+  if(el.dataset.pageRemove){try{const id=el.dataset.pageRemove;change(pr=>removePage(pr,id),'Página eliminada');}catch(error){toast(String(error instanceof Error?error.message:error));}return;}
+  if(el.dataset.page&&!el.dataset.pageName){setPage(el.dataset.page);return;}
   if(el.dataset.resource){void insertResource(el.dataset.resource).catch(err=>toast(String(err)));return;}
   if(el.dataset.action==='resource-reseed'){resourceSeed=`${resourceSeed.replace(/-\d+$/,'')}-${Math.floor(Math.random()*9000+1000)}`;searchResources(true);return;}
   if(el.dataset.iconItem){void insertLibraryIcon(el.dataset.iconItem).catch(err=>toast(String(err)));return;}
@@ -771,6 +788,7 @@ events.addEventListener('change',e=>{
     void (async()=>{if(c.set!.startsWith('kit-')){const mod=kitModule??await import('./kits');if(disposed)return;change(pr=>{mod.ensureKitVariant(pr,c.set!,{...(c.variant??{}),[axis]:value});switchVariant(pr,n.id,{[axis]:value});});}else change(pr=>switchVariant(pr,n.id,{[axis]:value}));})();
     return;
   }
+  if(el.dataset.pageName){const id=el.dataset.pageName;try{change(pr=>renamePage(pr,id,el.value));}catch(error){toast(String(error instanceof Error?error.message:error));renderPages();}return;}
   if(el.id==='resource-source'){resourceSource=el.value as typeof resourceSource;resourceHits=[];resourceState='idle';searchResources(true);return;}
   if(el.id==='zoom-value') {
     const raw = el.value.trim().replace(/%$/, '').trim().replace(',', '.'); const value = Number(raw);
@@ -831,6 +849,7 @@ events.addEventListener('change',e=>{
   }
   if(el.dataset.field&&state.selected.length===1){const n=find(state.selected[0]);if(!n||isUnavailable(p(),n))return;const field=el.dataset.field as keyof DesignNode;let value:unknown=el.value;if(el instanceof HTMLInputElement&&el.type==='number'){if(!el.checkValidity()){toast('Introduce un valor dentro del rango permitido.');renderInspector();return;}value=Number(el.value);}if(el instanceof HTMLInputElement&&el.type==='checkbox')value=el.checked;if(field==='targetId'&&!value)value=null;if(['fillToken','materialToken','typographyToken','radiusToken','themeId'].includes(field)&&!value)value=undefined;
     // Editing a value that a token controls detaches the token and keeps the other resolved values, so nothing else jumps.
+    if(field==='pageId'){change(pr=>updateNode(pr,n.id,{pageId:String(value)}),'Pantalla movida de página');select([]);return;}
     const resolved=resolveNodeStyle(p(),n);let patch:Partial<DesignNode>={[field]:value};
     if(n.typographyToken&&['fontFamily','fontSize','fontWeight','lineHeight'].includes(field))patch={fontFamily:resolved.fontFamily,fontSize:resolved.fontSize,fontWeight:resolved.fontWeight,lineHeight:resolved.lineHeight,...patch,typographyToken:undefined};
     if(n.radiusToken&&field==='radius')patch={...patch,radiusToken:undefined};
@@ -853,11 +872,11 @@ byId<HTMLInputElement>('image-file').onchange=async e=>{const el=e.target as HTM
       const current=find(state.selected[0]),layers=vectorLayers(svg).map(l=>l.id);
       // Replacing the artwork keeps the animations whose layers still exist.
       if(current?.type==='vector')change(pr=>updateNode(pr,current.id,{svg,animations:current.animations?.filter(a=>!a.target||layers.includes(a.target))}),'Ilustración actualizada');
-      else{const parent=current?frameOf(p(),current.id):p().nodes.find(n=>n.type==='frame'),size=vectorSize(svg),width=Math.min(240,size.width);const n=node('vector',{parentId:parent?.id||null,x:32,y:32,width,height:Math.max(1,Math.round(width*size.height/size.width)),svg,name:file.name.replace(/\.svg$/i,'')});change(pr=>pr.nodes.push(n),'Ilustración añadida · anímala en Propiedades');select([n.id]);}
+      else{const parent=current?frameOf(p(),current.id):firstFrame(),size=vectorSize(svg),width=Math.min(240,size.width);const n=node('vector',{parentId:parent?.id||null,x:32,y:32,width,height:Math.max(1,Math.round(width*size.height/size.width)),svg,name:file.name.replace(/\.svg$/i,'')});change(pr=>pr.nodes.push(n),'Ilustración añadida · anímala en Propiedades');select([n.id]);}
     }catch(error){toast(error instanceof Error?error.message:'No se pudo importar el SVG.');}
     return;
   }if(file.size>3_000_000){toast('Usa una imagen de menos de 3 MB para mantener ligero el proyecto.');el.value='';return;}
-  const reader=new FileReader();reader.onload=()=>{if(disposed)return;const image=String(reader.result);const current=find(state.selected[0]);if(current?.type==='image')change(pr=>updateNode(pr,current.id,{image}));else{const parent=current?frameOf(p(),current.id):p().nodes.find(n=>n.type==='frame');const n=node('image',{parentId:parent?.id||null,x:32,y:32,width:240,height:180,image,name:file.name});change(pr=>pr.nodes.push(n));select([n.id]);}};reader.readAsDataURL(file);el.value='';};
+  const reader=new FileReader();reader.onload=()=>{if(disposed)return;const image=String(reader.result);const current=find(state.selected[0]);if(current?.type==='image')change(pr=>updateNode(pr,current.id,{image}));else{const parent=current?frameOf(p(),current.id):firstFrame();const n=node('image',{parentId:parent?.id||null,x:32,y:32,width:240,height:180,image,name:file.name});change(pr=>pr.nodes.push(n));select([n.id]);}};reader.readAsDataURL(file);el.value='';};
 
 // Pointer gestures make one history entry, regardless of how many pointer moves occur.
 type Gesture = {kind:'pan'|'drag'|'resize'|'draw'|'marquee';pointerId:number;start:{x:number;y:number};screen:{x:number;y:number};before:Project;geometry:Map<string,{x:number;y:number;width:number;height:number}>;ids:string[];handle?:string;pan:{x:number;y:number};draft?:DesignNode;moved:boolean;shift:boolean;scope:Scope;scopeBefore:Scope;selectionBefore:string[]};
@@ -874,13 +893,13 @@ dom.listen(stage,'pointerdown',e=>{
   else if(handle){g.kind='resize';g.ids=[handle.dataset.id!];g.handle=handle.dataset.resize;}
   else if(state.tool!=='cursor'){
     const parent=state.tool==='frame'?undefined:parentAt(pos.x,pos.y);if(parent&&isUnavailable(p(),parent)){toast('Esta pantalla está bloqueada.');return;}
-    g.kind='draw';g.draft=node(state.tool,{parentId:parent?.id||null,x:pos.x-(parent?.x||0),y:pos.y-(parent?.y||0),width:1,height:1});
+    g.kind='draw';g.draft=node(state.tool,{parentId:parent?.id||null,...(parent?{}:{pageId:pageId()}),x:pos.x-(parent?.x||0),y:pos.y-(parent?.y||0),width:1,height:1});
   }else{
     const raw=hitNode(e.target as HTMLElement);
-    const scope=(e.target as HTMLElement).closest('.frame-label') ? raw?.parentId ?? null : scopeAtPoint(p(),state.selectionScope,pos,raw?.id);
+    const scope=(e.target as HTMLElement).closest('.frame-label') ? raw?.parentId ?? null : scopeAtPoint(pv(),state.selectionScope,pos,raw?.id);
     if(scope!==state.selectionScope)select([],scope);
     g.scope=state.selectionScope;
-    const n=atScope(p(),raw?.id,state.selectionScope);
+    const n=atScope(pv(),raw?.id,state.selectionScope);
     if(n){
       if(e.shiftKey)select(state.selected.includes(n.id)?state.selected.filter(id=>id!==n.id):[...state.selected,n.id],state.selectionScope);
       else if(!state.selected.includes(n.id))select([n.id],state.selectionScope);
@@ -897,7 +916,7 @@ dom.listen(stage,'pointermove',e=>{
   if(g.kind==='draw'&&g.draft){const parent=g.draft.parentId?find(g.draft.parentId):undefined;const n=g.draft;n.x=Math.min(pos.x,g.start.x)-(parent?.x||0);n.y=Math.min(pos.y,g.start.y)-(parent?.y||0);n.width=Math.max(1,Math.abs(dx));n.height=Math.max(1,Math.abs(dy));if(e.shiftKey)n.height=n.width;const ghost=element(p(),{...n,parentId:null,x:n.x+(parent?.x||0),y:n.y+(parent?.y||0)});ghost.style.opacity='.6';byId('drawing-overlay').replaceChildren(ghost);return;}
   if(g.kind==='marquee'){
     const box=document.createElement('div');box.className='marquee';Object.assign(box.style,{left:`${Math.min(pos.x,g.start.x)}px`,top:`${Math.min(pos.y,g.start.y)}px`,width:`${Math.abs(dx)}px`,height:`${Math.abs(dy)}px`,borderWidth:`${1/state.zoom}px`});byId('drawing-overlay').replaceChildren(box);
-    state.selected=[...new Set([...g.ids,...inMarquee(p(),g.scope,g.start,pos)])];renderSelection();return;
+    state.selected=[...new Set([...g.ids,...inMarquee(pv(),g.scope,g.start,pos)])];renderSelection();return;
   }
   // Put every node back where the gesture found it (no document clone per pointer move), then apply the delta.
   for(const n of p().nodes){const o=g.geometry.get(n.id);if(o){n.x=o.x;n.y=o.y;n.width=o.width;n.height=o.height;}}
@@ -914,7 +933,7 @@ function finishGesture(e:Pick<PointerEvent,'pointerId'|'clientX'|'clientY'>,canc
   if(!gesture)return;const g=gesture;gesture=null;byId('drawing-overlay').replaceChildren();if(stage.hasPointerCapture(e.pointerId))stage.releasePointerCapture(e.pointerId);
   if(cancel){store.project=g.before;state.selectionScope=g.scopeBefore;state.selected=g.selectionBefore;state.pan=g.pan;render();return;}if(g.kind==='pan')return;
   if(g.kind==='draw'&&g.draft){const n=g.draft;if(!g.moved||n.width<8||n.height<8){const standard=node(n.type);n.width=standard.width;n.height=standard.height;}change(pr=>pr.nodes.push(n));select([n.id]);setTool('cursor');return;}
-  if(g.kind==='marquee'&&g.moved){select([...new Set([...g.ids,...inMarquee(p(),g.scope,g.start,point(e.clientX,e.clientY))])],g.scope);return;}
+  if(g.kind==='marquee'&&g.moved){select([...new Set([...g.ids,...inMarquee(pv(),g.scope,g.start,point(e.clientX,e.clientY))])],g.scope);return;}
   if(g.moved&&(g.kind==='drag'||g.kind==='resize')){
     if(g.kind==='drag'){
       const destination=parentAt(point(e.clientX,e.clientY).x,point(e.clientX,e.clientY).y);
@@ -934,7 +953,7 @@ dom.listen(stage,'dblclick',e=>{
   if(state.tool!=='cursor')return;
   // Pointer capture retargets click events to the stage in some engines.
   const target=document.elementFromPoint(e.clientX,e.clientY) as HTMLElement|null;
-  const raw=hitNode(target||e.target as HTMLElement);const n=atScope(p(),raw?.id,state.selectionScope);if(!n)return;
+  const raw=hitNode(target||e.target as HTMLElement);const n=atScope(pv(),raw?.id,state.selectionScope);if(!n)return;
   if(canEnter(n)){enterScope(n.id);return;}
   if(!['text','button','input'].includes(n.type)||isUnavailable(p(),n))return;
   const el=byId('artboards').querySelector<HTMLElement>(`[data-node="${CSS.escape(n.id)}"] .node-text`);if(!el)return;el.contentEditable='true';el.style.pointerEvents='auto';el.style.cursor='text';el.focus();
@@ -1060,6 +1079,21 @@ async function pollAgent(){
 function startAgentPolling(){if(agentTimer!==undefined)return;void pollAgent();agentTimer=setInterval(()=>void pollAgent(),500);}
 if(nativeInvoke && options.nativeAgent !== false)startAgentPolling();
 const stageObserver=new ResizeObserver(()=>{if(!disposed && stage.isConnected)renderCamera();});stageObserver.observe(stage);
+// Versions: named, compressed snapshots kept inside the document; restoring is a normal (undoable) commit.
+async function openVersions(compareId?: string){
+  const modal=byId('modal-root'),versions=p().versions??[];
+  let compare='';
+  if(compareId){const v=versions.find(v=>v.id===compareId);if(v){try{const d=compareVersion(p(),await unpackVersion(v.data));if(disposed)return;const list=(label:string,items:string[])=>items.length?`<p><b>${label}</b> ${esc(items.slice(0,12).join(', '))}${items.length>12?` y ${items.length-12} más`:''}</p>`:'';compare=`<section class="version-compare"><h3>Desde «${esc(v.name)}»</h3>${list('Pantallas nuevas:',d.added)}${list('Pantallas eliminadas:',d.removed)}${list('Pantallas cambiadas:',d.changed)}${!d.added.length&&!d.removed.length&&!d.changed.length?'<p>Sin cambios en las pantallas.</p>':''}<p class="field-note">${d.nodesBefore} → ${d.nodesAfter} elementos.</p></section>`;}catch(error){compare=`<p class="field-note">No se pudo leer la versión: ${esc(String(error instanceof Error?error.message:error))}</p>`;}}}
+  const size=(v:import('./model').Version)=>`${(v.data.length*3/4/1024).toFixed(0)} KB`;
+  modal.innerHTML=`<div class="modal-backdrop"><section class="dialog versions-dialog" role="dialog" aria-modal="true" aria-label="Versiones del diseño"><button class="dialog-close icon-button" data-action="close-preview" aria-label="Cerrar versiones">×</button><span class="eyebrow">VERSIONES</span><h2>Guarda hitos y vuelve a ellos.</h2><p>Cada versión es una copia comprimida del diseño dentro del documento (máximo 30). Restaurar es un cambio normal: Deshacer lo revierte.</p>
+    <form class="version-form" data-version-form><input name="name" aria-label="Nombre de la versión" placeholder="Nombre · p. ej. Entrega v1" maxlength="80" required/><input name="note" aria-label="Nota" placeholder="Nota (opcional)" maxlength="200"/><button class="primary" type="submit">Guardar versión</button></form>
+    ${versions.length?`<div class="version-list">${[...versions].reverse().map(v=>`<div class="version-row"><div><strong>${esc(v.name)}</strong><small>${esc(new Date(v.at).toLocaleString())} · ${v.screens} ${v.screens===1?'pantalla':'pantallas'} · ${size(v)}</small>${v.note?`<p>${esc(v.note)}</p>`:''}</div><div class="button-row compact"><button data-version-compare="${esc(v.id)}">Comparar</button><button data-version-restore="${esc(v.id)}">Restaurar</button><button data-version-remove="${esc(v.id)}" aria-label="Eliminar versión ${esc(v.name)}">×</button></div></div>`).join('')}</div>`:'<p class="empty-note">Aún no hay versiones guardadas.</p>'}${compare}</section></div>`;
+  modal.onsubmit=async e=>{e.preventDefault();const form=e.target as HTMLFormElement;const name=String(new FormData(form).get('name')??''),note=String(new FormData(form).get('note')??'');try{const version=await buildVersion(p(),name,note);if(disposed)return;change(pr=>addVersion(pr,version),`Versión «${version.name}» guardada`);void openVersions();}catch(error){toast(String(error instanceof Error?error.message:error));}};
+  modal.onclick=async e=>{const el=(e.target as HTMLElement).closest<HTMLElement>('button');if(!el)return;
+    if(el.dataset.versionCompare){void openVersions(el.dataset.versionCompare);return;}
+    if(el.dataset.versionRemove){change(pr=>removeVersion(pr,el.dataset.versionRemove!),'Versión eliminada');void openVersions();return;}
+    if(el.dataset.versionRestore){const v=(p().versions??[]).find(v=>v.id===el.dataset.versionRestore);if(!v)return;try{const payload=await unpackVersion(v.data);if(disposed)return;change(pr=>applyVersion(pr,payload),`Versión «${v.name}» restaurada · Deshacer la revierte`);closePreview();fit();}catch(error){toast(String(error instanceof Error?error.message:error));}}};
+}
 function agentHelp(){
   byId('modal-root').innerHTML=`<div class="modal-backdrop"><section class="dialog agent-dialog" role="dialog" aria-modal="true" aria-label="Flujo de IA y CLI"><button class="dialog-close icon-button" data-action="close-preview" aria-label="Cerrar guía de IA">×</button><span class="eyebrow">DISEÑAR JUNTOS</span><h2>Tú dibujas. La IA continúa.</h2><p class="agent-status">${nativeInvoke?(agentConnected?'● CLI local disponible con la app abierta':'Puente nativo disponible'):(embedded?'Editor integrado · API disponible para la aplicación':'Vista de navegador · el CLI se conecta a la app nativa')}</p><ol><li><strong>Leer contexto</strong><code>codaru context</code><span>Selección, pantallas, temas, conexiones y revisión actual.</span></li><li><strong>Descubrir piezas</strong><code>codaru catalog --kind icons</code><span>También: --kind kits. Usa schema para conocer las operaciones.</span></li><li><strong>Probar y aplicar</strong><code>codaru apply --file cambios.json --dry-run<br/>codaru apply --file cambios.json</code><span>Un lote atómico; devuelve IDs, cambios y contexto actualizado.</span></li><li><strong>Revisar el resultado</strong><code>codaru export --format svg --frame ID --output vista.svg</code><span>El diseño aparece en este lienzo. Deshacer restaura el lote.</span></li></ol><p>El JSON incluye <code>expectedRevision</code> y <code>operations</code>. Una revisión antigua se rechaza para proteger tus cambios. Cierra esta guía antes de pedir modificaciones.</p><p class="field-note">La app no llama a ningún modelo: tu agente ejecuta el CLI. Ejecutable en src-tauri/target/release/codaru; guía completa en CLI.md. Sin servidor Node.</p></section></div>`;
 }

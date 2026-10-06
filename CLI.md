@@ -73,6 +73,12 @@ Los tokens y los iconos se resuelven con el tema del elemento o de su pantalla. 
 ./codaru lint --frame pantalla-inicio
 ```
 
+### Páginas y versiones
+
+`page.add {name, id?}`, `page.rename {id, name}`, `page.remove {id}` (solo vacía), `page.activate {id}`, `page.move {id, index}`. Los nodos raíz llevan `pageId` (en `add` o con `update`); `context` lista `pages`, `activePageId` y el `pageId` de cada pantalla. Solo la página activa se dibuja; los flujos pueden cruzar páginas.
+
+`version.save {name, note?}` guarda una copia comprimida del diseño dentro del documento (máximo 30); `version.restore {id}` la restaura en el mismo lote (reversible con `undo`); `version.remove {id}`. El comando `versions` lista las versiones y, con `compare: ID`, qué pantallas se añadieron, quitaron o cambiaron desde esa versión.
+
 ### Variantes de componente
 
 `variant.define {componentId, variant:{eje:valor}, setName?}` pone un componente en un conjunto con esos ejes (los demás miembros reciben «Base» en los ejes nuevos); `variant.create {componentId, variant}` duplica el maestro junto al original como otra definición del conjunto; `variant.switch {id, variant}` cambia una instancia a la variante que coincida y conserva sus sobrescrituras por nombre de capa. `context` lista `components` con `set`, `setName` y `variant`, y cada instancia o maestro muestra los suyos. En kits, el eje es `Estado` con Normal, Seleccionado y Deshabilitado, y la definición que falte se crea al cambiar.

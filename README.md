@@ -139,6 +139,14 @@ Selecciona un elemento y usa **Tokens** en Propiedades para vincular relleno, ma
 
 El formato editable ahora es v2. Los borradores y archivos v1 se migran al abrirlos conservando las paletas y el contenido. Los degradados locales de dos colores siguen funcionando.
 
+## Páginas y módulos
+
+El panel **Páginas** agrupa las pantallas en módulos (Alta, Pagos, Onboarding…). Solo se dibuja, se lista y se mide la página activa, así un documento de muchas pantallas sigue ágil; las pantallas se mueven de página desde Propiedades y los flujos pueden apuntar a pantallas de cualquier página, de modo que una pantalla se reutiliza enlazándola, no duplicándola. Presentar recorre todas las páginas. Los documentos anteriores pasan a tener una página «Principal». Además, el navegador omite el pintado de las pantallas que quedan fuera de la vista.
+
+## Versiones
+
+**Versiones** (barra superior) guarda hitos del diseño dentro del documento: una copia comprimida con nombre, fecha y nota (hasta 30). **Comparar** dice qué pantallas se añadieron, quitaron o cambiaron desde esa versión; **Restaurar** vuelve a ella como un cambio normal, reversible con Deshacer, y conserva la lista de versiones. La IA usa `version.save`, `version.restore` y el comando `versions`.
+
 ## Variantes de componente
 
 Un componente puede tener **variantes**: estados o tamaños que comparten estructura (Normal, Seleccionado, Deshabilitado; Pequeño, Grande). En el inspector de un maestro, **◇ Nueva variante** duplica el maestro junto al original como otra definición del mismo conjunto; cada eje (Estado, Tamaño…) tiene su valor y **+ Eje** añade otro a todas las variantes. Una instancia muestra un selector por eje en **Variante** y cambia de definición conservando los textos y colores que hayas sobrescrito, emparejados por nombre de capa. Los kits forman un conjunto por elemento con el eje Estado, así que una instancia de kit pasa de Normal a Seleccionado desde el inspector. En Componentes, cada conjunto aparece agrupado con sus variantes y una vista previa real de cada una; las variantes de un conjunto viven juntas en un contenedor «Nombre · variantes» en el lienzo.

@@ -2,6 +2,10 @@
 
 ## Sin publicar
 
+- Páginas: el panel Páginas agrupa las pantallas en módulos; solo la página activa se dibuja, se lista y se mide. Las pantallas se mueven de página desde Propiedades, los flujos pueden apuntar a cualquier página y Presentar recorre todas. Los documentos anteriores reciben una página «Principal». CLI: `page.add/rename/remove/activate/move`, `pageId` en los nodos raíz y en `context`.
+- Versiones: hitos con nombre, fecha y nota guardados comprimidos dentro del documento (hasta 30), con comparación por pantallas y restauración reversible. Diálogo «Versiones» en la barra superior; CLI `version.save`, `version.restore`, `version.remove` y comando `versions`.
+- Rendimiento: el lienzo omite el pintado de las pantallas fuera de la vista; la página activa acota el trabajo de dibujo, capas, revisión y selección.
+- Editor modular: partes nuevas `pages` (panel de páginas) y `system` (índice de la pestaña Sistema); con partes montadas, cambiar de pestaña ya no oculta Capas ni Componentes.
 - Banco de recursos gratuitos en Componentes → Recursos: iconos e ilustraciones de Iconify (colecciones de código abierto, insertados como ilustración editable en el color de texto), fotos Creative Commons de Openverse (uso comercial y modificación) y fotos de relleno de Lorem Picsum. Búsqueda bajo demanda con arrastrar o clic; cada capa guarda en su nombre título, autor y licencia. Sin conexión, la pestaña lo indica y el resto del editor sigue igual. La app nativa permite esos tres dominios en su CSP.
 
 ## 0.5.0 — 2026-10-06

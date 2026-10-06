@@ -1,4 +1,4 @@
-import { Store, clone, node, updateNode, remove, createComponent, instantiate, group, ungroup, detach, children, tokens, defineVariant, createVariant, switchVariant, setDesignSystemNotes, setComponentDoc, removeComponent, docStale, designSystemStale, type Project, type DesignNode, type Kind } from './model';
+import { Store, clone, node, updateNode, remove, createComponent, instantiate, group, ungroup, detach, children, tokens, defineVariant, createVariant, switchVariant, setDesignSystemNotes, setComponentDoc, removeComponent, docStale, designSystemStale, type Project, type DesignNode, type Kind, pagesOf, activePage, addPage, renamePage, removePage, movePage, buildVersion, addVersion, removeVersion, applyVersion, unpackVersion, compareVersion, type Version,} from './model';
 import { effectiveTheme, type DesignTheme } from './themes';
 import { kits, getKitItems, insertKitItem, ensureKitVariant, type KitId, type KitVariant } from './kits';
 import { iconPacks, getIconItems, insertIcon } from './icon-library';
@@ -65,7 +65,8 @@ export async function context(host: AgentHost,params: Record<string,unknown> = {
   return {revision:await revision(p),name:p.name,formatVersion:p.version,selection,selectionScope:host.scope(),scope,depth,
     coordinates:'Píxeles relativos al padre. Los frames raíz usan coordenadas del workspace.',busy:host.busy(),
     counts:{nodes:p.nodes.length,frames:p.nodes.filter(n=>n.type==='frame').length,components:p.components.length},
-    frames:p.nodes.filter(n=>n.type==='frame').map(n=>({id:n.id,name:n.name,themeId:effectiveTheme(p,n).id,mode:effectiveTheme(p,n).mode})),
+    pages:pagesOf(p),activePageId:activePage(p).id,versions:(p.versions??[]).map(v=>({id:v.id,name:v.name,at:v.at,note:v.note,screens:v.screens})),
+    frames:p.nodes.filter(n=>n.type==='frame').map(n=>({id:n.id,name:n.name,themeId:effectiveTheme(p,n).id,mode:effectiveTheme(p,n).mode,pageId:n.parentId===null?(n.pageId??pagesOf(p)[0].id):undefined})),
     themes:Object.values(p.designThemes).map(t=>({id:t.id,name:t.name})),activeThemeId:p.activeThemeId,mode:p.theme,
     components:p.components.slice(0,100).map(c=>({id:c.id,name:c.name,masterId:c.masterId,...(c.set?{set:c.set,setName:c.setName,variant:c.variant}:{}),documented:!!c.doc,...(docStale(c)?{docStale:true}:{})})),...(p.components.length>100?{componentsTruncated:true}:{}),
     designSystem:p.designSystem?Object.fromEntries(Object.entries(p.designSystem).map(([k,v])=>[k,String(v).slice(0,600)])):null,...(designSystemStale(p)?{designSystemStale:true}:{}),
@@ -91,6 +92,8 @@ export const agentSchema = {
     'designSystem.set':{summary:'qué es el producto, para quién y en qué negocio o nicho',brand:'por qué esta marca y esta dirección visual funcionan para ese producto',principles:'una regla por línea',color:'cómo se usa cada token y qué no se hace con el color',typography:'escala, jerarquía y usos de cada estilo',spacing:'escala de espaciado, márgenes y radios',motion:'cuándo se anima y cómo',voice:'tono y reglas de contenido; cada campo texto de hasta 4000 caracteres, null lo borra. Es la pestaña Sistema'},
     'component.doc':{componentId:'ID de definición (en un conjunto se documenta el conjunto entero); un patch vacío {} marca la ficha como revisada tras un cambio',description:'qué es y qué hace, una frase',why:'por qué este y no otro parecido',when:'cuándo usarlo y cuándo no',how:'cómo se usa: opciones, contenido, comportamiento',do:'buenas prácticas, una por línea; termina una línea con [ejemplo: ID] para mostrar esa capa del documento al lado',dont:'malas prácticas, una por línea, mismo [ejemplo: ID]'},
     'component.remove':{componentId:'ID de definición sin instancias; la elimina junto con su maestro (y el contenedor de variantes si queda vacío). Con instancias se rechaza: sepáralas con detach o elimínalas antes'},
+    'page.add':{name:'nombre de la página (módulo); los nodos raíz llevan pageId y solo se dibuja la página activa',id:'opcional'},'page.rename':{id:'ID',name:'nuevo nombre'},'page.remove':{id:'ID de una página vacía'},'page.activate':{id:'ID'},'page.move':{id:'ID',index:'posición'},
+    'version.save':{name:'nombre de la versión',note:'opcional; guarda una copia comprimida del diseño dentro del documento (máximo 30)'},'version.restore':{id:'ID de versión; sustituye el diseño por esa copia (reversible con undo) y conserva la lista de versiones'},'version.remove':{id:'ID de versión'},
     'variant.define':{componentId:'ID de definición',variant:'{eje:valor}; crea o amplía el conjunto de variantes de ese componente; los demás miembros reciben "Base" en los ejes nuevos',setName:'opcional, nombre del conjunto'},
     'variant.create':{componentId:'ID de definición existente',variant:'{eje:valor} de la variante nueva: duplica el maestro junto al original como otra definición del mismo conjunto'},
     'variant.switch':{id:'ID de instancia',variant:'{eje:valor}; cambia la instancia a la variante que coincida y conserva sus sobrescrituras por nombre de capa. En kits, Estado: Normal|Seleccionado|Deshabilitado'},
@@ -128,6 +131,15 @@ export function applyOperations(p: Project,operations: unknown) {
       case 'designSystem.set':{const {op:_name,notes,...rest}=op;setDesignSystemNotes(p,object(notes??rest));break;}
       case 'component.doc':{const {op:_name,componentId,doc,...rest}=op;setComponentDoc(p,string(componentId,'componentId'),object(doc??rest));break;}
       case 'component.remove':removeComponent(p,string(op.componentId,'componentId'));break;
+      case 'page.add':addPage(p,string(op.name,'name'),op.id===undefined?undefined:string(op.id,'id'));break;
+      case 'page.rename':renamePage(p,string(op.id,'id'),string(op.name,'name'));break;
+      case 'page.remove':removePage(p,string(op.id,'id'));break;
+      case 'page.activate':{const id=string(op.id,'id');if(!pagesOf(p).some(page=>page.id===id))fail('Página no encontrada.');p.activePageId=id;break;}
+      case 'page.move':movePage(p,string(op.id,'id'),number(op.index,0));break;
+      case 'version.push':addVersion(p,op.version as Version);break;
+      case 'version.apply':applyVersion(p,object(op.payload) as Partial<Project>);break;
+      case 'version.remove':removeVersion(p,string(op.id,'id'));break;
+      case 'version.save':case 'version.restore':fail('Las operaciones de versión se resuelven antes del lote; usa codaru apply.');break;
       case 'variant.define':defineVariant(p,string(op.componentId,'componentId'),object(op.variant) as Record<string,string>,op.setName===undefined?undefined:string(op.setName,'setName'));break;
       case 'variant.create':createVariant(p,string(op.componentId,'componentId'),object(op.variant) as Record<string,string>);break;
       case 'variant.switch':{const id=string(op.id,'id');existing(p,id);const inst=p.nodes.find(n=>n.id===id)!,c=p.components.find(c=>c.id===inst.instanceOf);const values=object(op.variant) as Record<string,string>;if(c?.set)ensureKitVariant(p,c.set,{...(c.variant??{}),...values});switchVariant(p,id,values);break;}
@@ -162,13 +174,24 @@ export async function handleAgentRequest(host: AgentHost,request: AgentRequest):
       else return fail('format debe ser json, html o svg.');
       return {ok:true,format:params.format,content,revision:await revision(p)};
     }
+    if(request.command==='versions'){const p=host.project(),list=(p.versions??[]).map(v=>({id:v.id,name:v.name,at:v.at,note:v.note,screens:v.screens,nodes:v.nodes,bytes:v.data.length}));if(typeof params.compare==='string'){const version=(p.versions??[]).find(v=>v.id===params.compare);if(!version)return fail('Versión no encontrada.');return {ok:true,versions:list,compare:{id:version.id,...compareVersion(p,await unpackVersion(version.data))}};}return {ok:true,versions:list};}
     if(!['apply','select','undo','redo'].includes(request.command))return fail('Comando desconocido. Ejecuta codaru --help.');
     if(host.busy())throw new AgentError('editor_busy','Termina la edición o cierra el diálogo del editor y vuelve a intentarlo.');
     if(request.command==='select'){const list=Array.isArray(params.ids)&&!params.ids.length?[]:ids(params.ids);list.forEach(id=>existing(host.project(),id));host.select(list);return {ok:true,context:await context(host)};}
     if(request.command==='undo'||request.command==='redo'){host[request.command]();return {ok:true,context:await context(host)};}
     const before=clone(host.project()),currentRevision=await revision(before);
     if(params.expectedRevision!==currentRevision)throw new AgentError('revision_conflict','Falta expectedRevision o el documento cambió. Lee codaru context y prepara el lote con la nueva revision.');
-    const draft=new Store(before);draft.commit(p=>applyOperations(p,params.operations));
+    // Version operations need async (de)compression, so the batch runs in chunks on a draft: a version saved
+    // mid-batch captures the operations before it, and the host still receives one atomic commit at the end.
+    const draft=new Store(before);let pending:unknown[]=[];const flush=()=>{if(pending.length){const chunk=pending;pending=[];draft.commit(p=>applyOperations(p,chunk));}};
+    if(!Array.isArray(params.operations)||!params.operations.length||params.operations.length>250)fail('operations debe contener entre 1 y 250 operaciones.');
+    for(const raw of params.operations as unknown[]){
+      const op=raw&&typeof raw==='object'?raw as Record<string,unknown>:{};
+      if(op.op==='version.save'){flush();pending.push({op:'version.push',version:await buildVersion(draft.project,string(op.name,'name'),op.note===undefined?undefined:String(op.note))});continue;}
+      if(op.op==='version.restore'){flush();const id=string(op.id,'id'),version=(draft.project.versions??[]).find(v=>v.id===id);if(!version)return fail('Versión no encontrada.');pending.push({op:'version.apply',payload:await unpackVersion(version.data)});continue;}
+      pending.push(raw);
+    }
+    flush();
     // The user may edit while the asynchronous hash is calculated.
     if(JSON.stringify(host.project())!==JSON.stringify(before))throw new AgentError('revision_conflict','El documento cambió durante la validación. Lee codaru context y vuelve a intentarlo.');
     if(host.busy())throw new AgentError('editor_busy','El editor inició otra interacción. Termínala antes de aplicar el lote.');
