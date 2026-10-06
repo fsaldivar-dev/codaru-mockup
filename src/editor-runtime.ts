@@ -1,4 +1,4 @@
-import { node, blank, clone, uid, validate, children, subtree, ancestors, topSelected, frameOf, absolute, isUnavailable, color, tokens, labels, containerKinds, layoutProject, updateNode, createComponent, instantiate, detach, duplicate, remove, group, ungroup, defineVariant, createVariant, switchVariant, renameVariantSet, variantAxes, variantLabel, variantSet, setDesignSystemNotes, setComponentDoc, docStale, designSystemStale, type Project, type DesignNode, type Kind, type Component, panelsOf, postureGroup } from './model';
+import { node, blank, clone, uid, validate, children, subtree, ancestors, topSelected, frameOf, absolute, isUnavailable, color, tokens, labels, containerKinds, layoutProject, updateNode, createComponent, instantiate, detach, duplicate, remove, group, ungroup, defineVariant, createVariant, switchVariant, renameVariantSet, variantAxes, variantLabel, variantSet, setDesignSystemNotes, setComponentDoc, docStale, designSystemStale, templateSignature, type Project, type DesignNode, type Kind, type Component, panelsOf, postureGroup } from './model';
 import { demo } from './demo';
 import { effectiveTheme, resolveNodeStyle } from './themes';
 import { openThemeEditor } from './theme-editor';
@@ -37,7 +37,7 @@ function initial() {
 }
 const editor = options.editor ?? createEditor({ document: initial() });
 const session = getEditorSession(editor), store = session.store, state = session.state;
-let lastNotified = JSON.stringify(store.project);
+let lastNotified = store.serialize();
 
 
 let tab: 'layers' | 'components' | 'system' = 'layers';
@@ -91,7 +91,7 @@ function toast(message: string) { byId('toast').textContent = message; byId('toa
 function persist() {
   if (disposed) return;
   session.notify(true);
-  const serialized = JSON.stringify(p());
+  const serialized = store.serialize();
   if (serialized !== lastNotified) {
     lastNotified = serialized;
     try { onHostChange?.(clone(p())); } catch (error) { console.error('Codaru onChange:', error); }
@@ -100,7 +100,7 @@ function persist() {
   byId('save-state').className = 'save-dot pending';
   clearTimeout(saveTimer); saveTimer = setTimeout(() => {
     if (storageWarning) { byId('save-state').className = 'save-dot error'; return; }
-    try { localStorage.setItem(STORAGE!, JSON.stringify(p())); byId('save-state').className = 'save-dot'; byId('save-state').title = 'Guardado en este dispositivo'; }
+    try { localStorage.setItem(STORAGE!, store.serialize()); byId('save-state').className = 'save-dot'; byId('save-state').title = 'Guardado en este dispositivo'; }
     catch { byId('save-state').className = 'save-dot error'; byId('save-state').title = 'Sin espacio local: guarda un archivo'; toast('No hay espacio para el borrador. Guarda el proyecto como archivo.'); }
   }, 250);
 }
@@ -153,7 +153,7 @@ function render() {
   document.querySelector('[data-action="theme"]')!.innerHTML = icon(p().theme === 'light' ? 'sun' : 'moon', 16);
   (document.querySelector('[data-action="undo"]') as HTMLButtonElement).disabled = !store.undoStack.length;
   (document.querySelector('[data-action="redo"]') as HTMLButtonElement).disabled = !store.redoStack.length;
-  renderCanvas(); renderLayers(); renderInspector(); renderComponents(); renderSystem();
+  renderCanvas(); if (tab === 'layers') renderLayers(); renderInspector(); if (tab === 'components') renderComponents(); renderSystem();
   const pending = p().components.filter(docStale).length + (designSystemStale(p()) ? 1 : 0), badge = byId('system-stale'); badge.hidden = !pending; badge.textContent = `${pending}`; badge.title = `${pending} ${pending === 1 ? 'ficha' : 'fichas'} por revisar`;
 }
 function renderCanvas() {
@@ -181,6 +181,19 @@ function renderCanvas() {
   byId('empty-canvas').hidden = p().nodes.length > 0;
   building.decorate(p(), touchedByAgent); touchedByAgent = [];
   setTransform(); renderSelection(); renderConnections();
+}
+// Redraw only the top-level screens that contain these nodes; the rest of the canvas keeps its DOM.
+function renderRoots(ids: string[]) {
+  const artboards = byId('artboards'), roots = new Set<string>();
+  for (const id of ids) { const chain = [find(id), ...ancestors(p(), id)].filter((n): n is DesignNode => !!n); roots.add((chain.at(-1) ?? chain[0])?.id ?? id); }
+  for (const id of roots) {
+    const n = find(id); const old = artboards.querySelector<HTMLElement>(`:scope > .design-node[data-node="${CSS.escape(id)}"]`);
+    if (!n || n.hidden) { old?.remove(); continue; }
+    const fresh = element(p(), n);
+    if (old) old.replaceWith(fresh); else artboards.append(fresh);
+    const label = artboards.querySelector<HTMLElement>(`:scope > .frame-label[data-node="${CSS.escape(id)}"]`); if (label) { label.style.left = `${n.x}px`; label.style.top = `${n.y - 30 / state.zoom}px`; }
+  }
+  renderSelection(); renderConnections();
 }
 function setTransform() {
   session.notify(false);
@@ -349,7 +362,7 @@ async function insertResource(id: string, position?: { x: number; y: number }) {
       const size = vectorSize(svg), width = Math.min(96, size.width || 64);
       created = node('vector', { parentId: parent?.id ?? null, x, y, width, height: Math.max(1, Math.round(width * (size.height || 64) / (size.width || 64))), svg, name: lib.creditName(hit), color: '@text' });
     } else {
-      const image = await lib.fetchImageDataURL(hit.imageUrl!, { maxSize: 1200 }); if (disposed) return;
+      const image = await lib.fetchImageDataURL(hit.imageUrl!, { maxSize: 800 }); if (disposed) return;
       const width = Math.min(300, image.width);
       created = node('image', { parentId: parent?.id ?? null, x, y, width, height: Math.max(1, Math.round(width * image.height / image.width)), image: image.data, name: lib.creditName(hit) });
     }
@@ -463,10 +476,16 @@ function renderInspector() {
     <section class="inspector-section"><div class="button-row">${n.type!=='frame'&&!n.componentId&&!n.instanceOf?'<button class="component-button" data-action="make-component">◇ Crear componente</button>':''}${n.instanceOf?'<button data-action="master">Editar maestro</button><button data-action="detach">Desvincular</button>':''}${n.componentId?'<button class="component-button" data-action="insert-instance">◇ Insertar instancia</button>':''}${n.type==='group'&&!n.componentId&&!n.instanceOf?'<button data-action="ungroup">Desagrupar</button>':''}</div>${n.type==='frame'?'<button class="wide-button" data-action="export-svg">Exportar pantalla SVG</button>':''}</section></fieldset>${themePanel()}`;
 }
 
-function setTab(next: typeof tab) { tab=next; document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',(b as HTMLElement).dataset.tab===tab)); layersEl.hidden=tab!=='layers'; byId('components').hidden=tab!=='components'; byId('system-index').hidden=tab!=='system'; }
+function setTab(next: typeof tab) { tab=next; document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',(b as HTMLElement).dataset.tab===tab)); layersEl.hidden=tab!=='layers'; byId('components').hidden=tab!=='components'; byId('system-index').hidden=tab!=='system'; if(tab==='layers')renderLayers(); if(tab==='components')renderComponents(); }
 function setMode(next: typeof state.mode) { state.mode=next; document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',(b as HTMLElement).dataset.mode===state.mode)); renderConnections(); renderSystem(); }
 /** A component template drawn small enough to fit a tile, on the theme background it would sit on. */
+const previewCache = new Map<string, { key: string; el: HTMLElement }>();
 function componentPreview(c: Component, maxWidth: number, maxHeight: number) {
+  const key = `${templateSignature(c)}|${maxWidth}x${maxHeight}|${p().theme}|${p().activeThemeId}`, cached = previewCache.get(c.id);
+  if (cached && cached.key === key) return cached.el.cloneNode(true) as HTMLElement;
+  const el = buildComponentPreview(c, maxWidth, maxHeight); previewCache.set(c.id, { key, el }); return el.cloneNode(true) as HTMLElement;
+}
+function buildComponentPreview(c: Component, maxWidth: number, maxHeight: number) {
   const root = c.template[0], scale = Math.min(1, maxWidth / Math.max(1, root.width), maxHeight / Math.max(1, root.height));
   const wrap = document.createElement('div'); wrap.className = 'sys-preview'; wrap.style.width = `${Math.round(root.width * scale)}px`; wrap.style.height = `${Math.round(root.height * scale)}px`;
   const inner = document.createElement('div'); inner.style.cssText = `position:absolute;left:0;top:0;width:${root.width}px;height:${root.height}px;transform:scale(${scale});transform-origin:0 0;pointer-events:none`;
@@ -841,7 +860,7 @@ byId<HTMLInputElement>('image-file').onchange=async e=>{const el=e.target as HTM
   const reader=new FileReader();reader.onload=()=>{if(disposed)return;const image=String(reader.result);const current=find(state.selected[0]);if(current?.type==='image')change(pr=>updateNode(pr,current.id,{image}));else{const parent=current?frameOf(p(),current.id):p().nodes.find(n=>n.type==='frame');const n=node('image',{parentId:parent?.id||null,x:32,y:32,width:240,height:180,image,name:file.name});change(pr=>pr.nodes.push(n));select([n.id]);}};reader.readAsDataURL(file);el.value='';};
 
 // Pointer gestures make one history entry, regardless of how many pointer moves occur.
-type Gesture = {kind:'pan'|'drag'|'resize'|'draw'|'marquee';pointerId:number;start:{x:number;y:number};screen:{x:number;y:number};before:Project;ids:string[];handle?:string;pan:{x:number;y:number};draft?:DesignNode;moved:boolean;shift:boolean;scope:Scope;scopeBefore:Scope;selectionBefore:string[]};
+type Gesture = {kind:'pan'|'drag'|'resize'|'draw'|'marquee';pointerId:number;start:{x:number;y:number};screen:{x:number;y:number};before:Project;geometry:Map<string,{x:number;y:number;width:number;height:number}>;ids:string[];handle?:string;pan:{x:number;y:number};draft?:DesignNode;moved:boolean;shift:boolean;scope:Scope;scopeBefore:Scope;selectionBefore:string[]};
 let gesture:Gesture|null=null;
 function point(clientX:number,clientY:number){const r=stage.getBoundingClientRect();return{x:(clientX-r.left-state.pan.x)/state.zoom,y:(clientY-r.top-state.pan.y)/state.zoom};}
 function hitNode(target:HTMLElement):DesignNode|undefined{const hit=target.closest<HTMLElement>('[data-node]');return hit?find(hit.dataset.node!):undefined;}
@@ -849,7 +868,7 @@ dom.listen(stage,'pointerdown',e=>{
   if((e.target as HTMLElement).closest('#system-view'))return;
   if(e.button!==0&&e.button!==1)return;if((e.target as HTMLElement).closest('[contenteditable="true"]'))return;
   stage.focus();e.preventDefault();const pos=point(e.clientX,e.clientY);lastPoint=pos;
-  const g:Gesture={kind:'marquee',pointerId:e.pointerId,start:pos,screen:{x:e.clientX,y:e.clientY},before:clone(p()),ids:[],pan:{...state.pan},moved:false,shift:e.shiftKey,scope:state.selectionScope,scopeBefore:state.selectionScope,selectionBefore:[...state.selected]};
+  const g:Gesture={kind:'marquee',pointerId:e.pointerId,start:pos,screen:{x:e.clientX,y:e.clientY},before:clone(p()),geometry:new Map(p().nodes.map(n=>[n.id,{x:n.x,y:n.y,width:n.width,height:n.height}])),ids:[],pan:{...state.pan},moved:false,shift:e.shiftKey,scope:state.selectionScope,scopeBefore:state.selectionScope,selectionBefore:[...state.selected]};
   const handle=(e.target as HTMLElement).closest<HTMLElement>('[data-resize]');
   if(space||state.tool==='hand'||e.button===1)g.kind='pan';
   else if(handle){g.kind='resize';g.ids=[handle.dataset.id!];g.handle=handle.dataset.resize;}
@@ -880,7 +899,8 @@ dom.listen(stage,'pointermove',e=>{
     const box=document.createElement('div');box.className='marquee';Object.assign(box.style,{left:`${Math.min(pos.x,g.start.x)}px`,top:`${Math.min(pos.y,g.start.y)}px`,width:`${Math.abs(dx)}px`,height:`${Math.abs(dy)}px`,borderWidth:`${1/state.zoom}px`});byId('drawing-overlay').replaceChildren(box);
     state.selected=[...new Set([...g.ids,...inMarquee(p(),g.scope,g.start,pos)])];renderSelection();return;
   }
-  store.project=clone(g.before);
+  // Put every node back where the gesture found it (no document clone per pointer move), then apply the delta.
+  for(const n of p().nodes){const o=g.geometry.get(n.id);if(o){n.x=o.x;n.y=o.y;n.width=o.width;n.height=o.height;}}
   if(g.kind==='drag'){
     if(e.shiftKey){if(Math.abs(dx)>Math.abs(dy))dy=0;else dx=0;}
     for(const id of g.ids){const n=find(id)!;const par=n.parentId?find(n.parentId):undefined;if(par?.layout!=='free'&&par)continue;updateNode(p(),id,{x:e.altKey?n.x+dx:Math.round((n.x+dx)/4)*4,y:e.altKey?n.y+dy:Math.round((n.y+dy)/4)*4});}
@@ -888,7 +908,7 @@ dom.listen(stage,'pointermove',e=>{
     const n=find(g.ids[0])!;const h=g.handle!;let width=Math.max(8,n.width+(h.includes('e')?dx:-dx)),height=Math.max(8,n.height+(h.includes('s')?dy:-dy));if(e.shiftKey)height=width*n.height/n.width;
     updateNode(p(),n.id,{width:Math.round(width),height:Math.round(height),x:h.includes('w')?n.x+n.width-width:n.x,y:h.includes('n')?n.y+n.height-height:n.y});
   }
-  layoutProject(p());renderCanvas();
+  layoutProject(p());renderRoots(g.ids);
 });
 function finishGesture(e:Pick<PointerEvent,'pointerId'|'clientX'|'clientY'>,cancel=false){
   if(!gesture)return;const g=gesture;gesture=null;byId('drawing-overlay').replaceChildren();if(stage.hasPointerCapture(e.pointerId))stage.releasePointerCapture(e.pointerId);
@@ -985,7 +1005,7 @@ function initializeEmbedded(options: EmbeddedOptions) {
   const next=options.document===undefined?undefined:validate(options.document);
   embeddedInitialized=true;
   if(next){store.project=next;store.undoStack=[];store.redoStack=[];state.selected=[];state.selectionScope=null;}
-  lastNotified=JSON.stringify(p());onHostChange=options.onChange;nativeInvoke=options.invoke;
+  lastNotified=store.serialize();onHostChange=options.onChange;nativeInvoke=options.invoke;
   if(!STORAGE){const footer=document.querySelector('.sidebar-footer');const label=footer?.childNodes[1];if(label)label.textContent=' Documento en tu aplicación';}
   render();fit();persist();
   if(nativeInvoke&&options.nativeAgent!==false)startAgentPolling();

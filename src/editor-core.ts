@@ -104,8 +104,8 @@ export function createEditor(options: CreateEditorOptions = {}): CodaruEditor {
   let view: EditorViewHooks | undefined;
   let destroyed = false, destroying = false, finalDocument: Project | undefined;
   let dispatching = false, queued = false, pendingDocumentChange = false;
-  let lastDocument = JSON.stringify(store.project);
-  let lastState = JSON.stringify(snapshot());
+  let lastDocument = store.serialize();
+  let lastState = JSON.stringify(stateSnapshot());
   const onChange = options.onChange;
 
   function assertActive() { if (destroyed) throw new Error('El editor ya fue desmontado.'); }
@@ -124,13 +124,15 @@ export function createEditor(options: CreateEditorOptions = {}): CodaruEditor {
     while (state.selectionScope && !canEnter(state.selectionScope)) state.selectionScope = find(state.selectionScope)?.parentId ?? null;
     state.selected = state.selected.filter(id => find(id)?.parentId === state.selectionScope);
   }
-  function snapshot(): EditorState {
+  // Everything but the document: cheap to compare on every camera or selection change.
+  function stateSnapshot(): Omit<EditorState, 'document'> {
     return {
-      document: clone(store.project), selection: [...state.selected], scope: state.selectionScope,
+      selection: [...state.selected], scope: state.selectionScope,
       tool: state.tool, mode: state.mode, viewport: { zoom: state.zoom, pan: { ...state.pan } },
       canUndo: !!store.undoStack.length, canRedo: !!store.redoStack.length,
     };
   }
+  function snapshot(): EditorState { return { document: clone(store.project), ...stateSnapshot() }; }
   // Host callback errors must not roll back a transaction or block other subscribers.
   function safely(callback: () => void) {
     try { callback(); } catch (error) { console.error('Codaru: error en una suscripción del anfitrión.', error); }
@@ -147,20 +149,21 @@ export function createEditor(options: CreateEditorOptions = {}): CodaruEditor {
     if (destroyed) return;
     pendingDocumentChange ||= documentChanged;
     if (dispatching) { scheduleNotification(); return; }
-    const next = snapshot(), signature = JSON.stringify(next);
-    const documentSignature = JSON.stringify(next.document);
+    // The document is only serialized when a commit says it may have changed, and only cloned for whoever listens.
+    const partial = stateSnapshot(), signature = JSON.stringify(partial);
+    const documentSignature = pendingDocumentChange ? store.serialize() : lastDocument;
     const changed = pendingDocumentChange && documentSignature !== lastDocument;
     pendingDocumentChange = false;
     if (changed) lastDocument = documentSignature;
-    const stateChanged = signature !== lastState;
+    const stateChanged = signature !== lastState || changed;
     lastState = signature;
     if (!changed && !stateChanged) return;
     dispatching = true;
     try {
-      if (changed && onChange) safely(() => onChange(clone(next.document)));
+      if (changed && onChange) safely(() => onChange(clone(store.project)));
       if (stateChanged) for (const listener of [...listeners]) {
         if (destroyed) break;
-        if (listeners.has(listener)) safely(() => listener(clone(next)));
+        if (listeners.has(listener)) safely(() => listener({ document: clone(store.project), ...clone(partial) }));
       }
     } finally { dispatching = false; }
   }

@@ -458,13 +458,16 @@ export function validate(input: unknown): Project {
 }
 export class Store {
   project: Project; undoStack: Project[] = []; redoStack: Project[] = [];
+  private cache = ''; private cacheFor: Project | undefined;
   constructor(project: unknown) { this.project = validate(project); }
+  /** The document as JSON, computed once per committed version: every commit produces a new object, so identity is the cache key. */
+  serialize() { if (this.cacheFor !== this.project) { this.cache = JSON.stringify(this.project); this.cacheFor = this.project; } return this.cache; }
   commit(edit: (p: Project) => void) {
-    const before = clone(this.project);
-    try { edit(this.project); syncComponents(this.project); layoutProject(this.project); this.project = validate(this.project); }
+    const before = this.project, beforeSerialized = this.serialize(), draft = clone(before);
+    try { edit(draft); syncComponents(draft); layoutProject(draft); this.project = validate(draft); }
     catch (e) { this.project = before; throw e; }
-    if (JSON.stringify(before) !== JSON.stringify(this.project)) { this.undoStack.push(before); if (this.undoStack.length > 60) this.undoStack.shift(); this.redoStack = []; }
+    if (this.serialize() !== beforeSerialized) { this.undoStack.push(before); if (this.undoStack.length > 60) this.undoStack.shift(); this.redoStack = []; }
   }
-  undo() { const p = this.undoStack.pop(); if (p) { this.redoStack.push(clone(this.project)); this.project = p; } }
-  redo() { const p = this.redoStack.pop(); if (p) { this.undoStack.push(clone(this.project)); this.project = p; } }
+  undo() { const p = this.undoStack.pop(); if (p) { this.redoStack.push(this.project); this.project = p; } }
+  redo() { const p = this.redoStack.pop(); if (p) { this.undoStack.push(this.project); this.project = p; } }
 }
