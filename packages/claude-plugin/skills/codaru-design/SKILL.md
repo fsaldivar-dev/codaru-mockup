@@ -57,7 +57,7 @@ Nombra el tema con la marca y entrega una tabla rasgo → dónde está en el dis
 
 **Auto layout.** Prefiere `layout: vertical|horizontal` con `padding`, `gap`, `justify` y `align` a posiciones absolutas. Usa `sizing: fill` y `hugWidth`/`hugHeight` para que el diseño aguante cambios de texto y de tamaño.
 
-**Componentes.** Lo que se repite es un componente (`component`, `instance`), no copias.
+**Componentes.** Lo que se repite es un componente (`component`, `instance`), no copias. Los estados de un control (normal, seleccionado, deshabilitado, cargando) son **variantes** del mismo conjunto (`variant.define`, `variant.create`), y una instancia cambia de estado con `variant.switch` sin perder su texto; no dibujes un botón distinto por estado. Los kits ya traen el eje Estado.
 
 ## Por plataforma
 

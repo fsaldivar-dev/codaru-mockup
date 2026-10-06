@@ -47,3 +47,4 @@
 .building-skeleton::after{content:"";position:absolute;inset:0;background:linear-gradient(#0000 0,#0000 26px,#8884 26px,#8884 54px,#0000 54px,#0000 70px,#8884 70px,#8884 86px,#0000 86px,#0000 98px,#8884 98px,#8884 114px,#0000 114px) 24px 60px/55% auto no-repeat,linear-gradient(#0000 0,#0000 180px,#8883 180px,#8883 300px,#0000 300px) 24px 0/calc(100% - 48px) auto no-repeat;mask:linear-gradient(110deg,#000 40%,#0006 50%,#000 60%) 0 0/300% 100%;-webkit-mask:linear-gradient(110deg,#000 40%,#0006 50%,#000 60%) 0 0/300% 100%;animation:building-shimmer 1.6s linear infinite;pointer-events:none;border-radius:inherit}
 @keyframes building-shimmer{to{mask-position:-200% 0;-webkit-mask-position:-200% 0}}
 @media (prefers-reduced-motion:reduce){.building-dot,.building-in,.building-skeleton::after{animation:none}}
+.variant-caption{margin-top:14px}

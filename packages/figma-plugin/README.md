@@ -57,3 +57,5 @@ El diálogo de importación enumera cada uno de estos casos con cuántas capas a
 ## Estado
 
 La conversión está cubierta por pruebas que ejecutan el código real del plugin contra una simulación de la API de Figma. El plugin todavía no se ha ejecutado dentro de Figma: si falla con algún archivo, el mensaje aparece en el propio plugin.
+
+Los conjuntos de variantes (`Estado=Activo`) se importan como conjuntos de Codaru con sus ejes; una instancia puede cambiar de variante desde el inspector.

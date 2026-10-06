@@ -1,6 +1,6 @@
-import { Store, clone, node, updateNode, remove, createComponent, instantiate, group, ungroup, detach, children, tokens, type Project, type DesignNode, type Kind } from './model';
+import { Store, clone, node, updateNode, remove, createComponent, instantiate, group, ungroup, detach, children, tokens, defineVariant, createVariant, switchVariant, type Project, type DesignNode, type Kind } from './model';
 import { effectiveTheme, type DesignTheme } from './themes';
-import { kits, getKitItems, insertKitItem, type KitId, type KitVariant } from './kits';
+import { kits, getKitItems, insertKitItem, ensureKitVariant, type KitId, type KitVariant } from './kits';
 import { iconPacks, getIconItems, insertIcon } from './icon-library';
 import { exportHTML, exportSVG } from './render';
 import { sanitizeSVG, vectorLayers, vectorSize } from './motion';
@@ -39,13 +39,14 @@ function layerSummary(svg: string) {
   const all=vectorLayers(svg),named=all.filter(l=>!/^capa-\d+$/.test(l.id)),ordered=[...named,...all.filter(l=>!named.includes(l))];
   return {layers:ordered.slice(0,250).map(l=>`${l.id}:${l.tag}`),...(ordered.length>250?{layersTruncated:true,layerCount:ordered.length}:{})};
 }
+function variantOf(p: Project,componentId: string) { const c=p.components.find(c=>c.id===componentId); return c?.set?{set:c.set,setName:c.setName,variant:c.variant}:{}; }
 function describe(p: Project,n: DesignNode) {
   const theme=effectiveTheme(p,n);
   return {id:n.id,type:n.type,name:n.name,parentId:n.parentId,bounds:{x:n.x,y:n.y,width:n.width,height:n.height},
     ...(n.text?{text:n.text.slice(0,240),...(n.text.length>240?{textTruncated:true}:{})}:{}),
     ...(children(p,n.id).length?{childCount:children(p,n.id).length,layout:n.layout,padding:n.paddingSides??n.padding,gap:n.gap,...(n.justify?{justify:n.justify}:{}),...(n.align?{align:n.align}:{}),...(n.wrap?{wrap:true}:{}),...(n.hugWidth?{hugWidth:true}:{}),...(n.hugHeight?{hugHeight:true}:{})}:{}),
     appearance:{fill:n.fill,color:n.color,radius:n.radius,...(n.strokeWidth?{stroke:n.stroke,strokeWidth:n.strokeWidth}:{}),...(n.opacity!==100?{opacity:n.opacity}:{}),...(n.fillToken?{fillToken:n.fillToken}:{}),...(n.materialToken?{materialToken:n.materialToken}:{}),...(n.typographyToken?{typographyToken:n.typographyToken}:{}),...(n.radiusToken?{radiusToken:n.radiusToken}:{})},
-    theme:{id:theme.id,mode:theme.mode},...(n.instanceOf?{instanceOf:n.instanceOf}:{}),...(n.componentId?{componentId:n.componentId}:{}),
+    theme:{id:theme.id,mode:theme.mode},...(n.instanceOf?{instanceOf:n.instanceOf,...variantOf(p,n.instanceOf)}:{}),...(n.componentId?{componentId:n.componentId,...variantOf(p,n.componentId)}:{}),
     ...(n.targetId?{targetId:n.targetId,...(n.transition?{transition:n.transition}:{})}:{}),...(n.svg?layerSummary(n.svg):{}),...(n.device?{device:n.device}:{}),...(n.fold?{fold:n.fold}:{}),...(n.foldPair?{foldPair:n.foldPair}:{}),...(n.safeArea?{safeArea:n.safeArea}:{}),...(n.skin?{skin:n.skin}:{}),...(n.animations?.length?{animations:n.animations}:{}),...(n.iconPack?{icon:{pack:n.iconPack,name:n.iconName}}:{}),...(n.hidden?{hidden:true}:{}),...(n.locked?{locked:true}:{})};
 }
 export async function context(host: AgentHost,params: Record<string,unknown> = {},document=host.project()) {
@@ -66,6 +67,7 @@ export async function context(host: AgentHost,params: Record<string,unknown> = {
     counts:{nodes:p.nodes.length,frames:p.nodes.filter(n=>n.type==='frame').length,components:p.components.length},
     frames:p.nodes.filter(n=>n.type==='frame').map(n=>({id:n.id,name:n.name,themeId:effectiveTheme(p,n).id,mode:effectiveTheme(p,n).mode})),
     themes:Object.values(p.designThemes).map(t=>({id:t.id,name:t.name})),activeThemeId:p.activeThemeId,mode:p.theme,
+    components:p.components.slice(0,100).map(c=>({id:c.id,name:c.name,masterId:c.masterId,...(c.set?{set:c.set,setName:c.setName,variant:c.variant}:{})})),...(p.components.length>100?{componentsTruncated:true}:{}),
     nodes,flows:flows.slice(0,100),flowsTruncated:flows.length>100,truncated,
     next:truncated?'Acota con codaru context --scope ID --depth 1.':'Usa los IDs y revision de este contexto en codaru apply. Consulta codaru schema o codaru catalog para descubrir operaciones y recursos.'};
 }
@@ -84,6 +86,9 @@ export const agentSchema = {
     vector:{svg:'texto SVG; se sanea y cada forma recibe un id de capa',parentId:'ID o null',x:24,y:24,width:'opcional; conserva la proporción',name:'opcional',id:'opcional'},
     figma:{data:'contenido del archivo .figma.codaru.json que escribe el plugin de Figma; añade sus pantallas, componentes y tokens al documento'},
     dom:{data:'instantánea codaru-dom-snapshot v1 de una página web (scripts/snapshot.js del skill codaru-clone); añade la página como pantalla, con un tema derivado de sus colores y tipografías, y capas vinculadas a esos tokens'},
+    'variant.define':{componentId:'ID de definición',variant:'{eje:valor}; crea o amplía el conjunto de variantes de ese componente; los demás miembros reciben "Base" en los ejes nuevos',setName:'opcional, nombre del conjunto'},
+    'variant.create':{componentId:'ID de definición existente',variant:'{eje:valor} de la variante nueva: duplica el maestro junto al original como otra definición del mismo conjunto'},
+    'variant.switch':{id:'ID de instancia',variant:'{eje:valor}; cambia la instancia a la variante que coincida y conserva sus sobrescrituras por nombre de capa. En kits, Estado: Normal|Seleccionado|Deshabilitado'},
     animate:{id:'ID del elemento',animations:'lista completa que reemplaza la anterior; [] o null las quita'},group:{ids:['ID1','ID2']},ungroup:{id:'ID de grupo'},detach:{id:'ID de instancia'},
     theme:{theme:'Perfil completo {id,name,modes:{light:TokenSet,dark:TokenSet}}'},'theme.activate':{id:'ID de tema',mode:'light|dark (opcional)'},
   },
@@ -115,6 +120,9 @@ export function applyOperations(p: Project,operations: unknown) {
       case 'group':group(p,ids(op.ids));break;
       case 'ungroup':{const id=string(op.id,'id');existing(p,id);ungroup(p,id);break;}
       case 'detach':{const id=string(op.id,'id');existing(p,id);detach(p,id);break;}
+      case 'variant.define':defineVariant(p,string(op.componentId,'componentId'),object(op.variant) as Record<string,string>,op.setName===undefined?undefined:string(op.setName,'setName'));break;
+      case 'variant.create':createVariant(p,string(op.componentId,'componentId'),object(op.variant) as Record<string,string>);break;
+      case 'variant.switch':{const id=string(op.id,'id');existing(p,id);const inst=p.nodes.find(n=>n.id===id)!,c=p.components.find(c=>c.id===inst.instanceOf);const values=object(op.variant) as Record<string,string>;if(c?.set)ensureKitVariant(p,c.set,{...(c.variant??{}),...values});switchVariant(p,id,values);break;}
       case 'theme':{const theme=clone(object(op.theme)) as unknown as DesignTheme;const id=string(theme.id,'theme.id');if(!/^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(id)||['constructor','prototype','__proto__'].includes(id))fail('ID de tema inválido.');p.designThemes[id]=theme;if(id==='project')for(const m of ['light','dark'] as const)for(const key of tokens)p.themes[m][key]=theme.modes[m].colors[key];break;}
       case 'theme.activate':p.activeThemeId=string(op.id,'id');if(op.mode!==undefined)p.theme=string(op.mode,'mode') as Project['theme'];break;
       default:fail(`Operación desconocida: ${name}. Consulta codaru schema.`);

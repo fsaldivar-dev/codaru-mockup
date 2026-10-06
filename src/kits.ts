@@ -241,6 +241,26 @@ function makeTemplate(kit: KitId, item: KitItem, variant: KitVariant, componentI
 }
 
 /** Inserts one reusable instance. Templates are materialized only when requested. */
+export const kitStates: Record<KitVariant, string> = { default: 'Normal', selected: 'Seleccionado', disabled: 'Deshabilitado' };
+/** Register the reusable definition of a kit item in one state; the three states of an item form a variant set. */
+export function ensureKitComponent(p: Project, kit: KitId, itemId: string, variant: KitVariant = 'default'): string {
+  const item = getKitItems(kit).find(i => i.id === itemId);
+  if (!item) throw new Error('Elemento de kit desconocido');
+  if (!['default', 'selected', 'disabled'].includes(variant)) throw new Error('Variante de kit desconocida');
+  ensureKitTheme(p, kit);
+  const componentId = `kit-${kit}-${itemId}-${variant}-v1`;
+  if (!p.components.some(c => c.id === componentId)) {
+    const template = makeTemplate(kit, item, variant, componentId);
+    p.components.push({ id: componentId, name: template[0].name, masterId: `${componentId}-master`, template, set: `kit-${kit}-${itemId}`, setName: item.name, variant: { Estado: kitStates[variant] } });
+  }
+  return componentId;
+}
+/** For a kit set, materialize the definition a variant switch needs; returns its id, or nothing when the set is not a kit's. */
+export function ensureKitVariant(p: Project, setId: string, variant: Record<string, string>): string | undefined {
+  const m = /^kit-(ios|macos|android|linux|web)-(.+)$/.exec(setId); if (!m) return;
+  const state = (Object.entries(kitStates).find(([, label]) => label === variant.Estado)?.[0] ?? 'default') as KitVariant;
+  return ensureKitComponent(p, m[1] as KitId, m[2], state);
+}
 export function insertKitItem(p: Project, kit: KitId, itemId: string, parentId: string | null, x: number, y: number, variant: KitVariant = 'default'): string {
   const item = getKitItems(kit).find(i => i.id === itemId);
   if (!item) throw new Error('Elemento de kit desconocido');
@@ -250,11 +270,7 @@ export function insertKitItem(p: Project, kit: KitId, itemId: string, parentId: 
   if (parentId !== null && (!parent || !containerKinds.includes(parent.type))) throw new Error('Contenedor inválido');
   const scope = parent ? [parent, ...ancestors(p, parent.id)] : [];
   if (scope.some(n => n.instanceOf || n.componentId)) throw new Error('Los componentes anidados quedan fuera de esta versión');
-  const themeId = ensureKitTheme(p, kit), componentId = `kit-${kit}-${itemId}-${variant}-v1`;
-  if (!p.components.some(c => c.id === componentId)) {
-    const template = makeTemplate(kit, item, variant, componentId);
-    p.components.push({ id: componentId, name: template[0].name, masterId: `${componentId}-master`, template });
-  }
+  const themeId = ensureKitTheme(p, kit), componentId = ensureKitComponent(p, kit, itemId, variant);
   const id = instantiate(p, componentId, parentId, x, y);
   updateNode(p, id, { themeId: scope.some(n => n.themeId) ? undefined : themeId });
   return id;

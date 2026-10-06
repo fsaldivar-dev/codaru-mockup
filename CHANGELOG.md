@@ -1,5 +1,9 @@
 # Changelog
 
+## Sin publicar
+
+- Variantes de componente: un conjunto agrupa definiciones por ejes (Estado, Tamaño…). Desde el inspector de un maestro, «Nueva variante» duplica el maestro junto al original como otra definición del conjunto y «+ Eje» añade un eje a todas; una instancia elige la variante por eje y conserva sus sobrescrituras por nombre de capa, manteniendo su id, posición y flujos. Los kits forman un conjunto por elemento con el eje Estado y materializan la definición que falte al cambiar. Figma importa los conjuntos de variantes como conjuntos con sus ejes. CLI: `variant.define`, `variant.create`, `variant.switch`; `context` lista los componentes con su conjunto.
+
 ## 0.4.0 — 2026-10-06
 
 ### Importar una web o una app existente

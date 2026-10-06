@@ -53,7 +53,11 @@ export interface DesignNode {
   /** Device frame of a screen; an id of deviceSkins. */
   skin?: string;
 }
-export interface Component { id: string; name: string; masterId: string; template: DesignNode[]; }
+export interface Component {
+  id: string; name: string; masterId: string; template: DesignNode[];
+  /** Variant set this definition belongs to, its display name and this member's axis values (Estado=Activo, Tamaño=M). */
+  set?: string; setName?: string; variant?: Record<string, string>;
+}
 export interface Project {
   format: 'codaru-mockup'; version: 2; name: string;
   theme: Theme; themes: Record<Theme, Record<string, string>>;
@@ -200,6 +204,80 @@ export function syncComponents(p: Project) {
     }
   }
 }
+const variantText = (value: unknown): value is string => typeof value === 'string' && value.trim().length > 0 && value.length <= 40 && !/[=,]/.test(value);
+export function cleanVariant(variant: unknown): Record<string, string> {
+  if (!variant || typeof variant !== 'object' || Array.isArray(variant)) throw new Error('Variante inválida: usa {eje: valor}');
+  const entries = Object.entries(variant as Record<string, unknown>);
+  if (!entries.length || entries.length > 6) throw new Error('Una variante tiene entre 1 y 6 ejes');
+  for (const [axis, value] of entries) if (!variantText(axis) || !variantText(value) || ['__proto__', 'constructor', 'prototype'].includes(axis)) throw new Error('Ejes y valores de variante: texto de 1 a 40 caracteres, sin "=" ni ","');
+  return Object.fromEntries(entries.map(([axis, value]) => [axis.trim(), (value as string).trim()]));
+}
+export const variantLabel = (variant: Record<string, string> | undefined) => variant ? Object.entries(variant).map(([axis, value]) => `${axis}=${value}`).join(', ') : '';
+export function variantSet(p: Project, setId: string) { return p.components.filter(c => c.set === setId); }
+/** Axes of a set and the values its members use, in first-seen order. */
+export function variantAxes(p: Project, setId: string): Record<string, string[]> {
+  const axes: Record<string, string[]> = {};
+  for (const c of variantSet(p, setId)) for (const [axis, value] of Object.entries(c.variant ?? {})) { axes[axis] ??= []; if (!axes[axis].includes(value)) axes[axis].push(value); }
+  return axes;
+}
+function componentOf(p: Project, id: string) { const c = p.components.find(c => c.id === id); if (!c) throw new Error('Componente no encontrado'); return c; }
+/** Place a definition in a variant set with these axis values; a definition without a set starts one. Every member answers to the same axes. */
+export function defineVariant(p: Project, componentId: string, variant: Record<string, string>, setName?: string) {
+  const c = componentOf(p, componentId), values = cleanVariant(variant);
+  if (!c.set) c.set = `set-${uid()}`;
+  if (setName !== undefined) renameVariantSet(p, c.set, setName); else c.setName ??= c.name;
+  const next = { ...(c.variant ?? {}), ...values };
+  if (variantSet(p, c.set).some(s => s.id !== c.id && variantLabel({ ...Object.fromEntries(Object.keys(next).map(axis => [axis, 'Base'])), ...s.variant }) === variantLabel(next))) throw new Error(`Ya existe la variante ${variantLabel(next)}`);
+  c.variant = next;
+  for (const s of variantSet(p, c.set)) { s.setName ??= c.setName; s.variant ??= {}; for (const axis of Object.keys(next)) s.variant[axis] ??= 'Base'; }
+  return c;
+}
+export function renameVariantSet(p: Project, setId: string, name: string) {
+  if (typeof name !== 'string' || !name.trim() || name.length > 80) throw new Error('Nombre de conjunto inválido');
+  for (const s of variantSet(p, setId)) s.setName = name.trim();
+}
+/** Duplicate a master beside the original as a new definition of the same set, with these axis values. */
+export function createVariant(p: Project, componentId: string, variant: Record<string, string>) {
+  const c = componentOf(p, componentId), values = cleanVariant(variant);
+  const master = p.nodes.find(n => n.id === c.masterId && n.componentId === c.id); if (!master) throw new Error('El maestro fue eliminado; crea la variante desde otro componente del conjunto');
+  if (!c.set || !c.variant) defineVariant(p, c.id, Object.fromEntries(Object.keys(values).map(axis => [axis, c.variant?.[axis] ?? 'Base'])));
+  const target = { ...c.variant, ...values };
+  if (variantSet(p, c.set!).some(s => variantLabel(s.variant) === variantLabel(target))) throw new Error(`Ya existe la variante ${variantLabel(target)}`);
+  const ns = subtree(p, master.id), map = new Map(ns.map(n => [n.id, uid()]));
+  for (const original of ns) {
+    const n = clone(original); n.id = map.get(original.id)!; n.parentId = map.get(original.parentId!) ?? original.parentId; delete n.componentId; delete n.overrides;
+    if (n.targetId && map.has(n.targetId)) n.targetId = map.get(n.targetId)!;
+    if (original.id === master.id) { n.x = master.x + master.width + 24; n.name = `${c.setName} / ${variantLabel(target)}`; }
+    p.nodes.push(n);
+  }
+  const created = createComponent(p, map.get(master.id)!);
+  created.set = c.set; created.setName = c.setName; created.variant = target;
+  return { componentId: created.id, masterId: created.masterId };
+}
+/** Point an instance at the member of its set that matches these values, keeping overrides by layer name and the instance id. */
+export function switchVariant(p: Project, instanceId: string, variant: Record<string, string>) {
+  const inst = p.nodes.find(n => n.id === instanceId); if (!inst?.instanceOf) throw new Error('Selecciona una instancia');
+  const c = componentOf(p, inst.instanceOf); if (!c.set) throw new Error('Este componente no tiene variantes');
+  const target = { ...(c.variant ?? {}), ...cleanVariant(variant) };
+  const next = variantSet(p, c.set).find(s => Object.entries(target).every(([axis, value]) => (s.variant ?? {})[axis] === value));
+  if (!next) throw new Error(`No hay una variante ${variantLabel(target)} en ${c.setName ?? c.name}`);
+  if (next.id === c.id) return c.id;
+  const old = subtree(p, inst.id), kept = old.filter(n => n.overrides?.length).map(n => ({ node: n, src: n.id === inst.id ? c.template[0] : c.template.find(t => t.id === n.componentKey) }));
+  const index = p.nodes.findIndex(n => n.id === inst.id), ids = new Set(old.map(n => n.id));
+  p.nodes = p.nodes.filter(n => !ids.has(n.id));
+  const rootId = instantiate(p, next.id, inst.parentId, inst.x, inst.y), fresh = subtree(p, rootId);
+  p.nodes = p.nodes.filter(n => !fresh.includes(n)); p.nodes.splice(index, 0, ...fresh);
+  for (const n of fresh) if (n.parentId === rootId) n.parentId = inst.id;
+  fresh[0].id = inst.id;
+  for (const { node: oldNode, src } of kept) {
+    const match = oldNode.id === inst.id ? fresh[0] : src ? fresh.find(f => { const t = next.template.find(t => t.id === f.componentKey); return !!t && t.type === src.type && t.name === src.name; }) : undefined;
+    if (!match) continue;
+    const fields = (oldNode.overrides ?? []).filter(key => !['id', 'componentId', 'componentKey', 'instanceOf', 'parentId', 'x', 'y'].includes(key) && !(oldNode.id === inst.id && key === 'name' && oldNode.name === c.name));
+    for (const key of fields) (match as unknown as Record<string, unknown>)[key] = (oldNode as unknown as Record<string, unknown>)[key];
+    if (fields.length) match.overrides = fields;
+  }
+  return next.id;
+}
 export function detach(p: Project, id: string) { for (const n of subtree(p, id)) { delete n.instanceOf; delete n.componentKey; delete n.overrides; } }
 export function duplicate(p: Project, ids: string[]) {
   const result: string[] = [];
@@ -297,6 +375,9 @@ export function validate(input: unknown): Project {
   validateNodes(p.nodes); const componentIds = new Set<string>();
   for (const c of p.components) {
     if (!c || typeof c.id !== 'string' || componentIds.has(c.id) || typeof c.name !== 'string' || typeof c.masterId !== 'string' || !Array.isArray(c.template) || !c.template.length || c.template.length > 3000) throw new Error('Componente inválido');
+    if (c.set !== undefined && (typeof c.set !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(c.set))) throw new Error('Conjunto de variantes inválido');
+    if (c.setName !== undefined && (typeof c.setName !== 'string' || c.setName.length > 80)) throw new Error('Nombre de conjunto inválido');
+    if (c.variant !== undefined) cleanVariant(c.variant);
     componentIds.add(c.id); validateNodes(c.template);
     if (c.template.filter(n => !n.parentId).length !== 1) throw new Error('Plantilla de componente inválida');
     const master = p.nodes.find(n => n.id === c.masterId);

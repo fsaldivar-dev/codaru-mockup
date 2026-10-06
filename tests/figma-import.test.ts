@@ -72,8 +72,11 @@ test('the Figma plugin export is converted into screens, components, tokens and 
   const chip = find('Chip'); assert.deepEqual([chip.type, chip.strokeWidth, chip.stroke, find('Grupo').type], ['rect', 2, '#000000', 'group']);
   const sheet = find('Componentes de Figma');
   assert.deepEqual(doc.components.map(c => c.name).sort(), ['Chip / Estado=Activo', 'Chip / Estado=Inactivo', 'Tarjeta']);
+  const chips = doc.components.filter(c => c.name.startsWith('Chip'));
+  assert.equal(new Set(chips.map(c => c.set)).size, 1); assert.equal(chips[0].setName, 'Chip'); assert.deepEqual(chips.map(c => c.variant!.Estado).sort(), ['Activo', 'Inactivo']);
+  assert.equal(doc.components.find(c => c.name === 'Tarjeta')!.set, undefined);
   assert.ok(doc.nodes.filter(n => n.parentId === sheet.id).every(n => n.componentId));
-  for (const expected of ['Capas ocultas', 'Capas giradas', 'Variantes', 'Auto layout', 'Sombras', 'Playfair Display']) assert.ok(report!.notes.some(note => note.includes(expected)), expected);
+  for (const expected of ['Capas ocultas', 'Capas giradas', 'Auto layout', 'Sombras', 'Playfair Display']) assert.ok(report!.notes.some(note => note.includes(expected)), expected);
   store.undo();
   assert.equal(store.project.nodes.length, 1); assert.equal(store.project.designThemes.project.modes.light.colors['marca-primario'], undefined);
 });

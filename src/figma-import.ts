@@ -136,9 +136,9 @@ export function importFigma(p: Project, input: unknown): FigmaReport {
   }
 
   // Loose components of a page have no screen around them; they are gathered on one sheet.
-  const loose: Raw[] = [], roots: DesignNode[] = [];
+  const loose: Raw[] = [], roots: DesignNode[] = [], variantMeta = new Map<string, { set: string; setName: string; variant: string }>();
   for (const raw of input.nodes as unknown[]) {
-    if (record(raw) && (raw.type === 'COMPONENT' || raw.type === 'COMPONENT_SET')) { loose.push(...(raw.type === 'COMPONENT_SET' && Array.isArray(raw.children) ? raw.children.filter(record).map((child: Raw) => ({ ...child, name: `${text(raw.name, 60)} / ${text(child.name, 60)}` })) : [raw])); if (raw.type === 'COMPONENT_SET') note('Variantes: cada una se importó como un componente separado.'); continue; }
+    if (record(raw) && (raw.type === 'COMPONENT' || raw.type === 'COMPONENT_SET')) { loose.push(...(raw.type === 'COMPONENT_SET' && Array.isArray(raw.children) ? raw.children.filter(record).map((child: Raw) => ({ ...child, name: `${text(raw.name, 60)} / ${text(child.name, 60)}`, __set: text(raw.id, 200) || text(raw.name, 60), __setName: text(raw.name, 60), __variant: text(child.name, 120) })) : [raw])); continue; }
     const created = convert(raw, null, 0, true);
     if (created) { roots.push(created); if (created.type === 'frame') report.screens++; }
   }
@@ -147,6 +147,7 @@ export function importFigma(p: Project, input: unknown): FigmaReport {
     let x = 40, y = 40, rowHeight = 0, widest = 0;
     for (const raw of loose) {
       const created = convert({ ...raw, x: 0, y: 0 }, sheet.id, 1, false); if (!created) continue;
+      if (raw.__set) variantMeta.set(created.id, { set: `fgset-${String(raw.__set).replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '')}`.slice(0, 100), setName: String(raw.__setName) || 'Variantes', variant: String(raw.__variant) });
       if (x > 40 && x + created.width > 1400) { x = 40; y += rowHeight + 40; rowHeight = 0; }
       created.x = x; created.y = y; x += created.width + 40; rowHeight = Math.max(rowHeight, created.height); widest = Math.max(widest, x);
     }
@@ -159,7 +160,17 @@ export function importFigma(p: Project, input: unknown): FigmaReport {
   for (const root of roots) { root.x = round(root.x + offsetX); root.y = round(root.y + offsetY); }
   p.nodes.push(...added);
   for (const created of added.filter(n => loose.length && n.parentId === roots.at(-1)!.id)) {
-    try { createComponent(p, created.id); report.components++; } catch { note('Componentes que contienen otros componentes: se importaron como grupos.'); }
+    try {
+      const component = createComponent(p, created.id); report.components++;
+      const meta = variantMeta.get(created.id);
+      if (meta) {
+        // Figma names variants "Eje=Valor, Eje=Valor"; anything else joins the set as a plain member.
+        const pairs = meta.variant.split(',').map(part => part.split('=').map(v => v.trim()));
+        const variant = pairs.every(pair => pair.length === 2 && pair[0] && pair[1]) ? Object.fromEntries(pairs.slice(0, 6)) : { Variante: meta.variant.replace(/[=,]/g, ' ').trim().slice(0, 40) || 'Base' };
+        try { component.set = meta.set; component.setName = meta.setName; component.variant = variant; created.name = `${meta.setName} / ${meta.variant}`; component.name = created.name; }
+        catch { note('Variantes con nombres no válidos: se importaron como componentes sueltos.'); }
+      }
+    } catch { note('Componentes que contienen otros componentes: se importaron como grupos.'); }
   }
   // Auto layout is kept only where Codaru arranges the children exactly as Figma had them;
   // otherwise the container keeps Figma's positions as a free layout. Innermost containers first.

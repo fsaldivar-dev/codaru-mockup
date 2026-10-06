@@ -1,4 +1,4 @@
-import { node, blank, clone, uid, validate, children, subtree, ancestors, topSelected, frameOf, absolute, isUnavailable, color, tokens, labels, containerKinds, layoutProject, updateNode, createComponent, instantiate, detach, duplicate, remove, group, ungroup, type Project, type DesignNode, type Kind, panelsOf, postureGroup } from './model';
+import { node, blank, clone, uid, validate, children, subtree, ancestors, topSelected, frameOf, absolute, isUnavailable, color, tokens, labels, containerKinds, layoutProject, updateNode, createComponent, instantiate, detach, duplicate, remove, group, ungroup, defineVariant, createVariant, switchVariant, renameVariantSet, variantAxes, variantLabel, variantSet, type Project, type DesignNode, type Kind, panelsOf, postureGroup } from './model';
 import { demo } from './demo';
 import { effectiveTheme, resolveNodeStyle } from './themes';
 import { openThemeEditor } from './theme-editor';
@@ -269,7 +269,9 @@ function renderComponents() {
   const target=byId('components');
   const tabs=`<div class="library-tabs"><button data-library="local" aria-pressed="${libraryTab==='local'}">Locales</button><button data-library="kits" aria-pressed="${libraryTab==='kits'}">Kits de diseño</button><button data-library="icons" aria-pressed="${libraryTab==='icons'}">Iconos</button></div>`;
   if(libraryTab==='local') {
-    target.innerHTML = tabs+`<div class="component-caption">Tu biblioteca local <span>${p().components.length}</span></div>${p().components.map(c => `<button class="component-tile" data-component="${c.id}" draggable="true"><span class="component-preview">${icon('component',24)}</span><strong>${esc(c.name)}</strong><small>Arrastra al lienzo o haz clic</small></button>`).join('') || '<p class="empty-note">Selecciona un elemento o grupo y pulsa «Crear componente».</p>'}`;
+    const comps=p().components, loose=comps.filter(c=>!c.set), sets=new Map<string,typeof comps>(); for(const c of comps.filter(c=>c.set)) sets.set(c.set!,[...(sets.get(c.set!)??[]),c]);
+    const tile=(c:typeof comps[number],label:string)=>`<button class="component-tile" data-component="${c.id}" draggable="true"><span class="component-preview">${icon('component',24)}</span><strong>${esc(label)}</strong><small>Arrastra al lienzo o haz clic</small></button>`;
+    target.innerHTML = tabs+`<div class="component-caption">Tu biblioteca local <span>${comps.length}</span></div>${loose.map(c=>tile(c,c.name)).join('')}${[...sets].map(([,list])=>`<div class="component-caption variant-caption">${esc(list[0].setName??list[0].name)} <span>${list.length} ${list.length===1?'variante':'variantes'}</span></div>${list.map(c=>tile(c,variantLabel(c.variant)||c.name)).join('')}`).join('')}${comps.length?'':'<p class="empty-note">Selecciona un elemento o grupo y pulsa «Crear componente».</p>'}`;
     return;
   }
   if(libraryTab==='icons'){
@@ -403,9 +405,22 @@ function renderInspector() {
     ${n.type==='image'?'<section class="inspector-section"><button class="wide-button" data-action="image">Cambiar imagen local</button></section>':''}
     <section class="inspector-section"><div class="section-heading"><span>AL HACER CLIC</span>${icon('link',14)}</div><select data-field="targetId" aria-label="Navegar a pantalla"><option value="">Sin navegación</option>${p().nodes.filter(f=>f.type==='frame'&&f.id!==frameOf(p(),n.id)?.id).map(f=>`<option value="${f.id}" ${n.targetId===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}</select>${n.targetId?`<label class="full-field"><span>Transición</span><select data-transition="type" aria-label="Transición">${[['','Sin animación'],...transitionTypes.map(t=>[t,transitionLabels[t]])].map(([v,l])=>`<option value="${v}" ${(n.transition?.type??'')===v?'selected':''}>${l}</option>`).join('')}</select></label>${n.transition?`<div class="field-grid"><label class="number-field"><span>Duración</span><input type="number" aria-label="Duración de la transición" data-transition="duration" value="${n.transition.duration}" min="0" max="5000" step="50"/></label><label class="full-field"><span>Curva</span><select data-transition="easing" aria-label="Curva de la transición">${easings.map(e=>`<option value="${e}" ${n.transition!.easing===e?'selected':''}>${easingLabels[e]}</option>`).join('')}</select></label></div>`:''}`:''}<p class="field-note">Prueba la conexión en Presentar.</p></section>
     <section class="inspector-section"><div class="section-heading"><span>ANIMACIÓN</span>${icon('play',14)}</div><p class="field-note">${n.animations?.length?`${n.animations.length} ${n.animations.length===1?'animación':'animaciones'}: ${esc(n.animations.map(a=>a.name).join(', '))}.`:'Sin animaciones.'}${n.svg?` ${vectorLayers(n.svg).length} capas animables.`:''} Se reproducen en Presentar.</p><button class="wide-button" data-action="animator">${icon('spark',16)} Abrir animador</button>${n.type==='vector'?'<button class="wide-button" data-action="image">Cambiar SVG</button>':''}</section>
+    ${variantPanel(n)}
     <section class="inspector-section"><div class="button-row">${n.type!=='frame'&&!n.componentId&&!n.instanceOf?'<button class="component-button" data-action="make-component">◇ Crear componente</button>':''}${n.instanceOf?'<button data-action="master">Editar maestro</button><button data-action="detach">Desvincular</button>':''}${n.componentId?'<button class="component-button" data-action="insert-instance">◇ Insertar instancia</button>':''}${n.type==='group'&&!n.componentId&&!n.instanceOf?'<button data-action="ungroup">Desagrupar</button>':''}</div>${n.type==='frame'?'<button class="wide-button" data-action="export-svg">Exportar pantalla SVG</button>':''}</section></fieldset>${themePanel()}`;
 }
 
+// Variants: a master shows its set and axis values; an instance picks the member it points at.
+function variantPanel(n: DesignNode) {
+  const c=p().components.find(c=>c.id===(n.componentId??n.instanceOf)); if(!c)return '';
+  if(n.componentId){
+    if(!c.set)return `<section class="inspector-section"><div class="section-heading"><span>VARIANTES</span></div><p class="field-note">Un conjunto de variantes agrupa los estados o tamaños de este componente; las instancias cambian entre ellos sin perder sus textos.</p><button class="wide-button" data-action="variant-create">◇ Nueva variante</button></section>`;
+    const axes=variantAxes(p(),c.set), members=variantSet(p(),c.set);
+    return `<section class="inspector-section"><div class="section-heading"><span>VARIANTES</span><span>${members.length}</span></div><label class="full-field"><span>Conjunto</span><input aria-label="Nombre del conjunto" data-variant-set value="${esc(c.setName??c.name)}" maxlength="80"/></label>${Object.keys(axes).map(axis=>`<label class="full-field"><span>${esc(axis)}</span><input aria-label="Valor de ${esc(axis)}" data-variant-axis="${esc(axis)}" value="${esc(c.variant?.[axis]??'Base')}" maxlength="40" list="variant-values-${esc(axis).replace(/[^A-Za-z0-9]+/g,'-')}"/><datalist id="variant-values-${esc(axis).replace(/[^A-Za-z0-9]+/g,'-')}">${axes[axis].map(v=>`<option value="${esc(v)}"></option>`).join('')}</datalist></label>`).join('')}<div class="button-row"><button class="component-button" data-action="variant-create">◇ Nueva variante</button><button data-action="variant-axis">+ Eje</button></div><p class="field-note">${members.length>1?`Otras: ${members.filter(m=>m.id!==c.id).map(m=>`<button class="text-button" data-select-master="${esc(m.masterId)}">${esc(variantLabel(m.variant))}</button>`).join(' · ')}`:'Es la única variante del conjunto.'}</p></section>`;
+  }
+  if(!c.set)return '';
+  const axes=variantAxes(p(),c.set); if(c.set.startsWith('kit-'))axes.Estado=[...new Set([...(axes.Estado??[]),'Normal','Seleccionado','Deshabilitado'])];
+  return `<section class="inspector-section"><div class="section-heading"><span>VARIANTE</span></div><p class="field-note">${esc(c.setName??c.name)}</p>${Object.entries(axes).map(([axis,values])=>`<label class="full-field"><span>${esc(axis)}</span><select data-variant-switch="${esc(axis)}" aria-label="Variante · ${esc(axis)}">${values.map(v=>`<option value="${esc(v)}" ${(c.variant?.[axis]??'')===v?'selected':''}>${esc(v)}</option>`).join('')}</select></label>`).join('')}</section>`;
+}
 function addFrame() {
   const ns = children(p(),null); const x = ns.length ? Math.max(...ns.map(n=>n.x+n.width))+80 : 60;
   const f = node('frame',{x,y:100,name:`${String(p().nodes.filter(n=>n.type==='frame').length+1).padStart(2,'0')} · Nueva pantalla`});
@@ -520,6 +535,8 @@ async function action(act: string) {
     case 'insert-instance':{const n=find(state.selected[0]);if(n?.componentId)insertComponent(n.componentId,{x:absolute(p(),n).x,y:absolute(p(),n).y+n.height+20});break;}
     case 'master':{const n=find(state.selected[0]);const c=p().components.find(c=>c.id===n?.instanceOf);if(c&&find(c.masterId)){select([c.masterId]);focusFrame(c.masterId);}else toast('El maestro fue eliminado; puedes desvincular esta instancia.');break;}
     case 'detach':change(pr=>detach(pr,state.selected[0]));break;
+    case 'variant-create':{const n=find(state.selected[0]);const c=p().components.find(c=>c.id===n?.componentId);if(!c)break;const axes=c.set?variantAxes(p(),c.set):{};const axis=Object.keys(axes)[0]??'Estado';const taken=new Set(axes[axis]??[]);let value='Variante 2';for(let i=2;taken.has(value);i++)value=`Variante ${i}`;let masterId='';change(pr=>{masterId=createVariant(pr,c.id,{[axis]:value}).masterId;},'Variante creada junto al maestro');if(masterId){select([masterId]);focusFrame(masterId);}break;}
+    case 'variant-axis':{const n=find(state.selected[0]);const c=p().components.find(c=>c.id===n?.componentId);if(!c)break;const existing=c.set?Object.keys(variantAxes(p(),c.set)):[];let axis='Eje 2';for(let i=2;existing.includes(axis);i++)axis=`Eje ${i}`;change(pr=>defineVariant(pr,c.id,{[axis]:'Base'}));break;}
     case 'align-left':align('left');break;
     case 'align-center':align('center');break;
     case 'distribute':distribute();break;
@@ -536,6 +553,7 @@ events.addEventListener('click',e=>{
   if('scope' in el.dataset){enterScope(el.dataset.scope||null);return;}
   if((el.dataset.pick||'pickFill' in el.dataset)&&el.closest('#inspector')){const n=state.selected.length===1?find(state.selected[0]):undefined;if(n&&('pickFill' in el.dataset||el.dataset.pick==='Relleno: valor'))openFillPicker(el,n);else pickColorFor(el,pickerContext(n));return;}
   if(el.dataset.pickToken&&el.closest('#inspector')){const token=el.dataset.pickToken;openColorPicker({...pickerContext(),anchor:el,value:p().designThemes[p().activeThemeId].modes[p().theme].colors[token],commit:value=>change(pr=>{pr.designThemes[pr.activeThemeId].modes[pr.theme].colors[token]=value;if(pr.activeThemeId==='project')pr.themes[pr.theme][token]=value;})});return;}
+  if(el.dataset.selectMaster){select([el.dataset.selectMaster]);focusFrame(el.dataset.selectMaster);return;}
   if(el.dataset.lintNode){const n=find(el.dataset.lintNode);if(n){select([n.id]);fit(true);}else if(p().designThemes[el.dataset.lintNode])void action('themes');return;}
   if(el.dataset.posture){const current=find(previewFrame||''),other=find(el.dataset.posture);if(current&&other){const t:Transition={type:panelsOf(other)>panelsOf(current)?'unfold':'fold',duration:700,easing:'ease-in-out'};previewHistory.push({id:current.id,transition:t});preview(other.id,false,t);}return;}
   if(el.dataset.action){void action(el.dataset.action).catch(err=>toast(String(err)));return;}
@@ -557,6 +575,14 @@ events.addEventListener('input',e=>{const el=e.target as HTMLInputElement;if(!['
 dom.listen(layersEl,'dblclick',e=>{const el=(e.target as HTMLElement).closest<HTMLElement>('[data-layer]');if(el&&!(e.target as HTMLElement).closest('button'))enterScope(el.dataset.layer!);});
 events.addEventListener('change',e=>{
   const el=e.target as HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement;
+  if(state.selected.length===1&&(el.dataset.variantAxis!==undefined||el.dataset.variantSet!==undefined||el.dataset.variantSwitch!==undefined)){
+    const n=find(state.selected[0]); const c=p().components.find(c=>c.id===(n?.componentId??n?.instanceOf)); if(!n||!c)return;
+    if(el.dataset.variantSet!==undefined){change(pr=>renameVariantSet(pr,c.set!,el.value));return;}
+    if(el.dataset.variantAxis!==undefined){change(pr=>defineVariant(pr,c.id,{[el.dataset.variantAxis!]:el.value}));return;}
+    const axis=el.dataset.variantSwitch!, value=el.value;
+    void (async()=>{if(c.set!.startsWith('kit-')){const mod=kitModule??await import('./kits');if(disposed)return;change(pr=>{mod.ensureKitVariant(pr,c.set!,{...(c.variant??{}),[axis]:value});switchVariant(pr,n.id,{[axis]:value});});}else change(pr=>switchVariant(pr,n.id,{[axis]:value}));})();
+    return;
+  }
   if(el.id==='zoom-value') {
     const raw = el.value.trim().replace(/%$/, '').trim().replace(',', '.'); const value = Number(raw);
     if (raw && Number.isFinite(value) && value > 0) zoomAt(value / 100);
