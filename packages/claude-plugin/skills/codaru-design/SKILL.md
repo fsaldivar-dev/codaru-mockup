@@ -105,6 +105,11 @@ Antes de dar por terminado un flujo, comprueba que tiene:
 - **Instancias** de los componentes que definiste; definir componentes y luego dibujar copias es trabajo perdido.
 - `./codaru lint` sin errores ni avisos de `palette`.
 
-Escribe el sistema de diseño en el documento, no solo en el chat: `designSystem.set` con qué es el producto y para quién, por qué la marca y la dirección visual funcionan para ese negocio o nicho, y los principios; y `component.doc` en cada conjunto con cuándo usarlo y sus buenas y malas prácticas. La persona lo ve en la pestaña Sistema.
+Escribe el sistema de diseño en el documento, no solo en el chat; la persona lo lee en la pestaña Sistema como un sitio de documentación. Dos partes:
+
+- **Fundamentos** (`designSystem.set`): `summary` (qué es el producto, para quién, qué negocio o nicho), `brand` (por qué esta paleta, tipografía y tono funcionan para ese negocio y qué los haría fallar), `principles` (una regla por línea) y una nota breve por fundamento: `color`, `typography`, `spacing`, `motion`, `voice`.
+- **Componentes** (`component.doc`, por conjunto): cada página responde cuatro preguntas en este orden y con una o dos frases cada una: `description` (qué es y qué hace), `why` (por qué este y no otro parecido con el que se confunde), `when` (cuándo sí y cuándo no), `how` (opciones, contenido y comportamiento). Después `do` y `dont`, de tres a cinco líneas cada uno, concretas y comprobables. Si una práctica se entiende mejor viendo un caso, dibújalo: crea una pantalla «Ejemplos · Nombre» con el caso bueno y el malo como grupos y termina la línea con `[ejemplo: ID]` para que aparezca al lado.
+
+Documenta primero lo que más se usa o más dudas genera; el índice de Sistema muestra el avance. Las piezas del kit no necesitan documentación propia salvo que la app las use de una forma particular.
 
 Di qué pantallas creaste o cambiaste, qué decisiones de diseño tomaste y por qué, la tabla de rasgos si hubo referencias, y el resumen de `./codaru lint` final. Si dejaste algún aviso sin corregir, explica el motivo.

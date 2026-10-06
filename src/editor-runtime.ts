@@ -6,7 +6,7 @@ import type { KitId, KitVariant } from './kits';
 import { element, escape as esc, exportHTML, exportSVG } from './render';
 import { icon } from './icons';
 import { devicePresets, deviceSkins, presetSafeArea, sizeClass } from './devices';
-import { lintProject, lintRules, lintSummary, type LintIssue } from './lint';
+import { contrastRatio, lintProject, lintRules, lintSummary, type LintIssue } from './lint';
 import { closeColorPicker, openColorPicker, pickColorFor, type GradientValue } from './color-picker';
 import { easingLabels, easings, sanitizeSVG, startMotion, transitionLabels, transitionScreens, transitionTypes, vectorLayers, vectorSize, type Transition } from './motion';
 import { atScope, commonScope, scopeAtPoint, inMarquee, type Scope } from './selection';
@@ -421,25 +421,100 @@ function componentPreview(c: Component, maxWidth: number, maxHeight: number) {
   wrap.append(inner); return wrap;
 }
 const lines = (text: string | undefined) => (text ?? '').split('\n').map(l => l.trim()).filter(Boolean);
-// The design system tab: the narrative, the tokens in use and every component with its variants and notes.
+/** Notes are plain text: blank lines split paragraphs, lines starting with "-", "•" or "1." become lists. */
+function notesHTML(text: string | undefined) {
+  if (!text?.trim()) return '';
+  return text.split(/\n\s*\n/).map(block => {
+    const items = block.split('\n').map(l => l.trim()).filter(Boolean);
+    if (items.length && items.every(l => /^(-|•|\d+[.)])\s/.test(l))) { const ordered = /^\d/.test(items[0]); return `<${ordered ? 'ol' : 'ul'}>${items.map(l => `<li>${esc(l.replace(/^(-|•|\d+[.)])\s/, ''))}</li>`).join('')}</${ordered ? 'ol' : 'ul'}>`; }
+    return `<p>${items.map(esc).join('<br>')}</p>`;
+  }).join('');
+}
+/** A guideline line, with the optional `[ejemplo: ID]` references it points at. */
+function guideline(line: string) { const ids: string[] = []; const text = line.replace(/\[ejemplo:\s*([^\]]+)\]/gi, (_, list: string) => { ids.push(...list.split(',').map(v => v.trim()).filter(Boolean)); return ''; }).trim(); return { text, ids }; }
+/** A layer of the document drawn small, for examples beside a guideline. */
+function nodePreview(id: string, maxWidth: number, maxHeight: number) {
+  const n = find(id); if (!n) return undefined;
+  const ns = subtree(p(), id).map(k => clone(k)); ns[0].parentId = null; ns[0].x = 0; ns[0].y = 0;
+  const scale = Math.min(1, maxWidth / Math.max(1, n.width), maxHeight / Math.max(1, n.height));
+  const wrap = document.createElement('div'); wrap.className = 'sys-preview'; wrap.style.width = `${Math.round(n.width * scale)}px`; wrap.style.height = `${Math.round(n.height * scale)}px`;
+  const inner = document.createElement('div'); inner.style.cssText = `position:absolute;left:0;top:0;width:${n.width}px;height:${n.height}px;transform:scale(${scale});transform-origin:0 0;pointer-events:none`;
+  try { const proj = { ...p(), nodes: ns }; inner.append(element(proj, ns[0], true)); wrap.style.background = color(p(), '@background', n); } catch { inner.textContent = '·'; }
+  wrap.append(inner); return wrap;
+}
+let systemPage = 'inicio', systemEditing = false;
+const foundationPages: Array<[string, string, keyof NonNullable<Project['designSystem']>]> = [['principios', 'Principios', 'principles'], ['color', 'Color', 'color'], ['tipografia', 'Tipografía', 'typography'], ['espaciado', 'Espaciado y radios', 'spacing'], ['movimiento', 'Movimiento', 'motion'], ['contenido', 'Voz y contenido', 'voice']];
+// The design system tab is a small documentation site: a contents page with progress, one page per foundation and one per component set.
 function renderSystem() {
   const view = byId('system-view'); view.hidden = state.mode !== 'system';
   if (state.mode !== 'system') return;
   const scroll = view.scrollTop, project = p(), theme = project.designThemes[project.activeThemeId], notes = project.designSystem ?? {};
   const sets = new Map<string, Component[]>(); for (const c of project.components) sets.set(c.set ?? c.id, [...(sets.get(c.set ?? c.id) ?? []), c]);
-  const note = (key: keyof NonNullable<Project['designSystem']>, label: string, hint: string) => `<label class="sys-field"><span>${label}</span><textarea data-system="${key}" rows="3" placeholder="${esc(hint)}" aria-label="${esc(label)}">${esc(notes[key] ?? '')}</textarea></label>`;
+  const setKey = (c: Component) => c.set ?? c.id, title = (list: Component[]) => list[0].set ? list[0].setName ?? list[0].name : list[0].name;
+  const documented = (list: Component[]) => !!(list[0].doc?.description || list[0].doc?.when || list[0].doc?.usage || list[0].doc?.how);
+  const done = [...sets.values()].filter(documented).length, pages = [...sets.keys()];
+  if (systemPage.startsWith('c:') && !sets.has(systemPage.slice(2))) systemPage = 'inicio';
+  const field = (scope: 'system' | 'doc', key: string, label: string, hint: string, value: string | undefined, componentId?: string, rows = 3) => systemEditing || !value
+    ? `<label class="sys-field"><span>${esc(label)}</span><textarea ${scope === 'system' ? `data-system="${esc(key)}"` : `data-doc="${esc(key)}" data-doc-component="${esc(componentId ?? '')}"`} rows="${rows}" placeholder="${esc(hint)}" aria-label="${esc(label)}${componentId ? ` · ${esc(title(sets.get(setKey(project.components.find(c => c.id === componentId)!)) ?? []))}` : ''}">${esc(value ?? '')}</textarea></label>`
+    : `<div class="sys-read"><h4>${esc(label)}</h4>${notesHTML(value)}</div>`;
+  const head = (eyebrow: string, heading: string, sub: string) => `<header class="sys-head"><div><span class="eyebrow">${esc(eyebrow)}</span><h1>${esc(heading)}</h1>${sub ? `<p>${sub}</p>` : ''}</div><button class="text-button" data-system-edit aria-pressed="${systemEditing}">${systemEditing ? 'Terminar edición' : 'Editar'}</button></header>`;
   const swatches = (mode: 'light' | 'dark') => Object.entries(theme.modes[mode].colors).map(([k, v]) => `<div class="sys-swatch"><i style="background:${esc(v)}"></i><b>@${esc(k)}</b><small>${esc(v)}</small></div>`).join('');
-  const typo = Object.entries(theme.modes.light.typography).map(([k, t]) => `<div class="sys-type" style="font-family:${t.fontFamily === 'serif' ? 'Georgia,serif' : t.fontFamily === 'mono' ? 'ui-monospace,monospace' : 'inherit'};font-size:${Math.min(28, t.fontSize)}px;font-weight:${t.fontWeight}">${esc(t.name)} <small>${esc(k)} · ${t.fontSize}/${t.fontWeight}</small></div>`).join('');
-  const docField = (c: Component, key: 'usage' | 'do' | 'dont', label: string, hint: string) => `<label class="sys-field"><span>${label}</span><textarea data-doc="${key}" data-doc-component="${esc(c.id)}" rows="2" placeholder="${esc(hint)}" aria-label="${esc(label)} · ${esc(c.setName ?? c.name)}">${esc(c.doc?.[key] ?? '')}</textarea></label>`;
-  view.innerHTML = `<article class="system-doc">
-    <header><span class="eyebrow">SISTEMA DE DISEÑO</span><h1>${esc(project.name)}</h1><p>Tema «${esc(theme.name)}» · ${project.components.length} ${project.components.length === 1 ? 'componente' : 'componentes'} en ${sets.size} ${sets.size === 1 ? 'conjunto' : 'conjuntos'}. Lo que escribas aquí viaja con el documento y la IA lo lee en <code>codaru context</code>.</p></header>
-    <section id="sys-why"><h2>Por qué funciona</h2>${note('summary', 'Producto, negocio y nicho', 'Qué es la app, para quién y qué problema resuelve.')}${note('brand', 'Marca y dirección visual', 'Por qué esta paleta, esta tipografía y este tono funcionan para ese negocio, y qué los haría fallar.')}${note('principles', 'Principios', 'Una regla por línea: una acción principal por pantalla, el oro solo en detalles…')}</section>
-    <section id="sys-tokens"><h2>Tokens</h2><h3>Claro</h3><div class="sys-swatches">${swatches('light')}</div><h3>Oscuro</h3><div class="sys-swatches">${swatches('dark')}</div>${typo ? `<h3>Tipografía</h3><div class="sys-types">${typo}</div>` : ''}${Object.keys(theme.modes.light.radii).length ? `<h3>Radios</h3><p class="sys-inline">${Object.entries(theme.modes.light.radii).map(([k, v]) => `<code>${esc(k)}</code> ${v}`).join(' · ')}</p>` : ''}</section>
-    <section id="sys-components"><h2>Componentes</h2>${project.components.length ? '' : '<p class="empty-note">Aún no hay componentes. Crea uno desde el inspector con «Crear componente».</p>'}${[...sets.values()].map(list => { const c = list[0], isSet = !!c.set; return `<div class="sys-card" id="sys-${esc(c.set ?? c.id)}"><div class="sys-card-head"><h3>${esc(isSet ? c.setName ?? c.name : c.name)}</h3><span>${isSet ? `${list.length} ${list.length === 1 ? 'variante' : 'variantes'}` : 'componente'}</span></div><div class="sys-variants" data-previews="${esc(c.set ?? c.id)}">${list.map(m => `<figure data-preview-of="${esc(m.id)}"><figcaption>${esc(isSet ? variantLabel(m.variant) || m.name : m.name)}</figcaption></figure>`).join('')}</div>${docField(c, 'usage', 'Cuándo usarlo', 'Para qué sirve y cuándo no es la pieza adecuada.')}<div class="sys-two">${docField(c, 'do', 'Buenas prácticas', 'Una por línea.')}${docField(c, 'dont', 'Malas prácticas', 'Una por línea.')}</div>${lines(c.doc?.do).length || lines(c.doc?.dont).length ? `<div class="sys-two sys-lists"><ul>${lines(c.doc?.do).map(l => `<li class="do">${esc(l)}</li>`).join('')}</ul><ul>${lines(c.doc?.dont).map(l => `<li class="dont">${esc(l)}</li>`).join('')}</ul></div>` : ''}</div>`; }).join('')}</section></article>`;
-  for (const fig of view.querySelectorAll<HTMLElement>('figure[data-preview-of]')) { const c = project.components.find(c => c.id === fig.dataset.previewOf); if (c) fig.prepend(componentPreview(c, 260, 160)); }
-  byId('system-index').innerHTML = `<button class="sys-link" data-system-section="sys-why">Por qué funciona</button><button class="sys-link" data-system-section="sys-tokens">Tokens</button><button class="sys-link" data-system-section="sys-components">Componentes</button>${[...sets.values()].map(list => `<button class="sys-link sub" data-system-section="sys-${esc(list[0].set ?? list[0].id)}">${esc(list[0].set ? list[0].setName ?? list[0].name : list[0].name)}</button>`).join('')}`;
-  view.scrollTop = scroll;
+  let body = '';
+  if (systemPage === 'inicio') {
+    body = head('SISTEMA DE DISEÑO', project.name, `Tema «${esc(theme.name)}» · ${project.components.length} ${project.components.length === 1 ? 'componente' : 'componentes'} en ${sets.size} ${sets.size === 1 ? 'conjunto' : 'conjuntos'}`)
+      + field('system', 'summary', 'Producto, negocio y nicho', 'Qué es la app, para quién y qué problema resuelve.', notes.summary)
+      + field('system', 'brand', 'Por qué la marca funciona', 'Por qué esta paleta, esta tipografía y este tono funcionan para ese negocio, y qué los haría fallar.', notes.brand, undefined, 5)
+      + `<section><h2>Avance</h2><p class="sys-progress"><b>${done} de ${sets.size}</b> componentes documentados · ${foundationPages.filter(([, , key]) => notes[key]).length} de ${foundationPages.length} fundamentos</p><div class="sys-progress-bar"><i style="width:${sets.size ? Math.round(done / sets.size * 100) : 0}%"></i></div><p class="field-note">Empieza por lo que más se usa o más dudas genera; cada página responde qué es, por qué, cuándo y cómo.</p></section>
+      <section><h2>Contenido</h2><div class="sys-toc"><div><h3>Fundamentos</h3>${foundationPages.map(([id, label, key]) => `<button class="sys-toc-item" data-system-page="${id}"><span>${esc(label)}</span><i class="${notes[key] ? 'done' : ''}"></i></button>`).join('')}</div><div><h3>Componentes</h3>${[...sets.values()].map(list => `<button class="sys-toc-item" data-system-page="c:${esc(setKey(list[0]))}"><span>${esc(title(list))}</span><small>${list[0].set ? `${list.length} var.` : ''}</small><i class="${documented(list) ? 'done' : ''}"></i></button>`).join('') || '<p class="empty-note">Aún no hay componentes.</p>'}</div></div></section>`;
+  } else if (foundationPages.some(([id]) => id === systemPage)) {
+    const [, label, key] = foundationPages.find(([id]) => id === systemPage)!;
+    let extra = '';
+    if (systemPage === 'color') {
+      const pairs: Array<[string, string, string]> = [['@text', '@background', 'texto sobre fondo'], ['@text', '@surface', 'texto sobre superficie'], ['@muted', '@surface', 'texto apagado sobre superficie'], ['@primary', '@background', 'acción principal sobre fondo'], ['@accent', '@surface', 'acento sobre superficie'], ['@accent', '@primary', 'acento sobre la acción principal']];
+      const row = (mode: 'light' | 'dark') => pairs.map(([a, b, what]) => { const ca = theme.modes[mode].colors[a.slice(1)], cb = theme.modes[mode].colors[b.slice(1)]; if (!ca || !cb) return ''; const r = contrastRatio(ca, cb); return `<tr><td>${esc(what)}</td><td><code>${a}</code> / <code>${b}</code></td><td class="${r >= 4.5 ? 'ok' : r >= 3 ? 'mid' : 'bad'}">${r.toFixed(1)}:1</td></tr>`; }).join('');
+      extra = `<h3>Claro</h3><div class="sys-swatches">${swatches('light')}</div><h3>Oscuro</h3><div class="sys-swatches">${swatches('dark')}</div><h3>Contrastes medidos</h3><table class="sys-table"><thead><tr><th>Uso</th><th>Par</th><th>Claro</th></tr></thead><tbody>${row('light')}</tbody></table><table class="sys-table"><thead><tr><th>Uso</th><th>Par</th><th>Oscuro</th></tr></thead><tbody>${row('dark')}</tbody></table><p class="field-note">4,5:1 para texto, 3:1 para controles e indicadores.</p>`;
+    } else if (systemPage === 'tipografia') {
+      extra = `<div class="sys-types">${Object.entries(theme.modes.light.typography).map(([k, t]) => `<div class="sys-type"><div style="font-family:${t.fontFamily === 'serif' ? 'Georgia,serif' : t.fontFamily === 'mono' ? 'ui-monospace,monospace' : 'inherit'};font-size:${Math.min(34, t.fontSize)}px;font-weight:${t.fontWeight};line-height:${t.lineHeight}">${esc(project.name)}</div><small><code>${esc(k)}</code> ${esc(t.name)} · ${t.fontFamily} ${t.fontSize}/${t.fontWeight} · ${t.lineHeight}</small></div>`).join('') || '<p class="empty-note">El tema no define estilos de texto.</p>'}</div>`;
+    } else if (systemPage === 'espaciado') {
+      extra = `<h3>Escala</h3><div class="sys-scale">${[4, 8, 12, 16, 24, 32, 48].map(v => `<div><i style="width:${v}px;height:${v}px"></i><small>${v}</small></div>`).join('')}</div>${Object.keys(theme.modes.light.radii).length ? `<h3>Radios</h3><div class="sys-scale">${Object.entries(theme.modes.light.radii).map(([k, v]) => `<div><i style="width:40px;height:40px;border-radius:${Math.min(20, v)}px"></i><small>${esc(k)} · ${v}</small></div>`).join('')}</div>` : ''}`;
+    } else if (systemPage === 'movimiento') {
+      const flows = project.nodes.filter(n => n.targetId), byType = new Map<string, number>(); for (const n of flows) { const t = n.transition?.type ?? 'sin animación'; byType.set(t, (byType.get(t) ?? 0) + 1); }
+      const animated = project.nodes.filter(n => n.animations?.length).length;
+      extra = `<p class="sys-inline">${flows.length} ${flows.length === 1 ? 'conexión' : 'conexiones'}: ${[...byType].map(([t, n]) => `<code>${esc(t)}</code> ×${n}`).join(' · ') || '—'} · ${animated} ${animated === 1 ? 'elemento animado' : 'elementos animados'}.</p>`;
+    } else if (systemPage === 'principios' && notes.principles && !systemEditing) {
+      extra = '';
+    }
+    body = head('FUNDAMENTOS', label, '') + (systemPage === 'principios' ? field('system', key, 'Principios', 'Una regla por línea: una acción principal por pantalla, el oro solo en detalles…', notes[key], undefined, 8) : extra + field('system', key, `Notas de ${label.toLowerCase()}`, 'Cómo se usa y qué no se hace.', notes[key], undefined, 5));
+  } else {
+    const list = sets.get(systemPage.slice(2))!, c = list[0], isSet = !!c.set, doc = c.doc ?? {}, axes = isSet ? variantAxes(project, c.set!) : {};
+    const master = project.nodes.find(n => n.id === c.masterId && n.componentId === c.id);
+    const parts = c.template.slice(1).filter(n => n.name && !/^(Grupo|Texto|Rectángulo|Elipse|Botón|Campo|Tarjeta|Imagen|Icono|Ilustración)$/.test(n.name)).slice(0, 12);
+    const options = isSet ? Object.entries(axes).map(([axis, values]) => `<h4>${esc(axis)}</h4><div class="sys-variants">${values.map(v => { const m = list.find(m => m.variant?.[axis] === v) ?? c; return `<figure data-preview-of="${esc(m.id)}"><figcaption>${esc(v)}</figcaption></figure>`; }).join('')}</div>`).join('') : `<div class="sys-variants"><figure data-preview-of="${esc(c.id)}"><figcaption>${esc(c.name)}</figcaption></figure></div>`;
+    const guides = (kind: 'do' | 'dont') => lines(doc[kind]).map(l => { const g = guideline(l); return `<li class="${kind}"><span>${esc(g.text)}</span>${g.ids.map(id => `<span class="sys-example" data-example="${esc(id)}"></span>`).join('')}</li>`; }).join('');
+    const i = pages.indexOf(systemPage.slice(2)), prev = i > 0 ? pages[i - 1] : undefined, next = i < pages.length - 1 ? pages[i + 1] : undefined;
+    body = head(isSet ? `COMPONENTE · ${list.length} ${list.length === 1 ? 'VARIANTE' : 'VARIANTES'}` : 'COMPONENTE', title(list), systemEditing || !doc.description ? '' : esc(doc.description))
+      + (systemEditing || !doc.description ? field('doc', 'description', 'Qué es y qué hace', 'Una frase: «La acción que hace avanzar la pantalla».', doc.description, c.id, 2) : '')
+      + `<section><h2>Opciones</h2>${options}${master ? `<p class="field-note">Maestro en «${esc(frameOf(project, master.id)?.name ?? 'el lienzo')}» · <button class="text-button" data-select-master="${esc(master.id)}">Ir al maestro</button></p>` : '<p class="field-note">El maestro fue eliminado.</p>'}</section>`
+      + (parts.length ? `<section><h2>Anatomía</h2><div class="sys-anatomy"><figure data-anatomy-of="${esc(c.id)}"></figure><ol>${parts.map(n => `<li>${esc(n.name)}<small> · ${esc(labels[n.type])}</small></li>`).join('')}</ol></div></section>` : '')
+      + `<section><h2>Por qué</h2>${field('doc', 'why', 'Por qué este y no otro parecido', 'Qué lo distingue de los componentes con los que se confunde.', doc.why, c.id)}</section>`
+      + `<section><h2>Cuándo</h2>${field('doc', 'when', 'Cuándo usarlo y cuándo no', 'Las situaciones en que es la pieza adecuada.', doc.when ?? doc.usage, c.id)}</section>`
+      + `<section><h2>Cómo</h2>${field('doc', 'how', 'Cómo se usa', 'Opciones, contenido y comportamiento.', doc.how, c.id)}${systemEditing || (!doc.do && !doc.dont) ? `<div class="sys-two">${field('doc', 'do', 'Buenas prácticas', 'Una por línea. Termina con [ejemplo: ID] para mostrar una capa.', doc.do, c.id, 4)}${field('doc', 'dont', 'Malas prácticas', 'Una por línea. Termina con [ejemplo: ID] para mostrar una capa.', doc.dont, c.id, 4)}</div>` : ''}${doc.do || doc.dont ? `<div class="sys-two sys-lists"><div><h4 class="do">Sí</h4><ul>${guides('do')}</ul></div><div><h4 class="dont">No</h4><ul>${guides('dont')}</ul></div></div>` : ''}</section>`
+      + `<nav class="sys-pager">${prev ? `<button data-system-page="c:${esc(prev)}">← ${esc(title(sets.get(prev)!))}</button>` : '<span></span>'}${next ? `<button data-system-page="c:${esc(next)}">${esc(title(sets.get(next)!))} →</button>` : ''}</nav>`;
+  }
+  view.innerHTML = `<article class="system-doc">${body}</article>`;
+  for (const fig of view.querySelectorAll<HTMLElement>('figure[data-preview-of]')) { const c = project.components.find(c => c.id === fig.dataset.previewOf); if (c) fig.prepend(componentPreview(c, 300, 180)); }
+  for (const fig of view.querySelectorAll<HTMLElement>('figure[data-anatomy-of]')) {
+    const c = project.components.find(c => c.id === fig.dataset.anatomyOf); if (!c) continue;
+    const preview = componentPreview(c, 420, 240), root = c.template[0], scale = Math.min(1, 420 / Math.max(1, root.width), 240 / Math.max(1, root.height));
+    const parts = c.template.slice(1).filter(n => n.name && !/^(Grupo|Texto|Rectángulo|Elipse|Botón|Campo|Tarjeta|Imagen|Icono|Ilustración)$/.test(n.name)).slice(0, 12);
+    parts.forEach((n, i) => { const at = absolute({ ...project, nodes: c.template }, n), badge = document.createElement('b'); badge.className = 'sys-badge'; badge.textContent = `${i + 1}`; badge.style.left = `${Math.round(at.x * scale)}px`; badge.style.top = `${Math.round(at.y * scale)}px`; preview.append(badge); });
+    fig.append(preview);
+  }
+  for (const slot of view.querySelectorAll<HTMLElement>('.sys-example')) { const pv = nodePreview(slot.dataset.example!, 220, 120); if (pv) slot.append(pv); else slot.innerHTML = `<small class="sys-missing">ejemplo «${esc(slot.dataset.example!)}» no encontrado</small>`; }
+  byId('system-index').innerHTML = `<button class="sys-link ${systemPage === 'inicio' ? 'active' : ''}" data-system-page="inicio">Inicio · ${done}/${sets.size}</button><h5>Fundamentos</h5>${foundationPages.map(([id, label, key]) => `<button class="sys-link sub ${systemPage === id ? 'active' : ''}" data-system-page="${id}">${esc(label)}<i class="${notes[key] ? 'done' : ''}"></i></button>`).join('')}<h5>Componentes</h5>${[...sets.values()].map(list => `<button class="sys-link sub ${systemPage === `c:${setKey(list[0])}` ? 'active' : ''}" data-system-page="c:${esc(setKey(list[0]))}">${esc(title(list))}<i class="${documented(list) ? 'done' : ''}"></i></button>`).join('')}`;
+  view.scrollTop = systemPage === lastSystemPage ? scroll : 0; lastSystemPage = systemPage;
 }
+let lastSystemPage = 'inicio';
 // Variants: a master shows its set and axis values; an instance picks the member it points at.
 function variantPanel(n: DesignNode) {
   const c=p().components.find(c=>c.id===(n.componentId??n.instanceOf)); if(!c)return '';
@@ -596,7 +671,8 @@ events.addEventListener('click',e=>{
   if(el.dataset.component){insertComponent(el.dataset.component);return;}
   if(el.dataset.tab){setTab(el.dataset.tab as typeof tab);if(tab==='system'&&state.mode!=='system')setMode('system');else if(tab!=='system'&&state.mode==='system')setMode('design');return;}
   if(el.dataset.mode){setMode(el.dataset.mode as typeof state.mode);if(state.mode==='system'&&tab!=='system')setTab('system');else if(state.mode!=='system'&&tab==='system')setTab('layers');if(state.mode==='flow')toast('Selecciona un elemento y elige su destino en «Al hacer clic».');return;}
-  if(el.dataset.systemSection){document.getElementById(el.dataset.systemSection)?.scrollIntoView({behavior:'smooth',block:'start'});return;}
+  if(el.dataset.systemPage){systemPage=el.dataset.systemPage;renderSystem();return;}
+  if(el.dataset.systemEdit!==undefined){systemEditing=!systemEditing;renderSystem();return;}
   if(el.dataset.collapse){const id=el.dataset.collapse;collapsed.has(id)?collapsed.delete(id):collapsed.add(id);renderLayers();return;}
   if(el.dataset.lock){change(pr=>{const n=pr.nodes.find(n=>n.id===el.dataset.lock)!;n.locked=!n.locked;});return;}
   if(el.dataset.hide){change(pr=>{const n=pr.nodes.find(n=>n.id===el.dataset.hide)!;n.hidden=!n.hidden;});return;}

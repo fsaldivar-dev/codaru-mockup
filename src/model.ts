@@ -60,9 +60,10 @@ export interface Component {
   /** Design-system notes: when to use it, good and bad practice. Shared by every member of a set. */
   doc?: ComponentDoc;
 }
-export interface ComponentDoc { usage?: string; do?: string; dont?: string; }
-/** The design system's narrative: what the product is, why the brand works for it, and the principles to keep. */
-export interface DesignSystemNotes { summary?: string; brand?: string; principles?: string; }
+/** A component page answers four questions: what it is, why, when and how. Guideline lines may end in `[ejemplo: ID]` to show a layer of the document beside them. */
+export interface ComponentDoc { description?: string; why?: string; when?: string; how?: string; do?: string; dont?: string; /** Older documents: when + why in one field. */ usage?: string; }
+/** The design system's narrative and foundations: what the product is, why the brand works for it, the principles, and one note per foundation. */
+export interface DesignSystemNotes { summary?: string; brand?: string; principles?: string; color?: string; typography?: string; spacing?: string; motion?: string; voice?: string; }
 export interface Project {
   format: 'codaru-mockup'; version: 2; name: string;
   theme: Theme; themes: Record<Theme, Record<string, string>>;
@@ -218,7 +219,7 @@ export function cleanVariant(variant: unknown): Record<string, string> {
   for (const [axis, value] of entries) if (!variantText(axis) || !variantText(value) || ['__proto__', 'constructor', 'prototype'].includes(axis)) throw new Error('Ejes y valores de variante: texto de 1 a 40 caracteres, sin "=" ni ","');
   return Object.fromEntries(entries.map(([axis, value]) => [axis.trim(), (value as string).trim()]));
 }
-const NOTE_KEYS = { designSystem: ['summary', 'brand', 'principles'], doc: ['usage', 'do', 'dont'] } as const;
+const NOTE_KEYS = { designSystem: ['summary', 'brand', 'principles', 'color', 'typography', 'spacing', 'motion', 'voice'], doc: ['description', 'why', 'when', 'how', 'do', 'dont', 'usage'] } as const;
 /** Merge free-text notes: strings up to 4000 characters, null or empty removes a field, nothing else gets in. */
 export function mergeNotes<T extends object>(current: T | undefined, patch: unknown, kind: keyof typeof NOTE_KEYS): T | undefined {
   if (!patch || typeof patch !== 'object' || Array.isArray(patch)) throw new Error('Se esperaba un objeto con textos');

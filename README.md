@@ -145,7 +145,7 @@ Un componente puede tener **variantes**: estados o tamaños que comparten estruc
 
 ## Sistema de diseño
 
-La pestaña **Sistema** (en el panel izquierdo o junto a Diseño y Flujos) muestra el sistema de diseño del documento: **por qué funciona** (producto, negocio y nicho; marca y dirección visual; principios), los **tokens** del tema en claro y oscuro con su tipografía y radios, y cada **componente** con sus variantes dibujadas y su documentación: cuándo usarlo, buenas prácticas y malas prácticas. Todo se edita ahí mismo, viaja con el JSON y la IA lo lee en `codaru context` y lo escribe con `designSystem.set` y `component.doc`.
+La pestaña **Sistema** (en el panel izquierdo o junto a Diseño y Flujos) es la documentación del sistema de diseño, dentro del documento. Un índice con el avance (qué está documentado y qué no), páginas de **fundamentos** (principios, color con los contrastes medidos, tipografía con la escala dibujada, espaciado y radios, movimiento, voz) y una página por **componente** que responde qué es, por qué, cuándo y cómo, con sus variantes dibujadas por eje, la anatomía numerada de sus capas y las buenas y malas prácticas; una práctica puede señalar una capa del documento con `[ejemplo: ID]` y se muestra al lado. Se lee como documentación y se edita con **Editar**; todo viaja con el JSON y la IA lo lee en `codaru context` y lo escribe con `designSystem.set` y `component.doc`.
 
 ## Componentes prefabricados
 
