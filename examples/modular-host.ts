@@ -17,8 +17,10 @@ const view = createEditorView(editor, {
   nativeAgent: false,
 });
 view.mount('canvas', el('canvas-slot'));
+view.mount('pages', el('pages-slot'));
 view.mount('layers', el('layers-panel'));
 view.mount('library', el('library-panel'));
+view.mount('system', el('system-panel'));
 view.mount('insert', el('insert-slot'));
 view.mount('toolbar', el('toolbar-slot'));
 // The view bar is split: each control sits where this IDE wants it.
@@ -55,7 +57,7 @@ el('appearance-toggle').onclick = () => {
   notice.textContent = 'Apariencia del IDE actualizada. El tema de tu diseño se conserva.';
 };
 
-const tabs = ['layers', 'library'] as const;
+const tabs = ['layers', 'library', 'system'] as const;
 function showTab(tab: typeof tabs[number]) {
   for (const name of tabs) {
     el(`${name}-panel`).hidden = name !== tab;
@@ -64,11 +66,11 @@ function showTab(tab: typeof tabs[number]) {
   }
 }
 for (const tab of tabs) {
-  el(`${tab}-tab`).onclick = () => showTab(tab);
+  el(`${tab}-tab`).onclick = () => { showTab(tab); editor.setMode(tab === 'system' ? 'system' : editor.getState().mode === 'system' ? 'design' : editor.getState().mode); };
   el(`${tab}-tab`).onkeydown = event => {
     if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
     event.preventDefault();
-    const next = event.key === 'Home' ? 'layers' : event.key === 'End' ? 'library' : tab === 'layers' ? 'library' : 'layers';
+    const i = tabs.indexOf(tab), next = event.key === 'Home' ? tabs[0] : event.key === 'End' ? tabs[tabs.length - 1] : tabs[(i + (event.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
     showTab(next); el(`${next}-tab`).focus();
   };
 }

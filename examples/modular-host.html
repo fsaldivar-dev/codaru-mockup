@@ -30,13 +30,16 @@
     <aside class="navigator" aria-label="Navegador del proyecto">
       <div class="navigator-caption">PROYECTO</div>
       <div class="project-item"><span data-icon="grid"></span>Mockups<small>FORMA</small></div>
+      <div id="pages-slot" class="pages-slot"></div>
       <div class="panel-tabs" role="tablist" aria-label="Recursos del proyecto">
         <button id="layers-tab" role="tab" aria-selected="true" aria-controls="layers-panel" tabindex="0">Capas</button>
         <button id="library-tab" role="tab" aria-selected="false" aria-controls="library-panel" tabindex="-1">Biblioteca</button>
+        <button id="system-tab" role="tab" aria-selected="false" aria-controls="system-panel" tabindex="-1">Sistema</button>
       </div>
       <div class="navigation-content">
         <div id="layers-panel" class="fragment-panel" role="tabpanel" aria-labelledby="layers-tab"></div>
         <div id="library-panel" class="fragment-panel" role="tabpanel" aria-labelledby="library-tab" hidden></div>
+        <div id="system-panel" class="fragment-panel" role="tabpanel" aria-labelledby="system-tab" hidden></div>
       </div>
       <div id="insert-slot" class="insert-slot"></div>
       <div class="navigator-note">Doble clic para entrar en una pantalla.<br/>Escape para volver al nivel anterior.</div>
