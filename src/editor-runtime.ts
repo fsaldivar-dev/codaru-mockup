@@ -507,7 +507,7 @@ function renderSystem() {
     const c = project.components.find(c => c.id === fig.dataset.anatomyOf); if (!c) continue;
     const preview = componentPreview(c, 420, 240), root = c.template[0], scale = Math.min(1, 420 / Math.max(1, root.width), 240 / Math.max(1, root.height));
     const parts = c.template.slice(1).filter(n => n.name && !/^(Grupo|Texto|Rectángulo|Elipse|Botón|Campo|Tarjeta|Imagen|Icono|Ilustración)$/.test(n.name)).slice(0, 12);
-    parts.forEach((n, i) => { const at = absolute({ ...project, nodes: c.template }, n), badge = document.createElement('b'); badge.className = 'sys-badge'; badge.textContent = `${i + 1}`; badge.style.left = `${Math.round(at.x * scale)}px`; badge.style.top = `${Math.round(at.y * scale)}px`; preview.append(badge); });
+    parts.forEach((n, i) => { const at = absolute({ ...project, nodes: c.template }, n), badge = document.createElement('b'); badge.className = 'sys-badge'; badge.textContent = `${i + 1}`; badge.style.left = `${Math.round((at.x + Math.min(n.width, 24) / 2) * scale)}px`; badge.style.top = `${Math.round((at.y + Math.min(n.height, 24) / 2) * scale)}px`; preview.append(badge); });
     fig.append(preview);
   }
   for (const slot of view.querySelectorAll<HTMLElement>('.sys-example')) { const pv = nodePreview(slot.dataset.example!, 220, 120); if (pv) slot.append(pv); else slot.innerHTML = `<small class="sys-missing">ejemplo «${esc(slot.dataset.example!)}» no encontrado</small>`; }
