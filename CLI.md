@@ -73,6 +73,10 @@ Los tokens y los iconos se resuelven con el tema del elemento o de su pantalla. 
 ./codaru lint --frame pantalla-inicio
 ```
 
+### Importar una página web
+
+`{ "op": "dom", "data": <instantánea> }` dentro de `apply`. La instantánea la produce `packages/claude-plugin/skills/codaru-clone/scripts/snapshot.js` ejecutado en la página (formato `codaru-dom-snapshot`, versión 1). Crea una pantalla del tamaño del viewport a la derecha de las existentes, un tema `Importado · dominio` con los colores y las tipografías más usados, y capas vinculadas a esos tokens; SVG saneados como ilustraciones, imágenes del mismo dominio como imágenes, el resto como cajas. Límite: 3000 capas por instantánea.
+
 Devuelve `summary` (errores, avisos y notas, y cuántos por regla) e `issues`, cada uno con `node`, `frame`, `rule`, `severity`, `message`, `fix` y, si el problema solo aparece en un modo, `mode`. El contraste se calcula contra el fondo real del texto en claro y en oscuro. Corrige con `apply` y repite hasta no tener errores. Reglas: `contrast`, `target`, `text-size`, `text-fit`, `overflow`, `safe-area`, `hinge`, `overlap`, `off-theme`, `alignment`, `scale`, `palette` (el color principal del tema no funciona como acento ni como ancla) `accent-fill` (chip pequeño con acento cálido de fondo y texto oscuro) y `gradient` (rampa de neutro oscuro a acento cálido que se embarra).
 
 ## Ilustraciones, animaciones y transiciones

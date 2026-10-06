@@ -6,6 +6,7 @@ import { exportHTML, exportSVG } from './render';
 import { sanitizeSVG, vectorLayers, vectorSize } from './motion';
 import { devicePresets, deviceSkins } from './devices';
 import { importFigma } from './figma-import';
+import { importDOM } from './dom-import';
 import { lintProject, lintRules, lintSummary } from './lint';
 
 export interface AgentHost {
@@ -82,6 +83,7 @@ export const agentSchema = {
     flow:{from:'ID de origen',to:'ID de pantalla destino o null',transition:'opcional {type:fade|slide-left|slide-right|slide-up|slide-down|scale|unfold|fold,duration:ms,easing}; null la quita. unfold/fold animan la bisagra de la pantalla que tenga fold'},
     vector:{svg:'texto SVG; se sanea y cada forma recibe un id de capa',parentId:'ID o null',x:24,y:24,width:'opcional; conserva la proporción',name:'opcional',id:'opcional'},
     figma:{data:'contenido del archivo .figma.codaru.json que escribe el plugin de Figma; añade sus pantallas, componentes y tokens al documento'},
+    dom:{data:'instantánea codaru-dom-snapshot v1 de una página web (scripts/snapshot.js del skill codaru-clone); añade la página como pantalla, con un tema derivado de sus colores y tipografías, y capas vinculadas a esos tokens'},
     animate:{id:'ID del elemento',animations:'lista completa que reemplaza la anterior; [] o null las quita'},group:{ids:['ID1','ID2']},ungroup:{id:'ID de grupo'},detach:{id:'ID de instancia'},
     theme:{theme:'Perfil completo {id,name,modes:{light:TokenSet,dark:TokenSet}}'},'theme.activate':{id:'ID de tema',mode:'light|dark (opcional)'},
   },
@@ -108,6 +110,7 @@ export function applyOperations(p: Project,operations: unknown) {
       case 'flow':{const id=string(op.from,'from');existing(p,id);updateNode(p,id,{targetId:op.to===null?null:string(op.to,'to'),...(op.transition!==undefined?{transition:op.transition===null?undefined:object(op.transition) as unknown as DesignNode['transition']}:{})});break;}
       case 'vector':{const svg=sanitizeSVG(string(op.svg,'svg')),size=vectorSize(svg),width=op.width===undefined?Math.min(size.width,320):number(op.width,160);p.nodes.push(node('vector',{...(op.id!==undefined?{id:string(op.id,'id')}:{}),name:op.name===undefined?'Ilustración':string(op.name,'name'),parentId:parent(op.parentId),x:number(op.x,0),y:number(op.y,0),width,height:Math.max(1,Math.round(width*size.height/size.width*100)/100),svg}));break;}
       case 'figma':importFigma(p,object(op.data));break;
+      case 'dom':importDOM(p,object(op.data));break;
       case 'animate':{const id=string(op.id,'id');existing(p,id);updateNode(p,id,{animations:op.animations===null||(Array.isArray(op.animations)&&!op.animations.length)?undefined:op.animations as DesignNode['animations']});break;}
       case 'group':group(p,ids(op.ids));break;
       case 'ungroup':{const id=string(op.id,'id');existing(p,id);ungroup(p,id);break;}

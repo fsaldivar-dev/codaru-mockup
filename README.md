@@ -85,6 +85,12 @@ Un contenedor (pantalla, tarjeta o grupo) puede organizar a sus hijos en fila o 
 
 Cada persona puede traer sus propios archivos con el plugin de [packages/figma-plugin](packages/figma-plugin/README.md): se instala en Figma desde su manifiesto, exporta un `.figma.codaru.json` sin token ni red, y Codaru lo abre con «Abrir proyecto». La importación se añade al documento, convierte los estilos en tokens y resume qué se simplificó.
 
+## Importar una web o una app existente
+
+`packages/claude-plugin/skills/codaru-clone/scripts/snapshot.js` se ejecuta dentro de cualquier página (consola del navegador, herramienta de JavaScript de un agente, Playwright) y devuelve una instantánea de lo visible: geometría, fondos y degradados, bordes, radios, sombras, tipografía, textos, SVG en línea e imágenes del mismo dominio. `codaruSnapshot({ download: true })` descarga `pagina.dom.codaru.json`. No envía nada a ningún sitio.
+
+La operación `dom` de `./codaru apply` importa esa instantánea como una pantalla del tamaño del viewport, con un tema `Importado · dominio` derivado de los colores y las tipografías de la página y las capas vinculadas a esos tokens. Lo que no se puede capturar (imágenes de otro dominio, fondos CSS, cursivas, fuentes propias) queda anotado. Con el skill `codaru-clone`, un agente puede replicar tu app pixel a pixel para rediseñarla, o extraer la ficha de marca de un sitio y diseñar tu producto con ese estilo sin copiarlo.
+
 ## Dispositivos y plegables
 
 - **Tamaño de pantalla**: al seleccionar una pantalla, «Dispositivo» ofrece tamaños de iPhone, iPad, teléfonos y tabletas Android, plegables y escritorio, en puntos o dp. «Girar» intercambia ancho y alto.

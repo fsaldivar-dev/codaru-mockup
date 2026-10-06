@@ -2,6 +2,7 @@
 
 ## Sin publicar
 
+- Importar una web o una app existente: `scripts/snapshot.js` (skill `codaru-clone`) captura una página en el navegador y la operación `dom` del CLI la importa como pantalla con un tema derivado de sus colores y tipografías, capas vinculadas a tokens, SVG como ilustraciones e imágenes del mismo dominio. El skill cubre dos modos: replicar la app propia pixel a pixel, o extraer la ficha de marca de un sitio para diseñar el producto propio con ese estilo.
 - Inspector: con un token de tipografía o de radio vinculado, los campos Fuente, Tamaño, Peso, Línea y Radio muestran el valor que realmente se dibuja y avisan del vínculo; editar uno desvincula el token y conserva los demás valores. Antes los cambios no tenían efecto porque el token mandaba.
 - Revisión de diseño: regla `gradient`. Un degradado entre un neutro oscuro y un acento cálido (negro a oro) se avisa: a mitad de camino se vuelve oliva. Tonos de un mismo color o vecinos no se marcan.
 - Skill `codaru-design`: principios «El blanco manda» (la superficie clara o el ancla oscura es el protagonista; el acento metálico va en texto, líneas y aros; una tarjeta de pago en oro es la excepción deliberada y única) y «Degradados que no embarran».
