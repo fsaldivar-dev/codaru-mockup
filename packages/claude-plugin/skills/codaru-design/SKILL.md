@@ -43,6 +43,10 @@ Nombra el tema con la marca y entrega una tabla rasgo → dónde está en el dis
 
 **Paleta.** Una paleta tiene anclas: un fondo, una superficie, un neutro realmente oscuro y un acento saturado que marca la acción principal y el estado activo. `@primary` debe contrastar al menos 3:1 con `@background` y ser un color de verdad o un neutro oscuro, nunca un tono medio apagado (marrón, ocre, gris azulado); `./codaru lint` lo marca como `palette`. «Marrón sobre beige» o «gris sobre gris claro» no es una paleta, es un filtro: todo queda en una sola banda tonal y nada destaca. Los tonos tierra y los grises cálidos van en superficies y fondos, con un acento y un oscuro que los sostengan. Un aviso de `palette` pide una decisión de paleta, no un intercambio: mover el marrón de `@primary` a `@accent` y poner el negro del texto como `@primary` deja el mismo diseño sepia con botones negros, y el lint también lo detecta.
 
+**El acento como fondo.** Que un color contraste no significa que funcione. Un acento saturado y cálido (oro, ámbar, amarillo) con texto oscuro encima en un elemento pequeño (chip de fecha, etiqueta, insignia) se lee como señal de aviso, por bueno que sea el ratio; `./codaru lint` lo marca como `accent-fill`. En pequeño, el acento va como **texto, icono o borde**, o como **tinte** (12–15 % del acento sobre la superficie) con el texto en el acento oscurecido hasta 4,5:1: es el patrón de botón teñido de iOS. El acento sólido con texto encima se reserva para la acción principal y para superficies grandes con tipografía generosa, donde se lee como material y no como etiqueta. Lo que sí funciona siempre es el acento **sobre** oscuro: oro sobre negro, iconos y cifras.
+
+**Indicadores.** Barras de progreso, checks, bordes de botón y cualquier elemento no textual que comunique estado necesitan 3:1 contra su fondo. Un oro `#c5a23e` sobre blanco da 2,4:1: oscurécelo para esos usos o ponlo sobre oscuro.
+
 **Contraste.** 4,5:1 para texto normal y 3:1 para texto grande (24 px, o 18,5 px en negrita), en claro y en oscuro.
 
 **Zonas táctiles.** 44 × 44 como mínimo (48 en Android), separadas al menos 8.
@@ -90,7 +94,9 @@ Anima para explicar, no para decorar: entradas de 200 a 500 ms con `ease-out`, u
 Antes de dar por terminado un flujo, comprueba que tiene:
 
 - Un **elemento protagonista por pantalla** (el número, el aro, el botón, la ilustración), no solo cabecera + tarjetas + barra.
-- Un **degradado real** en el momento de marca: `gradientStops` de 3 o 4 paradas o un degradado del tema (`./codaru catalog` y las sugerencias del tema). Si en todo el flujo no hay ninguno, no está terminado.
+- Un **degradado real** en el momento de marca: `gradientStops` de 3 o 4 paradas con una diferencia que se vea (al menos 15 % de luminosidad o un cambio de tono entre extremos) o un degradado del tema. Cinco copias de un negro-a-negro imperceptible cumplen la letra y no la intención; mejor uno que se note en el elemento protagonista.
+- **Sin HEX fijos en superficies**: tarjetas, chips y avatares con tokens (`@primary`, `@surface`, `@accent`). Y comprueba el modo oscuro como diseño, no solo como contraste: si el protagonista era «la tarjeta negra», en oscuro todo es negro y deja de serlo; inviértelo (oro o crema con texto oscuro) para que siga mandando.
+- **Las opciones también son paleta**: si la marca es negro y oro, un selector de colores no ofrece siete grises; ofrece negro, oro y crema.
 - Una **animación de entrada** en Presentar y, si hay ilustración, una animación propia.
 - **Instancias** de los componentes que definiste; definir componentes y luego dibujar copias es trabajo perdido.
 - `./codaru lint` sin errores ni avisos de `palette`.

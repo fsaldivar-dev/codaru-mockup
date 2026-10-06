@@ -26,6 +26,7 @@ description: Revisar un diseño de Codaru Mockup y corregir sus problemas. Úsal
 | `overlap` | Dos acciones se superponen | Sepáralas 8 o más |
 | `off-theme` | Color fijo casi igual a un token | Sustitúyelo por el token indicado en `fix` |
 | `alignment` | Bordes a 1–3 px de alinearse | Iguala `x`, o usa auto layout |
+| `accent-fill` | Chip pequeño con un acento cálido saturado de fondo y texto oscuro encima: contrasta, pero parece una señal de aviso | Acento como texto, icono o borde, o tinte del acento (12–15 %) con texto en el acento oscurecido; el relleno sólido solo en la acción principal y superficies grandes |
 | `scale` | Demasiados tamaños de texto o radios en una pantalla | Reduce la escala y vincula a tokens |
 | `palette` | `@primary` del tema no contrasta 3:1 con el fondo (error), es un tono medio apagado sin saturación, o es un neutro y `@accent` tampoco tiene color (aviso): la paleta se lee como una sola banda | Cambia el color principal del tema con `theme`: un acento saturado o un neutro realmente oscuro; deja los tonos tierra y grises para superficies |
 

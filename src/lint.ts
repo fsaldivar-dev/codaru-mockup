@@ -5,7 +5,7 @@ import { effectiveTheme } from './themes';
  * Design review: finds what a careful designer would flag, in both light and dark mode, without
  * drawing anything. Each issue points at one element so it can be shown as a heat map or fixed by an AI.
  */
-export type LintRule = 'contrast' | 'target' | 'text-size' | 'text-fit' | 'overflow' | 'safe-area' | 'hinge' | 'overlap' | 'off-theme' | 'alignment' | 'scale' | 'palette';
+export type LintRule = 'contrast' | 'target' | 'text-size' | 'text-fit' | 'overflow' | 'safe-area' | 'hinge' | 'overlap' | 'off-theme' | 'alignment' | 'scale' | 'palette' | 'accent-fill';
 export interface LintIssue {
   rule: LintRule; severity: 'error' | 'warning' | 'info';
   /** Element to look at, and the screen it belongs to. */
@@ -18,7 +18,7 @@ export interface LintIssue {
 }
 export const lintRules: Record<LintRule, string> = {
   contrast: 'Contraste de texto', target: 'Zona táctil pequeña', 'text-size': 'Texto pequeño', 'text-fit': 'Texto que no cabe', overflow: 'Contenido fuera de la pantalla',
-  'safe-area': 'Contenido bajo el área del sistema', hinge: 'Contenido sobre el pliegue', overlap: 'Acciones superpuestas', 'off-theme': 'Color fuera del tema', alignment: 'Casi alineados', palette: 'Paleta sin acento', scale: 'Demasiadas variantes',
+  'safe-area': 'Contenido bajo el área del sistema', hinge: 'Contenido sobre el pliegue', overlap: 'Acciones superpuestas', 'off-theme': 'Color fuera del tema', alignment: 'Casi alineados', palette: 'Paleta sin acento', 'accent-fill': 'Acento como fondo de un chip', scale: 'Demasiadas variantes',
 };
 
 type RGBA = [number, number, number, number];
@@ -35,7 +35,8 @@ function oklch([r, g, b]: RGBA) {
   const lin = (v: number) => { v /= 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; };
   const R = lin(r), G = lin(g), B = lin(b);
   const l = Math.cbrt(.4122214708 * R + .5363325363 * G + .0514459929 * B), m = Math.cbrt(.2119034982 * R + .6806995451 * G + .1073969566 * B), s = Math.cbrt(.0883024619 * R + .2817188376 * G + .6299787005 * B);
-  return { lightness: .2104542553 * l + .793617785 * m - .0040720468 * s, chroma: Math.hypot(1.9779984951 * l - 2.428592205 * m + .4505937099 * s, .0259040371 * l + .7827717662 * m - .808675766 * s) };
+  const a = 1.9779984951 * l - 2.428592205 * m + .4505937099 * s, bb = .0259040371 * l + .7827717662 * m - .808675766 * s;
+  return { lightness: .2104542553 * l + .793617785 * m - .0040720468 * s, chroma: Math.hypot(a, bb), hue: (Math.atan2(bb, a) * 180 / Math.PI + 360) % 360 };
 }
 /** WCAG contrast ratio between two opaque colors. */
 export function contrastRatio(a: string, b: string) { const x = luminance(parse(a)), y = luminance(parse(b)); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); }
@@ -167,6 +168,21 @@ export function lintProject(input: Project, options: { frame?: string } = {}): L
     if (sizes.length > 7) add({ rule: 'scale', severity: 'info', node: frame.id, frame: frame.id, message: `${name(frame)}: ${sizes.length} tamaños de texto distintos (${sizes.join(', ')}).`, fix: 'Reduce a una escala de 4 a 6 tamaños y vincúlalos a tokens de tipografía.' });
     const radii = [...new Set(inside.filter(n => n.radius > 0 && n.type !== 'ellipse' && n.radius < Math.min(n.width, n.height) / 2).map(n => n.radius))].sort((a, b) => a - b);
     if (radii.length > 4) add({ rule: 'scale', severity: 'info', node: frame.id, frame: frame.id, message: `${name(frame)}: ${radii.length} radios distintos (${radii.join(', ')}).`, fix: 'Usa dos o tres radios y vincúlalos a tokens de radio.' });
+  }
+  // Accent as a chip background: a small element filled with a saturated warm accent (gold, amber, yellow) and dark
+  // text on it reads as hazard signage, however good the contrast ratio. Large surfaces and icons are not the issue.
+  for (const n of nodes) {
+    if (n.type !== 'text' || !n.text.trim()) continue;
+    const host = ancestors(input, n.id).find(a => a.type !== 'frame' && a.type !== 'group' ? parse(color(input, a.fill, a))[3] > .5 || a.gradient !== 'none' || !!a.fillToken : a.type === 'group' && parse(color(input, a.fill, a))[3] > .5);
+    if (!host || host.width > 80 || host.height > 80) continue;
+    for (const [mode, p] of [['light', light], ['dark', dark]] as const) {
+      const paint = paintAt(p, host, { x: absolute(p, host).x + host.width / 2, y: absolute(p, host).y + host.height / 2 }); if (!paint || paint[3] < .9) continue;
+      const fill = oklch(paint), text = oklch(parse(color(p, n.color, n)));
+      if (fill.chroma >= .08 && fill.lightness >= .55 && fill.lightness <= .88 && fill.hue >= 40 && fill.hue <= 110 && text.lightness < .4) {
+        add({ rule: 'accent-fill', severity: 'info', node: host.id, frame: frameId(host), mode, message: `${name(host)}: chip de ${Math.round(host.width)} × ${Math.round(host.height)} con el acento ${toHex(paint)} de fondo y texto oscuro encima${mode === 'dark' ? ' en modo oscuro' : ''}: contrasta, pero parece una señal de aviso.`, fix: 'En elementos pequeños el acento va como texto, icono o borde, o como tinte (12–15 % sobre la superficie) con el texto en el acento oscurecido. El acento sólido con texto encima queda para la acción principal y las superficies grandes.' });
+        break;
+      }
+    }
   }
   // Palette: a theme whose primary color is a muddy mid tone neither reads as an accent nor anchors as a dark
   // neutral; the whole design ends up as one tonal band. Checked per theme in use, in both modes.

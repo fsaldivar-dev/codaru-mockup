@@ -73,7 +73,7 @@ Los tokens y los iconos se resuelven con el tema del elemento o de su pantalla. 
 ./codaru lint --frame pantalla-inicio
 ```
 
-Devuelve `summary` (errores, avisos y notas, y cuántos por regla) e `issues`, cada uno con `node`, `frame`, `rule`, `severity`, `message`, `fix` y, si el problema solo aparece en un modo, `mode`. El contraste se calcula contra el fondo real del texto en claro y en oscuro. Corrige con `apply` y repite hasta no tener errores. Reglas: `contrast`, `target`, `text-size`, `text-fit`, `overflow`, `safe-area`, `hinge`, `overlap`, `off-theme`, `alignment` y `scale`.
+Devuelve `summary` (errores, avisos y notas, y cuántos por regla) e `issues`, cada uno con `node`, `frame`, `rule`, `severity`, `message`, `fix` y, si el problema solo aparece en un modo, `mode`. El contraste se calcula contra el fondo real del texto en claro y en oscuro. Corrige con `apply` y repite hasta no tener errores. Reglas: `contrast`, `target`, `text-size`, `text-fit`, `overflow`, `safe-area`, `hinge`, `overlap`, `off-theme`, `alignment`, `scale`, `palette` (el color principal del tema no funciona como acento ni como ancla) y `accent-fill` (chip pequeño con acento cálido de fondo y texto oscuro).
 
 ## Ilustraciones, animaciones y transiciones
 

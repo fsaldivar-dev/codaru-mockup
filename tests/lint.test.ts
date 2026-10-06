@@ -99,3 +99,17 @@ test('a muddy primary color is reported as a palette without accent, a dark or s
   assert.equal(lintProject(demo()).filter(i => i.rule === 'palette').length, 0);
   assert.equal(lintProject(demoDevices()).filter(i => i.rule === 'palette').length, 0);
 });
+
+test('a small chip filled with a warm accent and dark text is flagged, large surfaces and icons are not', () => {
+  const p = project([
+    { id: 'chip', type: 'rect', x: 24, y: 100, width: 56, height: 56, fill: '#c5a23e' }, { id: 'chip-text', text: 'MAR', parentId: 'chip', x: 8, y: 20, width: 40, height: 16, color: '#1b1d1e' },
+    { id: 'hero', type: 'card', x: 24, y: 200, width: 340, height: 140, fill: '#c5a23e' }, { id: 'hero-text', text: '85,00 €', parentId: 'hero', x: 16, y: 40, width: 200, height: 48, fontSize: 36, color: '#1b1d1e' },
+    { id: 'tint', type: 'rect', x: 24, y: 400, width: 56, height: 56, fill: '#f6efd6' }, { id: 'tint-text', text: 'MAR', parentId: 'tint', x: 8, y: 20, width: 40, height: 16, color: '#7a6420' },
+    { id: 'blue', type: 'rect', x: 100, y: 400, width: 56, height: 56, fill: '#0a84ff' }, { id: 'blue-text', text: '6', parentId: 'blue', x: 8, y: 20, width: 40, height: 16, color: '#ffffff' },
+  ]);
+  const flagged = lintProject(p).filter(i => i.rule === 'accent-fill');
+  assert.deepEqual(flagged.map(i => i.node), ['chip']);
+  assert.equal(flagged[0].severity, 'info'); assert.match(flagged[0].message, /señal de aviso/);
+  assert.equal(lintProject(demo()).filter(i => i.rule === 'accent-fill').length, 0);
+  assert.equal(lintProject(demoDevices()).filter(i => i.rule === 'accent-fill').length, 0);
+});
