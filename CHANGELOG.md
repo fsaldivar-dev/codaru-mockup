@@ -1,25 +1,39 @@
 # Changelog
 
-## Sin publicar
+## 0.4.0 — 2026-10-06
 
-- Importar una web o una app existente: `scripts/snapshot.js` (skill `codaru-clone`) captura una página en el navegador y la operación `dom` del CLI la importa como pantalla con un tema derivado de sus colores y tipografías, capas vinculadas a tokens, SVG como ilustraciones e imágenes del mismo dominio. El skill cubre dos modos: replicar la app propia pixel a pixel, o extraer la ficha de marca de un sitio para diseñar el producto propio con ese estilo.
-- Inspector: con un token de tipografía o de radio vinculado, los campos Fuente, Tamaño, Peso, Línea y Radio muestran el valor que realmente se dibuja y avisan del vínculo; editar uno desvincula el token y conserva los demás valores. Antes los cambios no tenían efecto porque el token mandaba.
-- Revisión de diseño: regla `gradient`. Un degradado entre un neutro oscuro y un acento cálido (negro a oro) se avisa: a mitad de camino se vuelve oliva. Tonos de un mismo color o vecinos no se marcan.
-- Skill `codaru-design`: principios «El blanco manda» (la superficie clara o el ancla oscura es el protagonista; el acento metálico va en texto, líneas y aros; una tarjeta de pago en oro es la excepción deliberada y única) y «Degradados que no embarran».
-- Revisión de diseño: regla `accent-fill`. Un chip pequeño (≤ 80 px) relleno con un acento cálido saturado (oro, ámbar, amarillo) y texto oscuro encima se señala como nota: contrasta, pero se lee como señal de aviso. Superficies grandes, iconos y acentos sobre oscuro no se marcan.
-- Skill `codaru-design`: principios «El acento como fondo» e «Indicadores» (3:1 para elementos no textuales), degradados que se noten, sin HEX fijos en superficies, protagonista que sobreviva al modo oscuro y opciones de color dentro de la paleta.
-- Revisión de diseño: regla `palette`. Error si `@primary` no contrasta 3:1 con `@background`; aviso si es un tono medio apagado (croma OKLCH < 0,08) que ni destaca como acento ni ancla como neutro oscuro. También avisa si `@primary` es un neutro (negro o blanco) y `@accent` tampoco tiene color. Se evalúa por tema en uso y en ambos modos; en el panel aparece bajo «Paleta del tema» y al pulsarlo se abre Temas.
-- Skill `codaru-design`: sección «Con referencias» (extraer paleta, tipografía, elemento firma, formas y barras con valores concretos y reproducirlos), principio «Paleta» con anclas, y mínimos de entrega: protagonista por pantalla, un degradado real, animación de entrada, instancias de componentes y lint sin `palette`.
-- Lienzo: respuesta visual mientras una IA diseña. Cada lote del agente dibuja partículas que se asientan sobre lo creado o modificado, los elementos nuevos entran con un fundido, las pantallas vacías recién creadas se muestran como esqueleto y una píldora «Diseñando · N pantallas, N cambios» resume el progreso con una burbuja de aumento al pasar el ratón. No reacciona a cambios manuales y respeta «Reducir movimiento».
-- Exportación SVG: las ilustraciones que usan `currentColor` toman el color del elemento, como en Presentar y en HTML; antes salían en negro.
-- Campos: al enfocarlos muestran un borde de 1 px en el color principal del tema, en Presentar, en las vistas previas de Markdown y en el HTML exportado. Sustituye el contorno genérico del navegador.
-- Revisión de diseño: contraste en claro y oscuro contra el fondo real, zonas táctiles, texto pequeño o que no cabe, recortes, área segura, pliegue, acciones superpuestas, colores fuera del tema, desalineaciones y escalas. Lista por pantalla y mapa de calor en el lienzo.
-- CLI: comando `lint [--frame ID]`, también disponible para la IA.
-- Plugin de Claude Code en `packages/claude-plugin` con los skills `codaru-design` y `codaru-review`. El skill de diseño incluye `references/ios-hig.md`, una síntesis de las Human Interface Guidelines de Apple (Liquid Glass, barras, búsqueda, hojas, tipografía, color, controles, movimiento) con una lista de comprobación para pantallas de iPhone.
-- Ejemplos Forma y multiplataforma: el texto sobre color de marca usa tokens, de modo que pasan la revisión sin errores en claro y en oscuro.
+### Importar una web o una app existente
+
+- `scripts/snapshot.js` (skill `codaru-clone`) se ejecuta dentro de cualquier página y captura lo visible: geometría, fondos y degradados, bordes, radios, sombras, tipografía, textos, SVG en línea e imágenes del mismo dominio (reducidas a 2× su tamaño en pantalla, 1,5 MB de tope, `images:false` para omitirlas). No envía nada a ningún sitio.
+- Operación `dom` en `codaru apply`: importa la instantánea como una pantalla del tamaño del viewport, con un tema «Importado · dominio» derivado de los colores y las tipografías más usados, capas vinculadas a esos tokens, SVG saneados como ilustraciones e imágenes como imágenes; lo que no se pudo capturar queda anotado.
+- Skill `codaru-clone`: replicar la app propia pixel a pixel para rediseñarla, o extraer la ficha de marca de un sitio (paleta, tipografía, ritmo, elemento firma, tono) y diseñar el producto propio con ese estilo sin copiarlo.
+
+### Lienzo: la IA diseñando a la vista
+
+- Cada lote del agente dibuja partículas que se asientan sobre lo creado o modificado, los elementos nuevos entran con un fundido, las pantallas vacías recién creadas se muestran como esqueleto y una píldora «Diseñando · N pantallas, N cambios» resume el progreso, con una burbuja de aumento al pasar el ratón. No reacciona a cambios manuales y respeta «Reducir movimiento».
+
+### Revisión de diseño
+
+- Nueva revisión: contraste en claro y oscuro contra el fondo real, zonas táctiles, texto pequeño o que no cabe, recortes, área segura, pliegue, acciones superpuestas, colores fuera del tema, desalineaciones y escalas. Lista por pantalla y mapa de calor en el lienzo. Comando `codaru lint [--frame ID]`, también para la IA.
+- Regla `palette`: error si `@primary` no contrasta 3:1 con `@background`; aviso si es un tono medio apagado (croma OKLCH < 0,08) que ni destaca como acento ni ancla como neutro oscuro, o si es un neutro y `@accent` tampoco tiene color. Por tema en uso y en ambos modos; en el panel, bajo «Paleta del tema», abre Temas.
+- Regla `accent-fill`: un chip pequeño (≤ 80 px) relleno con un acento cálido saturado y texto oscuro encima contrasta, pero se lee como señal de aviso.
+- Regla `gradient`: un degradado que pasa por un tono oliva (neutro oscuro a acento cálido, como negro a oro) se embarra a mitad de camino.
+- Ejemplos Forma y multiplataforma: el texto sobre color de marca usa tokens y pasan la revisión sin errores en claro y en oscuro.
+
+### Skills para Claude Code (`packages/claude-plugin`)
+
+- `codaru-design`: flujo con el CLI y principios de diseño; «Con referencias» (extraer paleta, tipografía, elemento firma, formas y barras con valores concretos y reproducirlos); «Paleta» con anclas; «El acento como fondo», «Indicadores» (3:1), «El blanco manda» y «Degradados que no embarran»; mínimos de entrega (protagonista por pantalla, un degradado real, animación de entrada, instancias de componentes, lint limpio). Incluye `references/ios-hig.md`, una síntesis de las Human Interface Guidelines de Apple (Liquid Glass, barras, búsqueda, hojas, tipografía, color, controles, movimiento) con una lista de comprobación para iPhone.
+- `codaru-review`: auditar y corregir con el lint, regla por regla.
+- `codaru-clone`: ver arriba.
+
+### Editor
+
 - Markdown: bloque ```` ```codaru-mockup ```` y entrada `codaru-mockup/preview` para que un cliente muestre pantallas en vivo dentro de un documento, como prototipo o estáticas, sin cargar el editor.
 - Auto layout: padding por lado, reparto (inicio, centro, final, repartido), alineación transversal (estirar, inicio, centro, final), salto de línea, ajuste del contenedor al contenido y tamaño mínimo y máximo de los hijos. Sin estos campos el comportamiento es el anterior.
-- Figma: el auto layout se conserva con alineación, padding por lado, salto de línea y ajuste al contenido, solo cuando Codaru reproduce la misma geometría; si no, se mantienen las posiciones. El plugin exporta además los modos de tamaño y el estirado de cada hijo.
+- Figma: el auto layout se conserva con alineación, padding por lado, salto de línea y ajuste al contenido solo cuando Codaru reproduce la misma geometría; el plugin exporta además los modos de tamaño y el estirado de cada hijo.
+- Inspector: con un token de tipografía o de radio vinculado, los campos muestran el valor que realmente se dibuja y avisan del vínculo; editar uno desvincula el token y conserva los demás valores.
+- Campos: al enfocarlos muestran un borde de 1 px en el color principal del tema, en Presentar, en Markdown y en el HTML exportado.
+- Exportación SVG: las ilustraciones que usan `currentColor` toman el color del elemento; antes salían en negro.
 
 ## 0.3.0 — 2026-10-05
 
