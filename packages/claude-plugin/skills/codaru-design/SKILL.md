@@ -93,6 +93,17 @@ Lee `references/ios-hig.md` de este skill antes de diseñar una pantalla de iPho
 
 Anima para explicar, no para decorar: entradas de 200 a 500 ms con `ease-out`, una sola cosa moviéndose a la vez, retrasos escalonados de 60 a 100 ms en listas. Estados de carga con las bases de esqueleto. Las animaciones solo se ven en Presentar y en el HTML exportado.
 
+## Higiene del documento
+
+Cada pasada deja el documento como lo dejaría una persona ordenada, se lo pidan o no. Antes de entregar, pasa estas comprobaciones y corrige lo que falle en el mismo lote:
+
+1. **Variantes en su contenedor.** Las definiciones de un conjunto viven en un grupo con id `variants-<id del conjunto>`, nombre «Nombre · variantes», `layout: horizontal`, `gap: 24`, `padding: 24`, `hugWidth` y `hugHeight`, borde `@border` de 1 px y radio 12. `variant.create` lo crea solo; si encuentras maestros de un mismo conjunto sueltos o en un grupo normal, muévelos a ese contenedor (créalo con `add` y ese id) en lugar de agruparlos a mano.
+2. **Capas con nombre.** Cada capa de un maestro se llama por lo que es («Etiqueta», «Icono», «Brillo de carga»), no «Texto» o «Grupo»: la anatomía de Sistema se construye con esos nombres. Lo mismo para los grupos que nombras en una pantalla.
+3. **Sin componentes huérfanos.** Una definición sin instancias y sin lugar en el sistema (restos de un ejemplo, un ensayo) se elimina con sus maestros. Si dudas, pregunta antes de borrar; si tiene instancias, se queda.
+4. **Colores por token.** `./codaru lint` no debe dejar notas `off-theme`: un color fijo que coincide con un token se sustituye por el token (`@surface`, `@accent`, `@border`…). Los únicos fijos admitidos son los que no cambian con el modo a propósito, como la tinta sobre un degradado de marca, y se explican en la entrega.
+5. **Documentación sellada.** `docsToReview` vacío: actualiza las fichas que cambiaste o envía `component.doc {}` si siguen siendo válidas. Las fichas anteriores a las firmas (sin `docHash`) se sellan con ese mismo `{}`.
+6. **Sin pantallas sueltas.** Las pantallas de prueba o de ejemplos llevan un nombre que lo diga («Ejemplos · Botón principal») y las que ya no sirven se borran. Todas las de un flujo comparten tamaño y marco.
+
 ## Qué entregar
 
 Antes de dar por terminado un flujo, comprueba que tiene:
@@ -112,4 +123,4 @@ Escribe el sistema de diseño en el documento, no solo en el chat; la persona lo
 
 Documenta primero lo que más se usa o más dudas genera; el índice de Sistema muestra el avance. Cuando cambies un componente ya documentado o el tema, `context` lo marca (`docStale`, `designSystemStale`, `docsToReview`) y `lint` lo lista como `docs`: actualiza la ficha en el mismo lote o, si sigue siendo válida, envía `component.doc` con `{}` para marcarla como revisada. No dejes fichas que describan un componente que ya no existe así. Las piezas del kit no necesitan documentación propia salvo que la app las use de una forma particular.
 
-Di qué pantallas creaste o cambiaste, qué decisiones de diseño tomaste y por qué, la tabla de rasgos si hubo referencias, y el resumen de `./codaru lint` final. Si dejaste algún aviso sin corregir, explica el motivo.
+Di qué pantallas creaste o cambiaste, qué decisiones de diseño tomaste y por qué, la tabla de rasgos si hubo referencias, el resultado de las seis comprobaciones de higiene y el resumen de `./codaru lint` final. Si dejaste algún aviso o nota sin corregir, explica el motivo.

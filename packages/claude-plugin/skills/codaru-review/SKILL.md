@@ -32,6 +32,10 @@ description: Revisar un diseño de Codaru Mockup y corregir sus problemas. Úsal
 | `scale` | Demasiados tamaños de texto o radios en una pantalla | Reduce la escala y vincula a tokens |
 | `palette` | `@primary` del tema no contrasta 3:1 con el fondo (error), es un tono medio apagado sin saturación, o es un neutro y `@accent` tampoco tiene color (aviso): la paleta se lee como una sola banda | Cambia el color principal del tema con `theme`: un acento saturado o un neutro realmente oscuro; deja los tonos tierra y grises para superficies |
 
+## Higiene
+
+Además de las reglas, revisa lo que el lint no mide y corrígelo en el mismo lote: variantes de un conjunto fuera de su contenedor `variants-<id>`, capas de maestros sin nombre propio, definiciones sin instancias que no forman parte del sistema, pantallas de prueba sin nombre, y fichas con `docsToReview` pendiente. Está detallado en «Higiene del documento» del skill `codaru-design`.
+
 ## Criterio
 
 - `mode: "dark"` en un hallazgo de contraste significa que el diseño solo se revisó en claro. Es el fallo más común y casi siempre se arregla con tokens.
