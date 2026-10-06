@@ -2,6 +2,7 @@
 
 ## Sin publicar
 
+- Inspector: con un token de tipografía o de radio vinculado, los campos Fuente, Tamaño, Peso, Línea y Radio muestran el valor que realmente se dibuja y avisan del vínculo; editar uno desvincula el token y conserva los demás valores. Antes los cambios no tenían efecto porque el token mandaba.
 - Revisión de diseño: regla `gradient`. Un degradado entre un neutro oscuro y un acento cálido (negro a oro) se avisa: a mitad de camino se vuelve oliva. Tonos de un mismo color o vecinos no se marcan.
 - Skill `codaru-design`: principios «El blanco manda» (la superficie clara o el ancla oscura es el protagonista; el acento metálico va en texto, líneas y aros; una tarjeta de pago en oro es la excepción deliberada y única) y «Degradados que no embarran».
 - Revisión de diseño: regla `accent-fill`. Un chip pequeño (≤ 80 px) relleno con un acento cálido saturado (oro, ámbar, amarillo) y texto oscuro encima se señala como nota: contrasta, pero se lee como señal de aviso. Superficies grandes, iconos y acentos sobre oscuro no se marcan.
