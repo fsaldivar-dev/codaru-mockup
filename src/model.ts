@@ -87,8 +87,24 @@ export type FrameRole = 'screen' | 'annotation' | 'library';
 export const frameRoles: FrameRole[] = ['screen', 'annotation', 'library'];
 /** Role of a frame: explicit, or inferred (screens carry a device). Nested frames take their root's role. */
 export function roleOf(p: Project, n: DesignNode): FrameRole { const root = n.parentId ? ancestors(p, n.id).at(-1) ?? n : n; return root.role ?? (root.device ? 'screen' : 'annotation'); }
-/** Screens of the product in reading order: page by page, then top to bottom and left to right. */
-export function screens(p: Project): DesignNode[] { return pagesOf(p).flatMap(page => rootsOnPage(p, page.id).filter(n => n.type === 'frame' && !n.hidden && roleOf(p, n) === 'screen').sort((a, b) => Math.round(a.y / 200) - Math.round(b.y / 200) || a.x - b.x)); }
+/** Screen frames of a validated document in reading order: page by page, then top to bottom and left to right. The public `screens(document)` validates and adds role and page. */
+export function screenFrames(p: Project): DesignNode[] { return pagesOf(p).flatMap(page => rootsOnPage(p, page.id).filter(n => n.type === 'frame' && !n.hidden && roleOf(p, n) === 'screen').sort((a, b) => Math.round(a.y / 200) - Math.round(b.y / 200) || a.x - b.x)); }
+export type ScreenInfo = DesignNode & { role: FrameRole; page: string };
+/** Parse JSON text or take an object, and validate it as a design document. */
+export function parseDocument(document: unknown): Project {
+  let parsed = document;
+  if (typeof document === 'string') { try { parsed = JSON.parse(document); } catch { throw new Error('El archivo no es un diseño de Codaru: no contiene JSON válido.'); } }
+  return validate(parsed);
+}
+/**
+ * Screens of a document in reading order, page by page. Each keeps its node id, which never changes
+ * when screens are reordered, moved or renamed; use it in `pantalla:` and in `renderScreenToSVG`.
+ * Accepts JSON text or an object and validates it; returns copies with `role` and `page` resolved.
+ */
+export function screens(document: unknown): ScreenInfo[] {
+  const p = parseDocument(document), fallback = defaultPageId(p);
+  return screenFrames(p).map(n => ({ ...n, role: roleOf(p, n), page: n.page ?? fallback }));
+}
 export interface Page { id: string; name: string; }
 export interface Version { id: string; name: string; at: string; note?: string; /** gzip + base64 of the version payload */ data: string; screens: number; nodes: number; }
 export const PAGE_ID = /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/;

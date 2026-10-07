@@ -1,4 +1,5 @@
-import { panelsOf, postureGroup, validate, type DesignNode, type Project } from './model';
+import { panelsOf, postureGroup, screenFrames, type DesignNode, type Project } from './model';
+import { parseDocument, pickScreen, withTheme, type ScreenTheme } from './screen-svg';
 import { deviceSkins } from './devices';
 import { startMotion, transitionScreens, type Transition } from './motion';
 import { element, escape as esc } from './render';
@@ -8,7 +9,7 @@ import { element, escape as esc } from './render';
  *
  *   ```codaru-mockup
  *   archivo: diseno/forma.codaru.json
- *   pantalla: screen-login
+ *   pantalla: screen-login        (id de la pantalla: estable; también vale el nombre exacto)
  *   modo: prototipo
  *   ```
  *
@@ -34,6 +35,8 @@ export interface EnhanceOptions {
   load(file: string, block: MockupBlock): Promise<unknown>;
   /** Called from the preview's «Abrir en el editor» button; omit to hide the button. */
   onOpen?(block: MockupBlock, screen: string): void;
+  /** Theme for every block: `light`, `dark` or Codaru color tokens (`--codaru-primary`, `primary`…). A block's `tema:` still picks the mode. */
+  theme?: ScreenTheme;
 }
 
 const keys: Record<string, keyof MockupBlock> = { archivo: 'file', file: 'file', pantalla: 'screen', screen: 'screen', modo: 'mode', mode: 'mode', tema: 'theme', theme: 'theme', alto: 'maxHeight', height: 'maxHeight' };
@@ -41,6 +44,7 @@ const modes: Record<string, MockupBlock['mode']> = { prototipo: 'prototype', pro
 const themes: Record<string, 'light' | 'dark'> = { claro: 'light', light: 'light', oscuro: 'dark', dark: 'dark' };
 
 /** Read the `clave: valor` lines of a block. Unknown keys are an error, so typos do not pass silently. */
+export { renderScreenToSVG, renderScreenToDataURL, svgDataURL, screens, type ScreenTheme, type ScreenInfo, type RenderScreenOptions } from './screen-svg';
 export function parseMockupBlock(source: string): MockupBlock {
   const block: Partial<MockupBlock> = { mode: 'prototype' };
   for (const raw of source.split('\n')) {
@@ -79,20 +83,20 @@ button:disabled{opacity:.35;cursor:default}button:focus-visible,select:focus-vis
 .error{padding:12px 14px;border:1px solid #d9534f66;border-radius:10px;background:#d9534f14;white-space:pre-wrap}.error strong{display:block;margin-bottom:4px}`;
 
 /** Draw one design document as a preview inside `container`. The document is validated first. */
-export function renderMockup(container: HTMLElement, document: unknown, options: Partial<MockupBlock> & { onOpen?: EnhanceOptions['onOpen'] } = {}): MockupPreview {
-  let parsed = document;
-  if (typeof document === 'string') { try { parsed = JSON.parse(document); } catch { throw new Error('El archivo no es un diseño de Codaru: no contiene JSON válido.'); } }
-  const p: Project = validate(parsed);
-  if (options.theme) p.theme = options.theme;
-  const block: MockupBlock = { file: options.file ?? '', screen: options.screen, mode: options.mode ?? 'prototype', theme: options.theme, maxHeight: options.maxHeight };
+export function renderMockup(container: HTMLElement, document: unknown, options: Omit<Partial<MockupBlock>, 'theme'> & { theme?: ScreenTheme; onOpen?: EnhanceOptions['onOpen'] } = {}): MockupPreview {
+  const p: Project = parseDocument(document);
+  const mode = typeof options.theme === 'string' ? options.theme : options.theme?.mode;
+  const block: MockupBlock = { file: options.file ?? '', screen: options.screen, mode: options.mode ?? 'prototype', theme: mode, maxHeight: options.maxHeight };
   const frames = p.nodes.filter(n => n.type === 'frame' && !n.hidden);
-  if (!frames.length) throw new Error('El diseño no tiene pantallas visibles.');
-  const resolve = (wanted?: string) => !wanted ? frames[0] : frames.find(f => f.id === wanted) ?? frames.find(f => f.name === wanted);
-  const first = resolve(block.screen);
-  if (!first) throw new Error(`No existe la pantalla «${block.screen}». Disponibles: ${frames.slice(0, 12).map(f => f.id).join(', ')}${frames.length > 12 ? '…' : ''}`);
+  const first = pickScreen(p, block.screen);
+  withTheme(p, options.theme, frames.filter(f => f.parentId === null));
+  const resolve = (wanted?: string) => !wanted ? first : frames.find(f => f.id === wanted) ?? frames.find(f => f.name === wanted);
+  // The screen picker lists the product's screens in reading order; a frame named in the block that is not one of them is added.
+  const listed = screenFrames(p).length ? screenFrames(p) : frames.filter(f => f.parentId === null);
+  if (!listed.includes(first)) listed.unshift(first);
   const doc = container.ownerDocument, host = doc.createElement('div'), root = host.attachShadow({ mode: 'open' }), interactive = block.mode === 'prototype';
   host.dataset.codaruMockup = block.mode;
-  root.innerHTML = `<style>${styles}</style><div class="frame"><div class="bar">${interactive ? `<button class="icon" data-act="back" aria-label="Pantalla anterior" title="Pantalla anterior">${glyph('back')}</button>` : ''}<span class="name${interactive && frames.length > 1 ? ' quiet' : ''}"></span>${interactive && frames.length > 1 ? `<select aria-label="Pantalla" title="Cambiar de pantalla">${frames.map(f => `<option value="${esc(f.id)}">${esc(f.name)}</option>`).join('')}</select><span class="spacer"></span>` : ''}${interactive ? '<span class="postures"></span>' : ''}${options.onOpen ? `<button data-act="open" title="Abrir este diseño en el editor">${glyph('open')}Abrir en el editor</button>` : ''}</div><div class="viewport"><div class="sizer"><div class="canvas"></div></div></div></div>`;
+  root.innerHTML = `<style>${styles}</style><div class="frame"><div class="bar">${interactive ? `<button class="icon" data-act="back" aria-label="Pantalla anterior" title="Pantalla anterior">${glyph('back')}</button>` : ''}<span class="name${interactive && listed.length > 1 ? ' quiet' : ''}"></span>${interactive && listed.length > 1 ? `<select aria-label="Pantalla" title="Cambiar de pantalla">${listed.map(f => `<option value="${esc(f.id)}">${esc(f.name)}</option>`).join('')}</select><span class="spacer"></span>` : ''}${interactive ? '<span class="postures"></span>' : ''}${options.onOpen ? `<button data-act="open" title="Abrir este diseño en el editor">${glyph('open')}Abrir en el editor</button>` : ''}</div><div class="viewport"><div class="sizer"><div class="canvas"></div></div></div></div>`;
   const viewport = root.querySelector<HTMLElement>('.viewport')!, sizer = root.querySelector<HTMLElement>('.sizer')!, canvas = root.querySelector<HTMLElement>('.canvas')!;
   let current: DesignNode = first, scale = 1, history: { id: string; transition?: Transition }[] = [], disposed = false;
   const bezel = (frame: DesignNode) => frame.skin ? deviceSkins[frame.skin].bezel + 2 : 0;
@@ -105,11 +109,11 @@ export function renderMockup(container: HTMLElement, document: unknown, options:
   function show(frame: DesignNode, transition?: Transition, reverse = false) {
     const previous = scale, ghost = transition ? canvas.firstElementChild?.cloneNode(true) as HTMLElement | undefined : undefined;
     current = frame; canvas.replaceChildren();
-    const el = element(p, frame, interactive); Object.assign(el.style, { left: '0', top: '0', position: 'relative' });
+    const el = element(p, frame, interactive, true); Object.assign(el.style, { left: '0', top: '0', position: 'relative' });
     if (!interactive) el.style.pointerEvents = 'none';
     canvas.append(el); fit();
     root.querySelector('.name')!.textContent = frame.name;
-    const select = root.querySelector<HTMLSelectElement>('select'); if (select) select.value = frame.id;
+    const select = root.querySelector<HTMLSelectElement>('select'); if (select) { if (![...select.options].some(o => o.value === frame.id)) select.add(new Option(frame.name, frame.id)); select.value = frame.id; }
     const back = root.querySelector<HTMLButtonElement>('[data-act="back"]'); if (back) back.disabled = !history.length;
     const postures = root.querySelector<HTMLElement>('.postures');
     if (postures) { const others = postureGroup(p, frame.id).filter(f => f.id !== frame.id); postures.innerHTML = others.map(f => { const opens = panelsOf(f) > panelsOf(frame); return `<button data-posture="${esc(f.id)}" title="Ver esta pantalla ${opens ? 'desplegada' : 'plegada'}">${glyph(others.length > 1 ? 'posture' : opens ? 'unfold' : 'fold')}${others.length === 1 ? opens ? 'Desplegar' : 'Plegar' : esc(f.name.split('·').at(-2)?.trim() || f.name)}</button>`; }).join(''); }
@@ -158,7 +162,8 @@ export async function enhanceMarkdown(root: ParentNode, options: EnhanceOptions)
     let block: MockupBlock;
     try { block = parseMockupBlock(code.textContent ?? ''); } catch (error) { failure(slot, 'Bloque codaru-mockup inválido', error instanceof Error ? error.message : String(error)); continue; }
     try {
-      previews.push(renderMockup(slot, await options.load(block.file, block), { ...block, onOpen: options.onOpen }));
+      const theme: ScreenTheme | undefined = options.theme && typeof options.theme === 'object' ? { ...options.theme, ...(block.theme ? { mode: block.theme } : {}) } : block.theme ?? options.theme;
+      previews.push(renderMockup(slot, await options.load(block.file, block), { ...block, theme, onOpen: options.onOpen }));
       pre.hidden = true;
     } catch (error) { failure(slot, `No se pudo mostrar ${block.file}`, error instanceof Error ? error.message : String(error)); }
   }

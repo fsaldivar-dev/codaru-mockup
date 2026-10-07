@@ -114,6 +114,6 @@ test('SVG exports all gradient stops in inherited theme and declares glass fallb
   const svg = exportSVG(p, frame);
   assert.match(svg, /offset="0" stop-color="#123456"/); assert.match(svg, /offset="0.35" stop-color="#445566"/);
   assert.match(svg, /offset="1"/); assert.match(svg, /data-material-fallback="tint-and-border"/);
-  assert.match(svg, /fill-opacity="0.68"/); assert.match(svg, /desenfoque del fondo/);
+  assert.match(svg, /stop-opacity="0.68"/); assert.match(svg, /desenfoque del fondo/); // the glass alpha rides on each stop, as in the HTML view
   assert.doesNotMatch(svg, /@primary|backdrop-filter/);
 });

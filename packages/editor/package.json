@@ -18,6 +18,10 @@
       "types": "./dist/types/preview.d.ts",
       "import": "./dist/preview.js"
     },
+    "./svg": {
+      "types": "./dist/types/screen-svg.d.ts",
+      "import": "./dist/svg.js"
+    },
     "./modular": {
       "types": "./dist/types/modular.d.ts",
       "import": "./dist/modular.js"

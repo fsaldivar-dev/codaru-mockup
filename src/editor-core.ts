@@ -4,8 +4,9 @@ import {
   type DesignNode, type Kind, type Project,
 } from './model';
 import { commonScope } from './selection';
-// Pure helpers a host can use on a document without mounting anything.
-export { screens, roleOf, pagesOf, pageView, type FrameRole, type Page } from './model';
+// Pure helpers a host can use on a document, and the headless SVG renderer (also alone in `codaru-mockup/svg`).
+export { screens, roleOf, pagesOf, pageView, type FrameRole, type Page, type ScreenInfo } from './model';
+export { renderScreenToSVG, renderScreenToDataURL, svgDataURL, type ScreenTheme, type RenderScreenOptions } from './screen-svg';
 import { exportHTML, exportSVG } from './render';
 import type { AgentResponse, EditorOperation } from './embed';
 

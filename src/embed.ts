@@ -1,6 +1,6 @@
 import type { DesignNode, Kind, Project } from './model';
-// Pure helpers a host can use on a document without mounting anything.
-export { screens, roleOf, pagesOf, pageView, type FrameRole, type Page } from './model';
+// Pure helpers a host can use on a document; the headless SVG renderer lives in `codaru-mockup/svg`.
+export { screens, roleOf, pagesOf, pageView, type FrameRole, type Page, type ScreenInfo } from './model';
 
 export type CodaruInvoke = <T = unknown>(command: string, args?: Record<string, unknown>) => Promise<T>;
 export interface EmbeddedOptions {

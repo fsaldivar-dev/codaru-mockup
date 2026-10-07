@@ -1,5 +1,13 @@
 # Changelog
 
+## Sin publicar
+
+- Render headless: `renderScreenToSVG(document, { screen?, theme?, maxWidth?, mode: 'static' })` dibuja una pantalla como SVG autocontenido sin `window`, `document` ni canvas, y `renderScreenToDataURL` lo devuelve como URL `data:` apta para `<img src>` y Markdown. Valida el documento como `renderMockup` y se ve como la vista previa estática (prueba de píxeles: menos del 1 % distinto en cinco pantallas). Nueva entrada `codaru-mockup/svg` (119,7 kB, 39,2 kB gzip); también en `preview` y `core`. `core` pasa de 128 kB a 144 kB porque su exportación SVG usa ahora este dibujo.
+- `screens(document)` acepta JSON o un objeto, lo valida y devuelve las pantallas en orden de lectura con `id` estable, `name`, `role` y `page`. Sin `pantalla:`, la vista previa abre la primera pantalla en ese orden y su selector lista las pantallas así.
+- Tema por tokens: `theme` en `renderMockup`, `enhanceMarkdown` y `renderScreenToSVG` acepta `light`, `dark` o un mapa de colores de Codaru (`--codaru-primary`, `--primary` o `primary`, con `mode` opcional).
+- La exportación SVG del editor y de `codaru export --format svg` usa el mismo dibujo: bordes dentro de la caja, hijos desplazados por el borde, recorte de marcos anidados, degradados con la geometría de CSS, barra de estado e isla del dispositivo, y pesos intermedios de la fuente del sistema con su eje variable. Mide el texto con la tipografía real del navegador.
+- La vista previa estática ya no pinta las bandas de área segura, que son una ayuda de edición.
+
 ## 0.6.0 — 2026-10-06
 
 - Páginas: el panel Páginas agrupa las pantallas en módulos; solo la página activa se dibuja, se lista y se mide. Las pantallas se mueven de página desde Propiedades, los flujos pueden apuntar a cualquier página y Presentar recorre todas. Los documentos anteriores abren con una página «Página 1» sin cambiar. CLI: operación `page {action: create|rename|remove|move|activate, id, name?, index?, moveTo?}` (`remove` con contenido exige `moveTo`), campo `page` en los marcos raíz, `context --page` con `frames` y `nodes` por página, `lint --page`, `export --page`. Se aceptan los alias `page.*` y el campo `pageId`.

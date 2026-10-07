@@ -148,7 +148,7 @@ Para dos documentos abiertos crea dos `createEditor()` y dos `createEditorView()
 
 ## Núcleo sin interfaz, IA y operaciones nativas
 
-`codaru-mockup/core` crea sesiones sin montar DOM ni instalar estilos. Permite consultar y modificar documentos, validar transacciones, manejar historial y utilizar `editor.agent(command, params)` para contexto, catálogo, esquema y lotes de operaciones. El contexto mantiene el contrato de revisiones documentado en [CLI.md](../CLI.md). Ambos puntos de entrada exportan además helpers puros sobre un documento: `screens(p)` (pantallas en orden de lectura, página por página), `roleOf(p, n)`, `pagesOf(p)` y `pageView(p, pageId)`.
+`codaru-mockup/core` crea sesiones sin montar DOM ni instalar estilos. Permite consultar y modificar documentos, validar transacciones, manejar historial y utilizar `editor.agent(command, params)` para contexto, catálogo, esquema y lotes de operaciones. El contexto mantiene el contrato de revisiones documentado en [CLI.md](../CLI.md). Ambos puntos de entrada exportan además helpers puros sobre un documento: `screens(document)` (pantallas en orden de lectura con id estable, nombre, rol y página), `roleOf(p, n)`, `pagesOf(p)`, `pageView(p, pageId)`, y `core` el render sin DOM `renderScreenToSVG` / `renderScreenToDataURL`, también disponible solo en `codaru-mockup/svg` (ver [MARKDOWN.md](MARKDOWN.md#imágenes-sin-montar-nada)).
 
 La exportación JSON es `JSON.stringify(editor.getDocument())`. Las exportaciones `exportHTML()` y `exportSVG(frameId)` necesitan un DOM de navegador; SVG también mide texto con canvas. `command()` ejecuta acciones de la vista y requiere una vista conectada. Un núcleo sin interfaz no implementa por sí solo diálogos, archivos del sistema ni renderizado para Node.
 
@@ -162,9 +162,10 @@ Medidos sobre `packages/editor/dist` tras `npm run package:build`, sumando cada 
 
 | Entrada | Carga inicial | Gzip | Bajo demanda |
 | --- | --- | --- | --- |
-| `codaru-mockup/core` | 122,3 kB | 40,0 kB | agente de IA (con importación de páginas), revisión de diseño, kits, iconos e importación de Figma: 90,5 kB (32,7 kB gzip) |
-| `codaru-mockup/modular` | 363,5 kB | 110,1 kB | agente, Figma, kits, iconos, animador y ejemplo multiplataforma: 93,7 kB (33,5 kB gzip) |
-| `codaru-mockup/preview` | 123,2 kB | 40,7 kB | — |
+| `codaru-mockup/core` | 144,0 kB | 48,3 kB | agente de IA (con importación de páginas), revisión de diseño, kits, iconos e importación de Figma: 90,5 kB (32,7 kB gzip) |
+| `codaru-mockup/modular` | 408,1 kB | 124,4 kB | agente, Figma, kits, iconos, animador y ejemplo multiplataforma: 93,7 kB (33,5 kB gzip) |
+| `codaru-mockup/preview` | 145,0 kB | 49,0 kB | — |
+| `codaru-mockup/svg` | 119,7 kB | 39,2 kB | — |
 
 `modular` ya contiene a `core` y sus estilos; no carga el editor completo del iframe (`dist/editor`). Estas cifras son solo el paquete embebible: no incluyen el plugin Rust enlazado al host, el CLI opcional (0,42 MB) ni la app de ejemplo para macOS (5,06 MiB), que se miden por separado.
 

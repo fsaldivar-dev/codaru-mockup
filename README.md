@@ -68,7 +68,7 @@ Sin nada seleccionado, «Revisar el diseño» analiza todas las pantallas y list
 
 ## Maquetas en Markdown
 
-Un bloque ```` ```codaru-mockup ```` con `archivo`, `pantalla` y `modo` muestra una pantalla dentro de un documento. La entrada `codaru-mockup/preview` lo convierte en una vista previa en vivo, navegable o estática, sobre el HTML de cualquier motor de Markdown. Consulta [docs/MARKDOWN.md](docs/MARKDOWN.md).
+Un bloque ```` ```codaru-mockup ```` con `archivo`, `pantalla` y `modo` muestra una pantalla dentro de un documento. La entrada `codaru-mockup/preview` lo convierte en una vista previa en vivo, navegable o estática, sobre el HTML de cualquier motor de Markdown. Para miniaturas, imágenes en documentos o capturas de handoff sin montar nada, `codaru-mockup/svg` dibuja una pantalla como SVG autocontenido con `renderScreenToSVG` y `renderScreenToDataURL`: funciones puras, sin DOM, que se ven como la vista previa estática y aceptan `light`, `dark` o tokens de color. Consulta [docs/MARKDOWN.md](docs/MARKDOWN.md).
 
 ## Auto layout
 

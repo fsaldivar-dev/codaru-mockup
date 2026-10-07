@@ -3,7 +3,8 @@ import { effectiveTheme, resolveNodeStyle, type GradientToken, type MaterialToke
 import { iconLicenseNotice, iconSVG } from './icon-data';
 import { scopeSVG, startMotion, transitionScreens } from './motion';
 import { deviceSkins } from './devices';
-export const fonts: Record<string, string> = { system: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', serif: 'Georgia, "Times New Roman", serif', mono: 'ui-monospace, SFMono-Regular, Menlo, monospace' };
+import { escape, fonts, frameToSVG, type TextMeasure } from './screen-svg';
+export { escape, fonts };
 /** Focused fields get a 1 px ring in the theme's primary color. It travels inside each previewed screen,
  * so Presentar, Markdown previews (shadow DOM) and exported HTML share it without their own stylesheets. */
 const fieldFocusCSS = '.design-node[data-kind="input"]:focus-within{outline:1px solid var(--field-focus);outline-offset:-1px}.design-node[data-kind="input"] input:focus{outline:none}';
@@ -30,7 +31,8 @@ function backgroundFor(p: Project, n: DesignNode, material?: MaterialToken): str
   }
   return material ? rgba(color(p, material.tint, n), material.opacity) : color(p, n.fill, n);
 }
-export function element(p: Project, n: DesignNode, preview = false): HTMLElement {
+/** `preview` makes the screen interactive (fields, links, motion); `clean` leaves out the editing aids (safe-area bands). */
+export function element(p: Project, n: DesignNode, preview = false, clean = preview): HTMLElement {
   n = { ...n, ...resolveNodeStyle(p, n) };
   const el = document.createElement('div'); el.className = 'design-node'; el.dataset.node = n.id; el.dataset.kind = n.type; el.setAttribute('aria-label', n.name);
   const context = effectiveTheme(p, n), material = n.materialToken ? context.tokens.materials[n.materialToken] : undefined;
@@ -79,11 +81,11 @@ export function element(p: Project, n: DesignNode, preview = false): HTMLElement
     el.append(text);
   }
   if (preview && n.targetId) { el.dataset.target = n.targetId; if (n.transition) el.dataset.transition = JSON.stringify(n.transition); el.tabIndex = 0; el.setAttribute('role', 'button'); el.style.cursor = 'pointer'; }
-  for (const child of children(p, n.id)) el.append(element(p, child, preview));
+  for (const child of children(p, n.id)) el.append(element(p, child, preview, clean));
   if (n.type === 'frame' && preview) { const style = document.createElement('style'); style.textContent = fieldFocusCSS; el.prepend(style); const group = postureGroup(p, n.id); if (group.length > 1) el.dataset.postures = group.map(f => f.id).join(' '); el.dataset.panels = String(panelsOf(n)); }
   // Screens far from the viewport are skipped by the browser until they come into view.
   if (n.type === 'frame' && !preview && n.parentId === null) { el.style.setProperty('content-visibility', 'auto'); el.style.setProperty('contain-intrinsic-size', `${n.width}px ${n.height}px`); }
-  if (n.type === 'frame' && n.safeArea && !preview) {
+  if (n.type === 'frame' && n.safeArea && !clean) {
     // Editing aid only: the bands the system keeps for the status bar, cutout and home indicator.
     const { top, right, bottom, left } = n.safeArea, edge = '1px dashed rgba(236, 72, 120, .7)', tint = 'rgba(236, 72, 120, .07)';
     for (const [where, size] of [['top', top], ['bottom', bottom], ['left', left], ['right', right]] as const) {
@@ -126,7 +128,6 @@ export function element(p: Project, n: DesignNode, preview = false): HTMLElement
   }
   return el;
 }
-export function escape(s: unknown): string { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!); }
 export function exportHTML(p: Project): string {
   const iconNotices = iconLicenseNotice(p.nodes.filter(n => n.type === 'icon').map(n => n.iconPack!));
   const screens = children(p, null).filter(n => n.type === 'frame' && !n.hidden);
@@ -136,46 +137,19 @@ export function exportHTML(p: Project): string {
   }).join('\n');
   return `<!doctype html><html lang="es"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escape(p.name)}</title>${iconNotices ? `<script type="application/json" id="codaru-icon-licenses">${JSON.stringify(iconNotices).replaceAll('<', '\\u003c')}</script>` : ''}<style>body{margin:0;background:#ececf0;font-family:system-ui}nav{padding:14px;text-align:center;background:#fff;border-bottom:1px solid #ddd}nav button{padding:8px 14px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer}[hidden]{display:none!important}.screen{box-shadow:0 10px 60px #0001;max-width:none}#viewport{overflow:auto;overflow-x:clip;position:relative;min-height:calc(100vh - 62px)}[data-target]:focus-visible{outline:3px solid #7c5ce7;outline-offset:3px}</style><nav><button id="back">← Atrás</button> <button id="posture" hidden>Cambiar postura ⇄</button> <span id="screen-name">${escape(screens[0]?.name || '')}</span></nav><main id="viewport">${content}</main><script>const startMotion=${startMotion.toString()};const transitionScreens=${transitionScreens.toString()};const history=[];function go(id,transition,reverse){const next=document.getElementById(id);if(!next||!next.classList.contains('screen'))return;const current=document.querySelector('.screen:not([hidden])');if(current===next)return;let ghost;if(current){history.push({id:current.id,transition});if(transition){ghost=current.cloneNode(true);ghost.removeAttribute('id');ghost.classList.remove('screen');Object.assign(ghost.style,{position:'absolute',margin:'0',left:current.offsetLeft+'px',top:current.offsetTop+'px'})}}document.querySelectorAll('.screen').forEach(s=>s.hidden=s!==next);document.getElementById('screen-name').textContent=next.getAttribute('aria-label');const viewport=document.getElementById('viewport');viewport.scrollTo(0,0);if(ghost){viewport.append(ghost);transitionScreens(ghost,next,transition,reverse)}startMotion(next)}const linked=el=>{const target=el.closest('[data-target]');if(target)go(target.dataset.target,target.dataset.transition?JSON.parse(target.dataset.transition):undefined);return target};document.addEventListener('click',e=>{linked(e.target)});document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.tagName!=='INPUT'&&linked(e.target))e.preventDefault()});document.getElementById('back').onclick=()=>{const last=history.pop();if(last){go(last.id,last.transition,true);history.pop()}};const posture=document.getElementById('posture');const nextPosture=()=>{const current=document.querySelector('.screen:not([hidden])'),ids=((current&&current.dataset.postures)||'').split(' ').filter(Boolean);return ids.length>1?document.getElementById(ids[(ids.indexOf(current.id)+1)%ids.length]):null};const syncPosture=()=>{posture.hidden=!nextPosture()};posture.onclick=()=>{const current=document.querySelector('.screen:not([hidden])'),other=nextPosture();if(other)go(other.id,{type:+other.dataset.panels>+current.dataset.panels?'unfold':'fold',duration:700,easing:'ease-in-out'})};new MutationObserver(syncPosture).observe(document.getElementById('viewport'),{attributes:true,subtree:true,attributeFilter:['hidden']});syncPosture();startMotion(document.querySelector('.screen:not([hidden])')||document.body);</script></html>`;
 }
+let domMeasure: TextMeasure | undefined;
+/** SVG of one frame, as the headless renderer draws it, with text measured by the browser's own layout for exact wrapping. */
 export function exportSVG(p: Project, frame: DesignNode): string {
-  const iconNotices = iconLicenseNotice(p.nodes.filter(n => n.type === 'icon').map(n => n.iconPack!));
-  const gradients: string[] = []; const pieces: string[] = [];
-  function draw(n: DesignNode, x: number, y: number) {
-    if (n.hidden) return;
-    x += n.id === frame.id ? 0 : n.x; y += n.id === frame.id ? 0 : n.y;
-    n = { ...n, ...resolveNodeStyle(p, n) };
-    const set = effectiveTheme(p, n).tokens, material = n.materialToken ? set.materials[n.materialToken] : undefined;
-    let fill = color(p, material?.tint ?? n.fill, n); const safeId = 'g' + gradients.length;
-    const gradient = gradientFor(p, n);
-    if (gradient) {
-      const a = (gradient.angle - 90) * Math.PI / 180, dx = Math.cos(a) * 50, dy = Math.sin(a) * 50;
-      const stops = gradient.stops.map(stop => `<stop offset="${stop.position / 100}" stop-color="${color(p, stop.color, n)}"/>`).join('');
-      gradients.push(gradient.type === 'linear' ? `<linearGradient id="${safeId}" x1="${50 - dx}%" y1="${50 - dy}%" x2="${50 + dx}%" y2="${50 + dy}%">${stops}</linearGradient>` : `<radialGradient id="${safeId}" cx="30%" cy="20%" r="80%">${stops}</radialGradient>`);
-      fill = `url(#${safeId})`;
-    }
-    pieces.push(`<g opacity="${n.opacity / 100}"${material ? ' data-material-fallback="tint-and-border"' : ''}>`);
-    const style = `fill="${fill === 'transparent' ? 'none' : fill}"${material ? ` fill-opacity="${material.opacity / 100}"` : ''} stroke="${color(p, material?.stroke ?? n.stroke, n)}" stroke-width="${material ? Math.max(1, n.strokeWidth) : n.strokeWidth}"`;
-    if (n.type === 'ellipse') pieces.push(`<ellipse cx="${x + n.width / 2}" cy="${y + n.height / 2}" rx="${n.width / 2}" ry="${n.height / 2}" ${style}/>`);
-    else {
-      const limit = Math.min(n.width, n.height) / 2, r = [n.radius, n.radiusTR ?? n.radius, n.radiusBR ?? n.radius, n.radiusBL ?? n.radius].map(r => Math.min(limit, Math.max(0, r)));
-      pieces.push(`<path d="M${x+r[0]},${y} H${x+n.width-r[1]} Q${x+n.width},${y} ${x+n.width},${y+r[1]} V${y+n.height-r[2]} Q${x+n.width},${y+n.height} ${x+n.width-r[2]},${y+n.height} H${x+r[3]} Q${x},${y+n.height} ${x},${y+n.height-r[3]} V${y+r[0]} Q${x},${y} ${x+r[0]},${y} Z" ${style}${n.shadow ? ' filter="url(#shadow)"' : ''}/>`);
-    }
-    if (n.image) pieces.push(`<image href="${n.image}" x="${x}" y="${y}" width="${n.width}" height="${n.height}" preserveAspectRatio="xMidYMid slice"/>`);
-    // `color` feeds currentColor, as the element's CSS color does in Presentar and HTML.
-    if (n.type === 'vector') pieces.push(scopeSVG(n.svg!, n.id).replace('<svg ', `<svg x="${x}" y="${y}" width="${n.width}" height="${n.height}" color="${color(p, n.color, n)}" `));
-    if (n.type === 'icon') pieces.push(iconSVG(n.iconPack!, n.iconName!, color(p, n.color, n), n.width).replace('<svg ', `<svg x="${x}" y="${y}" `).replace(`height="${n.width}"`, `height="${n.height}"`));
-    if (n.text) {
-      const centered = n.type === 'button' || n.type === 'input'; const inset = centered ? 14 : 0;
-      const ctx = document.createElement('canvas').getContext('2d')!; ctx.font = `${n.fontWeight} ${n.fontSize}px ${fonts[n.fontFamily]}`;
-      const lines: string[] = [];
-      for (const paragraph of n.text.split('\n')) { let line = ''; for (const word of paragraph.split(' ')) { const next = line ? line + ' ' + word : word; if (line && ctx.measureText(next).width > n.width - inset * 2) { lines.push(line); line = word; } else line = next; } lines.push(line); }
-      const anchor = n.textAlign === 'center' ? 'middle' : n.textAlign === 'right' ? 'end' : 'start';
-      const tx = x + (n.textAlign === 'center' ? n.width / 2 : n.textAlign === 'right' ? n.width - inset : inset);
-      const ty = y + (centered ? (n.height - lines.length * n.fontSize * n.lineHeight) / 2 : 0) + n.fontSize;
-      pieces.push(`<text fill="${color(p, n.color, n)}" font-family="${escape(fonts[n.fontFamily])}" font-size="${n.fontSize}" font-weight="${n.fontWeight}" text-anchor="${anchor}">${lines.map((line, i) => `<tspan x="${tx}" y="${ty + i * n.fontSize * n.lineHeight}">${escape(line)}</tspan>`).join('')}</text>`);
-    }
-    for (const child of children(p, n.id)) draw(child, x, y);
-    pieces.push('</g>');
+  if (!domMeasure && typeof document !== 'undefined' && document.body) {
+    // A hidden span measures like the preview does; canvas picks a different face for intermediate system weights.
+    const probe = document.createElement('span'), cache = new Map<string, number>();
+    probe.setAttribute('aria-hidden', 'true'); Object.assign(probe.style, { position: 'absolute', left: '-99999px', top: '0', whiteSpace: 'pre', visibility: 'hidden', pointerEvents: 'none' });
+    domMeasure = (text, font) => {
+      const key = `${font.weight}|${font.size}|${font.family}|${text}`, known = cache.get(key); if (known !== undefined) return known;
+      if (!probe.isConnected) document.body.append(probe);
+      probe.style.font = `${font.weight} ${font.size}px ${font.family}`; probe.textContent = text;
+      const width = probe.getBoundingClientRect().width; if (cache.size > 5000) cache.clear(); cache.set(key, width); return width;
+    };
   }
-  draw(frame, 0, 0);
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${frame.width}" height="${frame.height}" viewBox="0 0 ${frame.width} ${frame.height}">${iconNotices ? `<metadata id="codaru-icon-licenses">${escape(iconNotices)}</metadata>` : ''}<desc>Los materiales de cristal se exportan como tintes y bordes; el desenfoque del fondo y la saturación se conservan en HTML.</desc><defs><filter id="shadow" x="-30%" y="-50%" width="160%" height="220%"><feDropShadow dx="0" dy="8" stdDeviation="8" flood-opacity=".12"/></filter>${gradients.join('')}<clipPath id="artboard"><rect width="${frame.width}" height="${frame.height}"/></clipPath></defs><g clip-path="url(#artboard)">${pieces.join('')}</g></svg>`;
+  try { return frameToSVG(p, frame, { measure: domMeasure }); } finally { if (typeof document !== 'undefined') document.querySelectorAll('body > span[aria-hidden="true"][style*="-99999px"]').forEach(el => el.remove()); }
 }
