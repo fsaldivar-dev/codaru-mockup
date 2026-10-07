@@ -4,6 +4,8 @@ import {
   type DesignNode, type Kind, type Project,
 } from './model';
 import { commonScope } from './selection';
+// Pure helpers a host can use on a document without mounting anything.
+export { screens, roleOf, pagesOf, pageView, type FrameRole, type Page } from './model';
 import { exportHTML, exportSVG } from './render';
 import type { AgentResponse, EditorOperation } from './embed';
 

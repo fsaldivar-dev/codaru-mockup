@@ -34,7 +34,9 @@ export interface DesignNode {
   iconPack?: string; iconName?: string;
   componentId?: string; instanceOf?: string; componentKey?: string; overrides?: string[];
   /** Page a root node belongs to; ignored on nested nodes. */
-  pageId?: string;
+  page?: string;
+  /** What a top-level frame is for: a screen of the product, an annotation (labels, legends) or a component library sheet. Defaults to screen when it has a device, annotation otherwise. */
+  role?: FrameRole;
   fillToken?: string; materialToken?: string; typographyToken?: string; radiusToken?: string;
   themeId?: string; themeMode?: 'inherit' | Theme; kitId?: string;
   /** Sanitized SVG of an illustration (type vector). */
@@ -76,19 +78,25 @@ export interface Project {
   designSystem?: DesignSystemNotes;
   /** Signature of the active theme when the notes were last saved. */
   designSystemHash?: string;
-  /** Pages (modules) group root nodes; only the active page is drawn. Documents without pages get one called «Principal». */
+  /** Pages (modules) group root nodes; only the active page is drawn. Documents without pages get one called «Página 1». */
   pages?: Page[]; activePageId?: string;
   /** Named snapshots of the design, compressed, kept inside the document. */
   versions?: Version[];
 }
+export type FrameRole = 'screen' | 'annotation' | 'library';
+export const frameRoles: FrameRole[] = ['screen', 'annotation', 'library'];
+/** Role of a frame: explicit, or inferred (screens carry a device). Nested frames take their root's role. */
+export function roleOf(p: Project, n: DesignNode): FrameRole { const root = n.parentId ? ancestors(p, n.id).at(-1) ?? n : n; return root.role ?? (root.device ? 'screen' : 'annotation'); }
+/** Screens of the product in reading order: page by page, then top to bottom and left to right. */
+export function screens(p: Project): DesignNode[] { return pagesOf(p).flatMap(page => rootsOnPage(p, page.id).filter(n => n.type === 'frame' && !n.hidden && roleOf(p, n) === 'screen').sort((a, b) => Math.round(a.y / 200) - Math.round(b.y / 200) || a.x - b.x)); }
 export interface Page { id: string; name: string; }
 export interface Version { id: string; name: string; at: string; note?: string; /** gzip + base64 of the version payload */ data: string; screens: number; nodes: number; }
 export const PAGE_ID = /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/;
-export function pagesOf(p: Project): Page[] { return p.pages?.length ? p.pages : [{ id: 'principal', name: 'Principal' }]; }
+export function pagesOf(p: Project): Page[] { return p.pages?.length ? p.pages : [{ id: 'pagina-1', name: 'Página 1' }]; }
 export function activePage(p: Project): Page { const pages = pagesOf(p); return pages.find(page => page.id === p.activePageId) ?? pages[0]; }
 /** Roots without pageId belong to «principal» when it exists, else to the first page; validate() stamps them so reordering pages never moves screens. */
-export function defaultPageId(p: Project) { const pages = pagesOf(p); return (pages.find(page => page.id === 'principal') ?? pages[0]).id; }
-export function rootsOnPage(p: Project, pageId: string) { const fallback = defaultPageId(p); return p.nodes.filter(n => n.parentId === null && (n.pageId ?? fallback) === pageId); }
+export function defaultPageId(p: Project) { const pages = pagesOf(p); return (pages.find(page => page.id === 'pagina-1') ?? pages.find(page => page.id === 'principal') ?? pages[0]).id; }
+export function rootsOnPage(p: Project, pageId: string) { const fallback = defaultPageId(p); return p.nodes.filter(n => n.parentId === null && (n.page ?? fallback) === pageId); }
 /** The id of the top-level ancestor of every node, in one pass. */
 export function rootIds(p: Project): Map<string, string> {
   const parent = new Map(p.nodes.map(n => [n.id, n.parentId])), roots = new Map<string, string>();
@@ -99,21 +107,23 @@ export function rootIds(p: Project): Map<string, string> {
 /** The document as seen from one page: its roots and their descendants, everything else left out. */
 export function pageView(p: Project, pageId: string): Project {
   const fallback = defaultPageId(p), tops = rootIds(p), byId = new Map(p.nodes.map(n => [n.id, n]));
-  return { ...p, nodes: p.nodes.filter(n => { const root = byId.get(tops.get(n.id)!); return !!root && (root.pageId ?? fallback) === pageId; }) };
+  return { ...p, nodes: p.nodes.filter(n => { const root = byId.get(tops.get(n.id)!); return !!root && (root.page ?? fallback) === pageId; }) };
 }
 export function addPage(p: Project, name: string, id?: string): Page {
   const pages = [...pagesOf(p)], clean = (name ?? '').trim().slice(0, 60) || `Página ${pages.length + 1}`;
   let pageId = id ?? `pagina-${uid().slice(0, 8)}`; if (!PAGE_ID.test(pageId)) throw new Error('ID de página inválido');
   if (pages.some(page => page.id === pageId)) throw new Error('Ya existe una página con ese id');
   const fallback = defaultPageId(p);
-  for (const n of p.nodes) if (n.parentId === null && !n.pageId) n.pageId = fallback;
+  for (const n of p.nodes) if (n.parentId === null && !n.page) n.page = fallback;
   const page = { id: pageId, name: clean }; p.pages = [...pages, page]; return page;
 }
 export function renamePage(p: Project, id: string, name: string) { const pages = [...pagesOf(p)], page = pages.find(page => page.id === id); if (!page) throw new Error('Página no encontrada'); const clean = (name ?? '').trim().slice(0, 60); if (!clean) throw new Error('Nombre de página vacío'); page.name = clean; p.pages = pages; }
 /** A page can go only when nothing lives on it; its screens must be moved or deleted first. */
-export function removePage(p: Project, id: string) {
+/** Remove a page; with `moveTo` its roots move to that page first, otherwise it must be empty. */
+export function removePage(p: Project, id: string, moveTo?: string) {
   const pages = pagesOf(p); if (!pages.some(page => page.id === id)) throw new Error('Página no encontrada'); if (pages.length === 1) throw new Error('El documento necesita al menos una página');
-  const left = rootsOnPage(p, id).length; if (left) throw new Error(`La página tiene ${left} ${left === 1 ? 'elemento' : 'elementos'}: muévelos a otra página o elimínalos antes`);
+  if (moveTo !== undefined) { if (moveTo === id || !pages.some(page => page.id === moveTo)) throw new Error('moveTo debe ser otra página existente'); for (const n of rootsOnPage(p, id)) n.page = moveTo; }
+  const left = rootsOnPage(p, id).length; if (left) throw new Error(`La página tiene ${left} ${left === 1 ? 'elemento' : 'elementos'}: indica moveTo con la página de destino, o muévelos o elimínalos antes`);
   p.pages = pages.filter(page => page.id !== id); if (p.activePageId === id) p.activePageId = p.pages[0].id;
 }
 export function movePage(p: Project, id: string, index: number) { const pages = [...pagesOf(p)], i = pages.findIndex(page => page.id === id); if (i < 0) throw new Error('Página no encontrada'); const [page] = pages.splice(i, 1); pages.splice(Math.max(0, Math.min(pages.length, index)), 0, page); p.pages = pages; }
@@ -472,7 +482,8 @@ export function validate(input: unknown, trusted = false): Project {
     if (!p.pages.length) delete p.pages;
   }
   if (p.activePageId !== undefined && !pagesOf(p).some(page => page.id === p.activePageId)) p.activePageId = defaultPageId(p);
-  if (p.pages) { const ids = new Set(p.pages.map(page => page.id)), fallback = defaultPageId(p); for (const n of p.nodes) if (n.parentId === null && (!n.pageId || !ids.has(n.pageId))) n.pageId = fallback; }
+  for (const n of p.nodes) { const legacy = (n as unknown as { pageId?: string }).pageId; if (legacy !== undefined) { n.page ??= legacy; delete (n as unknown as { pageId?: string }).pageId; } }
+  if (p.pages) { const ids = new Set(p.pages.map(page => page.id)), fallback = defaultPageId(p); for (const n of p.nodes) if (n.parentId === null && (!n.page || !ids.has(n.page))) n.page = fallback; }
   if (p.versions !== undefined) {
     if (!Array.isArray(p.versions) || p.versions.length > 30 || p.versions.some(v => !v || typeof v.id !== 'string' || !/^[A-Za-z0-9_-]{1,40}$/.test(v.id) || typeof v.name !== 'string' || v.name.length > 80 || typeof v.at !== 'string' || typeof v.data !== 'string' || v.data.length > 12_000_000 || (v.note !== undefined && (typeof v.note !== 'string' || v.note.length > 2000)))) throw new Error('Versiones inválidas');
     if (!p.versions.length) delete p.versions;
@@ -494,7 +505,8 @@ export function validate(input: unknown, trusted = false): Project {
       if (!n || typeof n.id !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(n.id) || ids.has(n.id) || !Object.keys(labels).includes(n.type)) throw new Error('Elemento inválido o identificador repetido');
       ids.add(n.id);
       for (const key of ['x', 'y', 'width', 'height', 'strokeWidth', 'radius', 'opacity', 'gradientAngle', 'fontSize', 'fontWeight', 'lineHeight', 'padding', 'gap'] as const) if (!Number.isFinite(n[key]) || Math.abs(n[key]) > 100000) throw new Error('Geometría inválida');
-      if (n.pageId !== undefined && (typeof n.pageId !== 'string' || !PAGE_ID.test(n.pageId))) throw new Error('Página de pantalla inválida');
+      if (n.page !== undefined && (typeof n.page !== 'string' || !PAGE_ID.test(n.page))) throw new Error('Página de pantalla inválida');
+      if (n.role !== undefined && !frameRoles.includes(n.role)) throw new Error('Rol de marco inválido: screen, annotation o library');
       for (const key of ['radiusTR', 'radiusBR', 'radiusBL'] as const) if (n[key] !== undefined && (!Number.isFinite(n[key]) || n[key]! < 0 || n[key]! > 10000)) throw new Error('Radio inválido');
       if (n.width < 1 || n.height < 1 || n.fontSize < 1 || n.opacity < 0 || n.opacity > 100 || n.padding < 0 || n.gap < 0) throw new Error('Tamaño inválido');
       for (const key of ['name', 'text', 'image'] as const) if (typeof n[key] !== 'string') throw new Error('Contenido inválido');

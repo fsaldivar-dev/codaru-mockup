@@ -7,10 +7,10 @@ description: Revisar un diseño de Codaru Mockup y corregir sus problemas. Úsal
 
 ## Flujo
 
-1. `./codaru lint` (o `--frame ID` para una pantalla). Devuelve `summary`, `issues` y, por cada hallazgo, `node`, `frame`, `rule`, `severity`, `message`, `mode` y `fix`.
+1. `./codaru lint` (o `--frame ID` para una pantalla, `--page ID` para un módulo). Devuelve `summary`, `issues` y, por cada hallazgo, `node`, `frame`, `rule`, `severity`, `message`, `mode` y `fix`.
 2. Agrupa por causa, no por elemento: veinte textos con poco contraste suelen ser un solo color fijo repetido.
 3. Corrige con un lote de `./codaru apply`, empezando por los errores. Valida antes con `--dry-run`.
-4. Vuelve a ejecutar `./codaru lint` hasta que no queden errores. Los avisos y notas se corrigen o se justifican.
+4. Vuelve a ejecutar `./codaru lint` hasta que no queden errores. Los avisos y notas se corrigen o se justifican. Una nota `role` significa que un marco sin rol ni dispositivo se revisa como anotación: si es una pantalla, dale `role:"screen"` (o un dispositivo) y vuelve a revisar; si es un rótulo o una biblioteca, `annotation` o `library`.
 
 ## Reglas y cómo resolverlas
 

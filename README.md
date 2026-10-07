@@ -57,7 +57,7 @@ Para editar un texto directamente, entra primero en su pantalla o grupo y haz do
 Sin nada seleccionado, «Revisar el diseño» analiza todas las pantallas y lista los hallazgos por pantalla; el mapa de calor los marca sobre el lienzo y al pulsar uno se va a su elemento.
 
 - **Contraste** de cada texto contra su fondo real, en claro y en oscuro. Indica cuándo solo falla en un modo, que suele deberse a un color fijo.
-- **Zonas táctiles** de menos de 44 × 44, **texto** de menos de 11 px o que no cabe en su caja.
+- **Zonas táctiles** de menos de 44 × 44, **texto** de menos de 11 px o que no cabe en su caja. Zonas táctiles, área segura y pliegue solo se miden en marcos con rol **pantalla**; las anotaciones y bibliotecas (rol en Propiedades) quedan fuera, y un marco sin rol ni dispositivo con controles recibe una nota para que lo asignes.
 - Contenido **recortado**, bajo el **área del sistema** o cruzando el **pliegue**, y acciones superpuestas.
 - **Coherencia**: colores casi iguales a un token sin vincular, bordes casi alineados y demasiados tamaños o radios.
 - **Degradado embarrado**: una rampa de un neutro oscuro a un acento cálido (negro a oro) pasa por oliva a mitad de camino; usa tonos de un mismo color.
@@ -141,7 +141,11 @@ El formato editable ahora es v2. Los borradores y archivos v1 se migran al abrir
 
 ## Páginas y módulos
 
-El panel **Páginas** agrupa las pantallas en módulos (Alta, Pagos, Onboarding…). Solo se dibuja, se lista y se mide la página activa, así un documento de muchas pantallas sigue ágil; las pantallas se mueven de página desde Propiedades y los flujos pueden apuntar a pantallas de cualquier página, de modo que una pantalla se reutiliza enlazándola, no duplicándola. Presentar recorre todas las páginas. Los documentos anteriores pasan a tener una página «Principal». Además, el navegador omite el pintado de las pantallas que quedan fuera de la vista.
+El panel **Páginas** agrupa las pantallas en módulos (Alta, Pagos, Onboarding…). Solo se dibuja, se lista y se mide la página activa, así un documento de muchas pantallas sigue ágil; las pantallas se mueven de página desde Propiedades y los flujos pueden apuntar a pantallas de cualquier página, de modo que una pantalla se reutiliza enlazándola, no duplicándola. Presentar recorre todas las páginas. Los documentos anteriores abren con una página «Página 1» y no cambian al guardarse. Desde el CLI: `page {action, id, name?, index?, moveTo?}` y el campo `page` de cada marco raíz.
+
+## Documentos grandes
+
+Con 80 pantallas y 2000 capas, cargar el documento tarda menos de medio segundo y mover el lienzo cuesta una fracción de milisegundo por evento: cada pantalla conserva su DOM entre cambios, solo se redibuja la que cambió y el navegador omite el pintado de las que quedan fuera de la vista (`tests/ui/perf.spec.ts` lo mide). Para que el trabajo con agentes también escale: reparte las pantallas en páginas, acota con `context --page`, `lint --page` y `export --page`, localiza elementos con `find --query` en lugar de leer el contexto completo, y marca los marcos de rótulos como anotación para que la revisión no los recorra.
 
 ## Versiones
 

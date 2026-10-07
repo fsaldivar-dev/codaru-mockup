@@ -14,15 +14,17 @@ const HELP: &str = "codaru — local JSON CLI for the running Codaru Mockup app
 
 Usage: codaru [--socket PATH] COMMAND [OPTIONS]
 
-  context [--scope SCOPE] [--depth N]       Read selection, frame, or workspace
+  context [--scope SCOPE] [--depth N] [--page ID]  Read selection, frame, page, or workspace
   schema                                  Discover commands and operation schema
   catalog [--kind KIND] [--kit KIT] [--query TEXT]
   apply --file PATH|- [--dry-run]           Apply one atomic operation batch
   select [ID ...] [--ids ID,ID]             Select IDs; no IDs clears selection
   undo                                    Undo one editor transaction
   redo                                    Redo one editor transaction
-  export [--format json|html|svg] [--frame ID] [--output PATH]
-  lint [--frame ID]                         Review contrast, targets and consistency
+  export [--format json|html|svg] [--frame ID] [--page ID] [--output PATH]
+  lint [--frame ID] [--page ID]             Review contrast, targets and consistency
+  find --query TEXT [--frame ID] [--page ID] [--type TYPE] [--limit N]
+  versions [--compare ID]                   List saved versions; compare one with the design
   --help                                  Show this help without opening the app
 
 Workflow:
@@ -57,7 +59,7 @@ fn parse(args: &[String]) -> Result<Options> {
         socket = Some(PathBuf::from(take_value(args, &mut index, "--socket")?)); index += 1;
     }
     let command = args.get(index).ok_or_else(|| invalid("Choose a command. Run codaru --help."))?.clone(); index += 1;
-    if !["schema", "context", "apply", "catalog", "select", "undo", "redo", "export", "lint"].contains(&command.as_str()) { return Err(invalid(format!("Unknown command '{}'. Run codaru --help.", command))); }
+    if !["schema", "context", "apply", "catalog", "select", "undo", "redo", "export", "lint", "find", "versions"].contains(&command.as_str()) { return Err(invalid(format!("Unknown command '{}'. Run codaru --help.", command))); }
     let mut options = Options { command, params: Map::new(), file: None, output: None, socket };
     let mut ids = Vec::new(); let mut seen = std::collections::HashSet::new();
     while index < args.len() {
@@ -81,6 +83,13 @@ fn parse(args: &[String]) -> Result<Options> {
                 options.params.insert("format".into(), json!(format));
             },
             ("lint", "--frame") => { options.params.insert("frame".into(), json!(take_value(args, &mut index, arg)?)); },
+            ("context" | "lint" | "export" | "find", "--page") => { options.params.insert("page".into(), json!(take_value(args, &mut index, arg)?)); },
+            ("find", "--query" | "--frame" | "--type") => { options.params.insert(arg.trim_start_matches("--").into(), json!(take_value(args, &mut index, arg)?)); },
+            ("find", "--limit") => {
+                let limit = take_value(args, &mut index, arg)?.parse::<u32>().map_err(|_| invalid("--limit must be an integer from 1 to 200."))?;
+                options.params.insert("limit".into(), json!(limit));
+            },
+            ("versions", "--compare") => { options.params.insert("compare".into(), json!(take_value(args, &mut index, arg)?)); },
             ("export", "--frame") => { options.params.insert("frame".into(), json!(take_value(args, &mut index, arg)?)); },
             ("export", "--output") => { options.output = Some(PathBuf::from(take_value(args, &mut index, arg)?)); },
             _ => return Err(invalid(format!("Unexpected option '{}' for {}. Run codaru --help.", arg, options.command))),

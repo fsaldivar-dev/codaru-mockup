@@ -2,8 +2,8 @@ import { blank, node, createComponent, instantiate, type Project, type DesignNod
 export function demo(): Project {
   const p = blank(); p.name = 'Forma · Tu espacio creativo';
   const add = (type: Kind, patch: Partial<DesignNode>) => { const n = node(type, patch); p.nodes.push(n); return n; };
-  const login = add('frame', { id: 'screen-login', name: '01 · Bienvenida', x: 60, y: 100, width: 390, height: 660 });
-  const dashboard = add('frame', { id: 'screen-dashboard', name: '02 · Tu espacio', x: 530, y: 100, width: 690, height: 660, fill: '@background' });
+  const login = add('frame', { id: 'screen-login', name: '01 · Bienvenida', x: 60, y: 100, width: 390, height: 660, role: 'screen' });
+  const dashboard = add('frame', { id: 'screen-dashboard', name: '02 · Tu espacio', x: 530, y: 100, width: 690, height: 660, fill: '@background', role: 'screen' });
   const l = (type: Kind, patch: Partial<DesignNode>) => add(type, { parentId: login.id, ...patch });
   const d = (type: Kind, patch: Partial<DesignNode>) => add(type, { parentId: dashboard.id, ...patch });
   l('rect', { name: 'Símbolo', x: 32, y: 32, width: 32, height: 32, radius: 11, gradient: 'linear', gradientEnd: '#ae91ff' });

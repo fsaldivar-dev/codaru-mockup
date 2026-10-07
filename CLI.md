@@ -30,12 +30,15 @@ El botón **IA / CLI** explica el recorrido desde la propia aplicación. Cierra 
 ```sh
 ./codaru context --scope workspace --depth 1
 ./codaru context --scope screen-login --depth 2
+./codaru context --page pagos --depth 1
+./codaru find --query correo --page pagos
 ./codaru catalog --kind kits --kit ios --query botón
 ./codaru catalog --kind icons --kit web --query home
 ./codaru apply --file cambios.json --dry-run
 ./codaru apply --file cambios.json
 ./codaru select pantalla-inicio
 ./codaru export --format svg --frame pantalla-inicio --output vista.svg
+./codaru export --format html --page pagos --output pagos.html
 ./codaru export --format html --output prototipo.html
 ./codaru export --format json --output proyecto.codaru.json
 ```
@@ -71,11 +74,22 @@ Los tokens y los iconos se resuelven con el tema del elemento o de su pantalla. 
 ```sh
 ./codaru lint
 ./codaru lint --frame pantalla-inicio
+./codaru lint --page pagos
+./codaru find --query "Continuar" --type button
+./codaru versions --compare v-1
 ```
 
 ### Páginas y versiones
 
-`page.add {name, id?}`, `page.rename {id, name}`, `page.remove {id}` (solo vacía), `page.activate {id}`, `page.move {id, index}`. Los nodos raíz llevan `pageId` (en `add` o con `update`); `context` lista `pages`, `activePageId` y el `pageId` de cada pantalla. Solo la página activa se dibuja; los flujos pueden cruzar páginas.
+`page {action: 'create'|'rename'|'remove'|'move'|'activate', id, name?, index?, moveTo?}`. Los nodos raíz llevan `page` (en `add` o con `update {id, patch:{page}}`); sin `page` pertenecen a la primera. Un documento sin páginas abre con una llamada «Página 1». `remove` de una página con contenido exige `moveTo` con la página que recibe sus marcos; sin él falla y lo dice. `context`, `lint`, `export` y `find` aceptan `--page ID`; `context` lista `pages` con `frames` y `nodes` por página, `activePageId` y la `page` y el `role` de cada marco. Solo la página activa se dibuja; los flujos pueden cruzar páginas. Los alias `page.add/rename/remove/activate/move` y el campo `pageId` de 0.5 siguen aceptándose.
+
+### Rol de los marcos
+
+Cada marco raíz tiene `role`: `screen` (pantalla del producto), `annotation` (rótulos, leyendas) o `library` (hoja de componentes). Sin `role`, es `screen` si tiene `device` y `annotation` si no; los marcos que crea `add` sin dispositivo ni rol quedan como `screen`. `lint` solo comprueba zonas táctiles, área segura y pliegue en pantallas, y avisa (`role`) cuando un marco sin rol ni dispositivo contiene controles. `screens(p)` del paquete devuelve las pantallas en orden de lectura, página por página.
+
+### Buscar
+
+`find --query TEXTO [--frame ID] [--page ID] [--type TIPO] [--limit N]` busca por nombre o texto (sin distinguir mayúsculas) y devuelve `[{id, name, type, frame, page, text?}]`, hasta 200 resultados. Úsalo antes de `update` o `remove` en lugar de recorrer el contexto entero.
 
 `version.save {name, note?}` guarda una copia comprimida del diseño dentro del documento (máximo 30); `version.restore {id}` la restaura en el mismo lote (reversible con `undo`); `version.remove {id}`. El comando `versions` lista las versiones y, con `compare: ID`, qué pantallas se añadieron, quitaron o cambiaron desde esa versión.
 
@@ -145,7 +159,7 @@ Las pantallas admiten además `safeArea` (`{top,right,bottom,left}`), `skin` (ma
 | `APP_NOT_RUNNING` | Abrir Codaru Mockup y volver a consultar contexto. |
 | `editor_busy` | Terminar el gesto o edición y cerrar el diálogo. |
 | `revision_conflict` | Volver a leer contexto; revisar el lote antes de actualizar su revisión. |
-| `validation_error` / `invalid_request` | Consultar `schema`; corregir referencias, tipos o límites. |
+| `validation_error` / `invalid_request` | El mensaje indica la operación (`op 3 (update)`), el campo y el valor esperado: «patch.fill debe ser HEX, "transparent" o "@alias"; llegó "rojo"». Con `--dry-run`, `errors` lista todas las operaciones que fallan. Consultar `schema` si hace falta. |
 | `TIMEOUT` | Leer contexto antes de repetir: el cambio anterior podría haberse aplicado. |
 
 El socket predeterminado está en `~/.local/share/codaru-mockup/agent.sock`, dentro de un directorio privado 0700; el socket tiene permisos 0600. No escucha en la red. `CODARU_AGENT_SOCKET` permite elegir otra ruta para la aplicación y el CLI; `--socket` cambia únicamente el destino de esa invocación del CLI. Solo una aplicación usa cada directorio de socket.

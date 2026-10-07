@@ -9,9 +9,9 @@ Trabajas sobre el diseño abierto en la app, con el CLI local `./codaru`. No rec
 
 ## Flujo
 
-1. `./codaru context` para ver selección, pantallas y la `revision`. Acota con `--scope ID --depth 1`.
+1. `./codaru context` para ver selección, pantallas, páginas y la `revision`. Acota con `--scope ID --depth 1` o `--page ID`. Para localizar un elemento por nombre o texto usa `./codaru find --query TEXTO [--page ID] [--type TIPO]` en vez de leer todo el contexto.
 2. `./codaru schema` lista operaciones, tamaños de dispositivo (`devices`) y campos. `./codaru catalog --kind kits|icons` lista recursos. No inventes ids.
-3. Escribe un lote `{"expectedRevision": "...", "operations": [...]}`. Valida con `./codaru apply --file lote.json --dry-run` y aplica con el mismo archivo.
+3. Escribe un lote `{"expectedRevision": "...", "operations": [...]}`. Valida con `./codaru apply --file lote.json --dry-run`: `errors` lista cada operación que falla con su índice, el campo y el valor esperado; corrígelas todas y aplica con el mismo archivo.
 4. `./codaru lint` y corrige lo que señale (ver el skill `codaru-review`).
 5. Revisa el resultado: `./codaru export --format svg --frame ID --output vista.svg`.
 
@@ -57,7 +57,9 @@ Nombra el tema con la marca y entrega una tabla rasgo → dónde está en el dis
 
 **Auto layout.** Prefiere `layout: vertical|horizontal` con `padding`, `gap`, `justify` y `align` a posiciones absolutas. Usa `sizing: fill` y `hugWidth`/`hugHeight` para que el diseño aguante cambios de texto y de tamaño.
 
-**Páginas.** Un documento se organiza en páginas (módulos): Alta, Pagos, Onboarding… Crea una página por flujo (`page.add`) y pon ahí sus pantallas (`pageId`); solo la página activa se dibuja, así el documento sigue ágil. Para enlazar una pantalla que ya existe en otra página, apunta el flujo a ella: no la dupliques. Antes de un cambio grande guarda una versión (`version.save`) con un nombre que diga qué entregas.
+**Páginas.** Un documento se organiza en páginas (módulos): Alta, Pagos, Onboarding… Crea una página por flujo (`{op:'page', action:'create', name}`) y pon ahí sus pantallas (campo `page` en `add`, o `update {patch:{page}}`); solo la página activa se dibuja, así el documento sigue ágil. Para enlazar una pantalla que ya existe en otra página, apunta el flujo a ella: no la dupliques. Para quitar una página con contenido indica `moveTo`. Antes de un cambio grande guarda una versión (`version.save`) con un nombre que diga qué entregas.
+
+**Rol de cada marco.** Un marco raíz es `screen` (pantalla del producto), `annotation` (rótulos, leyendas, notas al margen) o `library` (hoja de componentes). Pon `role` al crearlo: la revisión solo mide zonas táctiles, área segura y pliegue en pantallas, y las anotaciones no cuentan como pantallas entregadas.
 
 **Componentes.** Lo que se repite es un componente (`component`, `instance`), no copias. Los estados de un control (normal, seleccionado, deshabilitado, cargando) son **variantes** del mismo conjunto (`variant.define`, `variant.create`), y una instancia cambia de estado con `variant.switch` sin perder su texto; no dibujes un botón distinto por estado. Los kits ya traen el eje Estado.
 

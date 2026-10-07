@@ -148,7 +148,7 @@ Para dos documentos abiertos crea dos `createEditor()` y dos `createEditorView()
 
 ## Núcleo sin interfaz, IA y operaciones nativas
 
-`codaru-mockup/core` crea sesiones sin montar DOM ni instalar estilos. Permite consultar y modificar documentos, validar transacciones, manejar historial y utilizar `editor.agent(command, params)` para contexto, catálogo, esquema y lotes de operaciones. El contexto mantiene el contrato de revisiones documentado en [CLI.md](../CLI.md).
+`codaru-mockup/core` crea sesiones sin montar DOM ni instalar estilos. Permite consultar y modificar documentos, validar transacciones, manejar historial y utilizar `editor.agent(command, params)` para contexto, catálogo, esquema y lotes de operaciones. El contexto mantiene el contrato de revisiones documentado en [CLI.md](../CLI.md). Ambos puntos de entrada exportan además helpers puros sobre un documento: `screens(p)` (pantallas en orden de lectura, página por página), `roleOf(p, n)`, `pagesOf(p)` y `pageView(p, pageId)`.
 
 La exportación JSON es `JSON.stringify(editor.getDocument())`. Las exportaciones `exportHTML()` y `exportSVG(frameId)` necesitan un DOM de navegador; SVG también mide texto con canvas. `command()` ejecuta acciones de la vista y requiere una vista conectada. Un núcleo sin interfaz no implementa por sí solo diálogos, archivos del sistema ni renderizado para Node.
 

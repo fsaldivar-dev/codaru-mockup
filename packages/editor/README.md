@@ -50,7 +50,7 @@ El contenedor debe tener ancho y alto definidos, por ejemplo `height: calc(100vh
 
 ## Integración por piezas, sin iframe
 
-`codaru-mockup/modular` monta cada parte del editor en un contenedor propio de tu app, dentro de Shadow DOM y con una sola sesión compartida. `codaru-mockup/core` es el mismo motor sin interfaz. No necesitan copiar assets ni un iframe.
+`codaru-mockup/modular` monta cada parte del editor en un contenedor propio de tu app, dentro de Shadow DOM y con una sola sesión compartida. `codaru-mockup/core` es el mismo motor sin interfaz. No necesitan copiar assets ni un iframe. Ambos exportan `screens(p)`, `roleOf`, `pagesOf` y `pageView` para leer un documento sin montar nada.
 
 ```ts
 import { createEditor, createEditorView } from 'codaru-mockup/modular';

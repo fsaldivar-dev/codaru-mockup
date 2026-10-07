@@ -8,7 +8,7 @@ import { demoDevices } from '../src/demo-devices';
 
 function project(kids: Partial<DesignNode>[], frame: Partial<DesignNode> = {}) {
   const p = blank();
-  p.nodes.push(node('frame', { id: 'f', name: 'Inicio', x: 0, y: 0, width: 390, height: 800, fill: '@background', ...frame }), ...kids.map((kid, i) => node((kid.type ?? 'text') as DesignNode['type'], { id: `n${i}`, parentId: 'f', x: 20, y: 60 + i * 70, ...kid })));
+  p.nodes.push(node('frame', { id: 'f', name: 'Inicio', x: 0, y: 0, width: 390, height: 800, fill: '@background', role: 'screen', ...frame }), ...kids.map((kid, i) => node((kid.type ?? 'text') as DesignNode['type'], { id: `n${i}`, parentId: 'f', x: 20, y: 60 + i * 70, ...kid })));
   return p;
 }
 const rules = (p: ReturnType<typeof project>) => lintProject(p).map(issue => `${issue.rule}:${issue.node}:${issue.severity}${issue.mode ? ':' + issue.mode : ''}`);

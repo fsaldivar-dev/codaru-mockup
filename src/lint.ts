@@ -1,11 +1,11 @@
-import { docStale, designSystemStale, absolute, ancestors, children, color, frameOf, labels, panelsOf, type DesignNode, type Project, type Theme } from './model';
+import { docStale, designSystemStale, roleOf, pageView, absolute, ancestors, children, color, frameOf, labels, panelsOf, type DesignNode, type Project, type Theme } from './model';
 import { effectiveTheme } from './themes';
 
 /**
  * Design review: finds what a careful designer would flag, in both light and dark mode, without
  * drawing anything. Each issue points at one element so it can be shown as a heat map or fixed by an AI.
  */
-export type LintRule = 'contrast' | 'target' | 'text-size' | 'text-fit' | 'overflow' | 'safe-area' | 'hinge' | 'overlap' | 'off-theme' | 'alignment' | 'scale' | 'palette' | 'accent-fill' | 'gradient' | 'docs';
+export type LintRule = 'contrast' | 'target' | 'text-size' | 'text-fit' | 'overflow' | 'safe-area' | 'hinge' | 'overlap' | 'off-theme' | 'alignment' | 'scale' | 'palette' | 'accent-fill' | 'gradient' | 'docs' | 'role';
 export interface LintIssue {
   rule: LintRule; severity: 'error' | 'warning' | 'info';
   /** Element to look at, and the screen it belongs to. */
@@ -18,7 +18,7 @@ export interface LintIssue {
 }
 export const lintRules: Record<LintRule, string> = {
   contrast: 'Contraste de texto', target: 'Zona táctil pequeña', 'text-size': 'Texto pequeño', 'text-fit': 'Texto que no cabe', overflow: 'Contenido fuera de la pantalla',
-  'safe-area': 'Contenido bajo el área del sistema', hinge: 'Contenido sobre el pliegue', overlap: 'Acciones superpuestas', 'off-theme': 'Color fuera del tema', alignment: 'Casi alineados', palette: 'Paleta sin acento', 'accent-fill': 'Acento como fondo de un chip', gradient: 'Degradado embarrado', docs: 'Documentación desactualizada', scale: 'Demasiadas variantes',
+  'safe-area': 'Contenido bajo el área del sistema', hinge: 'Contenido sobre el pliegue', overlap: 'Acciones superpuestas', 'off-theme': 'Color fuera del tema', alignment: 'Casi alineados', palette: 'Paleta sin acento', 'accent-fill': 'Acento como fondo de un chip', gradient: 'Degradado embarrado', docs: 'Documentación desactualizada', role: 'Marco revisado como anotación', scale: 'Demasiadas variantes',
 };
 
 type RGBA = [number, number, number, number];
@@ -43,7 +43,8 @@ export function contrastRatio(a: string, b: string) { const x = luminance(parse(
 const distance = (a: RGBA, b: RGBA) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
 const toHex = (c: RGBA) => `#${c.slice(0, 3).map(v => Math.round(v).toString(16).padStart(2, '0')).join('')}`;
 
-export function lintProject(input: Project, options: { frame?: string } = {}): LintIssue[] {
+export function lintProject(input: Project, options: { frame?: string; page?: string } = {}): LintIssue[] {
+  if (options.page) { const view = pageView(input, options.page); return lintProject(view, { frame: options.frame }); }
   const issues: LintIssue[] = [], seen = new Set<string>();
   const add = (issue: LintIssue) => { const key = `${issue.rule}|${issue.node}|${issue.mode ?? ''}|${issue.rule === 'scale' ? issue.message : ''}`; if (!seen.has(key)) { seen.add(key); issues.push(issue); } };
   const visible = (n: DesignNode) => !n.hidden && !ancestors(input, n.id).some(a => a.hidden);
@@ -121,14 +122,15 @@ export function lintProject(input: Project, options: { frame?: string } = {}): L
       const inset = n.type === 'text' ? 0 : 28, perLine = Math.max(1, Math.floor((n.width - inset) / (size * .52))), lines = n.text.split('\n').reduce((sum, line) => sum + Math.max(1, Math.ceil(line.length / perLine)), 0);
       if (n.type === 'text' && lines * size * n.lineHeight > n.height + size * .6) add({ rule: 'text-fit', severity: 'info', node: n.id, frame: frame?.id ?? null, message: `${name(n)}: el texto necesita unas ${lines} líneas y la caja solo admite ${Math.max(1, Math.floor(n.height / (size * n.lineHeight)))}.`, fix: 'Aumenta el alto o el ancho de la caja, o acorta el texto.' });
     }
-    if (interactive(n) && Math.min(n.width, n.height) < 44) add({ rule: 'target', severity: Math.min(n.width, n.height) < 32 ? 'error' : 'warning', node: n.id, frame: frame?.id ?? null, message: `${name(n)}: zona táctil de ${Math.round(n.width)} × ${Math.round(n.height)}; lo recomendado es 44 × 44 (48 en Android).`, fix: 'Amplía el elemento o envuélvelo en una zona táctil de al menos 44 × 44.' });
+    const screen = !frame || roleOf(input, frame) === 'screen';
+    if (screen && interactive(n) && Math.min(n.width, n.height) < 44) add({ rule: 'target', severity: Math.min(n.width, n.height) < 32 ? 'error' : 'warning', node: n.id, frame: frame?.id ?? null, message: `${name(n)}: zona táctil de ${Math.round(n.width)} × ${Math.round(n.height)}; lo recomendado es 44 × 44 (48 en Android).`, fix: 'Amplía el elemento o envuélvelo en una zona táctil de al menos 44 × 44.' });
     if (frame && n.id !== frame.id) {
       const at = absolute(input, n), origin = absolute(input, frame), x = at.x - origin.x, y = at.y - origin.y;
       if (x + n.width > frame.width + 1 || y + n.height > frame.height + 1 || x < -1 || y < -1) add({ rule: 'overflow', severity: x >= frame.width || y >= frame.height || x + n.width <= 0 || y + n.height <= 0 ? 'error' : 'warning', node: n.id, frame: frame.id, message: `${name(n)}: sobresale de la pantalla y se recorta.`, fix: 'Muévelo o redúcelo para que quede dentro de la pantalla, o usa auto layout.' });
       const leaf = !children(input, n.id).length;
-      if (leaf && frame.safeArea && (hasText || interactive(n)) && (y < frame.safeArea.top - 1 || y + n.height > frame.height - frame.safeArea.bottom + 1 || x < frame.safeArea.left - 1 || x + n.width > frame.width - frame.safeArea.right + 1))
+      if (screen && leaf && frame.safeArea && (hasText || interactive(n)) && (y < frame.safeArea.top - 1 || y + n.height > frame.height - frame.safeArea.bottom + 1 || x < frame.safeArea.left - 1 || x + n.width > frame.width - frame.safeArea.right + 1))
         add({ rule: 'safe-area', severity: 'warning', node: n.id, frame: frame.id, message: `${name(n)}: queda bajo la barra de estado, la cámara o el indicador de inicio.`, fix: 'Colócalo dentro del área segura de la pantalla.' });
-      if (leaf && frame.fold && (hasText || interactive(n))) {
+      if (screen && leaf && frame.fold && (hasText || interactive(n))) {
         const vertical = frame.fold.axis === 'vertical', panels = panelsOf(frame), start = vertical ? x : y, end = start + (vertical ? n.width : n.height), length = vertical ? frame.width : frame.height;
         for (let hinge = 1; hinge < panels; hinge++) { const line = length * hinge / panels, half = Math.max(frame.fold.gap / 2, 4); if (start < line - half && end > line + half) add({ rule: 'hinge', severity: 'warning', node: n.id, frame: frame.id, message: `${name(n)}: cruza la línea del pliegue.`, fix: 'Muévelo a un solo panel o divide el contenido entre los dos lados.' }); }
       }
@@ -206,6 +208,8 @@ export function lintProject(input: Project, options: { frame?: string } = {}): L
       const comp = input.components.find(x => x.id === c)!, master = input.nodes.find(n => n.id === comp.masterId);
       add({ rule: 'docs', severity: 'info', node: master?.id ?? comp.id, frame: master ? frameOf(input, master.id)?.id ?? null : null, message: `«${comp.setName ?? comp.name}»: el componente cambió después de documentarse; revisa su ficha en Sistema.`, fix: 'Actualiza component.doc (description, why, when, how, do, dont) o envía {} para marcarla como revisada si sigue siendo válida.' });
     }
+    // A root frame with neither a role nor a device reads as an annotation, so the touch-target, safe-area and hinge checks skip it. Say so when it clearly holds a screen.
+    for (const n of input.nodes) if (n.parentId === null && n.type === 'frame' && n.role === undefined && n.device === undefined && !n.hidden && input.nodes.some(k => k.parentId === n.id && interactive(k))) add({ rule: 'role', severity: 'info', node: n.id, frame: n.id, message: `«${n.name}» no tiene rol ni dispositivo, así que se revisa como anotación: sus zonas táctiles y áreas seguras no se comprueban.`, fix: 'Si es una pantalla del producto, asigna role:"screen" o un dispositivo (update {patch:{role:"screen"}}); si es un rótulo o una biblioteca, role:"annotation" o "library".' });
     if (designSystemStale(input)) add({ rule: 'docs', severity: 'info', node: input.activeThemeId, frame: null, message: 'El tema cambió después de escribir los fundamentos del sistema; revisa Color, Tipografía y Espaciado en Sistema.', fix: 'Actualiza designSystem.set o envía {} para marcar los fundamentos como revisados.' });
   }
   // Palette: a theme whose primary color is a muddy mid tone neither reads as an accent nor anchors as a dark
