@@ -1,6 +1,6 @@
 # Changelog
 
-## Sin publicar
+## 0.7.0 — 2026-10-07
 
 - Render headless: `renderScreenToSVG(document, { screen?, theme?, maxWidth?, mode: 'static' })` dibuja una pantalla como SVG autocontenido sin `window`, `document` ni canvas, y `renderScreenToDataURL` lo devuelve como URL `data:` apta para `<img src>` y Markdown. Valida el documento como `renderMockup` y se ve como la vista previa estática (prueba de píxeles: menos del 1 % distinto en cinco pantallas). Nueva entrada `codaru-mockup/svg` (119,7 kB, 39,2 kB gzip); también en `preview` y `core`. `core` pasa de 128 kB a 144 kB porque su exportación SVG usa ahora este dibujo.
 - `screens(document)` acepta JSON o un objeto, lo valida y devuelve las pantallas en orden de lectura con `id` estable, `name`, `role` y `page`. Sin `pantalla:`, la vista previa abre la primera pantalla en ese orden y su selector lista las pantallas así.
