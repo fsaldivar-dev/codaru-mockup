@@ -60,6 +60,6 @@
     "prepack": "node ./scripts/verify-package.mjs"
   },
   "bin": {
-    "codaru-assets": "./scripts/copy-assets.mjs"
+    "codaru-assets": "scripts/copy-assets.mjs"
   }
 }
