@@ -179,7 +179,7 @@ export async function handleAgentRequest(host: AgentHost,request: AgentRequest):
     if(host.busy())throw new AgentError('editor_busy','Termina la edición o cierra el diálogo del editor y vuelve a intentarlo.');
     if(request.command==='select'){const list=Array.isArray(params.ids)&&!params.ids.length?[]:ids(params.ids);list.forEach(id=>existing(host.project(),id));host.select(list);return {ok:true,context:await context(host)};}
     if(request.command==='undo'||request.command==='redo'){host[request.command]();return {ok:true,context:await context(host)};}
-    const before=clone(host.project()),currentRevision=await revision(before);
+    const live=host.project(),before=live,currentRevision=await revision(before);
     if(params.expectedRevision!==currentRevision)throw new AgentError('revision_conflict','Falta expectedRevision o el documento cambió. Lee codaru context y prepara el lote con la nueva revision.');
     // Version operations need async (de)compression, so the batch runs in chunks on a draft: a version saved
     // mid-batch captures the operations before it, and the host still receives one atomic commit at the end.
@@ -193,7 +193,8 @@ export async function handleAgentRequest(host: AgentHost,request: AgentRequest):
     }
     flush();
     // The user may edit while the asynchronous hash is calculated.
-    if(JSON.stringify(host.project())!==JSON.stringify(before))throw new AgentError('revision_conflict','El documento cambió durante la validación. Lee codaru context y vuelve a intentarlo.');
+    // Every commit produces a new document object, so identity tells whether the user edited meanwhile.
+    if(host.project()!==live)throw new AgentError('revision_conflict','El documento cambió durante la validación. Lee codaru context y vuelve a intentarlo.');
     if(host.busy())throw new AgentError('editor_busy','El editor inició otra interacción. Termínala antes de aplicar el lote.');
     const after=draft.project,beforeIds=new Set(before.nodes.map(n=>n.id)),afterIds=new Set(after.nodes.map(n=>n.id));
     const added=after.nodes.filter(n=>!beforeIds.has(n.id)),removed=before.nodes.filter(n=>!afterIds.has(n.id)).map(n=>n.id);

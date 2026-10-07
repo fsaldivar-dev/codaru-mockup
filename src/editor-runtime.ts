@@ -1,4 +1,4 @@
-import { node, blank, clone, uid, validate, children, subtree, ancestors, topSelected, frameOf, absolute, isUnavailable, color, tokens, labels, containerKinds, layoutProject, updateNode, createComponent, instantiate, detach, duplicate, remove, group, ungroup, defineVariant, createVariant, switchVariant, renameVariantSet, variantAxes, variantLabel, variantSet, setDesignSystemNotes, setComponentDoc, docStale, designSystemStale, templateSignature, pagesOf, activePage, rootsOnPage, pageView, addPage, renamePage, removePage, buildVersion, addVersion, removeVersion, applyVersion, unpackVersion, compareVersion, type Project, type DesignNode, type Kind, type Component, panelsOf, postureGroup } from './model';
+import { node, blank, clone, uid, validate, children, subtree, ancestors, topSelected, frameOf, absolute, isUnavailable, color, tokens, labels, containerKinds, layoutProject, updateNode, createComponent, instantiate, detach, duplicate, remove, group, ungroup, defineVariant, createVariant, switchVariant, renameVariantSet, variantAxes, variantLabel, variantSet, setDesignSystemNotes, setComponentDoc, docStale, designSystemStale, templateSignature, pagesOf, activePage, rootsOnPage, pageView, addPage, signature, rootIds, renamePage, removePage, buildVersion, addVersion, removeVersion, applyVersion, unpackVersion, compareVersion, type Project, type DesignNode, type Kind, type Component, panelsOf, postureGroup } from './model';
 import { demo } from './demo';
 import { effectiveTheme, resolveNodeStyle } from './themes';
 import { openThemeEditor } from './theme-editor';
@@ -47,7 +47,10 @@ let kitModule: typeof import('./kits') | undefined;
 let iconModule: typeof import('./icon-library') | undefined, iconPack='mac', iconSearch='';
 let space = false;
 const MIN_ZOOM = .1, MAX_ZOOM = 8;
-let collapsed = new Set<string>(); let saveTimer: ReturnType<typeof setTimeout>; let toastTimer: ReturnType<typeof setTimeout>;
+let collapsed = new Set<string>(), expanded = new Set<string>();
+// In a page with many screens the list starts folded; a frame is open when the person opened it or selected inside it.
+const collapsedByDefault = (n: DesignNode) => n.type === 'frame' && n.parentId === null && rootsOnPage(p(), pageId()).filter(f => f.type === 'frame').length > 6;
+const isCollapsed = (n: DesignNode) => collapsedByDefault(n) ? !expanded.has(n.id) : collapsed.has(n.id); let saveTimer: ReturnType<typeof setTimeout>; let toastTimer: ReturnType<typeof setTimeout>;
 let lastPoint = { x: 90, y: 120 }; let previewFrame: string | null = null; let previewHistory: { id: string; transition?: Transition }[] = []; let previewRatio = 1;
 /** Result of the last design review; the heat map is drawn while it is on. */
 let review: { issues: LintIssue[]; heat: boolean } | null = null;
@@ -132,7 +135,14 @@ function select(ids: string[], scope?: Scope) {
     while (n.parentId !== state.selectionScope && n.id !== state.selectionScope && n.parentId) n = find(n.parentId)!;
     return n.parentId === state.selectionScope ? n.id : '';
   }).filter(Boolean))];
-  renderSelection(); renderLayers(); renderInspector();
+  renderSelection(); syncLayerSelection(); renderInspector();
+}
+// Selection changes only touch the rows involved; the list is rebuilt when a selected row is not on screen.
+function syncLayerSelection() {
+  if (tab !== 'layers') return;
+  if (state.selected.some(id => !layersEl.querySelector(`[data-layer="${CSS.escape(id)}"]`))) { for (const id of state.selected) for (const a of ancestors(p(), id)) { expanded.add(a.id); collapsed.delete(a.id); } renderLayers(); return; }
+  for (const row of layersEl.querySelectorAll<HTMLElement>('.layer.selected')) row.classList.remove('selected');
+  for (const id of state.selected) layersEl.querySelector(`[data-layer="${CSS.escape(id)}"]`)?.classList.add('selected');
 }
 function canEnter(n: DesignNode) { return containerKinds.includes(n.type) && !isUnavailable(p(), n); }
 function enterScope(id: Scope) {
@@ -168,16 +178,32 @@ function render() {
   renderPages(); renderCanvas(); if (tab === 'layers') renderLayers(); renderInspector(); if (tab === 'components') renderComponents(); renderSystem();
   const pending = p().components.filter(docStale).length + (designSystemStale(p()) ? 1 : 0), badge = byId('system-stale'); badge.hidden = !pending; badge.textContent = `${pending}`; badge.title = `${pending} ${pending === 1 ? 'ficha' : 'fichas'} por revisar`;
 }
+// Each top-level screen keeps its DOM between renders until something inside it changes; a theme, mode or page
+// switch invalidates everything. Image and SVG payloads count by length so the signature stays cheap.
+const canvasCache = new Map<string, { sig: string; el: HTMLElement; label?: HTMLElement }>(); let canvasKey = '';
+const lightNode = (key: string, value: unknown) => (key === 'image' || key === 'svg') && typeof value === 'string' ? value.length : value;
+function rootSignatures() {
+  const tops = rootIds(p()), groups = new Map<string, DesignNode[]>();
+  for (const n of p().nodes) { const root = tops.get(n.id)!; const list = groups.get(root); if (list) list.push(n); else groups.set(root, [n]); }
+  return new Map([...groups].map(([root, nodes]) => [root, signature(JSON.stringify(nodes, lightNode))]));
+}
+function frameLabel(n: DesignNode) {
+  const label = document.createElement('button'); label.className = 'frame-label'; label.dataset.node = n.id; label.style.left = `${n.x}px`; label.style.top = `${n.y - 30 / state.zoom}px`; label.style.fontSize = `${11 / state.zoom}px`; label.style.height = `${24 / state.zoom}px`; label.innerHTML = `${icon('frame', 13 / state.zoom)}<span>${esc(n.name)}</span><small>${Math.round(n.width)} × ${Math.round(n.height)}</small>`;
+  return label;
+}
 function renderCanvas() {
-  const artboards = byId('artboards'); artboards.replaceChildren();
+  const artboards = byId('artboards');
+  const key = `${p().activeThemeId}|${p().theme}|${pageId()}|${signature(p().designThemes)}|${signature(p().components.map(c => [c.id, c.template.length]))}`;
+  if (key !== canvasKey) { canvasCache.clear(); canvasKey = key; }
+  const ordered: Node[] = [], seen = new Set<string>(), sigs = rootSignatures();
   for (const n of rootsOnPage(p(), pageId())) {
     if (n.hidden) continue;
-    if (n.type === 'frame') {
-      const label = document.createElement('button'); label.className = 'frame-label'; label.dataset.node = n.id; label.style.left = `${n.x}px`; label.style.top = `${n.y - 30 / state.zoom}px`; label.style.fontSize = `${11 / state.zoom}px`; label.style.height = `${24 / state.zoom}px`; label.innerHTML = `${icon('frame', 13 / state.zoom)}<span>${esc(n.name)}</span><small>${Math.round(n.width)} × ${Math.round(n.height)}</small>`;
-      artboards.append(label);
-    }
-    artboards.append(element(p(), n));
+    const sig = sigs.get(n.id) ?? ''; let entry = canvasCache.get(n.id);
+    if (!entry || entry.sig !== sig) { entry = { sig, el: element(p(), n), label: n.type === 'frame' ? frameLabel(n) : undefined }; canvasCache.set(n.id, entry); }
+    seen.add(n.id); if (entry.label) ordered.push(entry.label); ordered.push(entry.el);
   }
+  for (const id of [...canvasCache.keys()]) if (!seen.has(id)) canvasCache.delete(id);
+  artboards.replaceChildren(...ordered);
   if (review?.heat) {
     // One soft spot per issue: red for errors, amber for warnings, blue for notes. Overlaps add up.
     const layer = document.createElement('div'); layer.className = 'heat-layer'; layer.setAttribute('aria-hidden', 'true');
@@ -204,6 +230,7 @@ function renderRoots(ids: string[]) {
     const fresh = element(p(), n);
     if (old) old.replaceWith(fresh); else artboards.append(fresh);
     const label = artboards.querySelector<HTMLElement>(`:scope > .frame-label[data-node="${CSS.escape(id)}"]`); if (label) { label.style.left = `${n.x}px`; label.style.top = `${n.y - 30 / state.zoom}px`; }
+    const entry = canvasCache.get(id); if (entry) { entry.el = fresh; entry.sig = ''; }
   }
   renderSelection(); renderConnections();
 }
@@ -281,8 +308,8 @@ function renderConnections() {
 }
 function renderLayers() {
   const visit = (parentId: string | null, depth: number): string => (parentId === null ? rootsOnPage(p(), pageId()) : children(p(), parentId)).map(n => {
-    const kids = children(p(), n.id); const selectedClass = state.selected.includes(n.id) ? ' selected' : ''; const collapsedClass = collapsed.has(n.id) ? ' closed' : '';
-    return `<div class="layer${selectedClass}${n.hidden ? ' is-hidden' : ''}${n.type === 'frame' ? ' frame-layer' : ''}" data-layer="${esc(n.id)}" style="--depth:${depth}"><button class="collapse${collapsedClass}" data-collapse="${esc(n.id)}" aria-label="${collapsed.has(n.id)?'Expandir':'Contraer'} ${esc(n.name)}" ${!kids.length?'style="visibility:hidden"':''}>${icon('chevron',10)}</button><span class="layer-icon ${n.componentId || n.instanceOf ? 'purple' : ''}">${icon(n.componentId || n.instanceOf ? 'component' : n.type,14)}</span><span class="layer-name">${esc(n.name)}</span><button class="layer-action ${n.locked?'on':''}" data-lock="${n.id}" aria-label="${n.locked?'Desbloquear':'Bloquear'} ${esc(n.name)}">${icon('lock',12)}</button><button class="layer-action ${n.hidden?'on':''}" data-hide="${n.id}" aria-label="${n.hidden?'Mostrar':'Ocultar'} ${esc(n.name)}">${icon('eye',12)}</button></div>${!collapsed.has(n.id)?visit(n.id,depth+1):''}`;
+    const kids = children(p(), n.id); const selectedClass = state.selected.includes(n.id) ? ' selected' : ''; const collapsedClass = isCollapsed(n) ? ' closed' : '';
+    return `<div class="layer${selectedClass}${n.hidden ? ' is-hidden' : ''}${n.type === 'frame' ? ' frame-layer' : ''}" data-layer="${esc(n.id)}" style="--depth:${depth}"><button class="collapse${collapsedClass}" data-collapse="${esc(n.id)}" aria-label="${isCollapsed(n)?'Expandir':'Contraer'} ${esc(n.name)}" ${!kids.length?'style="visibility:hidden"':''}>${icon('chevron',10)}</button><span class="layer-icon ${n.componentId || n.instanceOf ? 'purple' : ''}">${icon(n.componentId || n.instanceOf ? 'component' : n.type,14)}</span><span class="layer-name">${esc(n.name)}</span><button class="layer-action ${n.locked?'on':''}" data-lock="${n.id}" aria-label="${n.locked?'Desbloquear':'Bloquear'} ${esc(n.name)}">${icon('lock',12)}</button><button class="layer-action ${n.hidden?'on':''}" data-hide="${n.id}" aria-label="${n.hidden?'Mostrar':'Ocultar'} ${esc(n.name)}">${icon('eye',12)}</button></div>${!isCollapsed(n)?visit(n.id,depth+1):''}`;
   }).join('');
   layersEl.innerHTML = visit(null,0) || '<p class="empty-note">Las capas de tus pantallas aparecerán aquí.</p>';
 }
@@ -768,7 +795,7 @@ events.addEventListener('click',e=>{
   if(el.dataset.systemPage){systemPage=el.dataset.systemPage;renderSystem();return;}
   if(el.dataset.systemEdit!==undefined){systemEditing=!systemEditing;renderSystem();return;}
   if(el.dataset.docReviewed){const id=el.dataset.docReviewed;change(pr=>{if(id==='system')setDesignSystemNotes(pr,{});else setComponentDoc(pr,id,{});},'Documentación marcada como vigente');return;}
-  if(el.dataset.collapse){const id=el.dataset.collapse;collapsed.has(id)?collapsed.delete(id):collapsed.add(id);renderLayers();return;}
+  if(el.dataset.collapse){const id=el.dataset.collapse,n=find(id);if(n&&collapsedByDefault(n)){expanded.has(id)?expanded.delete(id):expanded.add(id);}else{collapsed.has(id)?collapsed.delete(id):collapsed.add(id);}renderLayers();return;}
   if(el.dataset.lock){change(pr=>{const n=pr.nodes.find(n=>n.id===el.dataset.lock)!;n.locked=!n.locked;});return;}
   if(el.dataset.hide){change(pr=>{const n=pr.nodes.find(n=>n.id===el.dataset.hide)!;n.hidden=!n.hidden;});return;}
   if(el.dataset.layer){const id=el.dataset.layer;const siblings=find(id)?.parentId===state.selectionScope;select((e as MouseEvent).shiftKey&&siblings?(state.selected.includes(id)?state.selected.filter(x=>x!==id):[...state.selected,id]):[id]);return;}

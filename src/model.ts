@@ -214,9 +214,9 @@ export function updateNode(p: Project, id: string, patch: Partial<DesignNode>) {
   Object.assign(n, patch);
 }
 /** Arrange the visible children of one auto layout container, and resize it when it hugs its content. */
-export function layoutNode(p: Project, n: DesignNode) {
+export function layoutNode(p: Project, n: DesignNode, kidsOf?: Map<string | null, DesignNode[]>) {
   if (n.layout === 'free') return;
-  const kids = children(p, n.id).filter(k => !k.hidden); if (!kids.length) return;
+  const kids = (kidsOf ? kidsOf.get(n.id) ?? [] : children(p, n.id)).filter(k => !k.hidden); if (!kids.length) return;
   const vert = n.layout === 'vertical', pad = n.paddingSides ?? { top: n.padding, right: n.padding, bottom: n.padding, left: n.padding };
   const main = vert ? 'height' : 'width', cross = vert ? 'width' : 'height', at = vert ? 'y' : 'x', across = vert ? 'x' : 'y';
   const start = vert ? pad.top : pad.left, end = vert ? pad.bottom : pad.right, crossStart = vert ? pad.left : pad.top, crossEnd = vert ? pad.right : pad.bottom;
@@ -249,15 +249,22 @@ export function layoutNode(p: Project, n: DesignNode) {
     offset += lineCross + n.gap;
   });
 }
+/** Children grouped by parent in one pass; hot paths use it instead of filtering the node list per node. */
+export function childrenIndex(p: Project): Map<string | null, DesignNode[]> {
+  const kids = new Map<string | null, DesignNode[]>();
+  for (const n of p.nodes) { const list = kids.get(n.parentId); if (list) list.push(n); else kids.set(n.parentId, [n]); }
+  return kids;
+}
 export function layoutProject(p: Project) {
+  const kidsOf = childrenIndex(p);
   function apply(n: DesignNode) {
-    const kids = children(p, n.id).filter(k => !k.hidden);
+    const kids = (kidsOf.get(n.id) ?? []).filter(k => !k.hidden);
     // Containers that hug their content know their size before the parent arranges them.
     for (const k of kids) if (k.layout !== 'free' && (k.hugWidth || k.hugHeight)) apply(k);
-    layoutNode(p, n);
+    layoutNode(p, n, kidsOf);
     for (const k of kids) apply(k);
   }
-  for (const n of children(p, null)) apply(n);
+  for (const n of kidsOf.get(null) ?? []) apply(n);
 }
 export function createComponent(p: Project, id: string) {
   const root = p.nodes.find(n => n.id === id); if (!root || root.type === 'frame') throw new Error('Selecciona un elemento o grupo dentro de una pantalla');
@@ -452,11 +459,11 @@ export function ungroup(p: Project, id: string) {
   const kids = children(p, id); for (const k of kids) { k.parentId = n.parentId; k.x += n.x; k.y += n.y; }
   p.nodes = p.nodes.filter(x => x.id !== id); return kids.map(k => k.id);
 }
-export function validate(input: unknown): Project {
+export function validate(input: unknown, trusted = false): Project {
   if (!input || typeof input !== 'object') throw new Error('Archivo de proyecto inválido');
   const source = input as Record<string, unknown>;
   if (source.format !== 'codaru-mockup' || ![1, 2].includes(source.version as number) || !Array.isArray(source.nodes) || !Array.isArray(source.components) || source.nodes.length > 3000 || source.components.length > 300) throw new Error('Formato o versión de proyecto no compatible');
-  const p = clone(input) as Project;
+  const p = (trusted ? input : clone(input)) as Project;
   if (typeof p.name !== 'string' || p.name.length > 200 || !['light', 'dark'].includes(p.theme)) throw new Error('Nombre o tema inválido');
   if (p.designSystem !== undefined) { const notes = mergeNotes(undefined, p.designSystem, 'designSystem'); if (notes) p.designSystem = notes; else delete p.designSystem; }
   if (p.designSystemHash !== undefined && (typeof p.designSystemHash !== 'string' || p.designSystemHash.length > 64)) throw new Error('Firma de documentación inválida');
@@ -540,11 +547,12 @@ export function validate(input: unknown): Project {
     const templateProject = { ...p, nodes: c.template, activeThemeId: context.id, theme: context.mode };
     for (const n of c.template) validateNodeThemeRefs(templateProject, n);
   }
+  const byId = new Map(p.nodes.map(n => [n.id, n])), frames = new Set(p.nodes.filter(n => n.type === 'frame').map(n => n.id));
   for (const n of p.nodes) {
-    validateNodeThemeRefs(p, n);
+    validateNodeThemeRefs(p, n, byId);
     if ((n.instanceOf && !componentIds.has(n.instanceOf)) || (n.componentId && !componentIds.has(n.componentId))) throw new Error('Referencia a componente inválida');
-    if (n.instanceOf && ancestors(p, n.id).some(a => a.instanceOf || a.componentId)) throw new Error('Componentes anidados no admitidos');
-    if (n.targetId !== null && !p.nodes.some(f => f.id === n.targetId && f.type === 'frame')) throw new Error('Destino de navegación inválido');
+    if (n.instanceOf) { for (let up = n.parentId ? byId.get(n.parentId) : undefined, hops = 0; up && hops < 64; up = up.parentId ? byId.get(up.parentId) : undefined, hops++) if (up.instanceOf || up.componentId) throw new Error('Componentes anidados no admitidos'); }
+    if (n.targetId !== null && !frames.has(n.targetId)) throw new Error('Destino de navegación inválido');
   }
   return p;
 }

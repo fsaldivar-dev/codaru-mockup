@@ -22,7 +22,7 @@ export function defaultDesignTheme(id = 'project', name = 'Mi tema'): DesignThem
   return { id, name, modes: { light: mode('light'), dark: mode('dark') } };
 }
 
-export function effectiveTheme(p: Project, n?: DesignNode): { id: string; mode: Theme; tokens: TokenSet } {
+export function effectiveTheme(p: Project, n?: DesignNode, byId?: Map<string, DesignNode>): { id: string; mode: Theme; tokens: TokenSet } {
   let id: string | undefined, kitFallback: string | undefined, mode: Theme | undefined;
   const seen = new Set<string>();
   while (n && !seen.has(n.id)) {
@@ -30,7 +30,7 @@ export function effectiveTheme(p: Project, n?: DesignNode): { id: string; mode: 
     if (n.kitId && n.instanceOf) kitFallback ??= n.themeId;
     else id ??= n.themeId;
     if (!mode && n.themeMode && n.themeMode !== 'inherit') mode = n.themeMode;
-    n = n.parentId ? p.nodes.find(parent => parent.id === n!.parentId) : undefined;
+    n = n.parentId ? (byId ? byId.get(n.parentId) : p.nodes.find(parent => parent.id === n!.parentId)) : undefined;
   }
   id ??= kitFallback ?? p.activeThemeId;
   mode ??= p.theme;
@@ -42,8 +42,8 @@ export function effectiveTheme(p: Project, n?: DesignNode): { id: string; mode: 
   return { id, mode, tokens };
 }
 
-export function resolveColor(p: Project, value: string, n?: DesignNode): string {
-  const colors = effectiveTheme(p, n).tokens.colors;
+export function resolveColor(p: Project, value: string, n?: DesignNode, byId?: Map<string, DesignNode>): string {
+  const colors = effectiveTheme(p, n, byId).tokens.colors;
   const seen = new Set<string>();
   while (value.startsWith('@')) {
     const key = value.slice(1);
@@ -123,13 +123,13 @@ export function validateDesignThemes(p: Project) {
   }
 }
 
-export function validateNodeThemeRefs(p: Project, n: DesignNode) {
+export function validateNodeThemeRefs(p: Project, n: DesignNode, byId?: Map<string, DesignNode>) {
   for (const key of ['fillToken', 'materialToken', 'typographyToken', 'radiusToken', 'themeId', 'kitId'] as const) if (n[key] !== undefined && !safeId(n[key])) throw new Error('Referencia de token o tema inválida');
   if (n.themeId && !Object.hasOwn(p.designThemes, n.themeId)) throw new Error('Referencia de tema inválida');
   if (n.themeMode !== undefined && !['inherit', 'light', 'dark'].includes(n.themeMode)) throw new Error('Modo de elemento inválido');
-  const set = effectiveTheme(p, n).tokens;
+  const set = effectiveTheme(p, n, byId).tokens;
   if (n.fillToken && !Object.hasOwn(set.colors, n.fillToken) && !Object.hasOwn(set.gradients, n.fillToken)) throw new Error('Referencia de relleno inválida');
   for (const [field, category] of [['materialToken', 'materials'], ['typographyToken', 'typography'], ['radiusToken', 'radii']] as const) if (n[field] && !Object.hasOwn(set[category], n[field]!)) throw new Error(`Referencia de ${category} inválida`);
-  for (const key of ['fill', 'color', 'stroke', 'gradientEnd'] as const) resolveColor(p, n[key], n);
-  for (const stop of n.gradientStops ?? []) resolveColor(p, stop.color, n);
+  for (const key of ['fill', 'color', 'stroke', 'gradientEnd'] as const) resolveColor(p, n[key], n, byId);
+  for (const stop of n.gradientStops ?? []) resolveColor(p, stop.color, n, byId);
 }

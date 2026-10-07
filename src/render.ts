@@ -49,7 +49,7 @@ export function element(p: Project, n: DesignNode, preview = false): HTMLElement
     el.style.setProperty('backdrop-filter', filter); el.style.setProperty('-webkit-backdrop-filter', filter);
   }
   if (n.type === 'image') {
-    if (n.image) { const img = document.createElement('img'); img.src = n.image; img.alt = n.name; img.draggable = false; Object.assign(img.style, { width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit', pointerEvents: 'none' }); el.append(img); }
+    if (n.image) { const img = document.createElement('img'); img.src = n.image; img.alt = n.name; img.draggable = false; img.decoding = 'async'; if (!preview) img.loading = 'lazy'; Object.assign(img.style, { width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit', pointerEvents: 'none' }); el.append(img); }
     else { const stub = document.createElement('div'); stub.textContent = '▧  Imagen'; Object.assign(stub.style, { height: '100%', display: 'grid', placeItems: 'center', color: color(p, '@muted', n), background: color(p, '@accent', n), borderRadius: 'inherit' }); el.append(stub); }
   }
   if (n.type === 'icon') {
