@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Material 3 tonal · original editable flat forms.\ncanvas 48 48\nbackground none\nrect spineA { at 9 24; size 4 29; corner 2; fill #49454F; }\nrect spineB { at 19 24; size 4 29; corner 2; fill #49454F; }\npath slantedBook { move 28 11; line 33 9; line 43 37; line 37 39; close; fill none; stroke #49454F 2.8; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <rect x=\"-2\" y=\"-14.5\" width=\"4\" height=\"29\" rx=\"2\" transform=\"translate(9 24)\" fill=\"#49454F\"/>\n  <rect x=\"-2\" y=\"-14.5\" width=\"4\" height=\"29\" rx=\"2\" transform=\"translate(19 24)\" fill=\"#49454F\"/>\n  <path d=\"M28 11 L33 9 L43 37 L37 39 Z\" fill=\"none\" stroke=\"#49454F\" stroke-width=\"2.8\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "material-v2-library.aru"
+}

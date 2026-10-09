@@ -1,0 +1,6 @@
+// Musaru Cyberpunk · original editable nocturnal frequency geometry.
+canvas 108 98
+background none
+path key { move 16 2; line 106 2; line 106 84; line 94 96; line 2 96; line 2 16; close; fill #D5FF48; }
+rect left { at 40 47; size 10 42; corner 0; fill #10160B; }
+path right { move 62 26; line 72 26; line 72 61; line 65 68; line 62 68; close; fill #10160B; }

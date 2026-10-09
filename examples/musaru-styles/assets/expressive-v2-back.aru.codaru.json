@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Expressive · original flat editable shapes.\ncanvas 48 48\nbackground none\npath back { move 25 11; line 12 24; line 25 37; move 12 24; line 38 24; fill none; stroke #2F211B 3.4; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M25 11 L12 24 L25 37 M12 24 L38 24\" fill=\"none\" stroke=\"#2F211B\" stroke-width=\"3.4\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "expressive-v2-back.aru"
+}

@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.\ncanvas 32 32\nbackground none\ngroup download {\npath descarga { move 16 4; line 16 21; move 10 15; line 16 21; line 22 15; move 5 24; line 5 28; line 27 28; line 27 24; fill none; stroke #1C1917 1.8; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" width=\"32\" height=\"32\">\n  <g>\n    <path d=\"M16 4 L16 21 M10 15 L16 21 L22 15 M5 24 L5 28 L27 28 L27 24\" fill=\"none\" stroke=\"#1C1917\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "download.aru"
+}

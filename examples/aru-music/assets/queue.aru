@@ -1,0 +1,6 @@
+// Musaru controls · original curves generated for this prototype
+canvas 48 48
+background none
+group queue {
+path listA { move 8 13; line 35 13; fill none; stroke #F3F0E4 3; cap round; join round }path listB { move 8 23; line 29 23; fill none; stroke #F3F0E4 3; cap round; join round }path listC { move 8 33; line 22 33; fill none; stroke #F3F0E4 3; cap round; join round }path play { move 32 25; line 43 32; line 32 39; close; fill #F3F0E4 }
+}

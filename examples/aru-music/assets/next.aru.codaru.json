@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru controls · original curves generated for this prototype\ncanvas 48 48\nbackground none\ngroup next {\npath arrow { move 13 11; quad 12 9 16 11; line 33 22; quad 36 24 33 26; line 16 37; quad 12 39 13 35; close; fill #F3F0E4 }path end { move 38 11; line 38 37; fill none; stroke #F3F0E4 3; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <g>\n    <path d=\"M13 11 Q12 9 16 11 L33 22 Q36 24 33 26 L16 37 Q12 39 13 35 Z\" fill=\"#F3F0E4\"/>\n    <path d=\"M38 11 L38 37\" fill=\"none\" stroke=\"#F3F0E4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "next.aru"
+}

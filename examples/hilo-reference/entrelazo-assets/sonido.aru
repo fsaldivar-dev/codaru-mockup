@@ -1,0 +1,10 @@
+// ENTRELAZO. Geometría de autor. No reproduce un símbolo tradicional.
+canvas 24 24
+background none
+group sonido {
+resource "{\"key\": \"entrelazo-sonido\", \"kind\": \"ui-icon\", \"brand\": \"ENTRELAZO\", \"purpose\": \"Escuchar: onda que cruza tres hebras.\", \"identity\": \"Cruce, continuidad y pausa. Interpretaci\u00f3n contempor\u00e1nea de autor para Amealco.\", \"reusable\": true, \"tags\": [\"entrelazo\", \"amealco\", \"original\"]}"
+path hebra_0 { move 5 6; line 5 18; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_1 { move 12 3; line 12 21; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_2 { move 19 7; line 19 17; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_3 { move 2 12; curve 8 3 15 21 22 12; fill none; stroke #283472 1.25; cap round; join round }
+}

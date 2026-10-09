@@ -1,0 +1,7 @@
+// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.
+canvas 32 32
+background none
+group previous {
+path triangulo { move 24 8; line 10 16; line 24 24; close; fill none; stroke #1C1917 1.8; cap round; join round }
+path tope { move 7 8; line 7 24; fill none; stroke #1C1917 1.8; cap round; join round }
+}

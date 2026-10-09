@@ -1,0 +1,9 @@
+// Musaru · Clay / relieve suave · original editable cover
+canvas 600 400
+background none
+gradient clay radial 0.3 0.2 0.9 { stop 0 #FCE4D6; stop 0.6 #D5A39B; stop 1 #A97670 }
+gradient inner radial 0.3 0.25 0.85 { stop 0 #F7F1DF; stop 1 #CEB9A6 }
+circle softDisc { at 300 205; radius 149; fill clay;  }
+circle inset { at 300 205; radius 107; fill inner;  }
+circle label { at 300 205; radius 32; fill clay;  }
+circle hole { at 300 205; radius 6; fill #8A655D;  }

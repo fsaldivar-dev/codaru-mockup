@@ -1,0 +1,6 @@
+// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.
+canvas 32 32
+background none
+group close {
+path cruz { move 8 8; line 24 24; move 24 8; line 8 24; fill none; stroke #1C1917 1.8; cap round; join round }
+}

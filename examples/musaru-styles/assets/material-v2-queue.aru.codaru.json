@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Material 3 tonal · original editable flat forms.\ncanvas 48 48\nbackground none\nrect rowA { at 19 12; size 26 3; corner 1.5; fill #49454F; }\nrect rowB { at 19 24; size 26 3; corner 1.5; fill #49454F; }\nrect rowC { at 16 36; size 20 3; corner 1.5; fill #49454F; }\npath queuePlay { move 35 29; line 43 35; quad 45 36 43 37; line 35 43; close; fill #6750A4; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <rect x=\"-13\" y=\"-1.5\" width=\"26\" height=\"3\" rx=\"1.5\" transform=\"translate(19 12)\" fill=\"#49454F\"/>\n  <rect x=\"-13\" y=\"-1.5\" width=\"26\" height=\"3\" rx=\"1.5\" transform=\"translate(19 24)\" fill=\"#49454F\"/>\n  <rect x=\"-10\" y=\"-1.5\" width=\"20\" height=\"3\" rx=\"1.5\" transform=\"translate(16 36)\" fill=\"#49454F\"/>\n  <path d=\"M35 29 L43 35 Q45 36 43 37 L35 43 Z\" fill=\"#6750A4\"/>\n</svg>",
+  "filename": "material-v2-queue.aru"
+}

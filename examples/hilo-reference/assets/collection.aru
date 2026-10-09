@@ -1,0 +1,9 @@
+// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.
+canvas 32 32
+background none
+group collection {
+rect funda { at 17 18; size 19 19; corner 3; fill none; stroke #1C1917 1.8 }
+circle disco { at 17 18; radius 5; fill none; stroke #1C1917 1.8 }
+circle agujero { at 17 18; radius 1; fill #1C1917; stroke #1C1917 1.8 }
+path respaldo { move 5 22; line 5 6; quad 5 4 7 4; line 23 4; fill none; stroke #1C1917 1.8; cap round; join round }
+}

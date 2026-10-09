@@ -1,0 +1,8 @@
+// HILO / ramas-playlist. Original geometry, contemporary interpretation; no attributed traditional meaning.
+canvas 32 32
+background none
+group ramas-playlist {
+resource "{\"key\": \"hilo-ramas-playlist\", \"kind\": \"ui-icon\", \"brand\": \"HILO\", \"purpose\": \"Abrir playlists personales; icono de trazo fino para 24 px.\", \"identity\": \"Fine contour, open space and folded ribbon gestures\", \"reusable\": true, \"tags\": [\"hilo\", \"jardin-de-voces\"]}"
+path pistas { move 5 7; curve 10 6 15 6 20 7; move 5 14; line 18 14; move 5 21; line 13 21; fill none; stroke #383631 1.65; cap round; join round }
+path nota { move 22 24; line 22 12; line 28 10; line 28 22; curve 28 27 21 27 22 24; move 22 15; line 28 13; fill none; stroke #383631 1.65; cap round; join round }
+}

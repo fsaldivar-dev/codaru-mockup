@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Memphis · original editable printed geometry.\ncanvas 342 280\nbackground none\ncircle ring { at 153 132; radius 102; fill none; stroke #20212A 3; }\npath zigzag { move 133 250; line 149 232; line 165 250; line 181 232; line 197 250; line 213 232; line 229 250; fill none; stroke #20212A 4; cap round; }\npath coralMark { move 232 18; line 248 34; fill none; stroke #F3868F 6; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 342 280\" width=\"342\" height=\"280\">\n  <circle r=\"102\" transform=\"translate(153 132)\" fill=\"none\" stroke=\"#20212A\" stroke-width=\"3\"/>\n  <path d=\"M133 250 L149 232 L165 250 L181 232 L197 250 L213 232 L229 250\" fill=\"none\" stroke=\"#20212A\" stroke-width=\"4\" stroke-linecap=\"round\"/>\n  <path d=\"M232 18 L248 34\" fill=\"none\" stroke=\"#F3868F\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "memphis-v2-pocket-overlay.aru"
+}

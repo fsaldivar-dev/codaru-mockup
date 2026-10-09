@@ -1,0 +1,15 @@
+// Musaru monochrome · original editable geometry.
+canvas 430 430
+background none
+rect night { at 215 215; size 430 430; corner 0; fill #161616; }
+circle moon { at 282 109; radius 56; fill #FAFAFA; }
+circle moonCut { at 302 90; radius 51; fill #161616; }
+path floor { move 0 364; line 198 257; line 430 350; line 430 430; line 0 430; close; fill #FAFAFA; }
+path floorLineA { move 0 403; line 198 278; line 430 390; fill none; stroke #161616 1.5; cap round; }
+path floorLineB { move 109 430; line 198 278; line 294 430; fill none; stroke #161616 1.5; cap round; }
+path portal { move 92 332; line 92 185; curve 92 65 244 65 244 185; line 244 289; fill none; stroke #FAFAFA 3; cap round; }
+path innerPortal { move 113 320; line 113 186; curve 113 96 223 96 223 186; line 223 280; fill none; stroke #FAFAFA 1.5; cap round; }
+path soundArc { move 292 235; curve 318 205 350 205 376 235; fill none; stroke #FAFAFA 2; cap round; }
+path echoArc { move 302 252; curve 322 232 346 232 366 252; fill none; stroke #FAFAFA 2; cap round; }
+rect pillar { at 298 325; size 30 121; corner 0; fill #161616; }
+circle farBeat { at 53 64; radius 3; fill #FAFAFA; }

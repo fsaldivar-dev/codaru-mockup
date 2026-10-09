@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru POP: bespoke control, original editable paths\ncanvas 48 48\nbackground none\npath left { move 9 8; line 19 7; line 18 40; line 8 41; close; fill #252036; }\npath right { move 29 9; line 39 8; line 38 41; line 28 40; close; fill #252036; }\npath glint { move 12 12; line 12 22; move 32 13; line 32 23; fill none; stroke #FFF9E8 2; cap round; }\n\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M9 8 L19 7 L18 40 L8 41 Z\" fill=\"#252036\"/>\n  <path d=\"M29 9 L39 8 L38 41 L28 40 Z\" fill=\"#252036\"/>\n  <path d=\"M12 12 L12 22 M32 13 L32 23\" fill=\"none\" stroke=\"#FFF9E8\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "pop-v2-pause.aru"
+}

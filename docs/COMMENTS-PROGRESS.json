@@ -1,0 +1,48 @@
+{
+  "plan": "Comentarios del layout",
+  "status": "complete",
+  "authorizedBy": "Petición humana: va, siguiente, continua con los comentarios en el layout",
+  "completedAt": "2026-10-09T15:28:58.821790+00:00",
+  "scope": [
+    "hilos anclados a objetos seleccionados",
+    "marcadores de lienzo",
+    "respuestas, resolver y reabrir",
+    "borradores y desmontaje",
+    "hooks para IA del IDE",
+    "API, CLI y panel independiente personalizable"
+  ],
+  "evidence": [
+    "181/181 pruebas de modelo: artifacts/comments-model-tests-final.log",
+    "37/37 UI con un trabajador: artifacts/comments-ui-final.log; dos timeouts de clic durante compilación concurrente se repitieron sin modificar las pruebas y pasaron",
+    "16/16 Rust: artifacts/comments-rust-test.log",
+    "package:build final y tarball local instalado en /tmp/codaru-comments-consumer; imports sin DOM, hook, persistencia y geometría verificados",
+    "Consumidor instalado revisado visualmente; borrador preservado al desmontar/remontar: artifacts/comments/clean-consumer.png",
+    "native:build final exit0: artifacts/comments-native-build-final.log",
+    "Tauri dev.codaru.comments-qa, socket propio /tmp/codaru-comments-qa/agent.sock; comentario publicado por UI, CLI comments y lotes resolve/reopen dry-run + apply",
+    "Puente del IDE nativo recibió comment.review; Codex observó el render y devolvió una propuesta real guardada como autor IA; sin cambio de geometría",
+    "Último build nativo reabierto, hilo preservado por exportación y restaurado con revisión/dry-run; pulsar marcador abre el hilo y selecciona entrelazo-mobile-enter",
+    "1212 nodos iguales al documento inicial: artifacts/comments/native-verification.json",
+    "Captura de respuesta final en hilo nativo: artifacts/comments/native-response-final.png"
+  ],
+  "corrections": [
+    "estilos con nonce CSP de Tauri",
+    "tokens del mismo sistema visual",
+    "overlay de marcadores transparente",
+    "los marcadores no inician gestos del lienzo",
+    "importar/cambiar proyecto limpia metadatos opcionales y borradores ajenos",
+    "revelar un hilo encuadra la pantalla y conserva selección",
+    "comando comments autorizado por bridge Rust"
+  ],
+  "package": {
+    "filename": "artifacts/comments/codaru-mockup-0.7.0.tgz",
+    "published": false,
+    "size": 465697,
+    "unpackedSize": 1559587,
+    "integrity": "sha512-0aYNawUbQsWINsBDIoAtL7y96P/wUfNpTa5eFh43aIUDoxVcDH2NOVg/CdgIbQeCVG0A5apAaJfRBrPFXYrZpA=="
+  },
+  "limitations": [
+    "La IA y persistencia las aporta el IDE; subscribeComments es un hook local sin daemon o modelo integrado.",
+    "Las propuestas no cambian geometría automáticamente; los cambios usan operaciones normales con revisión."
+  ],
+  "next": null
+}

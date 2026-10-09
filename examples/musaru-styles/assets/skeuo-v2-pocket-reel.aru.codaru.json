@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru handheld cassette · editable compact three-hole spool.\ncanvas 48 48\nbackground none\ncircle rim { at 24 24; radius 23; fill #BDB496; stroke #8C8268 0.7 }\ncircle center { at 24 24; radius 4; fill #343D30 }\ncircle hole0 { at 35.00 24.00; radius 4; fill #343D30 }\ncircle hole1 { at 18.50 33.53; radius 4; fill #343D30 }\ncircle hole2 { at 18.50 14.47; radius 4; fill #343D30 }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <circle r=\"23\" transform=\"translate(24 24)\" fill=\"#BDB496\" stroke=\"#8C8268\" stroke-width=\"0.7\"/>\n  <circle r=\"4\" transform=\"translate(24 24)\" fill=\"#343D30\"/>\n  <circle r=\"4\" transform=\"translate(35 24)\" fill=\"#343D30\"/>\n  <circle r=\"4\" transform=\"translate(18.5 33.53)\" fill=\"#343D30\"/>\n  <circle r=\"4\" transform=\"translate(18.5 14.47)\" fill=\"#343D30\"/>\n</svg>",
+  "filename": "skeuo-v2-pocket-reel.aru"
+}

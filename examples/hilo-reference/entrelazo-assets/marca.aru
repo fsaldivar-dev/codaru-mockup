@@ -1,0 +1,25 @@
+// ENTRELAZO. Geometría de autor. No reproduce un símbolo tradicional.
+canvas 2640 350
+background none
+group marca {
+resource "{\"key\": \"entrelazo-marca\", \"kind\": \"illustration\", \"brand\": \"ENTRELAZO\", \"purpose\": \"Firma vectorial original de nueve letras. Exhibici\u00f3n desde 240 px.\", \"identity\": \"Cruce, continuidad y pausa. Interpretaci\u00f3n contempor\u00e1nea de autor para Amealco.\", \"reusable\": true, \"tags\": [\"entrelazo\", \"amealco\", \"original\"]}"
+path letra_0_E_0 { move 210 20; line 20 20; line 20 320; line 210 320; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_0_E_1 { move 20 170; line 130 170; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_0_E_2 { move 160 170; line 200 170; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_1_N_0 { move 320 320; line 320 20; line 510 320; line 510 20; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_2_T_0 { move 610 20; line 830 20; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_2_T_1 { move 720 20; line 720 320; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_3_R_0 { move 920 320; line 920 20; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_3_R_1 { move 920 20; curve 1180 0 1170 190 920 180; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_3_R_2 { move 1020 180; curve 1070 210 1060 310 1140 320; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_4_E_0 { move 1410 20; line 1220 20; line 1220 320; line 1410 320; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_4_E_1 { move 1220 170; line 1330 170; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_4_E_2 { move 1360 170; line 1400 170; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_5_L_0 { move 1520 20; line 1520 320; line 1710 320; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_6_A_0 { move 1810 320; line 1910 20; line 2010 320; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_6_A_1 { move 1850 220; line 1900 220; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_6_A_2 { move 1930 220; line 1970 220; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_7_Z_0 { move 2110 20; line 2330 20; line 2110 320; line 2330 320; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_7_Z_1 { move 2180 170; line 2260 170; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_8_O_0 { move 2520 20; curve 2670 20 2670 320 2520 320; curve 2370 320 2370 20 2520 20; fill none; stroke #283472 7.199999999999999; cap round; join round }
+}

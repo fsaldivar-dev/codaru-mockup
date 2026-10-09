@@ -1,0 +1,38 @@
+// VENERO 02. Original contemporary geometry, not a traditional symbol.
+canvas 560 420
+background none
+group tension {
+resource "{\"kind\": \"illustration\", \"purpose\": \"Ilustraci\u00f3n vectorial original: estudio de tensi\u00f3n y pliegues, sin copiar motivos tradicionales. Desde 180 px.\", \"identity\": \"VENERO 02: tensi\u00f3n, pliegue y vac\u00edo. Interpretaci\u00f3n contempor\u00e1nea original.\", \"reusable\": true, \"tags\": [\"venero-02\", \"amealco\", \"original\"], \"key\": \"venero-02-tension\", \"brand\": \"VENERO\"}"
+path pliegue_0 { move 280 210; curve 252.882 122.581 99.2135 135.726 99.2135 100.726; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_1 { move 280 210; curve 256.313 108.932 122.085 118.665 122.085 83.6654; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_2 { move 280 210; curve 260.205 97.2509 148.03 104.064 148.03 69.0636; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_3 { move 280 210; curve 264.482 87.764 176.544 92.205 176.544 57.205; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_4 { move 280 210; curve 269.061 80.6563 207.072 83.3204 207.072 48.3204; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_5 { move 280 210; curve 273.853 76.0661 239.019 77.5827 239.019 42.5827; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_6 { move 280 210; curve 278.765 74.0828 271.764 75.1036 271.764 40.1036; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_7 { move 280 210; curve 283.7 74.745 304.669 75.9313 304.669 40.9313; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_8 { move 280 210; curve 288.564 78.0398 337.094 80.0497 337.094 45.0497; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_9 { move 280 210; curve 293.261 83.903 368.407 87.3787 368.407 52.3787; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_10 { move 280 210; curve 297.7 92.2205 398 97.7757 398 62.7757; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_11 { move 280 210; curve 301.794 102.831 425.296 111.038 425.296 76.0382; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_12 { move 280 210; curve 305.465 115.526 449.764 126.908 449.764 91.9081; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_13 { move 280 210; curve 308.639 130.061 470.928 145.077 470.928 110.077; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_14 { move 280 210; curve 311.256 146.152 488.376 165.19 488.376 130.19; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_15 { move 280 210; curve 313.265 163.485 501.767 186.857 501.767 151.857; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_16 { move 280 210; curve 314.626 181.724 510.843 209.655 510.843 174.655; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_17 { move 280 210; curve 315.314 200.513 515.425 233.141 515.425 198.141; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_18 { move 280 210; curve 315.314 219.487 515.425 256.859 515.425 221.859; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_19 { move 280 210; curve 314.626 238.276 510.843 280.345 510.843 245.345; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_20 { move 280 210; curve 313.265 256.515 501.767 303.143 501.767 268.143; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_21 { move 280 210; curve 311.256 273.848 488.376 324.81 488.376 289.81; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_22 { move 280 210; curve 308.639 289.939 470.928 344.923 470.928 309.923; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_23 { move 280 210; curve 305.465 304.474 449.764 363.092 449.764 328.092; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_24 { move 280 210; curve 301.794 317.169 425.296 378.962 425.296 343.962; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_25 { move 280 210; curve 297.7 327.779 398 392.224 398 357.224; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_26 { move 280 210; curve 293.261 336.097 368.407 402.621 368.407 367.621; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_27 { move 280 210; curve 288.564 341.96 337.094 409.95 337.094 374.95; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_28 { move 280 210; curve 283.7 345.255 304.669 414.069 304.669 379.069; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_29 { move 280 210; curve 278.765 345.917 271.764 414.896 271.764 379.896; fill none; stroke #BF193B 1.2; cap round; join round }
+path pliegue_30 { move 280 210; curve 273.853 343.934 239.019 412.417 239.019 377.417; fill none; stroke #BF193B 1.2; cap round; join round }
+path cinta { move 60 282; curve 205 359 154 51 341 59; curve 467 64 412 386 503 308; fill none; stroke #21191D 3; cap round; join round }
+}

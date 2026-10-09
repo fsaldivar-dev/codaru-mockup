@@ -1,0 +1,7 @@
+// Musaru Expressive · original flat editable shapes.
+canvas 48 48
+background none
+rect songOne { at 22 12; size 31 4; corner 2; fill #8D3D19; }
+rect songTwo { at 18 24; size 23 4; corner 2; fill #8D3D19; }
+path songNext { move 31 27; line 42 35; quad 44 37 41 39; line 31 44; close; fill #8D3D19; }
+rect songThree { at 14 36; size 15 4; corner 2; fill #8D3D19; }

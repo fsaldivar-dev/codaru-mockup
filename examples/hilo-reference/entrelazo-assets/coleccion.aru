@@ -1,0 +1,10 @@
+// ENTRELAZO. Geometría de autor. No reproduce un símbolo tradicional.
+canvas 24 24
+background none
+group coleccion {
+resource "{\"key\": \"entrelazo-coleccion\", \"kind\": \"ui-icon\", \"brand\": \"ENTRELAZO\", \"purpose\": \"Colecci\u00f3n: dos planos con pliegues abiertos.\", \"identity\": \"Cruce, continuidad y pausa. Interpretaci\u00f3n contempor\u00e1nea de autor para Amealco.\", \"reusable\": true, \"tags\": [\"entrelazo\", \"amealco\", \"original\"]}"
+path hebra_0 { move 4 3; line 17 3; line 17 17; line 4 17; close; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_1 { move 8 21; line 21 21; line 21 7; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_2 { move 8 7; line 13 7; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_3 { move 8 12; line 13 12; fill none; stroke #283472 1.25; cap round; join round }
+}

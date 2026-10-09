@@ -1,3 +1,14 @@
+import { createStylePackagePanel } from './style-package-view';
+import { createResourceLibraryPanel } from './resource-library-view';
+import { resourcePreviewRenderer } from './resource-preview';
+import { ContentCache } from './content-cache';
+import { applyAruAsset } from './aru';
+import { componentPropertyPanel, openComponentPropertyEditor } from './component-properties-view';
+import { implementationPanel, openImplementationEditor } from './implementations-view';
+import { setComponentImplementation } from './implementations';
+import type { ImplementationReference } from './contracts';
+import { getComponentProperties, setComponentProperty, removeComponentProperty, type ComponentPropertyValue } from './component-properties';
+import { getIconItems, isIconReference } from './icon-data';
 import { node, blank, clone, uid, validate, children, subtree, ancestors, topSelected, frameOf, absolute, isUnavailable, color, tokens, labels, containerKinds, layoutProject, updateNode, createComponent, instantiate, detach, duplicate, remove, group, ungroup, defineVariant, createVariant, switchVariant, renameVariantSet, variantAxes, variantLabel, variantSet, setDesignSystemNotes, setComponentDoc, docStale, designSystemStale, templateSignature, pagesOf, activePage, rootsOnPage, pageView, addPage, signature, rootIds, roleOf, renamePage, removePage, buildVersion, addVersion, removeVersion, applyVersion, unpackVersion, compareVersion, type Project, type DesignNode, type Kind, type Component, panelsOf, postureGroup } from './model';
 import { demo } from './demo';
 import { effectiveTheme, resolveNodeStyle } from './themes';
@@ -15,6 +26,7 @@ import type { EmbeddedOptions } from './embed';
 import { createEditor, getEditorSession, type CodaruEditor } from './editor-core';
 import { createViewDOM } from './view-dom';
 import { createBuildingFeedback } from './building';
+import { localizeProject, localizationIssues, resolveText, type LocalizationIssue } from './localization';
 
 export interface RuntimeOptions { app: HTMLDivElement; editor?: CodaruEditor; modular?: boolean; storageKey?: string | null; invoke?: EmbeddedOptions['invoke']; nativeAgent?: boolean; onDispose?: () => void; }
 export function createEditorRuntime(options: RuntimeOptions) {
@@ -42,12 +54,14 @@ let lastNotified = store.serialize();
 
 let tab: 'layers' | 'components' | 'system' = 'layers';
 let resourceSource: import('./resources').ResourceSource = 'iconify', resourceQuery = '', resourceHits: import('./resources').ResourceHit[] = [], resourceState: 'idle' | 'loading' | 'error' | 'done' = 'idle', resourceError = '', resourceSeed = 'codaru', resourceTimer: ReturnType<typeof setTimeout> | undefined, resourceAbort: AbortController | undefined, resourceModule: typeof import('./resources') | undefined;
-let libraryTab: 'local' | 'kits' | 'icons' | 'resources' = 'local', kitId: KitId = 'ios', kitVariant: KitVariant = 'default', kitSearch = '';
+let libraryTab: 'local' | 'kits' | 'icons' | 'resources' | 'styles' = 'local', kitId: KitId = 'ios', kitVariant: KitVariant = 'default', kitSearch = '';
 let kitModule: typeof import('./kits') | undefined;
 let iconModule: typeof import('./icon-library') | undefined, iconPack='mac', iconSearch='';
 let space = false;
 const MIN_ZOOM = .1, MAX_ZOOM = 8;
 let collapsed = new Set<string>(), expanded = new Set<string>();
+// Panel folding is view-local, never persisted into the shared design document.
+const foldedInspectorSections = new Set<string>();
 // In a page with many screens the list starts folded; a frame is open when the person opened it or selected inside it.
 const collapsedByDefault = (n: DesignNode) => n.type === 'frame' && n.parentId === null && rootsOnPage(p(), pageId()).filter(f => f.type === 'frame').length > 6;
 const isCollapsed = (n: DesignNode) => collapsedByDefault(n) ? !expanded.has(n.id) : collapsed.has(n.id); let saveTimer: ReturnType<typeof setTimeout>; let toastTimer: ReturnType<typeof setTimeout>;
@@ -55,13 +69,14 @@ let lastPoint = { x: 90, y: 120 }; let previewFrame: string | null = null; let p
 /** Result of the last design review; the heat map is drawn while it is on. */
 let review: { issues: LintIssue[]; heat: boolean } | null = null;
 const p = () => store.project;
+const previewProject = () => session.previewProject();
 const find = (id: string) => p().nodes.find(n => n.id === id);
 const app = options.app;
 const btn = (act: string, label: string, ico?: string, cls = '') => `<button class="${cls}" data-action="${act}" title="${esc(label)}" aria-label="${esc(label)}">${ico ? icon(ico) : ''}${ico ? '' : esc(label)}</button>`;
 app.innerHTML = `
   <header class="topbar"><div class="brand"><span class="brand-mark">${icon('frame', 21)}</span><strong>codaru<span> / mockup</span></strong><span class="alpha">01</span></div>
     <div class="project-title"><span class="breadcrumb">Proyectos</span><span class="slash">/</span><input id="project-name" aria-label="Nombre del proyecto" maxlength="200"/><span id="save-state" class="save-dot" title="Guardado local"></span></div>
-    <div class="top-actions"><button data-action="agent-help" class="agent-button">IA / CLI</button><button data-action="versions" class="themes-button">Versiones</button><button data-action="themes" class="themes-button">Temas</button>${btn('open', 'Abrir proyecto', 'folder', 'icon-button')}${btn('save', 'Guardar archivo · ⌘S', 'download', 'icon-button')}<span class="divider"></span><button data-action="preview" class="preview-button">${icon('play', 14)}<span>Presentar</span></button></div>
+    <div class="top-actions"><button data-action="agent-help" class="agent-button">IA / CLI</button>${options.modular?'':'<button data-action="comments" class="themes-button">Comentarios</button>'}<button data-action="versions" class="themes-button">Versiones</button><button data-action="themes" class="themes-button">Temas</button>${btn('open', 'Abrir proyecto', 'folder', 'icon-button')}${btn('save', 'Guardar archivo · ⌘S', 'download', 'icon-button')}<span class="divider"></span><button data-action="preview" class="preview-button">${icon('play', 14)}<span>Presentar</span></button></div>
   </header>
   <div class="workspace"><aside class="sidebar left-panel">
     <section class="project-panel"><div class="section-heading"><span>PÁGINAS</span><span class="count" id="frame-count" title="Pantallas en el documento">2</span><button class="icon-button tiny" data-action="add-page" aria-label="Nueva página" title="Nueva página">${icon('plus', 15)}</button></div><div id="pages" class="page-list"></div>
@@ -71,14 +86,14 @@ app.innerHTML = `
     <section class="insert-panel"><div class="section-heading"><span>INSERTAR</span><span class="hint-key">arrastrar</span></div><div class="insert-grid">${(['text','button','input','card','rect','image','vector'] as Kind[]).map(k => `<button draggable="true" data-insert="${k}" title="Insertar ${labels[k]}" aria-label="${labels[k]}">${icon(k, 17)}<span>${labels[k]}</span></button>`).join('')}</div></section>
     <div class="sidebar-footer"><span class="local-dot"></span> Guardado en tu dispositivo${btn('help', 'Atajos de teclado', 'help', 'icon-button tiny')}</div>
   </aside>
-  <main class="canvas-area"><div class="canvas-top"><div class="mode-switch"><button data-mode="design" class="active">Diseño</button><button data-mode="flow">Flujos <span id="flow-count">2</span></button><button data-mode="system">Sistema</button></div><div class="canvas-top-right"><span class="theme-switch"><select id="theme-select" class="theme-select" aria-label="Tema del diseño"></select><button data-action="theme" class="icon-button" aria-label="Cambiar entre claro y oscuro">${icon('sun',16)}</button></span><span class="divider"></span><button data-action="fit" class="fit-button" title="Ajustar pantallas · ⇧1">Ajustar</button></div></div>
+  <main class="canvas-area"><div class="canvas-top"><div class="mode-switch"><button data-mode="design" class="active">Diseño</button><button data-mode="flow">Flujos <span id="flow-count">2</span></button><button data-mode="system">Sistema</button></div><div class="canvas-top-right"><span class="locale-switch"><select id="locale-select" aria-label="Idioma de vista previa"></select><button data-action="locale-review" class="locale-count" hidden></button></span><span class="theme-switch"><select id="theme-select" class="theme-select" aria-label="Tema del diseño"></select><button data-action="theme" class="icon-button" aria-label="Cambiar entre claro y oscuro">${icon('sun',16)}</button></span><span class="divider"></span><button data-action="fit" class="fit-button" title="Ajustar pantallas · ⇧1">Ajustar</button></div></div>
     <div class="scope-bar"><nav id="scope-path" aria-label="Nivel de selección"></nav><span id="scope-hint"></span></div>
     <div id="stage" class="stage" tabindex="0" aria-label="Lienzo de diseño"><div id="world"><svg id="connections" class="connections"></svg><div id="artboards"></div><div id="selection-overlay"></div><div id="drawing-overlay"></div></div><div id="system-view" class="system-view" hidden></div><div id="empty-canvas" hidden><span class="empty-icon">${icon('frame',30)}</span><h2>Tu próxima idea empieza aquí.</h2><p>Crea una pantalla y dibuja sobre ella.</p><button class="primary" data-action="add-frame">Crear pantalla</button></div></div>
     <div class="canvas-bottom"><div id="selection-info">Listo para crear</div><div class="zoom-controls" role="group" aria-label="Zoom del lienzo"><span class="zoom-caption">Zoom</span>${btn('zoom-out','Alejar','minus','icon-button')}<input id="zoom-value" type="text" inputmode="decimal" aria-label="Porcentaje de zoom" value="70%" title="Zoom entre 10% y 800% · Enter para aplicar" autocomplete="off" spellcheck="false"/>${btn('zoom-in','Acercar','plus','icon-button')}<select id="zoom-options" aria-label="Opciones de zoom" title="Ajustar vista o elegir escala"><option value="">▾</option><option value="fit">Ajustar pantallas · ⇧1</option><option value="selection">Ajustar selección · ⇧2</option>${[25,50,100,200,400,800].map(value=>`<option value="${value}">${value}%</option>`).join('')}</select></div></div>
     <div class="toolbar" role="toolbar" aria-label="Herramientas de dibujo">${([['cursor','Seleccionar · V'],['frame','Pantalla · F'],['rect','Rectángulo · R'],['ellipse','Elipse · O'],['text','Texto · T'],['button','Botón · B'],['hand','Mover lienzo · Espacio']] as const).map(([k,l]) => `<button data-tool="${k}" class="${k === 'cursor' ? 'active' : ''}" title="${l}" aria-label="${l}">${icon(k,19)}</button>`).join('')}<span class="divider"></span>${btn('undo','Deshacer · ⌘Z','undo')}${btn('redo','Rehacer · ⇧⌘Z','redo')}</div>
   </main>
   <aside class="sidebar right-panel"><div class="inspector-title"><span>Propiedades</span><span class="inspector-badge">${icon('rect',13)}</span></div><div id="inspector"></div></aside></div>
-  <div id="toast" role="status"></div><div id="modal-root"></div><input type="file" id="import-file" accept=".json" hidden/><input type="file" id="image-file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,.svg" hidden/>`;
+  <div id="toast" role="status"></div><div id="modal-root"></div><input type="file" id="import-file" accept=".json" hidden/><input type="file" id="image-file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,.svg,.aru.codaru.json" hidden/>`;
 const dom = createViewDOM(app, !!options.modular);
 document = dom.document;
 const events = dom.events;
@@ -175,13 +190,20 @@ function render() {
   document.querySelector('[data-action="theme"]')!.innerHTML = icon(p().theme === 'light' ? 'sun' : 'moon', 16);
   (document.querySelector('[data-action="undo"]') as HTMLButtonElement).disabled = !store.undoStack.length;
   (document.querySelector('[data-action="redo"]') as HTMLButtonElement).disabled = !store.redoStack.length;
-  renderPages(); renderCanvas(); if (tab === 'layers') renderLayers(); renderInspector(); if (tab === 'components') renderComponents(); renderSystem();
+  renderPages(); renderCanvas(); renderLocaleControl(); if (tab === 'layers' || (options.modular && layersEl.isConnected)) renderLayers(); renderInspector(); if (tab === 'components' || (options.modular && byId('components').isConnected)) renderComponents(); renderSystem();
   const pending = p().components.filter(docStale).length + (designSystemStale(p()) ? 1 : 0), badge = byId('system-stale'); badge.hidden = !pending; badge.textContent = `${pending}`; badge.title = `${pending} ${pending === 1 ? 'ficha' : 'fichas'} por revisar`;
 }
 // Each top-level screen keeps its DOM between renders until something inside it changes; a theme, mode or page
-// switch invalidates everything. Image and SVG payloads count by length so the signature stays cheap.
+// switch invalidates everything. Exact content identities avoid hashing large payloads on every selection.
 const canvasCache = new Map<string, { sig: string; el: HTMLElement; label?: HTMLElement }>(); let canvasKey = '';
-const lightNode = (key: string, value: unknown) => (key === 'image' || key === 'svg') && typeof value === 'string' ? value.length : value;
+const payloads = new ContentCache<number>(); let nextPayload = 0;
+const lightNode = (key: string, value: unknown) => {
+  if ((key === 'image' || key === 'svg' || key === 'text') && typeof value === 'string' && value.length > 256) {
+    let id = payloads.get(value); if (id === undefined) { id = ++nextPayload; payloads.set(value, id); }
+    return { contentIdentity: id };
+  }
+  return value;
+};
 function rootSignatures() {
   const tops = rootIds(p()), groups = new Map<string, DesignNode[]>();
   for (const n of p().nodes) { const root = tops.get(n.id)!; const list = groups.get(root); if (list) list.push(n); else groups.set(root, [n]); }
@@ -193,17 +215,24 @@ function frameLabel(n: DesignNode) {
 }
 function renderCanvas() {
   const artboards = byId('artboards');
-  const key = `${p().activeThemeId}|${p().theme}|${pageId()}|${signature(p().designThemes)}|${signature(p().components.map(c => [c.id, c.template.length]))}`;
+  const projection = previewProject();
+  const key = `${editor.getLocalizationState().revision}|${p().activeThemeId}|${p().theme}|${pageId()}|${signature(p().designThemes)}|${signature(p().components.map(c => [c.id, c.template.length]))}`;
   if (key !== canvasKey) { canvasCache.clear(); canvasKey = key; }
   const ordered: Node[] = [], seen = new Set<string>(), sigs = rootSignatures();
   for (const n of rootsOnPage(p(), pageId())) {
     if (n.hidden) continue;
     const sig = sigs.get(n.id) ?? ''; let entry = canvasCache.get(n.id);
-    if (!entry || entry.sig !== sig) { entry = { sig, el: element(p(), n), label: n.type === 'frame' ? frameLabel(n) : undefined }; canvasCache.set(n.id, entry); }
+    if (!entry || entry.sig !== sig) { entry = { sig, el: element(projection, projection.nodes.find(x=>x.id===n.id)!), label: n.type === 'frame' ? frameLabel(n) : undefined }; canvasCache.set(n.id, entry); }
     seen.add(n.id); if (entry.label) ordered.push(entry.label); ordered.push(entry.el);
   }
   for (const id of [...canvasCache.keys()]) if (!seen.has(id)) canvasCache.delete(id);
-  artboards.replaceChildren(...ordered);
+  // Preserve connected, unchanged screens (including decoded images) and only move/replace affected nodes.
+  let cursor = artboards.firstChild;
+  for (const child of ordered) {
+    if (child === cursor) cursor = cursor.nextSibling;
+    else artboards.insertBefore(child, cursor);
+  }
+  while (cursor) { const next = cursor.nextSibling; cursor.remove(); cursor = next; }
   if (review?.heat) {
     // One soft spot per issue: red for errors, amber for warnings, blue for notes. Overlaps add up.
     const layer = document.createElement('div'); layer.className = 'heat-layer'; layer.setAttribute('aria-hidden', 'true');
@@ -222,12 +251,12 @@ function renderCanvas() {
 }
 // Redraw only the top-level screens that contain these nodes; the rest of the canvas keeps its DOM.
 function renderRoots(ids: string[]) {
-  const artboards = byId('artboards'), roots = new Set<string>();
+  const artboards = byId('artboards'), roots = new Set<string>(), projection = previewProject();
   for (const id of ids) { const chain = [find(id), ...ancestors(p(), id)].filter((n): n is DesignNode => !!n); roots.add((chain.at(-1) ?? chain[0])?.id ?? id); }
   for (const id of roots) {
     const n = find(id); const old = artboards.querySelector<HTMLElement>(`:scope > .design-node[data-node="${CSS.escape(id)}"]`);
     if (!n || n.hidden) { old?.remove(); continue; }
-    const fresh = element(p(), n);
+    const fresh = element(projection, projection.nodes.find(x=>x.id===n.id)!);
     if (old) old.replaceWith(fresh); else artboards.append(fresh);
     const label = artboards.querySelector<HTMLElement>(`:scope > .frame-label[data-node="${CSS.escape(id)}"]`); if (label) { label.style.left = `${n.x}px`; label.style.top = `${n.y - 30 / state.zoom}px`; }
     const entry = canvasCache.get(id); if (entry) { entry.el = fresh; entry.sig = ''; }
@@ -252,9 +281,9 @@ function renderCamera() {
   }
   renderSelection(); renderConnections();
 }
-function fit(selectionOnly = false) {
+function fit(selectionOnly = false, ids = state.selected) {
   if (gesture) return;
-  const nodes = (selectionOnly ? topSelected(p(), state.selected).map(find).filter((n): n is DesignNode => !!n) : rootsOnPage(p(), pageId())).filter(n => !n.hidden);
+  const nodes = (selectionOnly ? topSelected(p(), ids).map(find).filter((n): n is DesignNode => !!n) : rootsOnPage(p(), pageId())).filter(n => !n.hidden);
   if (!nodes.length) {
     if (selectionOnly) { toast('Selecciona un elemento para ajustar la vista.'); return; }
     state.pan = { x: 80, y: 60 }; state.zoom = 1; renderCamera(); return;
@@ -321,7 +350,7 @@ async function loadKits() {
 }
 function renderComponents() {
   const target=byId('components');
-  const tabs=`<div class="library-tabs"><button data-library="local" aria-pressed="${libraryTab==='local'}">Locales</button><button data-library="kits" aria-pressed="${libraryTab==='kits'}">Kits de diseño</button><button data-library="icons" aria-pressed="${libraryTab==='icons'}">Iconos</button><button data-library="resources" aria-pressed="${libraryTab==='resources'}">Recursos</button></div>`;
+  const tabs=`<div class="library-tabs"><button data-library="local" aria-pressed="${libraryTab==='local'}">Locales</button><button data-library="kits" aria-pressed="${libraryTab==='kits'}">Kits de diseño</button><button data-library="icons" aria-pressed="${libraryTab==='icons'}">Iconos</button><button data-library="resources" aria-pressed="${libraryTab==='resources'}">Recursos</button><button data-library="styles" aria-pressed="${libraryTab==='styles'}">Estilos</button></div>`;
   if(libraryTab==='local') {
     const comps=p().components, loose=comps.filter(c=>!c.set), sets=new Map<string,typeof comps>(); for(const c of comps.filter(c=>c.set)) sets.set(c.set!,[...(sets.get(c.set!)??[]),c]);
     const tile=(c:typeof comps[number],label:string)=>`<button class="component-tile" data-component="${c.id}" draggable="true"><span class="component-preview" data-tile-preview="${c.id}"></span><strong>${esc(label)}</strong><small>Arrastra al lienzo o haz clic</small></button>`;
@@ -329,12 +358,13 @@ function renderComponents() {
     for(const slot of target.querySelectorAll<HTMLElement>('[data-tile-preview]')){const c=comps.find(c=>c.id===slot.dataset.tilePreview);if(c)slot.append(componentPreview(c,170,70));}
     return;
   }
+  if(libraryTab==='styles'){ stylePanel.render(target,tabs); return; }
   if(libraryTab==='resources'){ renderResources(target, tabs); return; }
   if(libraryTab==='icons'){
     if(!iconModule){target.innerHTML=tabs+'<p class="empty-note">Cargando iconos…</p>';return;}
     const pack=iconModule.iconPacks.find(k=>k.id===iconPack)!;
     const items=iconModule.getIconItems(iconPack).filter(i=>`${i.id} ${i.name} ${i.tags.join(' ')}`.toLocaleLowerCase().includes(iconSearch.toLocaleLowerCase()));
-    target.innerHTML=tabs+`<label class="full-field"><span>Familia de iconos</span><select id="icon-pack" aria-label="Kit de iconos">${iconModule.iconPacks.map(k=>`<option value="${k.id}" ${k.id===iconPack?'selected':''}>${esc(k.name)}</option>`).join('')}</select></label><input id="icon-search" aria-label="Buscar iconos" placeholder="Buscar iconos…" value="${esc(iconSearch)}"/><p class="kit-description">${esc(pack.description)}</p><div class="component-caption">${items.length} iconos <span>Vectores</span></div><div class="icon-library-grid">${items.map(i=>`<button draggable="true" data-icon-item="${i.id}" title="${esc(i.name)}" aria-label="Insertar icono ${esc(i.name)}">${iconModule!.iconSVG(iconPack,i.id,'#c6b4ee',24)}<span>${esc(i.name)}</span></button>`).join('')||'<p class="empty-note">Sin coincidencias.</p>'}</div>`;
+    target.innerHTML=tabs+`<label class="full-field"><span>Familia de iconos</span><select id="icon-pack" aria-label="Kit de iconos">${iconModule.iconPacks.map(k=>`<option value="${k.id}" ${k.id===iconPack?'selected':''}>${esc(k.name)}</option>`).join('')}</select></label><input id="icon-search" aria-label="Buscar iconos" placeholder="Buscar iconos…" value="${esc(iconSearch)}"/><p class="kit-description">${esc(pack.description)}</p><div class="component-caption">${items.length} iconos <span>Vectores</span></div><div class="icon-library-grid">${items.map(i=>`<button draggable="true" data-icon-item="${i.id}" title="${esc(i.name)}" aria-label="Insertar icono ${esc(i.name)}">${iconModule!.iconSVG(iconPack,i.id,'currentColor',24)}<span>${esc(i.name)}</span></button>`).join('')||'<p class="empty-note">Sin coincidencias.</p>'}</div>`;
     return;
   }
   if(!kitModule){target.innerHTML=tabs+'<p class="empty-note">Cargando kits…</p>';return;}
@@ -350,8 +380,8 @@ function renderComponents() {
 async function insertKit(itemId: string,position?:{x:number;y:number}) {
   const kits=await loadKits();const current=find(state.selected[0]);
   let parent=position?parentAt(position.x,position.y):current&&(containerKinds.includes(current.type)?current:find(current.parentId!))||find(state.selectionScope!)||firstFrame();
-  // Repeated insertions go beside the selected instance, never inside a component.
-  while(parent&&(parent.instanceOf||parent.componentId||ancestors(p(),parent.id).some(n=>n.instanceOf||n.componentId)))parent=find(parent.parentId!);
+  // Repeated insertions go beside instances; masters can compose kit components.
+  while(parent&&(parent.instanceOf||ancestors(p(),parent.id).some(n=>n.instanceOf)))parent=find(parent.parentId!);
   if(parent&&isUnavailable(p(),parent)){toast('Desbloquea el contenedor para insertar elementos.');return;}
   const pos=parent?absolute(p(),parent):{x:0,y:0};let id='';
   const siblings=children(p(),parent?.id??null).filter(n=>n.kitId);const offset=(siblings.length%8)*20;
@@ -359,12 +389,23 @@ async function insertKit(itemId: string,position?:{x:number;y:number}) {
   if(id){select([id]);setTool('cursor');}
 }
 // Free resource bank: searches run only when the person types; results carry their license and credit.
+let resourceBank = false;
+const stylePanel = createStylePackagePanel({editor, save:saveFile, changed:()=>{renderComponents();persist();}, error:toast,
+  ...(nativeInvoke?{read:()=>nativeInvoke!<string|null>('plugin:codaru|open_document')}:{})});
+const drawingPanel = createResourceLibraryPanel({editor, project:p, refresh:renderComponents, save:saveFile, error:toast,
+  insert:async id=>{
+    const current=find(state.selected[0]); let parent=current && (containerKinds.includes(current.type)?current:find(current.parentId!)) || find(state.selectionScope!) || firstFrame();
+    while(parent && (parent.instanceOf || ancestors(p(),parent.id).some(n=>n.instanceOf)))parent=find(parent.parentId!);
+    await editor.insertResource(id,{parentId:parent?.id ?? null,x:32,y:32});
+  }});
 function renderResources(target: HTMLElement, tabs: string) {
+  if (!resourceBank) { drawingPanel.render(target, tabs); return; }
+  tabs += '<button class="wide-button" data-drawing-local>← Mis dibujos y biblioteca</button>';
   const sources = resourceModule?.resourceSources ?? [{ id: 'iconify' as const, name: 'Iconos e ilustraciones · Iconify', hint: '', terms: '' }];
   const source = sources.find(s => s.id === resourceSource) ?? sources[0];
   const tile = (h: import('./resources').ResourceHit) => `<button class="resource-tile ${h.kind}" draggable="true" data-resource="${esc(h.id)}" title="${esc(creditLine(h))}"><img src="${esc(h.thumb)}" alt="" loading="lazy" decoding="async"/><span>${esc(h.title)}</span>${h.kind === 'image' ? `<small>${esc(h.creator ?? '')}${h.creator ? ' · ' : ''}${esc(h.license)}</small>` : `<small>${esc(h.set ?? '')} · ${esc(h.license)}</small>`}</button>`;
   const body = resourceState === 'loading' ? '<p class="empty-note">Buscando…</p>' : resourceState === 'error' ? `<p class="empty-note resource-error">${esc(resourceError)}</p>` : resourceState === 'done' && !resourceHits.length ? '<p class="empty-note">Sin resultados. Prueba en inglés: «piano», «music», «teacher».</p>' : resourceState === 'idle' && resourceSource !== 'picsum' ? '<p class="empty-note">Escribe qué buscas. Los recursos se descargan solo cuando los pides; el editor no necesita conexión para lo demás.</p>' : `<div class="resource-grid ${resourceSource}">${resourceHits.map(tile).join('')}</div>`;
-  target.innerHTML = tabs + `<label class="full-field"><span>Fuente</span><select id="resource-source" aria-label="Fuente de recursos">${sources.map(s => `<option value="${s.id}" ${s.id === resourceSource ? 'selected' : ''}>${esc(s.name)}</option>`).join('')}</select></label>${resourceSource === 'picsum' ? `<div class="resource-row"><input id="resource-seed" aria-label="Semilla de fotos" placeholder="Semilla" value="${esc(resourceSeed)}"/><button class="text-button" data-action="resource-reseed">Otras fotos</button></div>` : `<input id="resource-search" aria-label="Buscar recursos" placeholder="${resourceSource === 'iconify' ? 'Buscar iconos e ilustraciones…' : 'Buscar fotos…'}" value="${esc(resourceQuery)}"/>`}<p class="kit-description">${esc(source.hint)}${source.terms ? ` <a href="${esc(source.terms)}" target="_blank" rel="noreferrer">Licencia</a>` : ''}</p>${body}<p class="field-note">Al insertar, el nombre de la capa guarda el crédito y la licencia. Las fotos CC BY y CC BY-SA requieren atribución en el producto final.</p>`;
+  target.innerHTML = tabs + `<button class="wide-button" data-action="image" title="Importa un archivo .aru.codaru.json preparado con codaru-aru">Importar recurso ARU</button><p class="field-note">Iconos e ilustraciones propios, con fuente editable y capas animables.</p><label class="full-field"><span>Fuente</span><select id="resource-source" aria-label="Fuente de recursos">${sources.map(s => `<option value="${s.id}" ${s.id === resourceSource ? 'selected' : ''}>${esc(s.name)}</option>`).join('')}</select></label>${resourceSource === 'picsum' ? `<div class="resource-row"><input id="resource-seed" aria-label="Semilla de fotos" placeholder="Semilla" value="${esc(resourceSeed)}"/><button class="text-button" data-action="resource-reseed">Otras fotos</button></div>` : `<input id="resource-search" aria-label="Buscar recursos" placeholder="${resourceSource === 'iconify' ? 'Buscar iconos e ilustraciones…' : 'Buscar fotos…'}" value="${esc(resourceQuery)}"/>`}<p class="kit-description">${esc(source.hint)}${source.terms ? ` <a href="${esc(source.terms)}" target="_blank" rel="noreferrer">Licencia</a>` : ''}</p>${body}<p class="field-note">Al insertar, el nombre de la capa guarda el crédito y la licencia. Las fotos CC BY y CC BY-SA requieren atribución en el producto final.</p>`;
 }
 function creditLine(h: import('./resources').ResourceHit) { return resourceModule ? resourceModule.creditName(h) : h.title; }
 async function loadResources() { if (!resourceModule) { resourceModule = await import('./resources'); if (resourceSource === 'picsum') resourceHits = resourceModule.picsumHits(resourceSeed); renderComponents(); } return resourceModule; }
@@ -418,7 +459,7 @@ async function insertLibraryIcon(name:string,position?:{x:number;y:number}){
   change(pr=>{id=library.insertIcon(pr,iconPack,name,parent?.id??null,position?position.x-pos.x:32,position?position.y-pos.y:32,24);},'Icono añadido · cambia color y tamaño en Propiedades');
   if(id){select([id]);setTool('cursor');}
 }
-function numField(label: string, key: keyof DesignNode, value: number, min = 0, max = 10000, step = 1) { return `<label class="number-field"><span>${label}</span><input type="number" aria-label="${esc(label)}" data-field="${key}" value="${Math.round(value*100)/100}" min="${min}" max="${max}" step="${step}"/></label>`; }
+function numField(label: string, key: keyof DesignNode, value: number, min = 0, max = 10000, step = 1) { return `<label class="number-field"><span title="${esc(label)}">${label}</span><input type="number" aria-label="${esc(label)}" data-field="${key}" value="${Math.round(value*100)/100}" min="${min}" max="${max}" step="${step}"/></label>`; }
 function selectField(label: string, field: keyof DesignNode, value: string, options: [string,string][]) { return `<label class="full-field"><span>${label}</span><select data-field="${field}" aria-label="${esc(label)}">${options.map(([v,l])=>`<option value="${v}" ${v===value?'selected':''}>${l}</option>`).join('')}</select></label>`; }
 function colorField(label: string, field: keyof DesignNode, value: string) {
   const n=state.selected.length===1?find(state.selected[0]):undefined; const resolved=color(p(),value,n); const keys=Object.keys(effectiveTheme(p(),n).tokens.colors);
@@ -483,20 +524,93 @@ function tokenPanel(n: DesignNode) {
   const choices=(values:Record<string,unknown>):[string,string][]=>[['','Sin vínculo'],...Object.entries(values).map(([id,value]):[string,string]=>[id,typeof value==='object'&&value?(value as {name:string}).name:id])];
   return `${n.type==='frame'?`${n.parentId===null?`<section class="inspector-section"><div class="section-heading"><span>PÁGINA Y ROL</span></div>${pagesOf(p()).length>1?selectField('Página de esta pantalla','page',n.page??pagesOf(p())[0].id,pagesOf(p()).map(page=>[page.id,page.name] as [string,string])):''}${selectField('Rol del marco','role',n.role??'',[['',`Automático · ${roleOf(p(),n)==='screen'?'pantalla':'anotación'}`],['screen','Pantalla del producto'],['annotation','Anotación o rótulo'],['library','Biblioteca de componentes']])}<p class="field-note">Las pantallas pasan la revisión completa (zonas táctiles, área segura, pliegue); las anotaciones y bibliotecas no.</p></section>`:''}${devicePanel(n)}<section class="inspector-section"><div class="section-heading"><span>TEMA DE ESTA PANTALLA</span></div>${selectField('Tema de pantalla','themeId',n.themeId??'',[['','Heredar documento'],...Object.values(p().designThemes).map(t=>[t.id,t.name] as [string,string])])}${selectField('Modo de pantalla','themeMode',n.themeMode??'inherit',[['inherit','Heredar documento'],['light','Claro'],['dark','Oscuro']])}<label class="full-field"><span>Estilo de plataforma</span><select aria-label="Aplicar tema de kit" id="frame-kit"><option value="">Elegir kit…</option>${[['ios','iOS'],['macos','macOS'],['android','Android'],['linux','Linux / GNOME'],['web','Web']].map(([id,name])=>`<option value="${id}">${name}</option>`).join('')}</select></label></section>`:''}<section class="inspector-section"><div class="section-heading"><span>TOKENS</span><button class="text-button" data-action="themes">Editar</button></div><p class="field-note">${esc(p().designThemes[theme.id].name)} · ${theme.mode==='light'?'Claro':'Oscuro'}</p>${selectField('Token de relleno','fillToken',n.fillToken??'',choices({...s.colors,...s.gradients}))}${selectField('Material','materialToken',n.materialToken??'',choices(s.materials))}${selectField('Token de radio','radiusToken',n.radiusToken??'',choices(s.radii))}${['text','button','input'].includes(n.type)?selectField('Token de tipografía','typographyToken',n.typographyToken??'',choices(s.typography)):''}<p class="field-note">Un vínculo controla esa propiedad. «Sin vínculo» permite usar el valor manual.</p></section>`;
 }
+function assetPanel() {
+  if (!state.selected.length) return '';
+  return `<section class="inspector-section"><div class="section-heading"><span>EXPORTAR ASSET</span></div><p class="field-note">Elemento o selección, con fondo transparente y sus hijos.</p><div class="button-row"><button data-action="asset-svg">SVG</button><button data-action="asset-png">PNG · 1×</button></div><button class="wide-button" data-action="asset-ios">iOS · .imageset</button><button class="wide-button" data-action="asset-android">Android · drawable</button><button class="wide-button" data-action="asset-all">iOS + Android · ZIP</button><p class="field-note">El ZIP incluye el SVG fuente. Cristal: tinte y borde, sin desenfoque del fondo.</p></section>`;
+}
+let exportingAsset = false;
+async function saveAsset(format: 'svg' | 'png' | 'assets', platform: 'ios' | 'android' | 'all' = 'all') {
+  if (exportingAsset) { toast('Preparando el asset…'); return; }
+  const snapshot = clone(previewProject()), ids = [...state.selected]; exportingAsset = true;
+  try {
+    toast('Preparando el asset…');
+    const { exportAsset } = await import('./asset-export'); if (disposed) return;
+    const result = await exportAsset(snapshot, { ids, format, platform }); if (disposed) return;
+    await saveFile(result.content, result.filename, format === 'assets' ? 'zip' : format, result.encoding);
+  } finally { exportingAsset = false; }
+}
+function readLocalizationIssues(): LocalizationIssue[] {
+  const config = session.localization(), issues = localizationIssues(p(), config);
+  if (!config?.locale) return issues;
+  for (const n of p().nodes) {
+    if (!n.textKey || n.hidden || ancestors(p(),n.id).some(a=>a.hidden)) continue;
+    const text = byId('artboards').querySelector<HTMLElement>(`.design-node[data-node="${CSS.escape(n.id)}"] > .node-text`);
+    if (!text?.isConnected || !text.textContent) continue;
+    const box = text.getBoundingClientRect(); if (!box.width || !box.height) continue;
+    const range = ownerDocument.createRange(); range.selectNodeContents(text);
+    const ink = range.getBoundingClientRect(), tolerance = Math.max(.6, state.zoom * .6);
+    for (let i = issues.length - 1; i >= 0; i--) if (issues[i].node === n.id && issues[i].kind === 'overflow') issues.splice(i,1);
+    if (ink.left < box.left - tolerance || ink.right > box.right + tolerance || ink.top < box.top - tolerance || ink.bottom > box.bottom + tolerance) issues.push({ kind:'overflow',node:n.id,key:n.textKey,locale:config.locale,measurement:'dom',message:'El texto se recorta en esta capa. Amplía su tamaño o ajusta la tipografía.' });
+  }
+  return issues;
+}
+function renderLocaleControl() {
+  const info = editor.getLocalizationState(), select = byId<HTMLSelectElement>('locale-select');
+  select.innerHTML = `<option value="">Texto de origen</option>${info.locales.map(locale=>`<option value="${esc(locale.id)}">${esc(locale.label)}</option>`).join('')}`;
+  select.value = info.locale ?? ''; select.disabled = !info.locales.length;
+  select.title = info.locales.length ? 'Idioma del mockup' : 'El IDE proporciona el catálogo de traducciones';
+  const count = readLocalizationIssues().length, button = document.querySelector<HTMLButtonElement>('[data-action="locale-review"]')!;
+  button.hidden = !count; button.textContent = `${count} ${count===1?'aviso':'avisos'}`; button.setAttribute('aria-label',`Revisar localización: ${count} avisos`);
+}
+function localizationPanel(n: DesignNode) {
+  const info=editor.getLocalizationState(), config=session.localization(), value=resolveText(n,config), issues=readLocalizationIssues().filter(i=>i.node===n.id);
+  const keys=[...new Set(Object.values(config?.messages??{}).flatMap(entries=>Object.keys(entries)))].sort().slice(0,200);
+  return `<section class="inspector-section localization-panel"><div class="section-heading"><span>LOCALIZACIÓN</span></div><label class="full-field"><span>Clave del proyecto</span><input aria-label="Clave de localización" data-text-key list="localization-keys" maxlength="200" placeholder="onboarding.start" value="${esc(n.textKey??'')}"/></label><datalist id="localization-keys">${keys.map(key=>`<option value="${esc(key)}"></option>`).join('')}</datalist>${n.textKey?`<p class="field-note">Vista previa · ${esc(info.locale??'texto de origen')}${value.source==='fallback'?' · idioma de respaldo':''}</p><div class="localized-text">${esc(value.text)}</div>${issues.map(issue=>`<p class="localization-warning" data-localization-issue="${issue.kind}">${esc(issue.message)}</p>`).join('')}${info.canRequestTranslation?'<button class="wide-button" data-action="translation-request">Abrir clave en el IDE</button>':''}`:'<p class="field-note">Vincula una clave para previsualizar sus traducciones. El texto de origen se conserva.</p>'}${!info.locales.length?'<p class="field-note">El IDE debe proporcionar el catálogo de idiomas.</p>':''}</section>`;
+}
+function showLocalizationIssues() {
+  const issues=readLocalizationIssues();
+  byId('modal-root').innerHTML=`<div class="modal-backdrop"><section class="dialog" role="dialog" aria-modal="true" aria-label="Revisión de localización"><button class="dialog-close icon-button" data-action="close-preview" aria-label="Cerrar">×</button><h2>Revisión de localización</h2><p>${issues.length} avisos · ${esc(editor.getLocalizationState().locale??'texto de origen')}</p><div class="localization-issues">${issues.slice(0,100).map(issue=>`<button class="wide-button" data-locale-issue="${esc(issue.node)}"><strong>${esc(find(issue.node)?.name??issue.node)}</strong><span>${esc(issue.key)}</span><small>${esc(issue.message)}</small></button>`).join('')||'<p>Sin avisos para este idioma.</p>'}</div>${issues.length>100?'<p>Se muestran los primeros 100 avisos.</p>':''}</section></div>`;
+}
+function prepareInspectorSections() {
+  let index = 0;
+  for (const section of inspector.querySelectorAll<HTMLElement>('.inspector-section')) {
+    const heading = section.querySelector<HTMLElement>(':scope > .section-heading');
+    const label = heading?.querySelector('span');
+    const title = label?.textContent?.trim();
+    if (!heading || !title) continue;
+    section.dataset.panelSection = title;
+    section.setAttribute('part', 'inspector-section');
+    heading.setAttribute('part', 'section-heading');
+    label!.id = `codaru-inspector-heading-${++index}`;
+    const toggle = ownerDocument.createElement('button');
+    toggle.className = 'icon-button tiny section-toggle';
+    toggle.dataset.sectionToggle = title;
+    toggle.setAttribute('part', 'section-toggle');
+    const folded = foldedInspectorSections.has(title);
+    section.classList.toggle('is-collapsed', folded);
+    toggle.setAttribute('aria-expanded', String(!folded));
+    toggle.setAttribute('aria-label', `${folded ? 'Expandir' : 'Contraer'} sección`);
+    toggle.setAttribute('aria-describedby', label!.id);
+    toggle.title = title;
+    toggle.innerHTML = icon('chevron', 12);
+    heading.append(toggle);
+  }
+}
 function renderInspector() {
   const n = state.selected.length === 1 ? find(state.selected[0]) : undefined;
   if (!n) {
-    inspector.innerHTML = `<section class="inspector-section selection-summary"><span class="summary-icon">${icon(state.selected.length?'layers':'frame',24)}</span><h3>${state.selected.length?state.selected.length+' elementos':'Un espacio para crear'}</h3><p>${state.selected.length?'Alinea, agrupa o convierte tu selección en un componente.':'Selecciona un elemento para editarlo, o arrastra una herramienta al lienzo.'}</p>${state.selected.length?`<div class="button-row"><button data-action="group">Agrupar</button><button data-action="duplicate">Duplicar</button></div><div class="button-row"><button data-action="align-left">Alinear izquierda</button><button data-action="align-center">Centrar</button></div><button class="wide-button" data-action="distribute">Distribuir horizontalmente</button>`:''}</section>${reviewPanel()}${themePanel()}<section class="inspector-section"><div class="section-heading"><span>DOCUMENTO</span></div><button class="wide-button" data-action="save">${icon('download',16)} Guardar proyecto .json</button><button class="wide-button" data-action="export-html">${icon('play',16)} Exportar prototipo HTML</button><button class="wide-button" data-action="new">${icon('plus',16)} Nuevo proyecto</button><button class="wide-button" data-action="open">${icon('folder',16)} Importar de Figma o abrir .json</button><button class="wide-button" data-action="example">${icon('grid',16)} Abrir ejemplo Forma</button><button class="wide-button" data-action="example-devices">${icon('frame',16)} Ejemplo iOS, Android y plegables</button></section><div class="inspector-tip">Dibuja primero.<br/><strong>Dale forma a tu idea.</strong></div>`; return;
+    inspector.innerHTML = `<section class="inspector-section selection-summary"><span class="summary-icon">${icon(state.selected.length?'layers':'frame',24)}</span><h3>${state.selected.length?state.selected.length+' elementos':'Un espacio para crear'}</h3><p>${state.selected.length?'Alinea, agrupa o convierte tu selección en un componente.':'Selecciona un elemento para editarlo, o arrastra una herramienta al lienzo.'}</p>${state.selected.length?`<div class="button-row"><button data-action="group">Agrupar</button><button data-action="duplicate">Duplicar</button></div><div class="button-row"><button data-action="align-left">Alinear izquierda</button><button data-action="align-center">Centrar</button></div><button class="wide-button" data-action="distribute">Distribuir horizontalmente</button>`:''}</section>${assetPanel()}${reviewPanel()}${themePanel()}<section class="inspector-section"><div class="section-heading"><span>DOCUMENTO</span></div><button class="wide-button" data-action="save">${icon('download',16)} Guardar proyecto .json</button><button class="wide-button" data-action="export-html">${icon('play',16)} Exportar prototipo HTML</button><button class="wide-button" data-action="new">${icon('plus',16)} Nuevo proyecto</button><button class="wide-button" data-action="open">${icon('folder',16)} Importar de Figma o abrir .json</button><button class="wide-button" data-action="example">${icon('grid',16)} Abrir ejemplo Forma</button><button class="wide-button" data-action="example-devices">${icon('frame',16)} Ejemplo iOS, Android y plegables</button></section><div class="inspector-tip">Dibuja primero.<br/><strong>Dale forma a tu idea.</strong></div>`; prepareInspectorSections(); return;
   }
   // Linked tokens win over the raw fields, so the inspector shows what is actually drawn.
   const r = { ...n, ...resolveNodeStyle(p(), n) };
   const isText = ['text','button','input'].includes(n.type); const isContainer = containerKinds.includes(n.type);
   inspector.innerHTML = `
     <section class="inspector-section node-heading"><span class="node-type ${n.componentId||n.instanceOf?'purple':''}">${icon(n.componentId||n.instanceOf?'component':n.type,16)} ${n.componentId?'Componente maestro':n.instanceOf?'Instancia':labels[n.type]}</span><input class="node-name" aria-label="Nombre del elemento" data-field="name" value="${esc(n.name)}"/>${isUnavailable(p(),n)?'<p class="locked-note">Este elemento está bloqueado u oculto.</p>':''}${canEnter(n)?'<button class="wide-button enter-scope" data-action="enter-scope" title="Doble clic o Enter">Entrar y seleccionar hijos ↵</button>':''}</section>
-    <fieldset ${isUnavailable(p(),n)?'disabled':''}>${tokenPanel(n)}
+    <fieldset ${isUnavailable(p(),n)?'disabled':''}>
     <section class="inspector-section"><div class="section-heading"><span>POSICIÓN Y TAMAÑO</span><button class="icon-button tiny" data-action="duplicate" aria-label="Duplicar selección">${icon('plus',14)}</button></div><div class="field-grid">${numField('X','x',n.x,-100000,100000)}${numField('Y','y',n.y,-100000,100000)}${numField('W','width',n.width,1)}${numField('H','height',n.height,1)}</div><div class="button-row compact"><button data-action="align-left" title="Alinear a la izquierda">${icon('align',16)}</button><button data-action="align-center" title="Centrar horizontalmente">${icon('center',16)}</button><button data-action="front">Al frente</button><button data-action="back">Al fondo</button></div></section>
+    </fieldset>${componentPropertyPanel(p(),n)}<fieldset ${isUnavailable(p(),n)?'disabled':''}>
     ${n.type==='icon'?`<section class="inspector-section"><div class="section-heading"><span>ICONO VECTORIAL</span></div><p class="field-note">${esc(n.iconPack)} / ${esc(n.iconName)}</p>${colorField('Color del icono','color',n.color)}<p class="field-note">Escala sin perder nitidez. El color admite tokens como @primary.</p></section>`:''}
-    ${isText?`<section class="inspector-section"><div class="section-heading"><span>TEXTO</span></div><textarea aria-label="Contenido del texto" data-field="text" rows="2">${esc(n.text)}</textarea>${selectField('Fuente','fontFamily',r.fontFamily,[['system','Sistema / Sans'],['serif','Georgia / Serif'],['mono','Monoespaciada']])}<div class="field-grid">${numField('Tamaño','fontSize',r.fontSize,1,200)}${numField('Peso','fontWeight',r.fontWeight,100,900,50)}${numField('Línea','lineHeight',r.lineHeight,.5,4,.1)}${selectField('Alinear','textAlign',n.textAlign,[['left','Izquierda'],['center','Centro'],['right','Derecha']])}</div>${n.typographyToken?`<p class="field-note" data-linked="typography">Tipografía vinculada al token «${esc(n.typographyToken)}». Si cambias un valor aquí, el texto se desvincula.</p>`:''}${colorField('Texto','color',n.color)}</section>`:''}
+    ${isText?`<section class="inspector-section"><div class="section-heading"><span>TEXTO DE ORIGEN</span></div><textarea aria-label="Contenido del texto" data-field="text" rows="2">${esc(n.text)}</textarea>${selectField('Fuente','fontFamily',r.fontFamily,[['system','Sistema / Sans'],['serif','Georgia / Serif'],['mono','Monoespaciada']])}<div class="field-grid">${numField('Tamaño','fontSize',r.fontSize,1,200)}${numField('Peso','fontWeight',r.fontWeight,100,900,50)}${numField('Línea','lineHeight',r.lineHeight,.5,4,.1)}${selectField('Alinear','textAlign',n.textAlign,[['left','Izquierda'],['center','Centro'],['right','Derecha']])}</div>${n.typographyToken?`<p class="field-note" data-linked="typography">Tipografía vinculada al token «${esc(n.typographyToken)}». Si cambias un valor aquí, el texto se desvincula.</p>`:''}${colorField('Texto','color',n.color)}</section>`:''}
     ${isContainer?`<section class="inspector-section"><div class="section-heading"><span>DISTRIBUCIÓN</span></div>${selectField('Organización','layout',n.layout,[['free','Libre'],['vertical','Columna ↕'],['horizontal','Fila ↔']])}${n.layout!=='free'?`<div class="field-grid">${n.paddingSides?'':numField('Padding','padding',n.padding,0,300)}${numField('Espacio','gap',n.gap,0,300)}</div>
       ${n.paddingSides?`<div class="stops-heading">Padding por lado <span>sup. · der. · inf. · izq.</span></div><div class="field-grid safe-fields">${(['top','right','bottom','left'] as const).map(edge=>`<label class="number-field"><span>${{top:'↑',right:'→',bottom:'↓',left:'←'}[edge]}</span><input type="number" aria-label="Padding ${{top:'superior',right:'derecho',bottom:'inferior',left:'izquierdo'}[edge]}" data-pad="${edge}" value="${n.paddingSides![edge]}" min="0" max="2000" step="1"/></label>`).join('')}</div>`:''}
       <button class="text-button" data-action="padding-sides">${n.paddingSides?'Usar un solo padding':'Padding por lado'}</button>
@@ -509,10 +623,12 @@ function renderInspector() {
     <section class="inspector-section"><div class="section-heading"><span>RELLENO</span></div>${fillFields(n)}<div class="field-grid">${numField('Opacidad','opacity',n.opacity,0,100)}${numField('Radio','radius',r.radius,0,500)}</div><details class="corner-details"><summary>Radios por esquina</summary><div class="field-grid">${numField('Sup. der.','radiusTR',n.radiusTR??n.radius,0,500)}${numField('Inf. der.','radiusBR',n.radiusBR??n.radius,0,500)}${numField('Inf. izq.','radiusBL',n.radiusBL??n.radius,0,500)}</div></details></section>
     <section class="inspector-section"><div class="section-heading"><span>BORDE Y EFECTOS</span></div>${colorField('Borde','stroke',n.stroke)}<div class="field-grid">${numField('Grosor','strokeWidth',n.strokeWidth,0,50)}<label class="check-field"><input type="checkbox" data-field="shadow" ${n.shadow?'checked':''}/> Sombra</label></div></section>
     ${n.type==='image'?'<section class="inspector-section"><button class="wide-button" data-action="image">Cambiar imagen local</button></section>':''}
+    ${tokenPanel(n)}${isText?localizationPanel(n):''}
     <section class="inspector-section"><div class="section-heading"><span>AL HACER CLIC</span>${icon('link',14)}</div><select data-field="targetId" aria-label="Navegar a pantalla"><option value="">Sin navegación</option>${pagesOf(p()).map(page=>{const frames=rootsOnPage(p(),page.id).filter(f=>f.type==='frame'&&f.id!==frameOf(p(),n.id)?.id);return frames.length?`<optgroup label="${esc(page.name)}">${frames.map(f=>`<option value="${f.id}" ${n.targetId===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}</optgroup>`:'';}).join('')}</select>${n.targetId&&!onPage(n.targetId)?`<p class="field-note">La pantalla de destino está en otra página.</p>`:''}${n.targetId?`<label class="full-field"><span>Transición</span><select data-transition="type" aria-label="Transición">${[['','Sin animación'],...transitionTypes.map(t=>[t,transitionLabels[t]])].map(([v,l])=>`<option value="${v}" ${(n.transition?.type??'')===v?'selected':''}>${l}</option>`).join('')}</select></label>${n.transition?`<div class="field-grid"><label class="number-field"><span>Duración</span><input type="number" aria-label="Duración de la transición" data-transition="duration" value="${n.transition.duration}" min="0" max="5000" step="50"/></label><label class="full-field"><span>Curva</span><select data-transition="easing" aria-label="Curva de la transición">${easings.map(e=>`<option value="${e}" ${n.transition!.easing===e?'selected':''}>${easingLabels[e]}</option>`).join('')}</select></label></div>`:''}`:''}<p class="field-note">Prueba la conexión en Presentar.</p></section>
-    <section class="inspector-section"><div class="section-heading"><span>ANIMACIÓN</span>${icon('play',14)}</div><p class="field-note">${n.animations?.length?`${n.animations.length} ${n.animations.length===1?'animación':'animaciones'}: ${esc(n.animations.map(a=>a.name).join(', '))}.`:'Sin animaciones.'}${n.svg?` ${vectorLayers(n.svg).length} capas animables.`:''} Se reproducen en Presentar.</p><button class="wide-button" data-action="animator">${icon('spark',16)} Abrir animador</button>${n.type==='vector'?'<button class="wide-button" data-action="image">Cambiar SVG</button>':''}</section>
+    <section class="inspector-section"><div class="section-heading"><span>ANIMACIÓN</span>${icon('play',14)}</div><p class="field-note">${n.animations?.length?`${n.animations.length} ${n.animations.length===1?'animación':'animaciones'}: ${esc(n.animations.map(a=>a.name).join(', '))}.`:'Sin animaciones.'}${n.svg?` ${vectorLayers(n.svg).length} capas animables.`:''} Se reproducen en Presentar.</p><button class="wide-button" data-action="animator">${icon('spark',16)} Abrir animador</button>${n.type==='vector'?'<button class="wide-button" data-action="image">Cambiar ilustración</button>':''}${n.aruSource?`<p class="field-note">ARU · ${esc(n.aruSource.filename)}</p><button class="wide-button" data-action="edit-aru" ${session.canOpenIllustration()?'':'disabled'}>Editar ilustración en el IDE ↗</button><button class="wide-button" data-action="export-aru">Exportar fuente ARU</button>`:''}</section>
     ${variantPanel(n)}
-    <section class="inspector-section"><div class="button-row">${n.type!=='frame'&&!n.componentId&&!n.instanceOf?'<button class="component-button" data-action="make-component">◇ Crear componente</button>':''}${n.instanceOf?'<button data-action="master">Editar maestro</button><button data-action="detach">Desvincular</button>':''}${n.componentId?'<button class="component-button" data-action="insert-instance">◇ Insertar instancia</button>':''}${n.type==='group'&&!n.componentId&&!n.instanceOf?'<button data-action="ungroup">Desagrupar</button>':''}</div>${n.type==='frame'?'<button class="wide-button" data-action="export-svg">Exportar pantalla SVG</button>':''}</section></fieldset>${themePanel()}`;
+    <section class="inspector-section"><div class="button-row">${n.type!=='frame'&&!n.componentId&&!n.instanceOf?'<button class="component-button" data-action="make-component">◇ Crear componente</button>':''}${n.instanceOf?'<button data-action="master">Editar maestro</button><button data-action="detach">Desvincular</button>':''}${n.componentId?'<button class="component-button" data-action="insert-instance">◇ Insertar instancia</button>':''}${n.type==='group'&&!n.componentId&&!n.instanceOf?'<button data-action="ungroup">Desagrupar</button>':''}</div>${n.type==='frame'?'<button class="wide-button" data-action="export-svg">Exportar pantalla SVG</button>':''}</section></fieldset>${implementationPanel(p(),n,session.canOpenImplementation())}${assetPanel()}${themePanel()}`;
+  prepareInspectorSections();
 }
 
 function setTab(next: typeof tab) { tab=next; document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',(b as HTMLElement).dataset.tab===tab)); if(!options.modular){layersEl.hidden=tab!=='layers'; byId('components').hidden=tab!=='components'; byId('system-index').hidden=tab!=='system';} if(tab==='layers')renderLayers(); if(tab==='components')renderComponents(); }
@@ -528,7 +644,7 @@ function buildComponentPreview(c: Component, maxWidth: number, maxHeight: number
   const root = c.template[0], scale = Math.min(1, maxWidth / Math.max(1, root.width), maxHeight / Math.max(1, root.height));
   const wrap = document.createElement('div'); wrap.className = 'sys-preview'; wrap.style.width = `${Math.round(root.width * scale)}px`; wrap.style.height = `${Math.round(root.height * scale)}px`;
   const inner = document.createElement('div'); inner.style.cssText = `position:absolute;left:0;top:0;width:${root.width}px;height:${root.height}px;transform:scale(${scale});transform-origin:0 0;pointer-events:none`;
-  try { const proj = { ...p(), nodes: c.template }; inner.append(element(proj, root, true)); wrap.style.background = color(proj, '@background', root); } catch { inner.textContent = '·'; }
+  try { const proj = localizeProject({ ...p(), nodes: c.template }, session.localization()); inner.append(element(proj, proj.nodes[0], true)); wrap.style.background = color(proj, '@background', root); } catch { inner.textContent = '·'; }
   wrap.append(inner); return wrap;
 }
 const lines = (text: string | undefined) => (text ?? '').split('\n').map(l => l.trim()).filter(Boolean);
@@ -546,7 +662,7 @@ function guideline(line: string) { const ids: string[] = []; const text = line.r
 /** A layer of the document drawn small, for examples beside a guideline. */
 function nodePreview(id: string, maxWidth: number, maxHeight: number) {
   const n = find(id); if (!n) return undefined;
-  const ns = subtree(p(), id).map(k => clone(k)); ns[0].parentId = null; ns[0].x = 0; ns[0].y = 0;
+  const ns = subtree(previewProject(), id).map(k => clone(k)); ns[0].parentId = null; ns[0].x = 0; ns[0].y = 0;
   const scale = Math.min(1, maxWidth / Math.max(1, n.width), maxHeight / Math.max(1, n.height));
   const wrap = document.createElement('div'); wrap.className = 'sys-preview'; wrap.style.width = `${Math.round(n.width * scale)}px`; wrap.style.height = `${Math.round(n.height * scale)}px`;
   const inner = document.createElement('div'); inner.style.cssText = `position:absolute;left:0;top:0;width:${n.width}px;height:${n.height}px;transform:scale(${scale});transform-origin:0 0;pointer-events:none`;
@@ -661,8 +777,11 @@ function insert(kind: Kind, position?: {x:number;y:number}) {
   change(pr=>pr.nodes.push(n)); select([n.id]); setTool('cursor');
 }
 function insertComponent(componentId: string, position?: {x:number;y:number}) {
-  const n = find(state.selected[0]); let parent = position ? parentAt(position.x,position.y) : n ? (containerKinds.includes(n.type)?n:find(n.parentId!)) : firstFrame();
-  if (parent && (isUnavailable(p(),parent) || parent.instanceOf || parent.componentId || ancestors(p(),parent.id).some(n=>n.instanceOf||n.componentId))) { toast('Inserta la instancia en una pantalla o grupo independiente.'); return; }
+  const n = find(state.selected[0]), scope = find(state.selectionScope!);
+  let parent = position ? parentAt(position.x,position.y) : n ? (containerKinds.includes(n.type)?n:find(n.parentId!)) : scope || firstFrame();
+  if (position && scope && containerKinds.includes(scope.type)) { const pos = absolute(p(), scope); if (position.x >= pos.x && position.y >= pos.y && position.x <= pos.x + scope.width && position.y <= pos.y + scope.height) parent = scope; }
+  if (parent && isUnavailable(p(),parent)) { toast('Desbloquea el contenedor para insertar elementos.'); return; }
+  if (parent && (parent.instanceOf || ancestors(p(),parent.id).some(n=>n.instanceOf))) { toast('Para añadir componentes aquí, edita el maestro o desvincula la instancia.'); return; }
   const pos = parent ? absolute(p(),parent) : {x:0,y:0}; let id = '';
   change(pr=>{id=instantiate(pr,componentId,parent?.id||null,position?position.x-pos.x:32,position?position.y-pos.y:32);}); if(id)select([id]);
 }
@@ -679,9 +798,9 @@ function distribute() {
   change(pr=>{let x=start;for(const n of ns){updateNode(pr,n.id,{x});x+=n.width+gap;}});
 }
 
-async function saveFile(content: string, filename: string, extension: string) {
-  if(nativeInvoke){const path=await nativeInvoke<string|null>('plugin:codaru|save_document',{content,filename,extension});if(path){toast('Archivo guardado');return true;}return false;}
-  const blob=new Blob([content],{type:extension==='json'?'application/json':extension==='svg'?'image/svg+xml':'text/html'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Archivo descargado');return true;
+async function saveFile(content: string, filename: string, extension: string, encoding: 'utf8' | 'base64' = 'utf8') {
+  if(nativeInvoke){const path=await nativeInvoke<string|null>('plugin:codaru|save_document',{content,filename,extension,...(encoding==='base64'?{encoding}:{})});if(path){toast('Archivo guardado');return true;}return false;}
+  const data=encoding==='base64'?Uint8Array.from(atob(content),c=>c.charCodeAt(0)):content;const blob=new Blob([data],{type:extension==='json'?'application/json':extension==='svg'?'image/svg+xml':extension==='png'?'image/png':extension==='zip'?'application/zip':extension==='aru'?'text/plain':'text/html'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Archivo descargado');return true;
 }
 const fileName = () => p().name.replace(/[^\p{L}\p{N} _-]/gu,'').trim()||'mockup';
 async function saveProject() { try {if(await saveFile(JSON.stringify(p(),null,2),`${fileName()}.codaru.json`,'json')){storageWarning='';persist();}}catch(e){toast(`No se pudo guardar: ${e instanceof Error?e.message:e}`);} }
@@ -698,7 +817,7 @@ async function importFromFigma(data: unknown) {
   byId('modal-root').innerHTML=`<div class="modal-backdrop"><section class="dialog" role="dialog" aria-modal="true" aria-label="Importación de Figma"><button data-action="close-preview" class="dialog-close icon-button" aria-label="Cerrar">${icon('close')}</button><span class="eyebrow">FIGMA</span><h2>Importación completada</h2><p>${report.screens} ${report.screens===1?'pantalla':'pantallas'}, ${report.layers} capas, ${report.components} componentes, ${report.tokens} tokens y ${report.illustrations} ilustraciones. Se añadieron a la derecha de tu documento; Deshacer las quita.</p>${report.notes.length?`<div class="import-notes"><strong>Qué se simplificó</strong><ul>${report.notes.map(note=>`<li>${esc(note)}</li>`).join('')}</ul></div>`:'<p>No hubo nada que simplificar.</p>'}<div class="dialog-actions"><button class="primary" data-action="close-preview">Entendido</button></div></section></div>`;
 }
 async function loadProject(data: string) { if(disposed)return; try {const parsed=JSON.parse(data);if(parsed&&parsed.format==='codaru-figma-export'){await importFromFigma(parsed);return;}const next=validate(parsed);if(await confirmReplace('Abrir proyecto','El proyecto actual se conservará en Deshacer. Guarda un archivo si quieres mantener una copia independiente.'))replace(next);}catch(e){toast(e instanceof Error?e.message:'Archivo inválido');} }
-function replace(next: Project){if(disposed)return;change(pr=>Object.assign(pr,next));state.selected=[];state.selectionScope=null;collapsed.clear();fit();render();}
+function replace(next: Project){if(disposed)return;commentView?.flush();editor.importDocument(next);collapsed.clear();fit();persist();}
 let pendingConfirmation: ((value: boolean) => void) | undefined;
 function confirmReplace(title: string, detail: string): Promise<boolean> {
   return new Promise(resolve=>{byId('modal-root').innerHTML=`<div class="modal-backdrop"><section class="dialog" role="dialog" aria-modal="true" aria-label="${esc(title)}"><h2>${esc(title)}</h2><p>${esc(detail)}</p><div class="dialog-actions"><button id="confirm-cancel">Cancelar</button><button class="primary" id="confirm-ok">Continuar</button></div></section></div>`;const finish=(value:boolean)=>{pendingConfirmation=undefined;byId('modal-root').replaceChildren();resolve(value);};pendingConfirmation=finish;byId('confirm-cancel').onclick=()=>finish(false);byId('confirm-ok').onclick=()=>finish(true);byId('confirm-cancel').focus();});
@@ -708,7 +827,7 @@ function preview(id?: string, reset = true, transition?: Transition, reverse = f
   const frame = find(id||'') || frameOf(p(),state.selected[0]) || p().nodes.find(n=>n.type==='frame'&&!n.hidden);
   if(!frame||frame.type!=='frame'){toast('Crea una pantalla para presentar.');return;}if(reset)previewHistory=[];previewFrame=frame.id;
   byId('modal-root').innerHTML=`<div class="preview-backdrop"><header class="preview-header"><span class="preview-brand">${icon('play',16)} Prototipo</span><select id="preview-select" aria-label="Pantalla del prototipo">${p().nodes.filter(n=>n.type==='frame'&&!n.hidden).map(n=>`<option value="${n.id}" ${n.id===frame.id?'selected':''}>${esc(n.name)}</option>`).join('')}</select><div>${(()=>{const others=postureGroup(p(),frame.id).filter(f=>f.id!==frame.id);return others.length===1?`<button data-posture="${others[0].id}" class="posture-button" title="Ver esta pantalla en la otra postura">${panelsOf(others[0])>panelsOf(frame)?'Desplegar':'Plegar'} ⇄</button>`:others.map(f=>`<button data-posture="${f.id}" class="posture-button" title="Ver esta pantalla en otra postura">${esc(f.name.split('·').at(-2)?.trim()||f.name)} ⇄</button>`).join('');})()}${btn('preview-back','Pantalla anterior','undo','icon-button')}${btn('close-preview','Cerrar presentación · Escape','close','icon-button')}</div></header><div id="preview-viewport"><div id="preview-sizer"><div id="preview-canvas"></div></div></div><div class="preview-footnote">Haz clic en los elementos conectados para navegar <span>ESC para volver al editor</span></div></div>`;
-  const el=element(p(),frame,true);el.style.left='0';el.style.top='0';el.style.position='relative';byId('preview-canvas').append(el);
+  const projection=previewProject();const el=element(projection,projection.nodes.find(n=>n.id===frame.id)!,true);el.style.left='0';el.style.top='0';el.style.position='relative';byId('preview-canvas').append(el);
   const bezel=frame.skin?deviceSkins[frame.skin].bezel*2+4:0,ratio=Math.min(1,(window.innerWidth-120-bezel)/frame.width,(window.innerHeight-160-bezel)/frame.height);if(ghost)ghost.dataset.scale=String(previewRatio/ratio);previewRatio=ratio;byId('preview-canvas').style.transform=`scale(${ratio})`;byId('preview-sizer').style.width=`${frame.width*ratio}px`;byId('preview-sizer').style.height=`${frame.height*ratio}px`;
   if(ghost){Object.assign(ghost.style,{position:'absolute',left:'0',top:'0'});if(!frame.skin&&!ghost.dataset.skin&&transition!.type!=='fold'&&transition!.type!=='unfold')byId('preview-sizer').style.overflow='hidden';byId('preview-canvas').append(ghost);transitionScreens(ghost,el,transition!,reverse);}
   startMotion(el);
@@ -720,14 +839,22 @@ function preview(id?: string, reset = true, transition?: Transition, reverse = f
 function closePreview(){closeColorPicker();const modal=byId('modal-root');modal.onclick=null;modal.onchange=null;modal.onkeydown=null;previewFrame=null;byId('modal-root').replaceChildren();stage.focus();}
 function help(){byId('modal-root').innerHTML=`<div class="modal-backdrop"><section class="dialog help-dialog" role="dialog" aria-modal="true" aria-label="Atajos"><button data-action="close-preview" class="dialog-close icon-button">${icon('close')}</button><span class="eyebrow">HECHO PARA DIBUJAR</span><h2>Menos vueltas. Más ideas.</h2><div class="shortcut-list">${[['Seleccionar / dibujar','V / R / T / B'],['Crear pantalla / elipse','F / O'],['Mover lienzo','Espacio + arrastrar'],['Zoom','⌘ + rueda / pellizco / + / −'],['Escala 100%','0'],['Mover con rueda','Rueda / ⇧ + rueda'],['Ajustar pantallas / selección','⇧1 / ⇧2'],['Selección múltiple','Arrastrar / ⇧ + clic'],['Entrar en pantalla o grupo','Doble clic / Enter'],['Salir un nivel','Escape'],['Seleccionar hijos del nivel','⌘A'],['Agrupar','⌘G'],['Crear componente','⌥⌘K'],['Duplicar','⌘D'],['Deshacer / rehacer','⌘Z / ⇧⌘Z'],['Mover 1 / 10 px','Flechas / ⇧ + flechas'],['Editar texto','Doble clic'],['Guardar proyecto','⌘S']].map(([l,k])=>`<div><span>${l}</span><kbd>${k}</kbd></div>`).join('')}</div></section></div>`;}
 
+let commentView:import('./comments-view').CommentsView|undefined,commentSidebar:HTMLElement|undefined;
 async function action(act: string) {
   assertActive();
-  if(options.modular && !dom.parts.dialogs.isConnected && ['themes','animator','preview','help','agent-help','new','example','example-devices','open'].includes(act)) throw new Error('Monta la parte dialogs para usar esta acción, o usa los diálogos y la API de tu IDE.');
+  if(options.modular && !dom.parts.dialogs.isConnected && ['themes','animator','preview','help','agent-help','new','example','example-devices','open','locale-review'].includes(act)) throw new Error('Monta la parte dialogs para usar esta acción, o usa los diálogos y la API de tu IDE.');
   switch(act){
+    case 'comments':{
+      if(commentSidebar){commentView!.flush();commentSidebar.hidden=!commentSidebar.hidden;commentSidebar.style.display=commentSidebar.hidden?'none':'flex';break;}
+      const {createCommentsView}=await import('./comments-view');commentSidebar=document.createElement('aside');commentSidebar.style.cssText='position:absolute;right:0;top:64px;bottom:0;width:340px;z-index:35;display:flex;flex-direction:column;box-shadow:-8px 0 24px #0003;background:var(--ui-surface);';
+      const close=document.createElement('button');close.textContent='Cerrar comentarios';close.onclick=()=>{try{commentView!.flush();commentSidebar!.hidden=true;commentSidebar!.style.display='none';}catch(e){toast(String(e));}};commentSidebar.append(close);
+      const slot=document.createElement('div');slot.style.cssText='min-height:0;flex:1;';commentSidebar.append(slot);app.append(commentSidebar);
+      commentView=createCommentsView(editor,{appearance:{theme:'dark'},onReveal:ids=>fit(true,[...new Set(ids.map(id=>frameOf(p(),id)?.id??id))]),onOpen:()=>{commentSidebar!.hidden=false;commentSidebar!.style.display='flex';},onError:e=>toast(e.message)});commentView.mountPanel(slot);commentView.mountPins(stage);break;
+    }
     case 'enter-scope':if(state.selected.length===1)enterScope(state.selected[0]);break;
     case 'add-frame':addFrame();break;
-    case 'undo':store.undo();state.selected=state.selected.filter(id=>!!find(id));render();persist();break;
-    case 'redo':store.redo();state.selected=state.selected.filter(id=>!!find(id));render();persist();break;
+    case 'undo':editor.undo();persist();break;
+    case 'redo':editor.redo();persist();break;
     case 'fit':fit();break;
     case 'zoom-in':zoomAt(state.zoom*1.2);break;
     case 'zoom-out':zoomAt(state.zoom/1.2);break;
@@ -764,21 +891,49 @@ async function action(act: string) {
     case 'distribute':distribute();break;
     case 'front':case 'back':change(pr=>{const ns=pr.nodes.filter(n=>editableIds().includes(n.id));pr.nodes=pr.nodes.filter(n=>!editableIds().includes(n.id));if(act==='front')pr.nodes.push(...ns);else pr.nodes.unshift(...ns);});break;
     case 'image':byId<HTMLInputElement>('image-file').click();break;
-    case 'export-html':await saveFile(exportHTML(p()),`${fileName()}.html`,'html');break;
-    case 'export-svg':{const frame=frameOf(p(),state.selected[0]);if(frame)await saveFile(exportSVG(p(),frame),`${frame.name}.svg`,'svg');break;}
+    case 'locale-review':showLocalizationIssues();break;
+    case 'translation-request':if(state.selected[0])await editor.requestTranslation(state.selected[0]);break;
+    case 'asset-svg':await saveAsset('svg');break;
+    case 'asset-png':await saveAsset('png');break;
+    case 'asset-ios':await saveAsset('assets','ios');break;
+    case 'asset-android':await saveAsset('assets','android');break;
+    case 'asset-all':await saveAsset('assets');break;
+    case 'export-html':await saveFile(editor.exportHTML(),`${fileName()}.html`,'html');break;
+    case 'export-svg':{const frame=frameOf(p(),state.selected[0]);if(frame)await saveFile(editor.exportSVG(frame.id),`${frame.name}.svg`,'svg');break;}
     case 'help':help();break;
   }
 }
 
 events.addEventListener('click',e=>{
   const el=(e.target as HTMLElement).closest<HTMLElement>('button,[data-layer]');if(!el)return;
+  if (el.dataset.sectionToggle) {
+    const key = el.dataset.sectionToggle, section = el.closest<HTMLElement>('.inspector-section')!;
+    const folded = !foldedInspectorSections.has(key);
+    if (folded) foldedInspectorSections.add(key); else foldedInspectorSections.delete(key);
+    section.classList.toggle('is-collapsed', folded);
+    el.setAttribute('aria-expanded', String(!folded));
+    el.setAttribute('aria-label', `${folded ? 'Expandir' : 'Contraer'} sección`);
+    return;
+  }
+  if(el.dataset.action==='edit-aru'){void editor.requestIllustration(state.selected[0]).catch(error=>toast(String(error)));return;}
+  if(el.dataset.action==='export-aru'){const n=find(state.selected[0]);if(n?.aruSource)void saveFile(n.aruSource.text,n.aruSource.filename,'aru').catch(error=>toast(String(error)));return;}
+  if(el.dataset.implementationOpen){void editor.requestImplementation(el.dataset.implementationNode!,el.dataset.implementationOpen).catch(error=>toast(String(error)));return;}
+  if(el.dataset.implementationCreate||el.dataset.implementationEdit){openImplementationEditor(byId('modal-root'),p,(el.dataset.implementationCreate??el.dataset.implementationComponent)!,el.dataset.implementationEdit,fn=>{store.commit(fn);render();persist();},closePreview);return;}
+  if(el.dataset.implementationRemove){change(pr=>setComponentImplementation(pr,el.dataset.implementationComponent!,el.dataset.implementationRemove!,null));return;}
+  if(el.dataset.propertyCreate||el.dataset.propertyEdit){openComponentPropertyEditor(byId('modal-root'),p,(el.dataset.propertyCreate??el.dataset.propertyComponent)!,el.dataset.propertyTarget,el.dataset.propertyEdit,fn=>{store.commit(fn);render();persist();},closePreview);return;}
+  if(el.dataset.propertyRemove){change(pr=>removeComponentProperty(pr,el.dataset.propertyComponent!,el.dataset.propertyRemove!));return;}
+  if(el.dataset.propertyReset){const id=state.selected[0];if(id)change(pr=>setComponentProperty(pr,id,el.dataset.propertyReset!,null));return;}
   if('scope' in el.dataset){enterScope(el.dataset.scope||null);return;}
   if((el.dataset.pick||'pickFill' in el.dataset)&&el.closest('#inspector')){const n=state.selected.length===1?find(state.selected[0]):undefined;if(n&&('pickFill' in el.dataset||el.dataset.pick==='Relleno: valor'))openFillPicker(el,n);else pickColorFor(el,pickerContext(n));return;}
   if(el.dataset.pickToken&&el.closest('#inspector')){const token=el.dataset.pickToken;openColorPicker({...pickerContext(),anchor:el,value:p().designThemes[p().activeThemeId].modes[p().theme].colors[token],commit:value=>change(pr=>{pr.designThemes[pr.activeThemeId].modes[pr.theme].colors[token]=value;if(pr.activeThemeId==='project')pr.themes[pr.theme][token]=value;})});return;}
   if(el.dataset.selectMaster){select([el.dataset.selectMaster]);focusFrame(el.dataset.selectMaster);return;}
   if(el.dataset.lintNode){const n=find(el.dataset.lintNode);if(n){select([n.id]);fit(true);}else if(p().designThemes[el.dataset.lintNode])void action('themes');return;}
   if(el.dataset.posture){const current=find(previewFrame||''),other=find(el.dataset.posture);if(current&&other){const t:Transition={type:panelsOf(other)>panelsOf(current)?'unfold':'fold',duration:700,easing:'ease-in-out'};previewHistory.push({id:current.id,transition:t});preview(other.id,false,t);}return;}
+  if(el.dataset.localeIssue){const id=el.dataset.localeIssue,root=find(rootIds(p()).get(id)??id);closePreview();if(root)setPage(root.page??pagesOf(p())[0].id);select([id]);fit(true);return;}
   if(el.dataset.action){void action(el.dataset.action).catch(err=>toast(String(err)));return;}
+  if(el.hasAttribute('data-drawing-bank')){resourceBank=true;renderComponents();void loadResources().catch(err=>toast(String(err)));return;}
+  if(el.hasAttribute('data-drawing-local')){resourceBank=false;renderComponents();return;}
+  if(drawingPanel.click(el)||stylePanel.click(el))return;
   if(el.dataset.library){libraryTab=el.dataset.library as typeof libraryTab;renderComponents();if(libraryTab==='kits')void loadKits().catch(err=>toast(String(err)));if(libraryTab==='icons')void loadIcons().catch(err=>toast(String(err)));if(libraryTab==='resources')void loadResources().catch(err=>toast(String(err)));return;}
   if(el.dataset.pageRename){const id=el.dataset.pageRename,row=el.closest<HTMLElement>('.page-row')!,page=pagesOf(p()).find(page=>page.id===id)!;row.innerHTML=`<input class="page-input" data-page-name="${esc(id)}" aria-label="Nombre de la página" value="${esc(page.name)}" maxlength="60"/>`;const input=row.querySelector<HTMLInputElement>('input')!;input.focus();input.select();input.onkeydown=ev=>{if(ev.key==='Escape'){ev.stopPropagation();renderPages();}if(ev.key==='Enter'){ev.preventDefault();input.blur();}};return;}
   if(el.dataset.pageRemove){try{const id=el.dataset.pageRemove;change(pr=>removePage(pr,id),'Página eliminada');}catch(error){toast(String(error instanceof Error?error.message:error));}return;}
@@ -801,10 +956,11 @@ events.addEventListener('click',e=>{
   if(el.dataset.layer){const id=el.dataset.layer;const siblings=find(id)?.parentId===state.selectionScope;select((e as MouseEvent).shiftKey&&siblings?(state.selected.includes(id)?state.selected.filter(x=>x!==id):[...state.selected,id]):[id]);return;}
   if(el.dataset.palette){const values:Record<string,[string,string,string,string]>={violet:['#7955e8','#eee8fd','#a28af6','#36304f'],ocean:['#227c9d','#e1f2f7','#6cc4df','#213e4a'],forest:['#33876c','#e4f2eb','#78c6a3','#233f34']};const [primary,accent,darkPrimary,darkAccent]=values[el.dataset.palette];change(pr=>{pr.themes.light.primary=primary;pr.themes.light.accent=accent;pr.themes.dark.primary=darkPrimary;pr.themes.dark.accent=darkAccent;});}
 });
-events.addEventListener('input',e=>{const el=e.target as HTMLInputElement;if(el.id==='resource-search'){resourceQuery=el.value;searchResources();return;}if(el.id==='resource-seed'){resourceSeed=el.value;return;}if(!['icon-search','kit-search'].includes(el.id))return;const id=el.id,pos=el.selectionStart;if(id==='icon-search')iconSearch=el.value;else kitSearch=el.value;renderComponents();const next=byId<HTMLInputElement>(id);next.focus();next.setSelectionRange(pos,pos);});
+events.addEventListener('input',e=>{const el=e.target as HTMLInputElement;if(drawingPanel.input(el))return;if(el.id==='resource-search'){resourceQuery=el.value;searchResources();return;}if(el.id==='resource-seed'){resourceSeed=el.value;return;}if(!['icon-search','kit-search'].includes(el.id))return;const id=el.id,pos=el.selectionStart;if(id==='icon-search')iconSearch=el.value;else kitSearch=el.value;renderComponents();const next=byId<HTMLInputElement>(id);next.focus();next.setSelectionRange(pos,pos);});
 dom.listen(layersEl,'dblclick',e=>{const el=(e.target as HTMLElement).closest<HTMLElement>('[data-layer]');if(el&&!(e.target as HTMLElement).closest('button'))enterScope(el.dataset.layer!);});
 events.addEventListener('change',e=>{
   const el=e.target as HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement;
+  if(el.dataset.publicProperty){const id=state.selected[0];if(!id)return;const prop=getComponentProperties(p(),id).find(prop=>prop.key===el.dataset.publicProperty);if(!prop)return;let value:ComponentPropertyValue=prop.type==='visibility'?(el as HTMLInputElement).checked:el.value;if(prop.type==='icon'){const current=prop.value as {pack:string;name:string};const pack=el.dataset.iconPart==='pack'?el.value:current.pack;const name=el.dataset.iconPart==='name'?el.value:isIconReference(pack,current.name)?current.name:getIconItems(pack)[0].id;value={pack,name};}change(pr=>setComponentProperty(pr,id,prop.key,value));return;}
   if(el.dataset.system!==undefined){const key=el.dataset.system;change(pr=>setDesignSystemNotes(pr,{[key]:el.value}));return;}
   if(el.dataset.doc!==undefined&&el.dataset.docComponent){const key=el.dataset.doc,id=el.dataset.docComponent;change(pr=>setComponentDoc(pr,id,{[key]:el.value}));return;}
   if(state.selected.length===1&&(el.dataset.variantAxis!==undefined||el.dataset.variantSet!==undefined||el.dataset.variantSwitch!==undefined)){
@@ -816,7 +972,10 @@ events.addEventListener('change',e=>{
     return;
   }
   if(el.dataset.pageName){const id=el.dataset.pageName;try{change(pr=>renamePage(pr,id,el.value));}catch(error){toast(String(error instanceof Error?error.message:error));renderPages();}return;}
+  if(el.id==='locale-select'){const value=el.value;el.blur();try{editor.setLocale(value||null);}catch(error){toast(String(error instanceof Error?error.message:error));renderLocaleControl();}return;}
+  if(el.dataset.textKey!==undefined){const n=find(state.selected[0]);if(!n||isUnavailable(p(),n))return;try{change(pr=>updateNode(pr,n.id,{textKey:el.value.trim()||undefined}));}catch(error){toast(String(error instanceof Error?error.message:error));renderInspector();}return;}
   if(el.id==='theme-select'){const id=el.value;if(p().designThemes[id]&&id!==p().activeThemeId)change(pr=>{pr.activeThemeId=id;},`Tema «${p().designThemes[id].name}» activo`);return;}
+  if(drawingPanel.input(el)||stylePanel.input(el))return;
   if(el.id==='resource-source'){resourceSource=el.value as typeof resourceSource;resourceHits=[];resourceState='idle';searchResources(true);return;}
   if(el.id==='zoom-value') {
     const raw = el.value.trim().replace(/%$/, '').trim().replace(',', '.'); const value = Number(raw);
@@ -894,6 +1053,14 @@ dom.listen(stage,'dragover',e=>{e.preventDefault();if(e.dataTransfer)e.dataTrans
 dom.listen(stage,'drop',e=>{e.preventDefault();try{const data=JSON.parse(e.dataTransfer?.getData('application/codaru')||'{}');const pos=point(e.clientX,e.clientY);if(data.resource)void insertResource(data.resource,pos).catch(err=>toast(String(err)));else if(data.iconItem)void insertLibraryIcon(data.iconItem,pos).catch(err=>toast(String(err)));else if(data.kitItem)void insertKit(data.kitItem,pos).catch(err=>toast(String(err)));else if(data.component)insertComponent(data.component,pos);else if(data.kind)insert(data.kind,pos);}catch{toast('No se pudo insertar este elemento.');}});
 byId<HTMLInputElement>('import-file').onchange=async e=>{const el=e.target as HTMLInputElement;const f=el.files?.[0];if(f){if(f.size>20_000_000)toast('El archivo supera 20 MB.');else await loadProject(await f.text());}el.value='';};
 byId<HTMLInputElement>('image-file').onchange=async e=>{const el=e.target as HTMLInputElement;const file=el.files?.[0];if(!file)return;
+  if(/\.aru\.codaru\.json$/i.test(file.name)){
+    el.value='';
+    try { if(file.size>1_200_000)throw new Error('El paquete ARU supera 1.2 MB.');
+      const data=JSON.parse(await file.text()); if(disposed)return;
+      const current=find(state.selected[0]),parent=current?frameOf(p(),current.id):firstFrame();let id='';
+      change(pr=>{id=applyAruAsset(pr,{op:'aru',data,...(current?.type==='vector'?{id:current.id}:{parentId:parent?.id??null})});},'Ilustración ARU importada');select([id]);
+    }catch(error){toast(error instanceof Error?error.message:'No se pudo importar ARU.');}return;
+  }
   if(file.type==='image/svg+xml'||/\.svg$/i.test(file.name)){
     el.value='';
     try{
@@ -1053,6 +1220,12 @@ function initializeEmbedded(options: EmbeddedOptions) {
   const next=options.document===undefined?undefined:validate(options.document);
   embeddedInitialized=true;
   if(next){store.project=next;store.undoStack=[];store.redoStack=[];state.selected=[];state.selectionScope=null;}
+  if(options.localization!==undefined)editor.setLocalization(options.localization);
+  session.setTranslationHandler(options.onTranslationRequest);
+  session.setImplementationHandler(options.onImplementationRequest);
+  session.setIllustrationHandler(options.onIllustrationRequest);
+  session.setResourceLibraryHandler(options.onResourceLibraryChange);
+  editor.setResourceServices(options.resourceServices ?? {});
   lastNotified=store.serialize();onHostChange=options.onChange;nativeInvoke=options.invoke;
   if(!STORAGE){const footer=document.querySelector('.sidebar-footer');const label=footer?.childNodes[1];if(label)label.textContent=' Documento en tu aplicación';}
   render();fit();persist();
@@ -1067,20 +1240,31 @@ function disposeEmbedded() {
     clearTimeout(saveTimer);clearTimeout(toastTimer);flushDraft();
     disposed=true;onHostChange=undefined;nativeInvoke=undefined;
     if(agentTimer!==undefined)clearInterval(agentTimer);
-    stageObserver.disconnect();building.dispose();dom.dispose();unbindView();options.onDispose?.();
+    stageObserver.disconnect();building.dispose();drawingPanel.dispose();stylePanel.dispose();session.setResourceRenderer(undefined);dom.dispose();unbindView();if(!options.editor){session.setResourceLibraryHandler(undefined);editor.destroy();}options.onDispose?.();
   }
   return clone(p());
 }
 
 // Explicit, transactional operations for a host agent. No model or network is required by the editor.
-type Operation = {op:'add';node:Partial<DesignNode>&{type:Kind}}|{op:'update';id:string;patch:Partial<DesignNode>}|{op:'remove';ids:string[]}|{op:'component';id:string}|{op:'instance';componentId:string;parentId:string|null;x:number;y:number};
+type Operation = import('./contracts').EditorOperation;
 const api = {
+  getComments:editor.getComments,captureCommentAnchor:editor.captureCommentAnchor,getCommentContext:editor.getCommentContext,subscribeComments:editor.subscribeComments,
+  getStyles:()=>{assertActive();return editor.getStyles();},getStyle:(id:string)=>{assertActive();return editor.getStyle(id);},importStyle:(...args:Parameters<typeof editor.importStyle>)=>{assertActive();const result=editor.importStyle(...args);persist();return result;},applyStyle:(...args:Parameters<typeof editor.applyStyle>)=>{assertActive();const result=editor.applyStyle(...args);persist();return result;},
+  getResourceLibrary:(...args:Parameters<typeof editor.getResourceLibrary>)=>{assertActive();return editor.getResourceLibrary(...args);},getResource:(...args:Parameters<typeof editor.getResource>)=>{assertActive();return editor.getResource(...args);},stageResource:(...args:Parameters<typeof editor.stageResource>)=>{assertActive();return editor.stageResource(...args);},reviewResource:(...args:Parameters<typeof editor.reviewResource>)=>{assertActive();return editor.reviewResource(...args);},requestResourceEdit:(...args:Parameters<typeof editor.requestResourceEdit>)=>{assertActive();return editor.requestResourceEdit(...args);},setResourceServices:(...args:Parameters<typeof editor.setResourceServices>)=>{assertActive();return editor.setResourceServices(...args);},exportResource:(...args:Parameters<typeof editor.exportResource>)=>{assertActive();return editor.exportResource(...args);},
+  insertResource:async (...args:Parameters<typeof editor.insertResource>)=>{assertActive();const result=await editor.insertResource(...args);persist();return result;},
   getDocument:()=>clone(p()), getSelection:()=>state.selected.map(id=>clone(find(id)!)), getSelectionScope:()=>state.selectionScope,
   select:(ids:string[])=>{assertActive();select(ids);},
-  apply:(operations:Operation[])=>{assertActive();store.commit(pr=>{for(const op of operations){if(op.op==='add')pr.nodes.push(node(op.node.type,op.node));else if(op.op==='update'){if('id'in op.patch||'type'in op.patch||'componentId'in op.patch||'instanceOf'in op.patch)throw new Error('Estos campos requieren una operación explícita');updateNode(pr,op.id,op.patch);}else if(op.op==='remove')remove(pr,op.ids);else if(op.op==='component')createComponent(pr,op.id);else if(op.op==='instance')instantiate(pr,op.componentId,op.parentId,op.x,op.y);}});state.selected=state.selected.filter(id=>!!find(id));render();persist();return clone(p());},
+  apply:(operations:Operation[])=>{const result=editor.apply(operations);persist();return result;},
+  getComponentProperties:editor.getComponentProperties,
+  getImplementations:(id:string)=>{assertActive();return editor.getImplementations(id);},
+  setImplementation:(componentId:string,platform:string,reference:ImplementationReference|null)=>{assertActive();const result=editor.setImplementation(componentId,platform,reference);persist();return result;},
+  requestIllustration:(id:string)=>{assertActive();return editor.requestIllustration(id);},
+  requestImplementation:(id:string,platform:string)=>{assertActive();return editor.requestImplementation(id,platform);},
+  setComponentProperty:(id:string,key:string,value:ComponentPropertyValue|null)=>{const result=editor.setComponentProperty(id,key,value);persist();return result;},
   agent:(command:string,params:Record<string,unknown>={})=>runAgent({command,params}),
-  importDocument:(input:unknown)=>{assertActive();const next=validate(input);store.commit(pr=>Object.assign(pr,next));state.selected=[];state.selectionScope=null;render();fit();persist();},
-  undo:()=>{assertActive();return action('undo');},redo:()=>{assertActive();return action('redo');}, exportHTML:()=>exportHTML(p()),
+  importDocument:(input:unknown)=>{assertActive();editor.importDocument(input);fit();persist();},
+  undo:()=>{assertActive();return action('undo');},redo:()=>{assertActive();return action('redo');}, exportHTML:editor.exportHTML, exportAsset: editor.exportAsset,
+  getPreviewDocument:editor.getPreviewDocument,getLocalization:editor.getLocalization,getLocalizationState:editor.getLocalizationState,getLocalizationIssues:editor.getLocalizationIssues,setLocalization:editor.setLocalization,setLocale:editor.setLocale,requestTranslation:editor.requestTranslation,
   initializeEmbedded,disposeEmbedded,
 };
 
@@ -1091,9 +1275,10 @@ let agentRunning=false;
 async function runAgent(request:import('./agent').AgentRequest){
   if(disposed)return {ok:false,error:{code:'editor_disposed',message:'El editor ya fue desmontado.'}};
   const module=await import('./agent');
-  return module.handleAgentRequest({project:p,selection:()=>[...state.selected],scope:()=>state.selectionScope,
+  return module.handleAgentRequest({resourceLibrary:editor.getResourceLibrary,resource:editor.getResource,exportResource:editor.exportResource,project:p,selection:()=>[...state.selected],localization:session.localization,localizationState:editor.getLocalizationState,previewProject,setLocale:editor.setLocale,localizationIssues:editor.getLocalizationIssues,scope:()=>state.selectionScope,
     busy:()=>disposed||(embedded&&!options.modular&&!embeddedInitialized)||!!gesture||!!byId('modal-root').children.length||!!document.activeElement?.matches('input,textarea,select,[contenteditable="true"]'),
-    commit:edit=>{assertActive();const before=building.snapshot(p());store.commit(edit);touchedByAgent=building.track(before,p());state.selected=state.selected.filter(id=>!!find(id));render();persist();},select:ids=>select(ids),
+    commit:edit=>{assertActive();const before=building.snapshot(p());store.commit(edit);touchedByAgent=building.track(before,p());state.selected=state.selected.filter(id=>!!find(id));render();persist();},
+    commitPrepared:prepared=>{assertActive();const before=building.snapshot(p());store.commitPrepared(prepared);touchedByAgent=building.track(before,p());state.selected=state.selected.filter(id=>!!find(id));render();persist();},select:ids=>select(ids),
     undo:()=>{store.undo();render();persist();},redo:()=>{store.redo();render();persist();}},request);
 }
 let agentConnected=false,agentTimer:ReturnType<typeof setInterval>|undefined;
@@ -1128,12 +1313,15 @@ function agentHelp(){
 }
 
 const unbindView = session.bindView({
-  render, camera: renderCamera,
+  render, resources: () => { drawingPanel.invalidate(); if (libraryTab === 'resources') renderComponents(); }, camera: renderCamera, localizationIssues: readLocalizationIssues,
   flush: () => { (document.activeElement as HTMLElement | null)?.blur(); if (gesture) finishGesture({pointerId:gesture.pointerId,clientX:gesture.screen.x,clientY:gesture.screen.y},true); persist(); flushDraft(); },
   isInteracting: () => !!gesture || !!pinch,
   isBusy: () => !!gesture || !!byId('modal-root').children.length || !!document.activeElement?.matches('input,textarea,select,[contenteditable="true"]'),
   dispose: () => { disposeEmbedded(); },
   command: async actionName => { assertActive(); await action(actionName); },
 });
+session.setResourceRenderer(resourcePreviewRenderer(app.ownerDocument));
+let savedComments=p().comments;
+const unbindCommentPersistence=session.bindExtension({flush:()=>{},dispose:()=>{commentView?.destroy();commentSidebar?.remove();unbindCommentPersistence();},notify:()=>{if(savedComments!==p().comments){savedComments=p().comments;persist();}}});
 return { api, editor, parts: dom.parts, restorePart: dom.restore, refresh: () => { render(); renderCamera(); }, dismissDialogs: () => { pendingConfirmation?.(false); closePreview(); }, fit, dispose: disposeEmbedded };
 }

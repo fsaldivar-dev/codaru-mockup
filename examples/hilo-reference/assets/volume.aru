@@ -1,0 +1,7 @@
+// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.
+canvas 32 32
+background none
+group volume {
+path bocina { move 5 12; line 10 12; line 17 6; line 17 26; line 10 20; line 5 20; close; fill none; stroke #1C1917 1.8; cap round; join round }
+path aire { move 22 11; curve 25 13 25 19 22 21; move 26 7; curve 32 11 32 21 26 25; fill none; stroke #1C1917 1.8; cap round; join round }
+}

@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Glass · original editable geometry; material is supplied by host nodes.\ncanvas 48 48\nbackground none\ncircle lens { at 20 20; radius 11; fill none; stroke #102C3B 2.7; }\npath handle { move 28 28; line 39 39; fill none; stroke #102C3B 2.7; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <circle r=\"11\" transform=\"translate(20 20)\" fill=\"none\" stroke=\"#102C3B\" stroke-width=\"2.7\"/>\n  <path d=\"M28 28 L39 39\" fill=\"none\" stroke=\"#102C3B\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "glass-v2-search.aru"
+}

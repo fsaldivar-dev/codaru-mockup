@@ -1,0 +1,21 @@
+// Musaru Skeuomorphic · original editable physical geometry.
+canvas 28 98
+background none
+gradient walnut linear 0 { stop 0 #5B3020; stop 0.16 #895036; stop 0.38 #A56642; stop 0.62 #78422C; stop 0.84 #A46643; stop 1 #5C3425 }
+gradient brass linear 90 { stop 0 #F3E4BA; stop 0.19 #C6AC73; stop 0.48 #E5D4AA; stop 0.52 #9D8356; stop 0.9 #D5BE8C; stop 1 #88724C }
+gradient brushed linear 90 { stop 0 #EEE8DC; stop 0.12 #D5CFC3; stop 0.8 #BDB7AC; stop 1 #999488 }
+gradient keycap linear 90 { stop 0 #FAF3E5; stop 0.68 #DED4C2; stop 1 #AEA596 }
+gradient blackkey linear 90 { stop 0 #4B4D47; stop 0.28 #343831; stop 1 #20231F }
+gradient portable linear 90 { stop 0 #D8CBB0; stop 0.38 #C5B797; stop 0.88 #B2A17F; stop 1 #8F8065 }
+rect well { at 14 48; size 24 92; corner 5; fill #70634D; }
+rect wheel { at 14 45; size 20 86; corner 4; fill brushed; }
+path rib0 { move 7 9; line 21 9; fill none; stroke #655D4D 1.2; cap round; }
+path rib1 { move 7 17; line 21 17; fill none; stroke #655D4D 1.2; cap round; }
+path rib2 { move 7 25; line 21 25; fill none; stroke #655D4D 1.2; cap round; }
+path rib3 { move 7 33; line 21 33; fill none; stroke #655D4D 1.2; cap round; }
+path rib4 { move 7 41; line 21 41; fill none; stroke #655D4D 1.2; cap round; }
+path rib5 { move 7 49; line 21 49; fill none; stroke #655D4D 1.2; cap round; }
+path rib6 { move 7 57; line 21 57; fill none; stroke #655D4D 1.2; cap round; }
+path rib7 { move 7 65; line 21 65; fill none; stroke #655D4D 1.2; cap round; }
+path rib8 { move 7 73; line 21 73; fill none; stroke #655D4D 1.2; cap round; }
+path rib9 { move 7 81; line 21 81; fill none; stroke #655D4D 1.2; cap round; }

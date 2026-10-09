@@ -1,0 +1,5 @@
+// Musaru POP: bespoke control, original editable paths
+canvas 48 48
+background none
+path arrow { move 22 5; line 4 24; line 23 43; line 24 31; line 43 33; line 44 18; line 23 19; close; fill #D3FF62; stroke #252036 3; cap round; }
+

@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru POP: bespoke control, original editable paths\ncanvas 48 48\nbackground none\npath wedge { move 6 9; line 31 23; quad 33 24 30 27; line 7 41; close; fill #252036; }\npath stop { move 36 8; line 43 7; line 42 40; line 35 41; close; fill #252036; }\n\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M6 9 L31 23 Q33 24 30 27 L7 41 Z\" fill=\"#252036\"/>\n  <path d=\"M36 8 L43 7 L42 40 L35 41 Z\" fill=\"#252036\"/>\n</svg>",
+  "filename": "pop-v2-next.aru"
+}

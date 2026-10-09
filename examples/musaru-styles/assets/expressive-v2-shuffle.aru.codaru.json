@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Expressive · original flat editable shapes.\ncanvas 48 48\nbackground none\npath rise { move 7 34; line 15 34; curve 23 34 24 14 33 14; line 41 14; move 34 7; line 41 14; line 34 21; fill none; stroke #8D3D19 3.2; cap round; }\npath fall { move 7 14; line 15 14; quad 18 14 20 18; move 28 30; quad 30 34 34 34; line 41 34; move 34 27; line 41 34; line 34 41; fill none; stroke #8D3D19 3.2; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M7 34 L15 34 C23 34 24 14 33 14 L41 14 M34 7 L41 14 L34 21\" fill=\"none\" stroke=\"#8D3D19\" stroke-width=\"3.2\" stroke-linecap=\"round\"/>\n  <path d=\"M7 14 L15 14 Q18 14 20 18 M28 30 Q30 34 34 34 L41 34 M34 27 L41 34 L34 41\" fill=\"none\" stroke=\"#8D3D19\" stroke-width=\"3.2\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "expressive-v2-shuffle.aru"
+}

@@ -1,0 +1,5 @@
+// Musaru Material 3 tonal · original editable flat forms.
+canvas 48 48
+background none
+path triangle { move 32 12; quad 34 11 34 14; line 34 34; quad 34 38 31 36; line 16 26; quad 13 24 16 22; close; fill #6750A4; }
+rect stop { at 11 24; size 3.5 27; corner 1.5; fill #6750A4; }

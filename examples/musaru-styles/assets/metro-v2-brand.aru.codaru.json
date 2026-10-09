@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Frutiger Metro · original editable music poster geometry.\ncanvas 48 48\nbackground none\ncircle ring { at 22 24; radius 17; fill none; stroke #D6F03D 4; }\npath wave { move 8 25; line 14 25; line 18 15; line 23 34; line 28 21; line 33 25; line 43 25; fill none; stroke #FAFBEF 3.5; cap round; }\ncircle dot { at 41 10; radius 4; fill #FF89BA; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <circle r=\"17\" transform=\"translate(22 24)\" fill=\"none\" stroke=\"#D6F03D\" stroke-width=\"4\"/>\n  <path d=\"M8 25 L14 25 L18 15 L23 34 L28 21 L33 25 L43 25\" fill=\"none\" stroke=\"#FAFBEF\" stroke-width=\"3.5\" stroke-linecap=\"round\"/>\n  <circle r=\"4\" transform=\"translate(41 10)\" fill=\"#FF89BA\"/>\n</svg>",
+  "filename": "metro-v2-brand.aru"
+}

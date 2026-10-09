@@ -1,0 +1,16 @@
+// Musaru · Memphis retro · original editable cover
+canvas 600 400
+background none
+circle backCircle { at 335 193; radius 153; fill #8ED2CD;  }
+path wedge { move 95 288; line 237 62; line 277 306; close; fill #E66876;  }
+path stripe { move 248 320; curve 169 140 369 25 471 99; line 454 143; curve 351 80 243 172 295 301; close; fill #69BDCF;  }
+circle record { at 349 209; radius 95; fill #2A2545;  }
+circle label { at 349 209; radius 34; fill #F3AD45;  }
+circle hole { at 349 209; radius 7; fill #2A2545;  }
+circle dot0 { at 98 347; radius 4; fill #2A2545;  }
+circle dot1 { at 121 347; radius 4; fill #2A2545;  }
+circle dot2 { at 144 347; radius 4; fill #2A2545;  }
+circle dot3 { at 167 347; radius 4; fill #2A2545;  }
+circle dot4 { at 190 347; radius 4; fill #2A2545;  }
+circle dot5 { at 213 347; radius 4; fill #2A2545;  }
+path zigzag { move 478 236; line 496 217; line 514 236; line 532 217; line 550 236; fill none; stroke #2A2545 6; cap round; }

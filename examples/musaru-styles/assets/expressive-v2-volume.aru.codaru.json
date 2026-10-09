@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Expressive · original flat editable shapes.\ncanvas 48 48\nbackground none\npath speaker { move 7 18; line 15 18; line 25 10; quad 28 8 28 13; line 28 35; quad 28 40 25 38; line 15 30; line 7 30; close; fill #8D3D19; }\npath vibration { move 34 15; curve 43 20 43 28 34 33; fill none; stroke #8D3D19 3.4; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M7 18 L15 18 L25 10 Q28 8 28 13 L28 35 Q28 40 25 38 L15 30 L7 30 Z\" fill=\"#8D3D19\"/>\n  <path d=\"M34 15 C43 20 43 28 34 33\" fill=\"none\" stroke=\"#8D3D19\" stroke-width=\"3.4\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "expressive-v2-volume.aru"
+}

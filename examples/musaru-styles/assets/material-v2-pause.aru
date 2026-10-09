@@ -1,0 +1,5 @@
+// Musaru Material 3 tonal · original editable flat forms.
+canvas 48 48
+background none
+rect pauseLeft { at 17 24; size 6 24; corner 2; fill #FFFFFF; }
+rect pauseRight { at 31 24; size 6 24; corner 2; fill #FFFFFF; }

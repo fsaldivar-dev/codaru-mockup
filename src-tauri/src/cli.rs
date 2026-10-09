@@ -5,6 +5,9 @@ mod agent_transport;
 #[path = "../../packages/tauri-plugin-codaru/src/bridge.rs"]
 mod bridge;
 
+#[path = "../../packages/tauri-plugin-codaru/src/export_content.rs"]
+mod export_content;
+
 use agent_transport::{AgentError, Result, MAX_REQUEST_BYTES};
 use serde_json::{json, Map, Value};
 use std::io::{Read, Write};
@@ -16,12 +19,15 @@ Usage: codaru [--socket PATH] COMMAND [OPTIONS]
 
   context [--scope SCOPE] [--depth N] [--page ID]  Read selection, frame, page, or workspace
   schema                                  Discover commands and operation schema
+  comments [--id ID]                       Read threads or exact context of one anchor
   catalog [--kind KIND] [--kit KIT] [--query TEXT]
+  locale [CODE|source]                    Inspect or change the preview language (no document edit)
   apply --file PATH|- [--dry-run]           Apply one atomic operation batch
   select [ID ...] [--ids ID,ID]             Select IDs; no IDs clears selection
   undo                                    Undo one editor transaction
   redo                                    Redo one editor transaction
-  export [--format json|html|svg] [--frame ID] [--page ID] [--output PATH]
+  export [--format json|html|svg|png|assets|aru] [--frame ID | --ids ID,ID | --resource ID] [--page ID]
+         [--platform ios|android|all] [--name NAME] [--width N] [--padding N] [--scale N] [--output PATH]
   lint [--frame ID] [--page ID]             Review contrast, targets and consistency
   find --query TEXT [--frame ID] [--page ID] [--type TYPE] [--limit N]
   versions [--compare ID]                   List saved versions; compare one with the design
@@ -59,7 +65,7 @@ fn parse(args: &[String]) -> Result<Options> {
         socket = Some(PathBuf::from(take_value(args, &mut index, "--socket")?)); index += 1;
     }
     let command = args.get(index).ok_or_else(|| invalid("Choose a command. Run codaru --help."))?.clone(); index += 1;
-    if !["schema", "context", "apply", "catalog", "select", "undo", "redo", "export", "lint", "find", "versions"].contains(&command.as_str()) { return Err(invalid(format!("Unknown command '{}'. Run codaru --help.", command))); }
+    if !["schema", "context", "comments", "apply", "catalog", "select", "undo", "redo", "export", "lint", "find", "versions", "locale"].contains(&command.as_str()) { return Err(invalid(format!("Unknown command '{}'. Run codaru --help.", command))); }
     let mut options = Options { command, params: Map::new(), file: None, output: None, socket };
     let mut ids = Vec::new(); let mut seen = std::collections::HashSet::new();
     while index < args.len() {
@@ -67,19 +73,23 @@ fn parse(args: &[String]) -> Result<Options> {
         if arg.starts_with("--") && !seen.insert(arg.clone()) { return Err(invalid(format!("{} was specified more than once.", arg))); }
         match (options.command.as_str(), arg.as_str()) {
             ("context", "--scope") => { options.params.insert("scope".into(), json!(take_value(args, &mut index, arg)?)); },
+            ("comments", "--id") => { options.params.insert("id".into(), json!(take_value(args, &mut index, arg)?)); },
             ("context", "--depth") => {
                 let depth = take_value(args, &mut index, arg)?.parse::<u32>().map_err(|_| invalid("--depth must be an integer from 0 to 4."))?;
                 if depth > 4 { return Err(invalid("--depth must be an integer from 0 to 4.")); }
                 options.params.insert("depth".into(), json!(depth));
             },
             ("catalog", "--kind" | "--kit" | "--query") => { options.params.insert(arg.trim_start_matches("--").into(), json!(take_value(args, &mut index, arg)?)); },
+            ("locale", _) if !arg.starts_with('-') && !options.params.contains_key("locale") => {
+                options.params.insert("locale".into(), if arg == "source" { Value::Null } else { json!(arg) });
+            },
             ("apply", "--file") => { options.file = Some(take_value(args, &mut index, arg)?); },
             ("apply", "--dry-run") => { options.params.insert("dryRun".into(), json!(true)); },
-            ("select", "--ids") => { ids.extend(take_value(args, &mut index, arg)?.split(',').filter(|id| !id.is_empty()).map(str::to_owned)); },
+            ("select" | "export", "--ids") => { ids.extend(take_value(args, &mut index, arg)?.split(',').filter(|id| !id.is_empty()).map(str::to_owned)); },
             ("select", _) if !arg.starts_with('-') => ids.push(arg.clone()),
             ("export", "--format") => {
                 let format = take_value(args, &mut index, arg)?;
-                if !["json", "html", "svg"].contains(&format.as_str()) { return Err(invalid("--format must be json, html, or svg.")); }
+                if !["json", "html", "svg", "png", "assets", "aru"].contains(&format.as_str()) { return Err(invalid("--format must be json, html, svg, png, assets, or aru.")); }
                 options.params.insert("format".into(), json!(format));
             },
             ("lint", "--frame") => { options.params.insert("frame".into(), json!(take_value(args, &mut index, arg)?)); },
@@ -90,6 +100,14 @@ fn parse(args: &[String]) -> Result<Options> {
                 options.params.insert("limit".into(), json!(limit));
             },
             ("versions", "--compare") => { options.params.insert("compare".into(), json!(take_value(args, &mut index, arg)?)); },
+            ("export", "--resource") => { options.params.insert("resource".into(), json!(take_value(args, &mut index, arg)?)); },
+            ("export", "--node") => { ids.push(take_value(args, &mut index, arg)?); },
+            ("export", "--platform" | "--name") => { options.params.insert(arg.trim_start_matches("--").into(), json!(take_value(args, &mut index, arg)?)); },
+            ("export", "--scale" | "--width" | "--padding") => {
+                let value = take_value(args, &mut index, arg)?.parse::<f64>().map_err(|_| invalid(format!("{} must be a number.", arg)))?;
+                if !value.is_finite() { return Err(invalid("Export dimensions must be finite.")); }
+                options.params.insert(arg.trim_start_matches("--").into(), json!(value));
+            },
             ("export", "--frame") => { options.params.insert("frame".into(), json!(take_value(args, &mut index, arg)?)); },
             ("export", "--output") => { options.output = Some(PathBuf::from(take_value(args, &mut index, arg)?)); },
             _ => return Err(invalid(format!("Unexpected option '{}' for {}. Run codaru --help.", arg, options.command))),
@@ -101,7 +119,13 @@ fn parse(args: &[String]) -> Result<Options> {
         options.params.entry("dryRun").or_insert(json!(false));
     }
     if options.command == "select" { options.params.insert("ids".into(), json!(ids)); }
-    if options.command == "export" { options.params.entry("format").or_insert(json!("json")); }
+    if options.command == "export" {
+        options.params.entry("format").or_insert(json!("json"));
+        if !ids.is_empty() { if options.params.contains_key("frame") { return Err(invalid("Use --frame or --ids, not both.")); } options.params.insert("ids".into(), json!(ids)); }
+        if options.params.contains_key("resource") && ["ids","frame","page"].iter().any(|key|options.params.contains_key(*key)) { return Err(invalid("Use --resource without --ids, --frame or --page.")); }
+        if ["png", "assets"].contains(&options.params["format"].as_str().unwrap_or("")) && options.output.is_none() { return Err(invalid("PNG/asset exports require --output PATH to keep binary content out of the conversation.")); }
+        if let Some(platform) = options.params.get("platform").and_then(Value::as_str) { if !["ios", "android", "all"].contains(&platform) { return Err(invalid("--platform must be ios, android, or all.")); } }
+    }
     Ok(options)
 }
 
@@ -121,14 +145,15 @@ fn save_export(path: &Path, response: &mut Value) -> Result<()> {
     let content = response.get("content").and_then(Value::as_str).ok_or_else(|| AgentError::new("INVALID_RESPONSE", "The export response is missing its content string; no file was written."))?;
     let path = if path.is_absolute() { path.to_owned() } else { std::env::current_dir().map_err(|e| AgentError::new("OUTPUT_UNAVAILABLE", e.to_string()))?.join(path) };
     if path.file_name().is_none() { return Err(invalid("--output must name a file.")); }
+    let bytes = export_content::decode(content, response.get("encoding").and_then(Value::as_str)).map_err(|message| AgentError::new("INVALID_RESPONSE", message))?;
     let temporary = path.with_file_name(format!(".codaru-export-{}-{}.tmp", std::process::id(), std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap_or_default().as_nanos()));
     let mut options = std::fs::OpenOptions::new(); options.write(true).create_new(true);
     #[cfg(unix)]
     { use std::os::unix::fs::OpenOptionsExt; options.mode(0o600); }
     let mut file = options.open(&temporary).map_err(|e| AgentError::new("OUTPUT_UNAVAILABLE", format!("Cannot write {}: {}", path.display(), e)))?;
-    let saved = (|| { file.write_all(content.as_bytes())?; file.sync_all()?; drop(file); std::fs::rename(&temporary, &path) })();
+    let saved = (|| { file.write_all(&bytes)?; file.sync_all()?; drop(file); std::fs::rename(&temporary, &path) })();
     if let Err(error) = saved { let _ = std::fs::remove_file(&temporary); return Err(AgentError::new("OUTPUT_UNAVAILABLE", format!("Cannot save {}: {}", path.display(), error))); }
-    let size = content.len();
+    let size = bytes.len();
     let object = response.as_object_mut().unwrap(); object.remove("content"); object.insert("output".into(), json!(path)); object.insert("bytes".into(), json!(size));
     Ok(())
 }
@@ -164,6 +189,14 @@ mod tests {
     use super::*;
     fn args(values: &[&str]) -> Vec<String> { values.iter().map(|s| s.to_string()).collect() }
     #[test]
+    fn parses_locale_without_turning_preview_into_a_document_edit() {
+        assert!(parse(&args(&["locale"])).unwrap().params.is_empty());
+        assert_eq!(parse(&args(&["locale", "en-US"])).unwrap().params["locale"], "en-US");
+        assert_eq!(parse(&args(&["locale", "source"])).unwrap().params["locale"], Value::Null);
+        assert!(parse(&args(&["locale", "en", "es"])).is_err());
+        assert!(parse(&args(&["locale", "--unknown"])).is_err());
+    }
+    #[test]
     fn parses_discovery_selection_and_apply_arguments() {
         assert_eq!(parse(&args(&["context"])).unwrap().params, Map::new());
         assert_eq!(parse(&args(&["context", "--scope", "frame", "--depth", "3"])).unwrap().params, json!({"scope":"frame","depth":3}).as_object().unwrap().clone());
@@ -187,6 +220,36 @@ mod tests {
     #[test]
     fn apply_input_is_bounded_before_parsing() {
         assert_eq!(apply_payload(std::io::repeat(b' ').take(MAX_REQUEST_BYTES as u64 + 1)).unwrap_err().code, "MESSAGE_TOO_LARGE");
+    }
+    #[test]
+    fn parses_asset_targets_and_requires_a_binary_destination() {
+        let export = parse(&args(&["export", "--format", "assets", "--ids", "art,star", "--platform", "ios", "--width", "120", "--padding", "4", "--name", "welcome", "--output", "welcome.zip"])).unwrap();
+        assert_eq!(export.params["ids"], json!(["art", "star"]));
+        assert_eq!(export.params["platform"], "ios"); assert_eq!(export.params["width"], 120.0); assert_eq!(export.params["padding"], 4.0);
+        let aru = parse(&args(&["export", "--format", "aru", "--ids", "logo", "--output", "logo.aru"])).unwrap();
+        assert_eq!(aru.params["format"], "aru"); assert_eq!(aru.params["ids"], json!(["logo"]));
+        let png = parse(&args(&["export", "--format", "png", "--node", "art", "--scale", "2", "--output", "art.png"])).unwrap();
+        assert_eq!(png.params["ids"], json!(["art"])); assert_eq!(png.params["scale"], 2.0);
+        for values in [&["export", "--format", "assets"][..], &["export", "--format", "svg", "--ids", "art", "--frame", "f"], &["export", "--platform", "windows"], &["export", "--width", "NaN"]] { assert!(parse(&args(values)).is_err(), "{:?}", values); }
+    }
+    #[test]
+    fn parses_resource_exports_without_mixing_document_targets() {
+        let export = parse(&args(&["export", "--resource", "aru-id", "--format", "png", "--output", "asset.png"])).unwrap();
+        assert_eq!(export.params["resource"], "aru-id");
+        for values in [&["export", "--resource", "id", "--ids", "node"][..], &["export", "--resource", "id", "--frame", "f"], &["export", "--resource", "id", "--page", "p"]] { assert!(parse(&args(values)).is_err()); }
+        assert_eq!(parse(&args(&["catalog", "--kind", "styles"])).unwrap().params["kind"], "styles");
+    }
+    #[test]
+    fn binary_export_decodes_before_replacing_the_destination() {
+        let path = std::env::temp_dir().join(format!("codaru-binary-export-test-{}.png", std::process::id()));
+        let mut response = json!({"ok":true,"format":"png","encoding":"base64","content":"iVBORw0KGgo="});
+        save_export(&path, &mut response).unwrap();
+        let expected = [137,80,78,71,13,10,26,10];
+        assert_eq!(std::fs::read(&path).unwrap(), expected);
+        assert_eq!(response["bytes"], 8); assert!(response.get("content").is_none());
+        assert!(save_export(&path, &mut json!({"encoding":"base64","content":"bad!"})).is_err());
+        assert_eq!(std::fs::read(&path).unwrap(), expected);
+        std::fs::remove_file(path).unwrap();
     }
     #[test]
     fn export_file_is_written_locally_without_content_in_stdout() {

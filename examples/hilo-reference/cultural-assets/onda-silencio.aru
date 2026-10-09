@@ -1,0 +1,8 @@
+// HILO / onda-silencio. Original geometry, contemporary interpretation; no attributed traditional meaning.
+canvas 32 32
+background none
+group onda-silencio {
+resource "{\"key\": \"hilo-onda-silencio\", \"kind\": \"ui-icon\", \"brand\": \"HILO\", \"purpose\": \"Silenciar audio; icono de trazo fino para 24 px.\", \"identity\": \"Fine contour, open space and folded ribbon gestures\", \"reusable\": true, \"tags\": [\"hilo\", \"jardin-de-voces\"]}"
+path altavoz { move 5 12; line 10 12; line 18 6; line 18 26; line 10 20; line 5 20; close; fill none; stroke #383631 1.65; cap round; join round }
+path corte { move 24 12; line 29 20; move 29 12; line 24 20; fill none; stroke #383631 1.65; cap round; join round }
+}

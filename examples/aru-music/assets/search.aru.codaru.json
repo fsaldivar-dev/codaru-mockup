@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru controls · original curves generated for this prototype\ncanvas 48 48\nbackground none\ngroup search {\ncircle lens { at 21 21; radius 12; fill none; stroke #F3F0E4 3 }path handle { move 30 30; line 40 40; fill none; stroke #F3F0E4 3; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <g>\n    <circle r=\"12\" transform=\"translate(21 21)\" fill=\"none\" stroke=\"#F3F0E4\" stroke-width=\"3\"/>\n    <path d=\"M30 30 L40 40\" fill=\"none\" stroke=\"#F3F0E4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "search.aru"
+}

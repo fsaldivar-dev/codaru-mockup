@@ -1,0 +1,28 @@
+// Musaru Frutiger Metro · original editable music poster geometry.
+canvas 830 732
+background none
+path cyanStream { move 11 485; curve 112 551 140 184 372 281; curve 572 365 546 94 820 115; line 830 162; curve 566 126 607 424 355 322; curve 161 244 155 635 0 529; close; fill #2AB9C9; }
+circle pinkDisc { at 525 325; radius 235; fill #D81B65; }
+circle innerLime { at 525 325; radius 183; fill #D6F03D; }
+circle whiteOrbit { at 525 325; radius 211; fill none; stroke #FAFBEF 7; }
+path whiteFlourish { move 96 534; curve 272 553 274 323 420 410; curve 497 458 423 527 367 491; curve 312 457 370 400 401 436; fill none; stroke #FAFBEF 12; cap round; }
+path thinFlourish { move 717 465; curve 844 350 685 167 632 240; curve 589 300 675 321 688 270; fill none; stroke #17232B 4; cap round; }
+circle dot0 { at 32 271; radius 3; fill #17232B; }
+circle dot1 { at 49 271; radius 3; fill #17232B; }
+circle dot2 { at 66 271; radius 3; fill #17232B; }
+circle dot3 { at 83 271; radius 3; fill #17232B; }
+circle dot4 { at 32 288; radius 3; fill #17232B; }
+circle dot5 { at 49 288; radius 3; fill #17232B; }
+circle dot6 { at 66 288; radius 3; fill #17232B; }
+circle dot7 { at 83 288; radius 3; fill #17232B; }
+circle dot8 { at 32 305; radius 3; fill #17232B; }
+circle dot9 { at 49 305; radius 3; fill #17232B; }
+circle dot10 { at 66 305; radius 3; fill #17232B; }
+circle dot11 { at 83 305; radius 3; fill #17232B; }
+circle spot0 { at 754 146; radius 8; fill #FAFBEF; }
+circle spot1 { at 734 169; radius 4; fill #FAFBEF; }
+circle spot2 { at 114 442; radius 7; fill #FAFBEF; }
+circle spot3 { at 99 465; radius 3; fill #FAFBEF; }
+circle spot4 { at 665 564; radius 9; fill #FAFBEF; }
+path arrow { move 51 355; line 105 355; line 105 333; line 149 377; line 105 421; line 105 399; line 51 399; close; fill #D81B65; }
+path city { move 0 732; line 0 682; line 25 682; line 25 660; line 47 660; line 47 696; line 74 696; line 74 645; line 90 645; line 90 630; line 109 630; line 109 692; line 144 692; line 144 671; line 166 671; line 166 713; line 200 713; line 200 682; line 226 682; line 226 653; line 244 653; line 244 702; line 292 702; line 292 672; line 312 672; line 312 650; line 330 650; line 330 732; line 830 732; line 830 666; line 809 666; line 809 627; line 788 627; line 788 650; line 764 650; line 764 700; line 727 700; line 727 673; line 706 673; line 706 732; close; fill #17232B; }

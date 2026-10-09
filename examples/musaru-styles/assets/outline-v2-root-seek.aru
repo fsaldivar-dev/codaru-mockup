@@ -1,0 +1,6 @@
+// Musaru MusicArt · original rounded outline, no fills or effects.
+canvas 284 24
+background none
+path rail { move 4 12; line 280 12; fill none; stroke #2F5148 1.2; cap round; }
+path played { move 4 12; line 112 12; fill none; stroke #2F5148 2.4; cap round; }
+circle needle { at 112 12; radius 4; fill none; stroke #2F5148 1.2; }

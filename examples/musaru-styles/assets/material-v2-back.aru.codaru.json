@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Material 3 tonal · original editable flat forms.\ncanvas 48 48\nbackground none\npath arrow { move 25 11; line 12 24; line 25 37; move 12 24; line 39 24; fill none; stroke #49454F 3; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M25 11 L12 24 L25 37 M12 24 L39 24\" fill=\"none\" stroke=\"#49454F\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "material-v2-back.aru"
+}

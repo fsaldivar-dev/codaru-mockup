@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Future minimal · original editable precision geometry.\ncanvas 48 48\nbackground none\npath triangle { move 15 11; line 32 24; line 15 37; close; fill none; stroke #F8FDFF 2.5; cap round; }\npath stop { move 38 11; line 38 37; fill none; stroke #F8FDFF 2.5; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M15 11 L32 24 L15 37 Z\" fill=\"none\" stroke=\"#F8FDFF\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n  <path d=\"M38 11 L38 37\" fill=\"none\" stroke=\"#F8FDFF\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "future-v2-pocket-next.aru"
+}

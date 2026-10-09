@@ -1,0 +1,6 @@
+// Musaru Material 3 tonal · original editable flat forms.
+canvas 48 48
+background none
+rect spineA { at 9 24; size 4 29; corner 2; fill #49454F; }
+rect spineB { at 19 24; size 4 29; corner 2; fill #49454F; }
+path slantedBook { move 28 11; line 33 9; line 43 37; line 37 39; close; fill none; stroke #49454F 2.8; cap round; }

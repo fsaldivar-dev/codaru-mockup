@@ -1,0 +1,9 @@
+// Musaru · Material 3 tonal · original editable cover
+canvas 600 400
+background none
+rect albumBack { at 324 185; size 262 262; corner 38; fill #DFD2F2;  }
+rect album { at 285 212; size 264 264; corner 38; fill #66558A;  }
+circle vinyl { at 285 212; radius 103; fill #E9E3F2;  }
+circle track { at 285 212; radius 80; fill none; stroke #DFD2F2 2; }
+circle label { at 285 212; radius 28; fill #DFD2F2;  }
+circle spindle { at 285 212; radius 6; fill #66558A;  }

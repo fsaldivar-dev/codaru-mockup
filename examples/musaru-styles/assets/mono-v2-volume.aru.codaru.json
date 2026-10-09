@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru monochrome · original editable geometry.\ncanvas 48 48\nbackground none\npath speaker { move 6 18; line 14 18; line 26 9; line 26 39; line 14 30; line 6 30; close; fill none; stroke #161616 2.4; cap round; }\npath wave { move 34 15; curve 43 20 43 28 34 33; fill none; stroke #161616 2.4; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M6 18 L14 18 L26 9 L26 39 L14 30 L6 30 Z\" fill=\"none\" stroke=\"#161616\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>\n  <path d=\"M34 15 C43 20 43 28 34 33\" fill=\"none\" stroke=\"#161616\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "mono-v2-volume.aru"
+}

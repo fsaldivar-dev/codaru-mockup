@@ -1,0 +1,17 @@
+// HILO / seguir-la-hebra. Original geometry, contemporary interpretation; no attributed traditional meaning.
+canvas 400 300
+background none
+group seguir-la-hebra {
+resource "{\"key\": \"hilo-seguir-la-hebra\", \"kind\": \"illustration\", \"brand\": \"HILO\", \"purpose\": \"B\u00fasqueda sin resultados: una hebra que encuentra una semilla. Ilustraci\u00f3n desde 180 px, sin simbolismo tradicional atribuido.\", \"identity\": \"Fine contour, open space and folded ribbon gestures\", \"reusable\": true, \"tags\": [\"hilo\", \"jardin-de-voces\"]}"
+group hebra {
+path camino { move 43 235; curve 81 246 102 222 88 207; curve 73 190 51 208 68 219; curve 92 237 139 206 143 174; curve 150 118 106 92 90 130; curve 70 175 136 208 194 185; curve 252 161 285 135 338 147; fill none; stroke #383631 1.8; cap round; join round }
+path eco { move 112 238; curve 161 239 199 220 219 201; fill none; stroke #D32F63 1.3; cap round; join round }
+}
+group hallazgo {
+path semilla { move 322 148; curve 336.4 145.8 346.8 113.56 342 86; curve 322 105.56 311.6 137.8 322 148; close; fill #F3DCE4; stroke #D32F63 1.7; cap round; join round }
+path pliegue { move 323 144; curve 325 126 330 106 340 88; fill none; stroke #D32F63 1.1; cap round; join round }
+path hoja { move 277 162; curve 283 167.5 300.68 160.74 311 149; curve 295.48 147.14 277.8 153.9 277 162; close; fill none; stroke #788A75 1.7; cap round; join round }
+circle acento { at 343 188; radius 3; fill #278D9B }
+circle punta { at 44 235; radius 2.5; fill #D32F63 }
+}
+}

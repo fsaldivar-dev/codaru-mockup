@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Apple minimal · original editable geometry, not SF Symbols.\ncanvas 48 48\nbackground none\ncircle dotA { at 12 24; radius 2.5; fill #1D1D1F; }\ncircle dotB { at 24 24; radius 2.5; fill #1D1D1F; }\ncircle dotC { at 36 24; radius 2.5; fill #1D1D1F; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <circle r=\"2.5\" transform=\"translate(12 24)\" fill=\"#1D1D1F\"/>\n  <circle r=\"2.5\" transform=\"translate(24 24)\" fill=\"#1D1D1F\"/>\n  <circle r=\"2.5\" transform=\"translate(36 24)\" fill=\"#1D1D1F\"/>\n</svg>",
+  "filename": "apple-v2-more.aru"
+}

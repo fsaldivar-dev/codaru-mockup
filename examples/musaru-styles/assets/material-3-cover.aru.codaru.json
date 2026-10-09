@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru · Material 3 tonal · original editable cover\ncanvas 600 400\nbackground none\nrect albumBack { at 324 185; size 262 262; corner 38; fill #DFD2F2;  }\nrect album { at 285 212; size 264 264; corner 38; fill #66558A;  }\ncircle vinyl { at 285 212; radius 103; fill #E9E3F2;  }\ncircle track { at 285 212; radius 80; fill none; stroke #DFD2F2 2; }\ncircle label { at 285 212; radius 28; fill #DFD2F2;  }\ncircle spindle { at 285 212; radius 6; fill #66558A;  }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 400\" width=\"600\" height=\"400\">\n  <rect x=\"-131\" y=\"-131\" width=\"262\" height=\"262\" rx=\"38\" transform=\"translate(324 185)\" fill=\"#DFD2F2\"/>\n  <rect x=\"-132\" y=\"-132\" width=\"264\" height=\"264\" rx=\"38\" transform=\"translate(285 212)\" fill=\"#66558A\"/>\n  <circle r=\"103\" transform=\"translate(285 212)\" fill=\"#E9E3F2\"/>\n  <circle r=\"80\" transform=\"translate(285 212)\" fill=\"none\" stroke=\"#DFD2F2\" stroke-width=\"2\"/>\n  <circle r=\"28\" transform=\"translate(285 212)\" fill=\"#DFD2F2\"/>\n  <circle r=\"6\" transform=\"translate(285 212)\" fill=\"#66558A\"/>\n</svg>",
+  "filename": "material-3-cover.aru"
+}

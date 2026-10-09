@@ -1,0 +1,8 @@
+// ENTRELAZO. Geometría de autor. No reproduce un símbolo tradicional.
+canvas 24 24
+background none
+group lugar {
+resource "{\"key\": \"entrelazo-lugar\", \"kind\": \"ui-icon\", \"brand\": \"ENTRELAZO\", \"purpose\": \"Localizar: contorno de semilla y punto interior.\", \"identity\": \"Cruce, continuidad y pausa. Interpretaci\u00f3n contempor\u00e1nea de autor para Amealco.\", \"reusable\": true, \"tags\": [\"entrelazo\", \"amealco\", \"original\"]}"
+path hebra_0 { move 12 22; curve -3 9 6 0 12 3; curve 18 0 27 9 12 22; close; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_1 { move 12 8; curve 16 8 16 14 12 14; curve 8 14 8 8 12 8; fill none; stroke #283472 1.25; cap round; join round }
+}

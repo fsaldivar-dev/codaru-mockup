@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Apple minimal · original editable geometry, not SF Symbols.\ncanvas 48 48\nbackground none\npath headband { move 9 28; line 9 22; curve 9 3 39 3 39 22; line 39 28; fill none; stroke #C82E49 2.6; cap round; }\nrect leftCup { at 11 30; size 7 14; corner 3.5; fill #C82E49; }\nrect rightCup { at 37 30; size 7 14; corner 3.5; fill #C82E49; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M9 28 L9 22 C9 3 39 3 39 22 L39 28\" fill=\"none\" stroke=\"#C82E49\" stroke-width=\"2.6\" stroke-linecap=\"round\"/>\n  <rect x=\"-3.5\" y=\"-7\" width=\"7\" height=\"14\" rx=\"3.5\" transform=\"translate(11 30)\" fill=\"#C82E49\"/>\n  <rect x=\"-3.5\" y=\"-7\" width=\"7\" height=\"14\" rx=\"3.5\" transform=\"translate(37 30)\" fill=\"#C82E49\"/>\n</svg>",
+  "filename": "apple-v2-listen.aru"
+}

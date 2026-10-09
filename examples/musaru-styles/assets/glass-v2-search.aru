@@ -1,0 +1,5 @@
+// Musaru Glass · original editable geometry; material is supplied by host nodes.
+canvas 48 48
+background none
+circle lens { at 20 20; radius 11; fill none; stroke #102C3B 2.7; }
+path handle { move 28 28; line 39 39; fill none; stroke #102C3B 2.7; cap round; }

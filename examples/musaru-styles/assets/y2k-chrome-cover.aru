@@ -1,0 +1,5 @@
+// Musaru · Y2K cromado · original editable cover
+canvas 600 400
+background none
+gradient metal linear 100 { stop 0 #FFFFFF; stop 0.2 #A7B3D3; stop 0.42 #E6EEFF; stop 0.49 #FFFFFF; stop 0.5 #485679; stop 0.7 #96A5CC; stop 0.9 #F2F7FF; stop 1 #8E9EBA }
+path ring { move 167 107; curve 244 -8 460 52 445 200; curve 434 337 197 370 151 258; curve 112 163 248 97 323 143; line 309 173; curve 242 145 180 174 194 237; curve 220 318 395 278 398 194; curve 402 101 267 66 199 134; close; fill metal; stroke #9FAAC1 1; }

@@ -1,0 +1,62 @@
+// Musaru orbital receiver · original editable industrial assembly.
+canvas 585 44
+background none
+gradient titanium linear 90 { stop 0 #73848C; stop 0.08 #43545F; stop 0.46 #273944; stop 0.88 #23333D; stop 1 #101D26 }
+gradient bezel linear 90 { stop 0 #16252E; stop 0.46 #0B161F; stop 1 #72858D }
+gradient metal linear 90 { stop 0 #D2DBDC; stop 0.2 #80939D; stop 0.49 #4A5D69; stop 0.51 #273A47; stop 0.8 #6A7E88; stop 1 #B0C0C6 }
+gradient key linear 90 { stop 0 #5A6F7A; stop 0.15 #314753; stop 0.85 #1B303D; stop 1 #10222E }
+gradient amber linear 90 { stop 0 #FFE0AB; stop 0.2 #FFD18A; stop 0.8 #F3AF55; stop 1 #D58A32 }
+path base { move 5 0; line 580 0; line 585 5; line 585 39; line 580 44; line 5 44; line 0 39; line 0 5; close; fill #132530; }
+rect slot0 { at 12 22; size 4 24; corner 2; fill #091720; }
+rect slot1 { at 23 22; size 4 24; corner 2; fill #091720; }
+rect slot2 { at 34 22; size 4 24; corner 2; fill #091720; }
+rect slot3 { at 45 22; size 4 24; corner 2; fill #091720; }
+rect slot4 { at 56 22; size 4 24; corner 2; fill #091720; }
+rect slot5 { at 67 22; size 4 24; corner 2; fill #091720; }
+rect slot6 { at 78 22; size 4 24; corner 2; fill #091720; }
+rect slot7 { at 89 22; size 4 24; corner 2; fill #091720; }
+rect slot8 { at 100 22; size 4 24; corner 2; fill #091720; }
+rect slot9 { at 111 22; size 4 24; corner 2; fill #091720; }
+rect slot10 { at 122 22; size 4 24; corner 2; fill #091720; }
+rect slot11 { at 133 22; size 4 24; corner 2; fill #091720; }
+rect slot12 { at 144 22; size 4 24; corner 2; fill #091720; }
+rect slot13 { at 155 22; size 4 24; corner 2; fill #091720; }
+rect slot14 { at 166 22; size 4 24; corner 2; fill #091720; }
+rect slot15 { at 177 22; size 4 24; corner 2; fill #091720; }
+rect slot16 { at 188 22; size 4 24; corner 2; fill #091720; }
+rect slot17 { at 199 22; size 4 24; corner 2; fill #091720; }
+rect slot18 { at 210 22; size 4 24; corner 2; fill #091720; }
+rect slot19 { at 221 22; size 4 24; corner 2; fill #091720; }
+rect slot20 { at 232 22; size 4 24; corner 2; fill #091720; }
+rect slot21 { at 243 22; size 4 24; corner 2; fill #091720; }
+rect slot22 { at 254 22; size 4 24; corner 2; fill #091720; }
+rect slot23 { at 265 22; size 4 24; corner 2; fill #091720; }
+rect slot24 { at 276 22; size 4 24; corner 2; fill #091720; }
+rect slot25 { at 287 22; size 4 24; corner 2; fill #091720; }
+rect slot26 { at 298 22; size 4 24; corner 2; fill #091720; }
+rect slot27 { at 309 22; size 4 24; corner 2; fill #091720; }
+rect slot28 { at 320 22; size 4 24; corner 2; fill #091720; }
+rect slot29 { at 331 22; size 4 24; corner 2; fill #091720; }
+rect slot30 { at 342 22; size 4 24; corner 2; fill #091720; }
+rect slot31 { at 353 22; size 4 24; corner 2; fill #091720; }
+rect slot32 { at 364 22; size 4 24; corner 2; fill #091720; }
+rect slot33 { at 375 22; size 4 24; corner 2; fill #091720; }
+rect slot34 { at 386 22; size 4 24; corner 2; fill #091720; }
+rect slot35 { at 397 22; size 4 24; corner 2; fill #091720; }
+rect slot36 { at 408 22; size 4 24; corner 2; fill #091720; }
+rect slot37 { at 419 22; size 4 24; corner 2; fill #091720; }
+rect slot38 { at 430 22; size 4 24; corner 2; fill #091720; }
+rect slot39 { at 441 22; size 4 24; corner 2; fill #091720; }
+rect slot40 { at 452 22; size 4 24; corner 2; fill #091720; }
+rect slot41 { at 463 22; size 4 24; corner 2; fill #091720; }
+rect slot42 { at 474 22; size 4 24; corner 2; fill #091720; }
+rect slot43 { at 485 22; size 4 24; corner 2; fill #091720; }
+rect slot44 { at 496 22; size 4 24; corner 2; fill #091720; }
+rect slot45 { at 507 22; size 4 24; corner 2; fill #091720; }
+rect slot46 { at 518 22; size 4 24; corner 2; fill #091720; }
+rect slot47 { at 529 22; size 4 24; corner 2; fill #091720; }
+rect slot48 { at 540 22; size 4 24; corner 2; fill #091720; }
+rect slot49 { at 551 22; size 4 24; corner 2; fill #091720; }
+rect slot50 { at 562 22; size 4 24; corner 2; fill #091720; }
+rect slot51 { at 573 22; size 4 24; corner 2; fill #091720; }
+path lip { move 9 4; line 576 4; fill none; stroke #506774 1; cap round; }

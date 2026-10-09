@@ -1,0 +1,23 @@
+// Musaru Memphis · original editable printed geometry.
+canvas 342 280
+background none
+path yellowCorner { move 0 0; line 125 0; line 0 125; close; fill #F7D85B; }
+rect blueRail { at 303 138; size 78 276; corner 0; fill #233BC7; }
+circle coralDisc { at 82 189; radius 74; fill #F3868F; }
+circle dot00 { at 278 32; radius 2.5; fill #FFF9EC; }
+circle dot01 { at 297 32; radius 2.5; fill #FFF9EC; }
+circle dot02 { at 316 32; radius 2.5; fill #FFF9EC; }
+circle dot10 { at 278 51; radius 2.5; fill #FFF9EC; }
+circle dot11 { at 297 51; radius 2.5; fill #FFF9EC; }
+circle dot12 { at 316 51; radius 2.5; fill #FFF9EC; }
+circle dot20 { at 278 70; radius 2.5; fill #FFF9EC; }
+circle dot21 { at 297 70; radius 2.5; fill #FFF9EC; }
+circle dot22 { at 316 70; radius 2.5; fill #FFF9EC; }
+circle dot30 { at 278 89; radius 2.5; fill #FFF9EC; }
+circle dot31 { at 297 89; radius 2.5; fill #FFF9EC; }
+circle dot32 { at 316 89; radius 2.5; fill #FFF9EC; }
+circle dot40 { at 278 108; radius 2.5; fill #FFF9EC; }
+circle dot41 { at 297 108; radius 2.5; fill #FFF9EC; }
+circle dot42 { at 316 108; radius 2.5; fill #FFF9EC; }
+path lowerArc { move 7 189; curve 7 252 89 269 112 231; fill none; stroke #20212A 3; cap round; }
+path bar { move 16 18; line 78 18; fill none; stroke #20212A 4; cap round; }

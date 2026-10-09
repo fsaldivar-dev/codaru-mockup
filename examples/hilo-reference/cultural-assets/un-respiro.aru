@@ -1,0 +1,17 @@
+// HILO / un-respiro. Original contemporary interpretation; no copied motif or attributed traditional meaning.
+canvas 320 260
+background none
+group un-respiro {
+resource "{\"key\":\"hilo-un-respiro\",\"kind\":\"illustration\",\"brand\":\"HILO\",\"purpose\":\"Offline state / keep listening to downloaded music\",\"identity\":\"Fine contours, ribbon rhythm and restrained color\",\"reusable\":true,\"tags\":[\"hilo\",\"cultural-exploration\"]}"
+path rama { move 46 200; curve 116 198 203 217 271 192; fill none; stroke #788A75 1.6; cap round; join round }
+path cuerpo { move 72 171; curve 99 132 127 127 155 137; curve 164 113 177 111 191 125; line 208 133; line 193 140; curve 201 166 178 193 143 191; curve 106 190 95 179 72 171; close; fill #FDF7F5; stroke #383631 1.75; cap round; join round }
+path ala { move 93 166; curve 126 143 155 149 169 166; curve 148 187 116 185 93 166; close; fill none; stroke #D32F63 1.6; cap round; join round }
+path pliegue_ala { move 105 170; curve 126 155 149 157 161 166; fill none; stroke #D32F63 1.25; cap round; join round }
+path cola { move 96 181; curve 77 192 61 191 41 177; curve 62 174 75 173 87 177; fill none; stroke #383631 1.5; cap round; join round }
+path patas { move 150 190; line 148 202; move 172 184; line 180 204; fill none; stroke #383631 1.5; cap round; join round }
+circle ojo { at 184 130; radius 1.8; fill #383631 }
+path hoja { move 234 199; curve 230 173 248 155 265 152; curve 269 178 253 195 234 199; close; fill #E3E9DE; stroke #788A75 1.5; cap round; join round }
+path liston_uno { move 87 100; curve 99 66 135 58 150 76; curve 132 88 109 91 87 100; fill none; stroke #D32F63 1.4; cap round; join round }
+path liston_dos { move 173 71; curve 205 64 232 73 239 93; curve 215 94 193 87 173 71; fill none; stroke #278D9B 1.4; cap round; join round }
+circle acento { at 162 73; radius 2.2; fill #D32F63 }
+}

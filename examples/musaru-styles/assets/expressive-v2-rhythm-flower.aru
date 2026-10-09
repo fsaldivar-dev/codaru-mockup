@@ -1,0 +1,17 @@
+// Musaru Expressive · original flat editable shapes.
+canvas 240 240
+background none
+circle petal0 { at 191.0 120.0; radius 43; fill #F3B697; }
+circle petal1 { at 177.44020660062125 161.7327529127656; radius 43; fill #F3B697; }
+circle petal2 { at 141.94020660062128 187.52501265695588; radius 43; fill #F3B697; }
+circle petal3 { at 98.05979339937873 187.5250126569559; radius 43; fill #F3B697; }
+circle petal4 { at 62.55979339937874 161.7327529127656; radius 43; fill #F3B697; }
+circle petal5 { at 49.0 120.00000000000001; radius 43; fill #F3B697; }
+circle petal6 { at 62.559793399378734 78.26724708723441; radius 43; fill #F3B697; }
+circle petal7 { at 98.05979339937872 52.474987343044106; radius 43; fill #F3B697; }
+circle petal8 { at 141.94020660062125 52.47498734304409; radius 43; fill #F3B697; }
+circle petal9 { at 177.44020660062125 78.2672470872344; radius 43; fill #F3B697; }
+circle center { at 120 120; radius 75; fill #FFDCC8; }
+path risingRhythm { move 58 130; curve 78 130 78 83 98 83; curve 118 83 118 157 138 157; curve 158 157 158 110 180 110; fill none; stroke #8D3D19 12; cap round; }
+circle warmBeat { at 120 49; radius 8; fill #8D3D19; }
+circle coolBeat { at 120 193; radius 8; fill #8D3D19; }

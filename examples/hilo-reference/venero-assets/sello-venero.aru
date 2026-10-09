@@ -1,0 +1,10 @@
+// Original VENERO concept. Contemporary illustration, not a traditional community emblem.
+canvas 96 96
+background none
+group sello-venero {
+resource "{\"key\": \"venero-sello-venero\", \"kind\": \"app-icon\", \"brand\": \"VENERO\", \"purpose\": \"Marca original VENERO: dos laderas y un cauce; no es un glifo tradicional.\", \"identity\": \"Escult\u00f3rico, curvas abiertas y contrapesos; agua, barro y bosque\", \"reusable\": true, \"tags\": [\"venero\", \"amealco\", \"original\"]}"
+path izquierda { move 10 18; line 30 18; curve 31 43 40 60 48 75; curve 26 66 15 44 10 18; close; fill #233D37; stroke none 2; cap round; join round }
+path derecha { move 86 18; line 66 18; curve 65 43 56 60 48 75; curve 70 66 81 44 86 18; close; fill #233D37; stroke none 2; cap round; join round }
+path manantial { move 48 23; curve 67 46 59 55 48 55; curve 37 55 29 46 48 23; close; fill #A4472F; stroke none 2; cap round; join round }
+path base { move 28 85; curve 40 78 56 78 68 85; fill none; stroke #658E97 3; cap round; join round }
+}

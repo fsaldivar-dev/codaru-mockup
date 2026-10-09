@@ -1,0 +1,4 @@
+// Musaru monochrome · original editable geometry.
+canvas 48 48
+background none
+path heart { move 24 39; curve 7 29 4 19 11 12; curve 17 7 22 11 24 16; curve 29 8 36 9 40 15; curve 46 25 34 34 24 39; close; fill none; stroke #161616 2.4; cap round; }

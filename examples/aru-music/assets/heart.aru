@@ -1,0 +1,6 @@
+// Musaru controls · original curves generated for this prototype
+canvas 48 48
+background none
+group heart {
+path love { move 24 39; curve 5 27 4 19 10 13; curve 16 7 22 12 24 16; curve 27 10 34 8 39 14; curve 46 24 33 34 24 39; fill none; stroke #F3F0E4 3; cap round; join round }
+}

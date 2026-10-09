@@ -1,0 +1,9 @@
+// Musaru · Minimalista monocromático · original editable cover
+canvas 600 400
+background none
+circle disc { at 300 200; radius 155; fill #111111;  }
+circle trackA { at 300 200; radius 127; fill none; stroke #F5F5F3 1; }
+circle trackB { at 300 200; radius 114; fill none; stroke #F5F5F3 1; }
+circle center { at 300 200; radius 44; fill #F5F5F3;  }
+circle hole { at 300 200; radius 9; fill #111111;  }
+path cut { move 163 127; line 244 45; line 278 45; line 175 151; close; fill #F5F5F3;  }

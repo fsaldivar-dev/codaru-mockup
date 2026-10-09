@@ -1,0 +1,7 @@
+// Original VENERO concept. Contemporary illustration, not a traditional community emblem.
+canvas 32 32
+background none
+group lugar {
+resource "{\"key\": \"venero-lugar\", \"kind\": \"ui-icon\", \"brand\": \"VENERO\", \"purpose\": \"Ubicaci\u00f3n de la comunidad; icono original para 24 px con etiqueta.\", \"identity\": \"Escult\u00f3rico, curvas abiertas y contrapesos; agua, barro y bosque\", \"reusable\": true, \"tags\": [\"venero\", \"amealco\", \"original\"]}"
+path silueta { move 25 12; curve 25 21 16 29 16 29; curve 16 29 7 21 7 12; curve 7 0 25 0 25 12; close; move 19 12; curve 19 16 13 16 13 12; curve 13 8 19 8 19 12; close; fill none; stroke #233D37 2; cap round; join round }
+}

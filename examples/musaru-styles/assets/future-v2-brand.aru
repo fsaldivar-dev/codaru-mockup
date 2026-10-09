@@ -1,0 +1,5 @@
+// Musaru Future minimal · original editable precision geometry.
+canvas 48 48
+background none
+path signal { move 8 31; line 17 31; line 23 12; line 29 36; line 35 20; line 42 20; fill none; stroke #0B6476 3; cap round; }
+circle origin { at 8 31; radius 2; fill #0B6476; }

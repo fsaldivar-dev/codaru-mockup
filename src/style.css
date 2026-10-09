@@ -81,3 +81,21 @@
 .page-list{display:flex;flex-direction:column;gap:2px;margin:2px 0 8px}.page-row{display:flex;align-items:center;gap:4px;border-radius:8px;padding:0 4px 0 0}.page-row.active{background:#ffffff0a}.page-row .page-name{flex:1;justify-content:flex-start;gap:8px;padding:7px 10px;font-size:11px;color:#c6c6ce;min-width:0}.page-row .page-name span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.page-row.active .page-name{color:#f0eef6}.page-row .count{font-size:9px;color:#8f8fa0;min-width:16px;text-align:right}.page-row .page-tool{opacity:0;padding:4px 6px;font-size:11px}.page-row:hover .page-tool,.page-row:focus-within .page-tool{opacity:1}.page-input{width:100%;font-size:11px;margin:2px}
 .versions-dialog{width:560px}.version-form{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin:16px 0}.version-form input{min-width:0}.version-list{display:flex;flex-direction:column;gap:8px;max-height:46vh;overflow:auto}.version-row{display:flex;justify-content:space-between;gap:12px;align-items:center;border:1px solid #ffffff10;border-radius:10px;padding:10px 12px}.version-row strong{display:block;font-size:12px;color:#ededf1}.version-row small{font-size:10px;color:#8f8fa0}.version-row p{margin:4px 0 0;font-size:11px;color:#b5b5c0}.version-compare{margin-top:16px;border-top:1px solid #ffffff10;padding-top:12px}.version-compare h3{margin:0 0 8px;font-size:12px;color:#ededf1}.version-compare p{margin:4px 0;font-size:11px}
 .theme-select{background:transparent;border:0;color:#9d9daa;font-size:11px;padding:4px 18px 4px 6px;border-radius:6px;cursor:pointer;max-width:220px;appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,#9d9daa 50%),linear-gradient(135deg,#9d9daa 50%,transparent 50%);background-position:calc(100% - 10px) 50%,calc(100% - 6px) 50%;background-size:4px 4px,4px 4px;background-repeat:no-repeat}.theme-select:hover{background-color:#ffffff0a;color:#f0eef6}.theme-select option{color:#1b1b22}
+
+/* The locale control is also independently mountable by an IDE. */
+.locale-switch{display:inline-flex;align-items:center;gap:6px;min-width:0}
+.locale-switch select{max-width:170px;min-width:100px;background:var(--panel);color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:6px 8px;font:inherit}
+.locale-switch select:disabled{opacity:.6}
+.locale-count{color:var(--accent);white-space:nowrap;font-size:11px}
+.localized-text{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--panel);padding:9px;border:1px solid var(--line);border-radius:6px;font-size:12px}
+.localization-warning{font-size:11px;line-height:1.5;color:var(--strong);border-left:3px solid var(--accent);padding-left:8px}
+.localization-issues{max-height:55vh;overflow:auto;display:grid;gap:8px}
+.localization-issues button{display:grid;gap:4px;text-align:left;white-space:normal}
+.localization-issues small{color:var(--muted)}
+
+/* Public controls use the same themeable primitives as the rest of the inspector. */
+.public-property{margin:14px 0 18px}.property-heading{display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:11px}.property-heading>span{flex:1}.property-heading button{font-size:10px;padding:3px 6px}.public-property textarea,.public-property select{width:100%;font-size:11px}.property-key{display:block;font:9px ui-monospace,monospace;opacity:.6;margin-top:6px}.property-icon-fields{display:grid;gap:6px;grid-template-columns:1fr 1fr}.property-warning,.property-error{color:var(--cm-text,#e7def3);font-size:11px;line-height:1.5}.property-dialog{width:min(480px,calc(100vw - 40px));max-height:calc(100vh - 40px);overflow:auto}.property-dialog input{width:100%}.property-dialog [hidden]{display:none}.property-dialog .full-field>span{font-size:11px}.property-dialog .property-error{color:#c74a60;min-height:16px;margin:8px 0}.component-properties>.section-heading{margin-bottom:14px}
+
+.slot-choices-title{display:block;font-size:11px;margin:12px 0 8px}.slot-choices{max-height:145px;overflow:auto;display:grid;gap:9px;padding:10px;border:1px solid var(--line);border-radius:6px}.slot-choices .check-field{font-size:11px}.property-dialog [data-slot-fields]{margin:12px 0 18px}
+.implementation-symbol{display:block;overflow-wrap:anywhere;font-size:12px;margin:6px 0}
+.implementation-location{overflow-wrap:anywhere}

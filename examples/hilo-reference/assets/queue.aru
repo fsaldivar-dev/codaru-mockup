@@ -1,0 +1,7 @@
+// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.
+canvas 32 32
+background none
+group queue {
+path renglones { move 5 8; line 26 8; move 5 15; line 20 15; move 5 22; line 16 22; fill none; stroke #1C1917 1.8; cap round; join round }
+path hilo { move 24 20; line 24 28; move 20 24; line 28 24; fill none; stroke #1C1917 1.8; cap round; join round }
+}

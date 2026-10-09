@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.\ncanvas 32 32\nbackground none\ngroup shuffle {\npath cruce_a { move 4 8; line 8 8; curve 15 8 17 24 24 24; line 28 24; move 24 20; line 28 24; line 24 28; fill none; stroke #1C1917 1.8; cap round; join round }\npath cruce_b { move 4 24; line 8 24; curve 12 24 13 20 14 18; move 18 13; curve 20 8 22 8 28 8; move 24 4; line 28 8; line 24 12; fill none; stroke #1C1917 1.8; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" width=\"32\" height=\"32\">\n  <g>\n    <path d=\"M4 8 L8 8 C15 8 17 24 24 24 L28 24 M24 20 L28 24 L24 28\" fill=\"none\" stroke=\"#1C1917\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M4 24 L8 24 C12 24 13 20 14 18 M18 13 C20 8 22 8 28 8 M24 4 L28 8 L24 12\" fill=\"none\" stroke=\"#1C1917\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "shuffle.aru"
+}

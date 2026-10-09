@@ -1,0 +1,43 @@
+// Musaru orbital receiver · original editable industrial assembly.
+canvas 136 140
+background none
+gradient titanium linear 90 { stop 0 #73848C; stop 0.08 #43545F; stop 0.46 #273944; stop 0.88 #23333D; stop 1 #101D26 }
+gradient bezel linear 90 { stop 0 #16252E; stop 0.46 #0B161F; stop 1 #72858D }
+gradient metal linear 90 { stop 0 #D2DBDC; stop 0.2 #80939D; stop 0.49 #4A5D69; stop 0.51 #273A47; stop 0.8 #6A7E88; stop 1 #B0C0C6 }
+gradient key linear 90 { stop 0 #5A6F7A; stop 0.15 #314753; stop 0.85 #1B303D; stop 1 #10222E }
+gradient amber linear 90 { stop 0 #FFE0AB; stop 0.2 #FFD18A; stop 0.8 #F3AF55; stop 1 #D58A32 }
+circle shadow { at 68.0 72.0; radius 63.0; fill #09141D; }
+circle outer { at 68.0 68.0; radius 63.0; fill metal; }
+circle groove { at 68.0 68.0; radius 54.0; fill #122631; }
+circle innerRing { at 68.0 68.0; radius 49.0; fill #82959D; }
+circle face { at 68.0 68.0; radius 45.0; fill key; }
+path knurl0 { move 68.00 8.00; line 68.00 12.00; fill none; stroke #192F3C 1.2; cap round; }
+path knurl1 { move 81.35 9.50; line 80.46 13.40; fill none; stroke #192F3C 1.2; cap round; }
+path knurl2 { move 94.03 13.94; line 92.30 17.55; fill none; stroke #192F3C 1.2; cap round; }
+path knurl3 { move 105.41 21.09; line 102.92 24.22; fill none; stroke #192F3C 1.2; cap round; }
+path knurl4 { move 114.91 30.59; line 111.78 33.08; fill none; stroke #192F3C 1.2; cap round; }
+path knurl5 { move 122.06 41.97; line 118.45 43.70; fill none; stroke #192F3C 1.2; cap round; }
+path knurl6 { move 126.50 54.65; line 122.60 55.54; fill none; stroke #192F3C 1.2; cap round; }
+path knurl7 { move 128.00 68.00; line 124.00 68.00; fill none; stroke #192F3C 1.2; cap round; }
+path knurl8 { move 126.50 81.35; line 122.60 80.46; fill none; stroke #192F3C 1.2; cap round; }
+path knurl9 { move 122.06 94.03; line 118.45 92.30; fill none; stroke #192F3C 1.2; cap round; }
+path knurl10 { move 114.91 105.41; line 111.78 102.92; fill none; stroke #192F3C 1.2; cap round; }
+path knurl11 { move 105.41 114.91; line 102.92 111.78; fill none; stroke #192F3C 1.2; cap round; }
+path knurl12 { move 94.03 122.06; line 92.30 118.45; fill none; stroke #192F3C 1.2; cap round; }
+path knurl13 { move 81.35 126.50; line 80.46 122.60; fill none; stroke #192F3C 1.2; cap round; }
+path knurl14 { move 68.00 128.00; line 68.00 124.00; fill none; stroke #192F3C 1.2; cap round; }
+path knurl15 { move 54.65 126.50; line 55.54 122.60; fill none; stroke #192F3C 1.2; cap round; }
+path knurl16 { move 41.97 122.06; line 43.70 118.45; fill none; stroke #192F3C 1.2; cap round; }
+path knurl17 { move 30.59 114.91; line 33.08 111.78; fill none; stroke #192F3C 1.2; cap round; }
+path knurl18 { move 21.09 105.41; line 24.22 102.92; fill none; stroke #192F3C 1.2; cap round; }
+path knurl19 { move 13.94 94.03; line 17.55 92.30; fill none; stroke #192F3C 1.2; cap round; }
+path knurl20 { move 9.50 81.35; line 13.40 80.46; fill none; stroke #192F3C 1.2; cap round; }
+path knurl21 { move 8.00 68.00; line 12.00 68.00; fill none; stroke #192F3C 1.2; cap round; }
+path knurl22 { move 9.50 54.65; line 13.40 55.54; fill none; stroke #192F3C 1.2; cap round; }
+path knurl23 { move 13.94 41.97; line 17.55 43.70; fill none; stroke #192F3C 1.2; cap round; }
+path knurl24 { move 21.09 30.59; line 24.22 33.08; fill none; stroke #192F3C 1.2; cap round; }
+path knurl25 { move 30.59 21.09; line 33.08 24.22; fill none; stroke #192F3C 1.2; cap round; }
+path knurl26 { move 41.97 13.94; line 43.70 17.55; fill none; stroke #192F3C 1.2; cap round; }
+path knurl27 { move 54.65 9.50; line 55.54 13.40; fill none; stroke #192F3C 1.2; cap round; }
+path pointer { move 68.0 29.0; line 68.0 44.0; fill none; stroke #FFD18A 3; cap round; }
+circle hub { at 68.0 68.0; radius 5; fill #C6D0D1; }

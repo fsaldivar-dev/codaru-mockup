@@ -1,0 +1,8 @@
+// HILO / vuelta-historial. Original geometry, contemporary interpretation; no attributed traditional meaning.
+canvas 32 32
+background none
+group vuelta-historial {
+resource "{\"key\": \"hilo-vuelta-historial\", \"kind\": \"ui-icon\", \"brand\": \"HILO\", \"purpose\": \"Ver canciones escuchadas recientemente; icono de trazo fino para 24 px.\", \"identity\": \"Fine contour, open space and folded ribbon gestures\", \"reusable\": true, \"tags\": [\"hilo\", \"jardin-de-voces\"]}"
+path regreso { move 5 12; curve 8 1 28 2 28 16; curve 28 30 9 32 5 21; move 5 4; line 5 12; line 13 12; fill none; stroke #383631 1.65; cap round; join round }
+path hora { move 17 9; line 17 17; line 22 20; fill none; stroke #383631 1.65; cap round; join round }
+}

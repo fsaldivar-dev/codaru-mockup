@@ -1,0 +1,5 @@
+// Musaru Future minimal · original editable precision geometry.
+canvas 48 48
+background none
+circle lens { at 20 20; radius 11; fill none; stroke #142C38 2.5; }
+path handle { move 28 28; line 40 40; fill none; stroke #142C38 2.5; cap round; }

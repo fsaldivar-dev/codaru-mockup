@@ -1,0 +1,6 @@
+// Musaru POP: bespoke control, original editable paths
+canvas 280 54
+background none
+path track { move 5 28; quad 13 14 21 27; quad 28 43 37 28; quad 45 10 54 27; quad 62 46 70 28; quad 79 9 88 28; quad 96 44 105 27; quad 114 10 123 28; quad 131 42 140 27; quad 148 13 157 27; line 270 27; fill none; stroke #252036 5; cap round; }
+circle handle { at 141 27; radius 11; fill #FF91CC; stroke #252036 3; }
+

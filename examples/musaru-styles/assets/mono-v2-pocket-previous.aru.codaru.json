@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru monochrome · original editable geometry.\ncanvas 48 48\nbackground none\npath triangle { move 34 10; line 14 24; line 34 38; close; fill #FAFAFA; }\nrect stop { at 9 24; size 3 28; corner 0; fill #FAFAFA; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M34 10 L14 24 L34 38 Z\" fill=\"#FAFAFA\"/>\n  <rect x=\"-1.5\" y=\"-14\" width=\"3\" height=\"28\" transform=\"translate(9 24)\" fill=\"#FAFAFA\"/>\n</svg>",
+  "filename": "mono-v2-pocket-previous.aru"
+}

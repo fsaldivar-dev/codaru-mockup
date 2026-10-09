@@ -4,5 +4,5 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"], "strict": true,
     "noEmit": true, "skipLibCheck": true, "types": ["vite/client", "node"]
   },
-  "include": ["src", "tests", "examples/tauri-host.ts", "vite.config.ts", "playwright.config.ts"]
+  "include": ["src", "tests", "examples/*.ts", "examples/aru-music/*.ts", "examples/musaru-styles/*.ts", "vite.config.ts", "playwright.config.ts"]
 }

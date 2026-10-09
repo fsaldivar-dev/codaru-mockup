@@ -1,0 +1,9 @@
+// ENTRELAZO. Geometría de autor. No reproduce un símbolo tradicional.
+canvas 24 24
+background none
+group volver {
+resource "{\"key\": \"entrelazo-volver\", \"kind\": \"ui-icon\", \"brand\": \"ENTRELAZO\", \"purpose\": \"Volver: flecha fina con terminal de hilo.\", \"identity\": \"Cruce, continuidad y pausa. Interpretaci\u00f3n contempor\u00e1nea de autor para Amealco.\", \"reusable\": true, \"tags\": [\"entrelazo\", \"amealco\", \"original\"]}"
+path hebra_0 { move 21 12; line 3 12; line 10 5; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_1 { move 3 12; line 10 19; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_2 { move 17 9; line 20 9; fill none; stroke #283472 1.25; cap round; join round }
+}

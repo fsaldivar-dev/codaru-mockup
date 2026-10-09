@@ -269,7 +269,7 @@ export function insertKitItem(p: Project, kit: KitId, itemId: string, parentId: 
   const parent = parentId === null ? undefined : p.nodes.find(n => n.id === parentId);
   if (parentId !== null && (!parent || !containerKinds.includes(parent.type))) throw new Error('Contenedor inválido');
   const scope = parent ? [parent, ...ancestors(p, parent.id)] : [];
-  if (scope.some(n => n.instanceOf || n.componentId)) throw new Error('Los componentes anidados quedan fuera de esta versión');
+  if (scope.some(n => n.instanceOf)) throw new Error('Para añadir componentes de kit aquí, edita el maestro o desvincula la instancia');
   const themeId = ensureKitTheme(p, kit), componentId = ensureKitComponent(p, kit, itemId, variant);
   const id = instantiate(p, componentId, parentId, x, y);
   updateNode(p, id, { themeId: scope.some(n => n.themeId) ? undefined : themeId });

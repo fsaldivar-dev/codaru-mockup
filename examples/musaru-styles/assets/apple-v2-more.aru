@@ -1,0 +1,6 @@
+// Musaru Apple minimal · original editable geometry, not SF Symbols.
+canvas 48 48
+background none
+circle dotA { at 12 24; radius 2.5; fill #1D1D1F; }
+circle dotB { at 24 24; radius 2.5; fill #1D1D1F; }
+circle dotC { at 36 24; radius 2.5; fill #1D1D1F; }

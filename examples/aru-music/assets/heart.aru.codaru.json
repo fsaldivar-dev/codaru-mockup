@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru controls · original curves generated for this prototype\ncanvas 48 48\nbackground none\ngroup heart {\npath love { move 24 39; curve 5 27 4 19 10 13; curve 16 7 22 12 24 16; curve 27 10 34 8 39 14; curve 46 24 33 34 24 39; fill none; stroke #F3F0E4 3; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <g>\n    <path d=\"M24 39 C5 27 4 19 10 13 C16 7 22 12 24 16 C27 10 34 8 39 14 C46 24 33 34 24 39\" fill=\"none\" stroke=\"#F3F0E4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "heart.aru"
+}

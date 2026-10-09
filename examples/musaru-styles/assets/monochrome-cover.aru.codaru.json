@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru · Minimalista monocromático · original editable cover\ncanvas 600 400\nbackground none\ncircle disc { at 300 200; radius 155; fill #111111;  }\ncircle trackA { at 300 200; radius 127; fill none; stroke #F5F5F3 1; }\ncircle trackB { at 300 200; radius 114; fill none; stroke #F5F5F3 1; }\ncircle center { at 300 200; radius 44; fill #F5F5F3;  }\ncircle hole { at 300 200; radius 9; fill #111111;  }\npath cut { move 163 127; line 244 45; line 278 45; line 175 151; close; fill #F5F5F3;  }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 600 400\" width=\"600\" height=\"400\">\n  <circle r=\"155\" transform=\"translate(300 200)\" fill=\"#111111\"/>\n  <circle r=\"127\" transform=\"translate(300 200)\" fill=\"none\" stroke=\"#F5F5F3\" stroke-width=\"1\"/>\n  <circle r=\"114\" transform=\"translate(300 200)\" fill=\"none\" stroke=\"#F5F5F3\" stroke-width=\"1\"/>\n  <circle r=\"44\" transform=\"translate(300 200)\" fill=\"#F5F5F3\"/>\n  <circle r=\"9\" transform=\"translate(300 200)\" fill=\"#111111\"/>\n  <path d=\"M163 127 L244 45 L278 45 L175 151 Z\" fill=\"#F5F5F3\"/>\n</svg>",
+  "filename": "monochrome-cover.aru"
+}

@@ -1,0 +1,6 @@
+// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.
+canvas 32 32
+background none
+group heart {
+path lazo { move 16 26; curve 10 22 4 18 4 12; curve 4 5 13 4 16 10; curve 20 4 28 6 28 12; curve 28 18 22 22 16 26; close; fill none; stroke #1C1917 1.8; cap round; join round }
+}

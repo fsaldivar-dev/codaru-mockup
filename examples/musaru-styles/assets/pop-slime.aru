@@ -1,0 +1,25 @@
+// Musaru style laboratory · original editable illustration
+canvas 600 400
+background none
+gradient jelly linear 100 { stop 0 #F4FF8B; stop 0.45 #C8F748; stop 1 #69D448 }
+path stickerShadow { move 89 111; line 157 88; line 169 34; line 220 72; line 281 40; line 294 94; line 354 86; line 335 143; line 389 181; line 344 223; line 364 284; line 301 280; line 274 338; line 224 307; line 170 350; line 153 288; line 91 296; line 106 235; line 59 198; line 104 159; close; fill #232139 }
+path sticker { move 80 101; line 148 78; line 160 24; line 211 62; line 272 30; line 285 84; line 345 76; line 326 133; line 380 171; line 335 213; line 355 274; line 292 270; line 265 328; line 215 297; line 161 340; line 144 278; line 82 286; line 97 225; line 50 188; line 95 149; close; fill #FF8FCA; stroke #232139 4 }
+group slime {
+ path body { move 135 230; curve 127 164 147 99 209 96; curve 266 80 309 110 308 166; curve 308 192 353 221 337 248; quad 326 266 302 253; quad 283 248 279 277; quad 270 303 248 279; quad 234 256 218 281; quad 202 310 183 280; quad 171 259 151 275; curve 118 285 109 253 135 230; close; fill jelly; stroke #232139 5 }
+ ellipse shine { at 183 130; size 45 19; fill #FAFFD1 }
+ circle leftEye { at 190 196; radius 11; fill #232139 }
+ circle rightEye { at 251 196; radius 11; fill #232139 }
+ circle eyeA { at 187 192; radius 3; fill #FFFFFF }
+ circle eyeB { at 248 192; radius 3; fill #FFFFFF }
+ path smile { move 199 221; quad 222 244 244 221; stroke #232139 5; cap round; fill none }
+ path band { move 141 186; curve 120 88 301 67 313 183; stroke #232139 15; cap round; fill none }
+ rect earA { at 141 199; size 25 55; corner 12; fill #8D75F5; stroke #232139 4 }
+ rect earB { at 313 199; size 25 55; corner 12; fill #8D75F5; stroke #232139 4 }
+}
+path starA { move 428.0 43.0; line 437.3 65.3; line 461.3 67.2; line 443.0 82.9; line 448.6 106.3; line 428.0 93.8; line 407.4 106.3; line 413.0 82.9; line 394.7 67.2; line 418.7 65.3; close; fill #F7FF91 }
+path starB { move 441.0 267.0; line 448.7 285.4; line 468.6 287.0; line 453.4 300.0; line 458.0 319.5; line 441.0 309.1; line 424.0 319.5; line 428.6 300.0; line 413.4 287.0; line 433.3 285.4; close; fill #B0E9FF }
+path note { move 457 170; line 457 119; line 499 108; line 499 157; stroke #232139 9; cap round; fill none }
+ellipse noteA { at 446 171; size 33 22; fill #232139 }
+ellipse noteB { at 488 158; size 33 22; fill #232139 }
+path scribble { move 393 225; quad 425 199 423 227; quad 422 252 451 224; stroke #232139 5; cap round; fill none }
+

@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Apple minimal · original editable geometry, not SF Symbols.\ncanvas 48 48\nbackground none\npath inner { move 18 17; curve 10 21 10 29 18 33; move 30 17; curve 38 21 38 29 30 33; fill none; stroke #68686D 2.5; cap round; }\npath outer { move 11 9; curve -2 18 -2 32 11 41; move 37 9; curve 50 18 50 32 37 41; fill none; stroke #68686D 2.5; cap round; }\ncircle station { at 24 25; radius 4; fill #68686D; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M18 17 C10 21 10 29 18 33 M30 17 C38 21 38 29 30 33\" fill=\"none\" stroke=\"#68686D\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n  <path d=\"M11 9 C-2 18 -2 32 11 41 M37 9 C50 18 50 32 37 41\" fill=\"none\" stroke=\"#68686D\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n  <circle r=\"4\" transform=\"translate(24 25)\" fill=\"#68686D\"/>\n</svg>",
+  "filename": "apple-v2-radio.aru"
+}

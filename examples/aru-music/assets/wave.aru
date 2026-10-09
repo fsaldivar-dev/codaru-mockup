@@ -1,0 +1,6 @@
+// Musaru controls · original curves generated for this prototype
+canvas 48 48
+background none
+group wave {
+path signalA { move 8 29; line 8 19; fill none; stroke #F3F0E4 3; cap round; join round }path signalB { move 16 36; line 16 12; fill none; stroke #F3F0E4 3; cap round; join round }path signalC { move 24 40; line 24 8; fill none; stroke #F3F0E4 3; cap round; join round }path signalD { move 32 34; line 32 14; fill none; stroke #F3F0E4 3; cap round; join round }path signalE { move 40 28; line 40 20; fill none; stroke #F3F0E4 3; cap round; join round }
+}

@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Expressive · original flat editable shapes.\ncanvas 48 48\nbackground none\npath heart { move 24 39; curve 6 29 5 18 12 12; curve 17 8 23 11 24 16; curve 28 9 36 9 40 15; curve 46 25 33 35 24 39; close; fill none; stroke #8D3D19 3.2; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M24 39 C6 29 5 18 12 12 C17 8 23 11 24 16 C28 9 36 9 40 15 C46 25 33 35 24 39 Z\" fill=\"none\" stroke=\"#8D3D19\" stroke-width=\"3.2\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "expressive-v2-heart.aru"
+}

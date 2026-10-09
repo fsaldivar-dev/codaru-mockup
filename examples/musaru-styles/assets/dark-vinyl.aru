@@ -1,0 +1,27 @@
+// Musaru style laboratory · original editable illustration
+canvas 600 400
+background none
+gradient chrome linear 90 { stop 0 #F0F5F9; stop 0.2 #8D9FAC; stop 0.45 #263946; stop 0.48 #F3FBFF; stop 0.7 #8498AA; stop 1 #1E2A38 }
+gradient black linear 100 { stop 0 #465766; stop 0.35 #17222E; stop 0.6 #060C15; stop 1 #273847 }
+gradient center linear 90 { stop 0 #D9FCFF; stop 0.4 #45C7EE; stop 0.5 #027AAB; stop 1 #06334C }
+group turntable {
+ circle chassis { at 300 200; radius 184; fill chrome }
+ circle inset { at 300 200; radius 175; fill black; stroke #040B12 3 }
+ circle blueRing { at 300 200; radius 157; fill none; stroke #48D4FF 3 }
+ circle record { at 300 200; radius 145; fill #080D13 }
+circle groove0 { at 300 200; radius 136; fill none; stroke #283B49 1; }
+circle groove1 { at 300 200; radius 125; fill none; stroke #283B49 1; }
+circle groove2 { at 300 200; radius 114; fill none; stroke #283B49 1; }
+circle groove3 { at 300 200; radius 103; fill none; stroke #283B49 1; }
+circle groove4 { at 300 200; radius 92; fill none; stroke #283B49 1; }
+circle groove5 { at 300 200; radius 81; fill none; stroke #283B49 1; }
+circle label { at 300 200; radius 64; fill center; stroke #99F2FF 1 }
+circle hub { at 300 200; radius 11; fill chrome }
+path reflectionA { move 200 99; quad 239 63 280 61; stroke #D8F9FF 7; cap round; fill none }
+path reflectionB { move 354 330; quad 388 317 411 288; stroke #607D92 4; cap round; fill none }
+}
+path armShadow { move 498 64; line 498 244; line 413 297; stroke #000000 19; cap round; fill none }
+path toneArm { move 490 60; line 490 240; line 407 291; stroke chrome 12; cap round; fill none }
+rect cartridge { at 399 296; size 34 19; corner 3; fill #D2ECF5; stroke #2F5268 2 }
+circle pivot { at 490 60; radius 22; fill chrome; stroke #080F1B 3 }
+

@@ -1,0 +1,23 @@
+// Original VENERO concept. Contemporary illustration, not a traditional community emblem.
+canvas 480 420
+background none
+group dar-forma {
+resource "{\"key\": \"venero-dar-forma\", \"kind\": \"illustration\", \"brand\": \"VENERO\", \"purpose\": \"Ilustraci\u00f3n editorial de manos modelando barro, original y no retrato de una persona real; desde 180 px.\", \"identity\": \"Escult\u00f3rico, curvas abiertas y contrapesos; agua, barro y bosque\", \"reusable\": true, \"tags\": [\"venero\", \"amealco\", \"original\"]}"
+circle campo { at 240 205; radius 166; fill #D9B995; stroke none 2 }
+group pieza {
+path vasija { move 179 97; line 301 97; curve 282 127 288 149 321 182; curve 356 218 346 309 294 329; line 186 329; curve 134 309 124 218 159 182; curve 192 149 198 127 179 97; close; fill #A4472F; stroke none 2; cap round; join round }
+path boca { move 180 97; curve 201 85 281 85 301 97; curve 280 111 201 111 180 97; close; fill #233D37; stroke none 2; cap round; join round }
+path luz { move 192 128; curve 208 155 171 195 175 237; fill none; stroke #F5F0E6 3; cap round; join round }
+path torno_0 { move 182 261; curve 210 272 272 272 299 261; fill none; stroke #D9B995 1.5; cap round; join round }
+path torno_1 { move 182 274; curve 210 285 272 285 299 274; fill none; stroke #D9B995 1.5; cap round; join round }
+path torno_2 { move 182 287; curve 210 298 272 298 299 287; fill none; stroke #D9B995 1.5; cap round; join round }
+path torno_3 { move 182 300; curve 210 311 272 311 299 300; fill none; stroke #D9B995 1.5; cap round; join round }
+}
+group manos {
+path mano_izquierda { move 0 252; curve 50 250 83 238 112 210; curve 135 187 151 171 166 175; curve 181 182 167 198 157 215; curve 151 227 160 236 169 225; line 182 202; curve 190 189 203 194 197 210; curve 185 250 161 282 131 295; curve 99 310 70 325 41 344; line 0 344; close; fill #233D37; stroke none 2; cap round; join round }
+path mano_derecha { move 480 252; curve 430 250 397 238 368 210; curve 345 187 329 171 314 175; curve 299 182 313 198 323 215; curve 329 227 320 236 311 225; line 298 202; curve 290 189 277 194 283 210; curve 295 250 319 282 349 295; curve 381 310 410 325 439 344; line 480 344; close; fill #233D37; stroke none 2; cap round; join round }
+path pulgar_izquierdo { move 107 269; curve 121 259 134 241 143 225; fill none; stroke #F5F0E6 2; cap round; join round }
+path pulgar_derecho { move 373 269; curve 359 259 346 241 337 225; fill none; stroke #F5F0E6 2; cap round; join round }
+}
+path suelo { move 67 375; line 413 375; fill none; stroke #233D37 1.4; cap round; join round }
+}

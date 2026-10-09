@@ -1,0 +1,5 @@
+// Musaru Material 3 tonal · original editable flat forms.
+canvas 48 48
+background none
+circle lens { at 20 20; radius 11; fill none; stroke #49454F 3; }
+path handle { move 28 28; line 38 38; fill none; stroke #49454F 3; cap round; }

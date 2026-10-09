@@ -1,0 +1,8 @@
+// HILO / flor-ajustes. Original geometry, contemporary interpretation; no attributed traditional meaning.
+canvas 32 32
+background none
+group flor-ajustes {
+resource "{\"key\": \"hilo-flor-ajustes\", \"kind\": \"ui-icon\", \"brand\": \"HILO\", \"purpose\": \"Abrir ajustes de HILO; acompa\u00f1ado de etiqueta; icono de trazo fino para 24 px.\", \"identity\": \"Fine contour, open space and folded ribbon gestures\", \"reusable\": true, \"tags\": [\"hilo\", \"jardin-de-voces\"]}"
+path corola { move 13 4; line 19 4; line 20 8; line 24 10; line 28 10; line 30 16; line 26 19; line 25 23; line 26 27; line 20 30; line 16 27; line 12 28; line 9 30; line 5 25; line 7 21; line 6 17; line 2 14; line 5 8; line 9 9; line 12 7; close; fill none; stroke #383631 1.65; cap round; join round }
+path centro { move 21 16; curve 21 23 11 23 11 16; curve 11 9 21 9 21 16; close; fill none; stroke #383631 1.65; cap round; join round }
+}

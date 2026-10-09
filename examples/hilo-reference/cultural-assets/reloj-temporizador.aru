@@ -1,0 +1,9 @@
+// HILO / reloj-temporizador. Original geometry, contemporary interpretation; no attributed traditional meaning.
+canvas 32 32
+background none
+group reloj-temporizador {
+resource "{\"key\": \"hilo-reloj-temporizador\", \"kind\": \"ui-icon\", \"brand\": \"HILO\", \"purpose\": \"Programar el fin de la reproducci\u00f3n; icono de trazo fino para 24 px.\", \"identity\": \"Fine contour, open space and folded ribbon gestures\", \"reusable\": true, \"tags\": [\"hilo\", \"jardin-de-voces\"]}"
+path reloj { move 27 18; curve 27 32 5 32 5 18; curve 5 4 27 4 27 18; close; fill none; stroke #383631 1.65; cap round; join round }
+path aguja { move 16 11; line 16 18; line 21 21; fill none; stroke #383631 1.65; cap round; join round }
+path pulsador { move 12 3; line 20 3; move 16 3; line 16 7; move 25 7; line 28 10; fill none; stroke #383631 1.65; cap round; join round }
+}

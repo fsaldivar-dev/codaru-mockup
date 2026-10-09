@@ -1,0 +1,6 @@
+// Musaru POP: bespoke control, original editable paths
+canvas 48 48
+background none
+path speaker { move 5 18; line 14 17; line 27 7; line 26 42; line 14 31; line 5 31; close; fill #FFF9E8; stroke #252036 3; cap round; }
+path sound { move 33 15; quad 42 24 33 33; move 39 8; quad 54 24 39 40; fill none; stroke #252036 3; cap round; }
+

@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru controls · original curves generated for this prototype\ncanvas 48 48\nbackground none\ngroup arrow {\npath stem { move 9 24; line 39 24; fill none; stroke #F3F0E4 3; cap round; join round }path head { move 29 14; line 39 24; line 29 34; fill none; stroke #F3F0E4 3; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <g>\n    <path d=\"M9 24 L39 24\" fill=\"none\" stroke=\"#F3F0E4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M29 14 L39 24 L29 34\" fill=\"none\" stroke=\"#F3F0E4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "arrow.aru"
+}

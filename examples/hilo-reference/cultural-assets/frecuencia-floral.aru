@@ -1,0 +1,27 @@
+// HILO / frecuencia-floral. Original geometry, contemporary interpretation; no attributed traditional meaning.
+canvas 400 360
+background none
+group frecuencia-floral {
+resource "{\"key\": \"hilo-frecuencia-floral\", \"kind\": \"illustration\", \"brand\": \"HILO\", \"purpose\": \"Estaciones de HILO: roseta original y dos \u00f3rbitas abiertas como frecuencia musical. Ilustraci\u00f3n desde 180 px.\", \"identity\": \"Fine contour, open space and folded ribbon gestures\", \"reusable\": true, \"tags\": [\"hilo\", \"jardin-de-voces\"]}"
+group frecuencia {
+path orbita_exterior { move 89 281; curve 32 229 47 120 112 80; curve 171 44 251 63 300 110; fill none; stroke #383631 1.5; cap round; join round }
+path orbita_final { move 320 137; curve 363 201 329 275 263 300; curve 210 319 146 313 115 299; fill none; stroke #383631 1.5; cap round; join round }
+path orbita_interior { move 81 199; curve 68 145 103 102 149 88; curve 196 73 239 89 264 113; fill none; stroke #278D9B 1.3; cap round; join round }
+path eco_inferior { move 306 217; curve 280 268 217 286 168 269; fill none; stroke #D32F63 1.3; cap round; join round }
+}
+group roseta {
+path liston_0 { move 215 182; curve 221.5 195 255.3 195 280 182; curve 255.3 169 221.5 169 215 182; close; fill none; stroke #788A75 1.7; cap round; join round }
+path liston_1 { move 209.728 194.728; curve 205.132 208.517 229.032 232.417 255.69 240.69; curve 247.417 214.032 223.517 190.132 209.728 194.728; close; fill #F3DCE4; stroke #D32F63 1.7; cap round; join round }
+path liston_2 { move 197 200; curve 184 206.5 184 240.3 197 265; curve 210 240.3 210 206.5 197 200; close; fill none; stroke #788A75 1.7; cap round; join round }
+path liston_3 { move 184.272 194.728; curve 170.483 190.132 146.583 214.032 138.31 240.69; curve 164.968 232.417 188.868 208.517 184.272 194.728; close; fill none; stroke #D32F63 1.7; cap round; join round }
+path liston_4 { move 179 182; curve 172.5 169 138.7 169 114 182; curve 138.7 195 172.5 195 179 182; close; fill none; stroke #788A75 1.7; cap round; join round }
+path liston_5 { move 184.272 169.272; curve 188.868 155.483 164.968 131.583 138.31 123.31; curve 146.583 149.968 170.483 173.868 184.272 169.272; close; fill #F3DCE4; stroke #D32F63 1.7; cap round; join round }
+path liston_6 { move 197 164; curve 210 157.5 210 123.7 197 99; curve 184 123.7 184 157.5 197 164; close; fill none; stroke #788A75 1.7; cap round; join round }
+path liston_7 { move 209.728 169.272; curve 223.517 173.868 247.417 149.968 255.69 123.31; curve 229.032 131.583 205.132 155.483 209.728 169.272; close; fill none; stroke #D32F63 1.7; cap round; join round }
+circle centro { at 197 182; radius 14; fill none; stroke #383631 1.6 }
+circle eje { at 197 182; radius 3; fill #D32F63 }
+}
+path hoja_exterior { move 94 282; curve 100.1 292.2 127.66 290.12 147 278; curve 126.06 268.92 98.5 271 94 282; close; fill #E3E9DE; stroke #788A75 1.6; cap round; join round }
+circle acento { at 312 125; radius 3.3; fill #278D9B }
+circle semilla { at 265 298; radius 2.6; fill #D32F63 }
+}

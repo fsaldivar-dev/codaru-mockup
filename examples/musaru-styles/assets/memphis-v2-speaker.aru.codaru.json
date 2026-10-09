@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Memphis · original editable printed geometry.\ncanvas 124 104\nbackground none\nrect block { at 72 44; size 70 76; corner 0; fill #233BC7; }\npath triangle { move 6 10; line 65 10; line 6 70; close; fill #F3868F; }\ncircle speaker { at 72 42; radius 22; fill #FFF9EC; }\ncircle core { at 72 42; radius 7; fill #20212A; }\npath foot { move 25 90; line 112 90; fill none; stroke #20212A 4; cap round; }\npath arch { move 7 50; curve 7 100 48 100 48 66; fill none; stroke #F7D85B 8; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 124 104\" width=\"124\" height=\"104\">\n  <rect x=\"-35\" y=\"-38\" width=\"70\" height=\"76\" transform=\"translate(72 44)\" fill=\"#233BC7\"/>\n  <path d=\"M6 10 L65 10 L6 70 Z\" fill=\"#F3868F\"/>\n  <circle r=\"22\" transform=\"translate(72 42)\" fill=\"#FFF9EC\"/>\n  <circle r=\"7\" transform=\"translate(72 42)\" fill=\"#20212A\"/>\n  <path d=\"M25 90 L112 90\" fill=\"none\" stroke=\"#20212A\" stroke-width=\"4\" stroke-linecap=\"round\"/>\n  <path d=\"M7 50 C7 100 48 100 48 66\" fill=\"none\" stroke=\"#F7D85B\" stroke-width=\"8\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "memphis-v2-speaker.aru"
+}

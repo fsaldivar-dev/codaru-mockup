@@ -1,0 +1,48 @@
+// Listening Garden · original AI-authored vector illustration, no embedded photograph
+canvas 560 360
+background none
+gradient shirt linear 100 { stop 0 #E6EE8A; stop 1 #ACC45B }
+gradient sunset linear 90 { stop 0 #F6C39E; stop 1 #DC8566 }
+group scenery {
+ circle halo { at 335 164; radius 139; fill sunset }
+ path farHill { move 184 261; quad 250 176 329 236; quad 428 166 496 264; line 496 303; line 184 303; close; fill #64846B }
+ path nearHill { move 146 290; quad 241 220 333 270; quad 430 218 525 299; line 525 335; line 146 335; close; fill #254B40 }
+}
+group plant {
+ path stem { move 466 302; quad 451 247 469 201; fill none; stroke #F1F0CA 4; cap round }
+ path leafA { move 459 264; curve 414 263 417 229 452 240; quad 463 244 459 264; close; fill #C4DB81 }
+ path leafB { move 461 237; curve 497 220 503 247 466 256; close; fill #E4EDAF }
+ path leafC { move 468 216; curve 437 195 459 176 475 203; close; fill #B4CF79 }
+}
+group listener {
+ path hairBack { move 199 166; curve 159 99 198 54 244 76; curve 283 58 312 94 289 154; line 278 203; line 203 202; close; fill #192E28 }
+ path neck { move 225 174; line 224 207; quad 245 227 260 202; line 260 164; close; fill #D48666 }
+ path face { move 210 104; curve 210 80 279 81 279 117; line 272 157; quad 267 192 241 191; quad 216 188 211 161; close; fill #F0B18D }
+ path fringe { move 203 123; curve 188 83 243 62 276 85; line 282 117; curve 262 100 248 111 240 93; quad 230 121 203 123; close; fill #192E28 }
+ path closedEye { move 244 136; quad 250 142 256 136; stroke #192E28 3; cap round; fill none }
+ path nose { move 265 135; line 269 150; line 261 153; stroke #BD7056 2; cap round; fill none }
+ path mouth { move 246 166; quad 253 170 260 165; stroke #9B514A 2; cap round; fill none }
+ path shoulder { move 222 199; curve 174 195 154 231 147 315; line 333 315; curve 330 242 300 197 262 198; quad 242 225 222 199; close; fill shirt }
+ path sleeve { move 177 229; quad 190 278 192 314; stroke #7F9A49 3; fill none }
+ path arm { move 305 298; curve 296 259 271 224 279 169; quad 285 155 299 164; quad 301 221 328 262; quad 343 302 305 298; close; fill #EDAA85 }
+ path cuff { move 298 281; line 333 268; line 343 304; line 310 319; close; fill #DAE984 }
+ group headphones {
+  path band { move 204 134; curve 188 67 285 63 294 131; stroke #F5F0DB 11; cap round; fill none }
+  rect earLeft { at 209 144; size 21 39; corner 10; fill #172723 }
+  rect earRight { at 286 144; size 21 39; corner 10; fill #172723 }
+  rect enamel { at 286 144; size 11 29; corner 5; fill #EC916B }
+ }
+}
+group vinyl {
+ circle outer { at 116 254; radius 63; fill #152E27 }
+ circle trackA { at 116 254; radius 51; fill none; stroke #365B43 2 }
+ circle trackB { at 116 254; radius 42; fill none; stroke #365B43 2 }
+ circle center { at 116 254; radius 22; fill #EC916B }
+ circle hole { at 116 254; radius 4; fill #152E27 }
+ path gleam { move 75 238; quad 84 213 108 207; fill none; stroke #D0DE90 4; cap round }
+}
+group sparkle {
+ path starA { move 127 104; quad 127 122 144 122; quad 127 122 127 140; quad 127 122 110 122; quad 127 122 127 104; fill #DCE68D }
+ path starB { move 416 51; quad 416 64 429 64; quad 416 64 416 77; quad 416 64 403 64; quad 416 64 416 51; fill #F4E2BA }
+ circle dot { at 163 71; radius 5; fill #EDAA85 }
+}

@@ -1,0 +1,38 @@
+// Musaru Skeuomorphic · original editable physical geometry.
+canvas 322 570
+background none
+gradient walnut linear 0 { stop 0 #5B3020; stop 0.16 #895036; stop 0.38 #A56642; stop 0.62 #78422C; stop 0.84 #A46643; stop 1 #5C3425 }
+gradient brass linear 90 { stop 0 #F3E4BA; stop 0.19 #C6AC73; stop 0.48 #E5D4AA; stop 0.52 #9D8356; stop 0.9 #D5BE8C; stop 1 #88724C }
+gradient brushed linear 90 { stop 0 #EEE8DC; stop 0.12 #D5CFC3; stop 0.8 #BDB7AC; stop 1 #999488 }
+gradient keycap linear 90 { stop 0 #FAF3E5; stop 0.68 #DED4C2; stop 1 #AEA596 }
+gradient blackkey linear 90 { stop 0 #4B4D47; stop 0.28 #343831; stop 1 #20231F }
+gradient portable linear 90 { stop 0 #D8CBB0; stop 0.38 #C5B797; stop 0.88 #B2A17F; stop 1 #8F8065 }
+rect loopShadow { at 161 47; size 72 84; corner 17; fill #4C493A; }
+rect fabric { at 161 44; size 64 82; corner 15; fill #616149; }
+rect hole { at 161 43; size 40 56; corner 9; fill #EAE2D4; }
+path weave0 { move 135 9; line 135 22; move 135 65; line 135 79; fill none; stroke #CBC7A05C 1.2; cap round; }
+path weave1 { move 147 9; line 147 22; move 147 65; line 147 79; fill none; stroke #CBC7A05C 1.2; cap round; }
+path weave2 { move 159 9; line 159 22; move 159 65; line 159 79; fill none; stroke #CBC7A05C 1.2; cap round; }
+path weave3 { move 171 9; line 171 22; move 171 65; line 171 79; fill none; stroke #CBC7A05C 1.2; cap round; }
+path weave4 { move 183 9; line 183 22; move 183 65; line 183 79; fill none; stroke #CBC7A05C 1.2; cap round; }
+rect shadow { at 163 320; size 300 484; corner 26; fill #4B3C2826; }
+rect rim { at 161 308; size 306 478; corner 22; fill #776D57; }
+rect body { at 161 304; size 300 470; corner 21; fill portable; }
+rect inset { at 161 301; size 278 444; corner 15; fill #D5C6A8; }
+path grip0 { move 294 232; line 303 232; fill none; stroke #6F664F 1.1; cap round; }
+path grip1 { move 294 247; line 303 247; fill none; stroke #6F664F 1.1; cap round; }
+path grip2 { move 294 262; line 303 262; fill none; stroke #6F664F 1.1; cap round; }
+path grip3 { move 294 277; line 303 277; fill none; stroke #6F664F 1.1; cap round; }
+path grip4 { move 294 292; line 303 292; fill none; stroke #6F664F 1.1; cap round; }
+path grip5 { move 294 307; line 303 307; fill none; stroke #6F664F 1.1; cap round; }
+path grip6 { move 294 322; line 303 322; fill none; stroke #6F664F 1.1; cap round; }
+path grip7 { move 294 337; line 303 337; fill none; stroke #6F664F 1.1; cap round; }
+path grip8 { move 294 352; line 303 352; fill none; stroke #6F664F 1.1; cap round; }
+circle screw0 { at 30 89; radius 3; fill #776D57; }
+path slot0 { move 28.4 89; line 31.6 89; fill none; stroke #2F3028 0.8; cap round; }
+circle screw1 { at 292 89; radius 3; fill #776D57; }
+path slot1 { move 290.4 89; line 293.6 89; fill none; stroke #2F3028 0.8; cap round; }
+circle screw2 { at 30 519; radius 3; fill #776D57; }
+path slot2 { move 28.4 519; line 31.6 519; fill none; stroke #2F3028 0.8; cap round; }
+circle screw3 { at 292 519; radius 3; fill #776D57; }
+path slot3 { move 290.4 519; line 293.6 519; fill none; stroke #2F3028 0.8; cap round; }

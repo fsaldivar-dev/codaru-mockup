@@ -1,0 +1,5 @@
+// Musaru Glass · original editable geometry; material is supplied by host nodes.
+canvas 48 48
+background none
+rect left { at 17 24; size 6 25; corner 3; fill #F8FDFF; }
+rect right { at 31 24; size 6 25; corner 3; fill #F8FDFF; }

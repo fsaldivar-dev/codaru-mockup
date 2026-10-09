@@ -1,0 +1,6 @@
+// Musaru controls · original curves generated for this prototype
+canvas 48 48
+background none
+group search {
+circle lens { at 21 21; radius 12; fill none; stroke #F3F0E4 3 }path handle { move 30 30; line 40 40; fill none; stroke #F3F0E4 3; cap round; join round }
+}

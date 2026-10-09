@@ -1,0 +1,13 @@
+// Musaru orbital receiver · original editable industrial assembly.
+canvas 48 48
+background none
+gradient titanium linear 90 { stop 0 #73848C; stop 0.08 #43545F; stop 0.46 #273944; stop 0.88 #23333D; stop 1 #101D26 }
+gradient bezel linear 90 { stop 0 #16252E; stop 0.46 #0B161F; stop 1 #72858D }
+gradient metal linear 90 { stop 0 #D2DBDC; stop 0.2 #80939D; stop 0.49 #4A5D69; stop 0.51 #273A47; stop 0.8 #6A7E88; stop 1 #B0C0C6 }
+gradient key linear 90 { stop 0 #5A6F7A; stop 0.15 #314753; stop 0.85 #1B303D; stop 1 #10222E }
+gradient amber linear 90 { stop 0 #FFE0AB; stop 0.2 #FFD18A; stop 0.8 #F3AF55; stop 1 #D58A32 }
+circle rim { at 24 24; radius 20; fill none; stroke #B2BEC3 1.4; }
+circle pin { at 24 24; radius 5; fill #FFD18A; }
+path vane0 { move 20.00 4.00; line 29.00 4.00; line 31.00 13.00; line 25.00 16.00; line 19.00 11.00; close; fill #B2BEC3; }
+path vane1 { move 43.32 30.54; line 38.82 38.33; line 30.03 35.56; line 30.43 28.87; line 37.76 26.17; close; fill #B2BEC3; }
+path vane2 { move 8.68 37.46; line 4.18 29.67; line 10.97 23.44; line 16.57 27.13; line 15.24 34.83; close; fill #B2BEC3; }

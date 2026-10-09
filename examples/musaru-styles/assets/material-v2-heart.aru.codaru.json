@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Material 3 tonal · original editable flat forms.\ncanvas 48 48\nbackground none\npath heart { move 24 38; curve 7 28 7 16 14 12; curve 19 9 23 13 24 16; curve 29 8 39 10 40 18; curve 42 27 31 35 24 38; close; fill none; stroke #6750A4 3; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M24 38 C7 28 7 16 14 12 C19 9 23 13 24 16 C29 8 39 10 40 18 C42 27 31 35 24 38 Z\" fill=\"none\" stroke=\"#6750A4\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "material-v2-heart.aru"
+}

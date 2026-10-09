@@ -1,6 +1,6 @@
 {
   "name": "codaru-mockup",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "type": "module",
   "main": "./dist/codaru.js",
   "types": "./dist/types/embed.d.ts",
@@ -25,6 +25,26 @@
     "./modular": {
       "types": "./dist/types/modular.d.ts",
       "import": "./dist/modular.js"
+    },
+    "./assets": {
+      "types": "./dist/types/asset-export.d.ts",
+      "import": "./dist/assets.js"
+    },
+    "./aru": {
+      "types": "./dist/types/aru.d.ts",
+      "import": "./dist/aru.js"
+    },
+    "./styles": {
+      "types": "./dist/types/style-package.d.ts",
+      "import": "./dist/styles.js"
+    },
+    "./identity": {
+      "types": "./dist/types/identity-view.d.ts",
+      "import": "./dist/identity.js"
+    },
+    "./comments": {
+      "types": "./dist/types/comments-view.d.ts",
+      "import": "./dist/comments.js"
     }
   },
   "files": [
@@ -64,6 +84,7 @@
     "prepack": "node ./scripts/verify-package.mjs"
   },
   "bin": {
-    "codaru-assets": "scripts/copy-assets.mjs"
+    "codaru-assets": "scripts/copy-assets.mjs",
+    "codaru-aru": "scripts/prepare-aru.mjs"
   }
 }

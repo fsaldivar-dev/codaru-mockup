@@ -1,0 +1,6 @@
+// Musaru Material 3 tonal · original editable flat forms.
+canvas 48 48
+background none
+path speaker { move 7 19; line 15 19; line 25 11; quad 27 10 27 13; line 27 35; quad 27 38 25 36; line 15 29; line 7 29; close; fill #49454F; }
+path waveA { move 33 17; quad 40 24 33 31; fill none; stroke #49454F 2.6; cap round; }
+path waveB { move 38 11; quad 49 24 38 37; fill none; stroke #49454F 2.6; cap round; }

@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// HILO / nudo-favoritas. Original contemporary interpretation; no copied motif or attributed traditional meaning.\ncanvas 32 32\nbackground none\ngroup nudo-favoritas {\nresource \"{\\\"key\\\":\\\"hilo-nudo-favoritas\\\",\\\"kind\\\":\\\"ui-icon\\\",\\\"brand\\\":\\\"HILO\\\",\\\"purpose\\\":\\\"Favorite songs\\\",\\\"identity\\\":\\\"Fine contours, ribbon rhythm and restrained color\\\",\\\"reusable\\\":true,\\\"tags\\\":[\\\"hilo\\\",\\\"cultural-exploration\\\"]}\"\npath lazo { move 16 25; curve 7 20 2 14 6 8; curve 10 3 16 10 16 13; curve 16 10 22 3 26 8; curve 30 14 25 20 16 25; close; fill none; stroke #383631 1.65; cap round; join round }\npath hilvan { move 16 13; curve 14 17 18 20 16 25; fill none; stroke #383631 1.65; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" width=\"32\" height=\"32\">\n  <g>\n    <path d=\"M16 25 C7 20 2 14 6 8 C10 3 16 10 16 13 C16 10 22 3 26 8 C30 14 25 20 16 25 Z\" fill=\"none\" stroke=\"#383631\" stroke-width=\"1.65\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M16 13 C14 17 18 20 16 25\" fill=\"none\" stroke=\"#383631\" stroke-width=\"1.65\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "nudo-favoritas.aru"
+}

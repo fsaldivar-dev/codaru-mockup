@@ -1,0 +1,5 @@
+// Musaru Apple minimal · original editable geometry, not SF Symbols.
+canvas 48 48
+background none
+path foldedNote { move 18 33; line 18 11; quad 18 8 21 8; line 37 8; line 37 18; line 23 18; line 23 33; curve 23 42 8 43 8 35; curve 8 29 15 29 18 31; close; fill #C82E49; }
+path fold { move 26 8; line 37 18; line 26 18; close; fill #F5B3BF; }

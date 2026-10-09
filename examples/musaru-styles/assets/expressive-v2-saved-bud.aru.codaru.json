@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Expressive · original flat editable shapes.\ncanvas 120 120\nbackground none\npath fourLeaves { move 60 18; curve 88 -2 122 24 102 60; curve 122 96 88 122 60 102; curve 32 122 -2 96 18 60; curve -2 24 32 -2 60 18; close; fill #DDE9C1; }\npath seed { move 39 62; line 55 76; line 82 44; fill none; stroke #3C4D24 6; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\" width=\"120\" height=\"120\">\n  <path d=\"M60 18 C88 -2 122 24 102 60 C122 96 88 122 60 102 C32 122 -2 96 18 60 C-2 24 32 -2 60 18 Z\" fill=\"#DDE9C1\"/>\n  <path d=\"M39 62 L55 76 L82 44\" fill=\"none\" stroke=\"#3C4D24\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "expressive-v2-saved-bud.aru"
+}

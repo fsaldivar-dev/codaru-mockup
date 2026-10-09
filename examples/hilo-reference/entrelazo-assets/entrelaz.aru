@@ -1,0 +1,10 @@
+// ENTRELAZO. Geometría de autor. No reproduce un símbolo tradicional.
+canvas 128 128
+background none
+group entrelaz {
+resource "{\"key\": \"entrelazo-entrelaz\", \"kind\": \"app-icon\", \"brand\": \"ENTRELAZO\", \"purpose\": \"Emblema original de cuatro lazos cruzados. No es un glifo tradicional.\", \"identity\": \"Cruce, continuidad y pausa. Interpretaci\u00f3n contempor\u00e1nea de autor para Amealco.\", \"reusable\": true, \"tags\": [\"entrelazo\", \"amealco\", \"original\"]}"
+path lazo_0 { move 64 67; curve 10 35 21 -7 56 33; curve 66 45 66 53 64 59; fill none; stroke #283472 2; cap round; join round }
+path lazo_1 { move 61 64; curve 93 10 135 21 95 56; curve 83 66 75 66 69 64; fill none; stroke #283472 2; cap round; join round }
+path lazo_2 { move 64 61; curve 118 93 107 135 72 95; curve 62 83 62 75 64 69; fill none; stroke #283472 2; cap round; join round }
+path lazo_3 { move 67 64; curve 35 118 -7 107 33 72; curve 45 62 53 62 59 64; fill none; stroke #283472 2; cap round; join round }
+}

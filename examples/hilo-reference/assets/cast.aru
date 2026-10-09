@@ -1,0 +1,7 @@
+// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.
+canvas 32 32
+background none
+group cast {
+rect pantalla { at 16 13; size 24 17; corner 3; fill none; stroke #1C1917 1.8 }
+path pie { move 10 28; line 16 22; line 22 28; close; fill none; stroke #1C1917 1.8; cap round; join round }
+}

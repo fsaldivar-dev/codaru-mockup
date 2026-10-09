@@ -1,0 +1,8 @@
+// VENERO 02. Original contemporary geometry, not a traditional symbol.
+canvas 24 24
+background none
+group mas {
+resource "{\"kind\": \"ui-icon\", \"purpose\": \"A\u00f1adir una lectura a la selecci\u00f3n personal.\", \"identity\": \"VENERO 02: tensi\u00f3n, pliegue y vac\u00edo. Interpretaci\u00f3n contempor\u00e1nea original.\", \"reusable\": true, \"tags\": [\"venero-02\", \"amealco\", \"original\"], \"key\": \"venero-02-mas\", \"brand\": \"VENERO\"}"
+path horizontal { move 5 12; line 19 12; fill none; stroke #21191D 1.5; cap round; join round }
+path vertical { move 12 5; line 12 19; fill none; stroke #21191D 1.5; cap round; join round }
+}

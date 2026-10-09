@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Memphis · original editable printed geometry.\ncanvas 120 120\nbackground none\ncircle disc { at 60 60; radius 53; fill #F3868F; }\nrect left { at 46 59; size 11 43; corner 0; fill #20212A; }\nrect right { at 74 59; size 11 43; corner 0; fill #20212A; }\npath under { move 10 116; line 110 116; fill none; stroke #233BC7 3; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\" width=\"120\" height=\"120\">\n  <circle r=\"53\" transform=\"translate(60 60)\" fill=\"#F3868F\"/>\n  <rect x=\"-5.5\" y=\"-21.5\" width=\"11\" height=\"43\" transform=\"translate(46 59)\" fill=\"#20212A\"/>\n  <rect x=\"-5.5\" y=\"-21.5\" width=\"11\" height=\"43\" transform=\"translate(74 59)\" fill=\"#20212A\"/>\n  <path d=\"M10 116 L110 116\" fill=\"none\" stroke=\"#233BC7\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "memphis-v2-pocket-pause.aru"
+}

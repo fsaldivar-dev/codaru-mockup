@@ -18,7 +18,7 @@ pub(crate) fn agent_respond(
 }
 
 fn validate_save(content: &str, filename: &str, extension: &str) -> Result<(), String> {
-    if !["json", "svg", "html"].contains(&extension) {
+    if !["json", "svg", "html", "png", "zip", "aru"].contains(&extension) {
         return Err("Formato no admitido".into());
     }
     // This is a suggested dialog name, never a path provided by the frontend.
@@ -32,15 +32,17 @@ fn validate_save(content: &str, filename: &str, extension: &str) -> Result<(), S
 }
 
 #[tauri::command]
-pub(crate) async fn save_document(content: String, filename: String, extension: String) -> Result<Option<String>, String> {
+pub(crate) async fn save_document(content: String, filename: String, extension: String, encoding: Option<String>) -> Result<Option<String>, String> {
     validate_save(&content, &filename, &extension)?;
+    if ["png", "zip"].contains(&extension.as_str()) && encoding.as_deref() != Some("base64") { return Err("PNG/ZIP necesitan contenido base64".into()); }
+    let bytes = crate::export_content::decode(&content, encoding.as_deref())?;
     let selected = rfd::AsyncFileDialog::new()
         .set_file_name(&filename)
         .add_filter("Documento", &[&extension])
         .save_file()
         .await;
     if let Some(file) = selected {
-        std::fs::write(file.path(), content).map_err(|e| e.to_string())?;
+        std::fs::write(file.path(), bytes).map_err(|e| e.to_string())?;
         Ok(Some(file.path().to_string_lossy().into_owned()))
     } else {
         Ok(None)

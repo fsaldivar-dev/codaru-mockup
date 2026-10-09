@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Original VENERO concept. Contemporary illustration, not a traditional community emblem.\ncanvas 32 32\nbackground none\ngroup bosque {\nresource \"{\\\"key\\\": \\\"venero-bosque\\\", \\\"kind\\\": \\\"ui-icon\\\", \\\"brand\\\": \\\"VENERO\\\", \\\"purpose\\\": \\\"Bosques y caminos; icono original para 24 px con etiqueta.\\\", \\\"identity\\\": \\\"Escult\\u00f3rico, curvas abiertas y contrapesos; agua, barro y bosque\\\", \\\"reusable\\\": true, \\\"tags\\\": [\\\"venero\\\", \\\"amealco\\\", \\\"original\\\"]}\"\npath silueta { move 16 3; line 7 15; line 11 15; line 4 24; line 28 24; line 21 15; line 25 15; close; move 16 24; line 16 29; fill none; stroke #233D37 2; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" width=\"32\" height=\"32\">\n  <g>\n    <path d=\"M16 3 L7 15 L11 15 L4 24 L28 24 L21 15 L25 15 Z M16 24 L16 29\" fill=\"none\" stroke=\"#233D37\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "bosque.aru"
+}

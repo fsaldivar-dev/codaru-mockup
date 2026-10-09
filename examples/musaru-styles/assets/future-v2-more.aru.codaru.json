@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Future minimal · original editable precision geometry.\ncanvas 48 48\nbackground none\nrect lineA { at 12 24; size 3 3; corner 1.5; fill #142C38; }\nrect lineB { at 24 24; size 3 3; corner 1.5; fill #142C38; }\nrect lineC { at 36 24; size 3 3; corner 1.5; fill #142C38; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <rect x=\"-1.5\" y=\"-1.5\" width=\"3\" height=\"3\" rx=\"1.5\" transform=\"translate(12 24)\" fill=\"#142C38\"/>\n  <rect x=\"-1.5\" y=\"-1.5\" width=\"3\" height=\"3\" rx=\"1.5\" transform=\"translate(24 24)\" fill=\"#142C38\"/>\n  <rect x=\"-1.5\" y=\"-1.5\" width=\"3\" height=\"3\" rx=\"1.5\" transform=\"translate(36 24)\" fill=\"#142C38\"/>\n</svg>",
+  "filename": "future-v2-more.aru"
+}

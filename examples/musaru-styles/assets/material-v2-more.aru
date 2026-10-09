@@ -1,0 +1,6 @@
+// Musaru Material 3 tonal · original editable flat forms.
+canvas 48 48
+background none
+circle dotA { at 12 24; radius 2.5; fill #49454F; }
+circle dotB { at 24 24; radius 2.5; fill #49454F; }
+circle dotC { at 36 24; radius 2.5; fill #49454F; }

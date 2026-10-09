@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.\ncanvas 32 32\nbackground none\ngroup volume {\npath bocina { move 5 12; line 10 12; line 17 6; line 17 26; line 10 20; line 5 20; close; fill none; stroke #1C1917 1.8; cap round; join round }\npath aire { move 22 11; curve 25 13 25 19 22 21; move 26 7; curve 32 11 32 21 26 25; fill none; stroke #1C1917 1.8; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" width=\"32\" height=\"32\">\n  <g>\n    <path d=\"M5 12 L10 12 L17 6 L17 26 L10 20 L5 20 Z\" fill=\"none\" stroke=\"#1C1917\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M22 11 C25 13 25 19 22 21 M26 7 C32 11 32 21 26 25\" fill=\"none\" stroke=\"#1C1917\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "volume.aru"
+}

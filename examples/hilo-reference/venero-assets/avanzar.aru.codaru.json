@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Original VENERO concept. Contemporary illustration, not a traditional community emblem.\ncanvas 32 32\nbackground none\ngroup avanzar {\nresource \"{\\\"key\\\": \\\"venero-avanzar\\\", \\\"kind\\\": \\\"ui-icon\\\", \\\"brand\\\": \\\"VENERO\\\", \\\"purpose\\\": \\\"Avanzar o abrir una lectura; icono original para 24 px con etiqueta.\\\", \\\"identity\\\": \\\"Escult\\u00f3rico, curvas abiertas y contrapesos; agua, barro y bosque\\\", \\\"reusable\\\": true, \\\"tags\\\": [\\\"venero\\\", \\\"amealco\\\", \\\"original\\\"]}\"\npath silueta { move 4 16; line 28 16; move 20 8; line 28 16; line 20 24; fill none; stroke #233D37 2; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" width=\"32\" height=\"32\">\n  <g>\n    <path d=\"M4 16 L28 16 M20 8 L28 16 L20 24\" fill=\"none\" stroke=\"#233D37\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "avanzar.aru"
+}

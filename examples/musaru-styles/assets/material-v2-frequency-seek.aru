@@ -1,0 +1,6 @@
+// Musaru Material 3 tonal · original editable flat forms.
+canvas 300 24
+background none
+rect inactive { at 150 12; size 296 4; corner 2; fill #CAC4D0; }
+rect active { at 57 12; size 110 4; corner 2; fill #6750A4; }
+rect thumb { at 112 12; size 5 22; corner 2.5; fill #6750A4; }

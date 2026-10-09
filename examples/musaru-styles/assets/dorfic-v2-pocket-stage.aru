@@ -1,0 +1,20 @@
+// Musaru DORFic · original editable daylight architecture.
+canvas 390 300
+background none
+gradient whiteSolid linear 90 { stop 0 #FFFFFF; stop 0.6 #EDF2F5; stop 1 #CDD6DD }
+gradient orangeSolid linear 110 { stop 0 #FF9D51; stop 0.45 #F26721; stop 1 #C74911 }
+gradient whiteSide linear 0 { stop 0 #B6C3CE; stop 1 #E0E7ED }
+gradient orangeSide linear 90 { stop 0 #DF571B; stop 1 #9E350B }
+path ground { move 10 251; line 240 195; line 385 255; line 146 299; close; fill #E5EDF2; }
+path shadow { move 56 246; line 278 216; line 364 253; line 129 282; close; fill #AEBFCB38; }
+path side { move 49 25; line 23 40; line 23 238; line 49 228; close; fill #B4C2CD; }
+path wall { move 49 25; line 279 25; line 279 228; line 49 228; close; fill orangeSolid; }
+path top { move 49 25; line 78 9; line 309 9; line 279 25; close; fill #FFAF70; }
+path right { move 279 25; line 309 9; line 309 211; line 279 228; close; fill orangeSide; }
+rect aperture { at 164 126; size 202 179; corner 0; fill #FAFCFD; }
+path step-top { move 37 228; line 279 228; line 322 208; line 81 208; close; fill #FAFCFD; }
+path step-front { move 37 228; line 279 228; line 279 246; line 37 246; close; fill #CFDCE5; }
+path step-side { move 279 228; line 322 208; line 322 226; line 279 246; close; fill #B1C2CF; }
+path column-front { move 328 122; line 351 122; line 351 248; line 328 248; close; fill whiteSolid; }
+path column-top { move 328 122; line 345 112; line 368 112; line 351 122; close; fill #FAFCFD; }
+path column-side { move 351 122; line 368 112; line 368 238; line 351 248; close; fill whiteSide; }

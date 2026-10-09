@@ -1,0 +1,12 @@
+// Musaru console gloss · original editable curved panels and album stages.
+canvas 48 48
+background none
+gradient pearl linear 90 { stop 0 #FFFFFF; stop 0.35 #F8FBF3; stop 1 #D5DFD5 }
+gradient forest linear 90 { stop 0 #287522; stop 0.48 #226A1E; stop 0.5 #175719; stop 1 #104815 }
+gradient lime linear 90 { stop 0 #D9F4B7; stop 0.47 #B1D77C; stop 0.5 #8FC254; stop 1 #599436 }
+gradient blue linear 0 { stop 0 #193F59; stop 0.48 #376A86; stop 1 #172F43 }
+gradient ochre linear 0 { stop 0 #6D3B16; stop 0.48 #96591D; stop 1 #4B3018 }
+gradient slate linear 0 { stop 0 #263D35; stop 0.48 #4B665B; stop 1 #1C342B }
+gradient key linear 90 { stop 0 #FFFFFF; stop 0.47 #EEF4E8; stop 0.5 #D3DECD; stop 1 #ACBDA6 }
+gradient floor linear 90 { stop 0 #EDF2EB; stop 1 #CED9CD }
+path heart { move 24 39; curve 6 31 1 18 10 11; curve 16 6 23 9 24 16; curve 28 6 38 6 42 15; curve 46 26 34 35 24 39; close; fill none; stroke #27352F 2.5; cap round; }

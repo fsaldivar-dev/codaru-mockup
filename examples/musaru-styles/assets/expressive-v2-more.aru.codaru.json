@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Expressive · original flat editable shapes.\ncanvas 48 48\nbackground none\ncircle first { at 11 24; radius 3; fill #2F211B; }\ncircle second { at 24 24; radius 3; fill #2F211B; }\ncircle third { at 37 24; radius 3; fill #2F211B; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <circle r=\"3\" transform=\"translate(11 24)\" fill=\"#2F211B\"/>\n  <circle r=\"3\" transform=\"translate(24 24)\" fill=\"#2F211B\"/>\n  <circle r=\"3\" transform=\"translate(37 24)\" fill=\"#2F211B\"/>\n</svg>",
+  "filename": "expressive-v2-more.aru"
+}

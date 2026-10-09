@@ -1,0 +1,5 @@
+// Musaru Future minimal · original editable precision geometry.
+canvas 48 48
+background none
+path speaker { move 7 19; line 14 19; line 25 10; line 25 38; line 14 29; line 7 29; close; fill none; stroke #142C38 2.5; cap round; }
+path sound { move 33 17; curve 40 20 40 28 33 31; fill none; stroke #142C38 2.5; cap round; }

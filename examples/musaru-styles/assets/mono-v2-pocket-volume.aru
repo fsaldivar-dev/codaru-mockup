@@ -1,0 +1,5 @@
+// Musaru monochrome · original editable geometry.
+canvas 48 48
+background none
+path speaker { move 6 18; line 14 18; line 26 9; line 26 39; line 14 30; line 6 30; close; fill none; stroke #FAFAFA 2.4; cap round; }
+path wave { move 34 15; curve 43 20 43 28 34 33; fill none; stroke #FAFAFA 2.4; cap round; }

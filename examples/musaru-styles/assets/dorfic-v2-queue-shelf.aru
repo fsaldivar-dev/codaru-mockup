@@ -1,0 +1,10 @@
+// Musaru DORFic · original editable daylight architecture.
+canvas 100 100
+background none
+gradient whiteSolid linear 90 { stop 0 #FFFFFF; stop 0.6 #EDF2F5; stop 1 #CDD6DD }
+gradient orangeSolid linear 110 { stop 0 #FF9D51; stop 0.45 #F26721; stop 1 #C74911 }
+gradient whiteSide linear 0 { stop 0 #B6C3CE; stop 1 #E0E7ED }
+gradient orangeSide linear 90 { stop 0 #DF571B; stop 1 #9E350B }
+path base { move 0 11; line 82 11; line 99 0; line 99 82; line 82 93; line 0 93; close; fill whiteSide; }
+rect face { at 41 44; size 82 82; corner 0; fill #FAFCFD; }
+path rail { move 0 87; line 82 87; line 99 76; line 99 82; line 82 93; line 0 93; close; fill #F26721; }

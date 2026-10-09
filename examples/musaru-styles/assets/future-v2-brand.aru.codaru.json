@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Future minimal · original editable precision geometry.\ncanvas 48 48\nbackground none\npath signal { move 8 31; line 17 31; line 23 12; line 29 36; line 35 20; line 42 20; fill none; stroke #0B6476 3; cap round; }\ncircle origin { at 8 31; radius 2; fill #0B6476; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M8 31 L17 31 L23 12 L29 36 L35 20 L42 20\" fill=\"none\" stroke=\"#0B6476\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n  <circle r=\"2\" transform=\"translate(8 31)\" fill=\"#0B6476\"/>\n</svg>",
+  "filename": "future-v2-brand.aru"
+}

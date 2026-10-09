@@ -1,0 +1,10 @@
+// Musaru · DORFic · original editable cover
+canvas 600 400
+background none
+gradient shell linear 100 { stop 0 #FFFFFF; stop 0.55 #E6E7E2; stop 1 #C4CDC9 }
+path chassis { move 188 60; line 389 60; line 440 112; line 440 296; line 389 347; line 188 347; line 137 296; line 137 112; close; fill shell; stroke #D0D2C9 2; }
+circle ring { at 288 203; radius 109; fill none; stroke #E76C24 22; }
+circle ringInner { at 288 203; radius 78; fill none; stroke #D0D2C9 2; }
+path play { move 269 162; line 332 204; line 269 246; close; fill #2F3534;  }
+rect meter { at 478 200; size 6 170; corner 3; fill #E76C24;  }
+rect line { at 89 200; size 2 90; corner 1; fill #D0D2C9;  }

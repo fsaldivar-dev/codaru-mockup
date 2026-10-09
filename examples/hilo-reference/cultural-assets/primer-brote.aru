@@ -1,0 +1,15 @@
+// HILO / primer-brote. Original contemporary interpretation; no copied motif or attributed traditional meaning.
+canvas 320 260
+background none
+group primer-brote {
+resource "{\"key\":\"hilo-primer-brote\",\"kind\":\"illustration\",\"brand\":\"HILO\",\"purpose\":\"Empty collection / begin a personal music collection\",\"identity\":\"Fine contours, ribbon rhythm and restrained color\",\"reusable\":true,\"tags\":[\"hilo\",\"cultural-exploration\"]}"
+path hilo { move 45 216; curve 109 201 191 235 275 210; fill none; stroke #383631 1.3; cap round; join round }
+path tallo { move 159 215; curve 150 174 163 127 158 87; fill none; stroke #788A75 1.7; cap round; join round }
+path rama { move 157 179; curve 123 176 102 158 94 139; fill none; stroke #788A75 1.5; cap round; join round }
+path hoja_izquierda { move 128 169; curve 99 171 77 148 76 124; curve 105 125 127 144 128 169; close; fill none; stroke #788A75 1.7; cap round; join round }
+path hoja_derecha { move 158 150; curve 171 113 204 99 235 102; curve 225 133 201 152 158 150; close; fill #E3E9DE; stroke #788A75 1.7; cap round; join round }
+path boton { move 158 93; curve 132 81 140 59 157 40; curve 177 58 184 81 158 93; close; fill #F3DCE4; stroke #D32F63 1.7; cap round; join round }
+path pliegue { move 157 47; curve 152 62 153 77 158 91; fill none; stroke #D32F63 1.1; cap round; join round }
+circle semilla { at 105 195; radius 3; fill #D32F63 }
+circle aire { at 234 59; radius 2.8; fill #278D9B }
+}

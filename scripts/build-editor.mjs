@@ -1,6 +1,6 @@
 import { build } from 'vite';
 import { cp, mkdir, readdir, stat, writeFile } from 'node:fs/promises';
-import { resolve, join } from 'node:path';
+import { resolve, join, dirname } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { gzipSync } from 'node:zlib';
 import { readFile } from 'node:fs/promises';
@@ -8,7 +8,7 @@ import { readFile } from 'node:fs/promises';
 const output = resolve('packages/editor/dist');
 await build({ configFile: false, base: './', build: {
   target: 'safari16', sourcemap: false, minify: true, outDir: output, emptyOutDir: true,
-  lib: { entry: { codaru: resolve('src/embed.ts'), core: resolve('src/editor-core.ts'), modular: resolve('src/modular.ts'), preview: resolve('src/preview.ts'), svg: resolve('src/screen-svg.ts') }, formats: ['es'], fileName: (_format, name) => `${name}.js` },
+  lib: { entry: { codaru: resolve('src/embed.ts'), core: resolve('src/editor-core.ts'), modular: resolve('src/modular.ts'), preview: resolve('src/preview.ts'), svg: resolve('src/screen-svg.ts'), assets: resolve('src/asset-export.ts'), aru: resolve('src/aru.ts'), styles: resolve('src/style-package.ts'), identity: resolve('src/identity-view.ts'), comments: resolve('src/comments-view.ts') }, formats: ['es'], fileName: (_format, name) => `${name}.js` },
 } });
 await build({ configFile: false, base: './', build: {
   target: 'safari16', sourcemap: false, outDir: join(output, 'editor'), emptyOutDir: true,
@@ -22,6 +22,15 @@ async function files(dir) {
   return (await Promise.all(entries.map(e => e.isDirectory() ? files(join(dir, e.name)) : join(dir, e.name)))).flat();
 }
 const all = await files(output);
+// Declaration imports must work in NodeNext consumers as well as bundlers.
+// A .js specifier resolves to its sibling .d.ts without shipping source modules.
+const declarations = new Set(all.filter(p => p.endsWith('.d.ts')));
+for (const file of declarations) {
+  const source = await readFile(file, 'utf8');
+  const updated = source.replace(/(['"])(\.\.?\/[^'"\n]+)\1/g, (match, quote, specifier) =>
+    declarations.has(resolve(dirname(file), `${specifier}.d.ts`)) ? `${quote}${specifier}.js${quote}` : match);
+  if (updated !== source) await writeFile(file, updated);
+}
 const runtime = all.filter(p => /\.(js|css|html)$/.test(p));
 const bytes = async paths => (await Promise.all(paths.map(async p => (await stat(p)).size))).reduce((a,b) => a+b, 0);
 const report = {

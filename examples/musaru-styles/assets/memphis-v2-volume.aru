@@ -1,0 +1,6 @@
+// Musaru Memphis · original editable printed geometry.
+canvas 48 48
+background none
+rect speaker { at 12 24; size 10 14; corner 0; fill #20212A; }
+path horn { move 17 17; line 28 8; line 28 40; line 17 31; close; fill #20212A; }
+path wave { move 35 16; quad 45 24 35 32; fill none; stroke #233BC7 3.5; cap round; }

@@ -1,0 +1,35 @@
+// Musaru Skeuomorphic · original editable physical geometry.
+canvas 786 486
+background none
+gradient walnut linear 0 { stop 0 #5B3020; stop 0.16 #895036; stop 0.38 #A56642; stop 0.62 #78422C; stop 0.84 #A46643; stop 1 #5C3425 }
+gradient brass linear 90 { stop 0 #F3E4BA; stop 0.19 #C6AC73; stop 0.48 #E5D4AA; stop 0.52 #9D8356; stop 0.9 #D5BE8C; stop 1 #88724C }
+gradient brushed linear 90 { stop 0 #EEE8DC; stop 0.12 #D5CFC3; stop 0.8 #BDB7AC; stop 1 #999488 }
+gradient keycap linear 90 { stop 0 #FAF3E5; stop 0.68 #DED4C2; stop 1 #AEA596 }
+gradient blackkey linear 90 { stop 0 #4B4D47; stop 0.28 #343831; stop 1 #20231F }
+gradient portable linear 90 { stop 0 #D8CBB0; stop 0.38 #C5B797; stop 0.88 #B2A17F; stop 1 #8F8065 }
+ellipse shadow { at 393 466; size 744 25; fill #3B2B2320; }
+rect case { at 393 237; size 782 450; corner 12; fill walnut; }
+rect rim { at 393 234; size 750 422; corner 7; fill #422E24; }
+rect face { at 393 231; size 734 408; corner 5; fill brass; }
+path grain0 { move 8 32; curve 11 120 6 269 8 427; fill none; stroke #E3B98733 1; cap round; }
+path grain1 { move 14 32; curve 17 120 12 269 14 427; fill none; stroke #E3B98733 1; cap round; }
+path grain2 { move 770 32; curve 773 120 768 269 770 427; fill none; stroke #E3B98733 1; cap round; }
+path grain3 { move 777 32; curve 780 120 775 269 777 427; fill none; stroke #E3B98733 1; cap round; }
+circle screw0 { at 36 38; radius 4; fill #7C715E; }
+path slot0 { move 34 38; line 38 38; fill none; stroke #332D24 0.9; cap round; }
+circle screw1 { at 750 38; radius 4; fill #7C715E; }
+path slot1 { move 748 38; line 752 38; fill none; stroke #332D24 0.9; cap round; }
+circle screw2 { at 36 426; radius 4; fill #7C715E; }
+path slot2 { move 34 426; line 38 426; fill none; stroke #332D24 0.9; cap round; }
+circle screw3 { at 750 426; radius 4; fill #7C715E; }
+path slot3 { move 748 426; line 752 426; fill none; stroke #332D24 0.9; cap round; }
+path brush0 { move 47 45; line 739 45; fill none; stroke #FFFFFF0A 0.7; cap round; }
+path brush1 { move 47 83; line 739 83; fill none; stroke #FFFFFF0A 0.7; cap round; }
+path brush2 { move 47 121; line 739 121; fill none; stroke #FFFFFF0A 0.7; cap round; }
+path brush3 { move 47 159; line 739 159; fill none; stroke #FFFFFF0A 0.7; cap round; }
+path brush4 { move 47 197; line 739 197; fill none; stroke #FFFFFF0A 0.7; cap round; }
+path brush5 { move 47 235; line 739 235; fill none; stroke #FFFFFF0A 0.7; cap round; }
+path brush6 { move 47 273; line 739 273; fill none; stroke #FFFFFF0A 0.7; cap round; }
+path brush7 { move 47 311; line 739 311; fill none; stroke #FFFFFF0A 0.7; cap round; }
+path brush8 { move 47 349; line 739 349; fill none; stroke #FFFFFF0A 0.7; cap round; }
+path brush9 { move 47 387; line 739 387; fill none; stroke #FFFFFF0A 0.7; cap round; }

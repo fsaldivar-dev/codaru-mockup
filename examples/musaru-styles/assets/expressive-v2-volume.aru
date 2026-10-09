@@ -1,0 +1,5 @@
+// Musaru Expressive · original flat editable shapes.
+canvas 48 48
+background none
+path speaker { move 7 18; line 15 18; line 25 10; quad 28 8 28 13; line 28 35; quad 28 40 25 38; line 15 30; line 7 30; close; fill #8D3D19; }
+path vibration { move 34 15; curve 43 20 43 28 34 33; fill none; stroke #8D3D19 3.4; cap round; }

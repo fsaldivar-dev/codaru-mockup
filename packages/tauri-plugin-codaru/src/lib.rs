@@ -1,6 +1,7 @@
 //! Native services for Codaru embedded inside an existing Tauri 2 host.
 //! This plugin creates no windows or webviews and does not own editor state.
 
+mod export_content;
 mod agent_transport;
 mod bridge;
 mod commands;

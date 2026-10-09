@@ -70,20 +70,28 @@ pub fn read_frame(stream: &mut std::os::unix::net::UnixStream, limit: usize, tim
 
 #[cfg(unix)]
 pub fn write_frame(stream: &mut std::os::unix::net::UnixStream, value: &Value, limit: usize) -> Result<()> {
+    write_frame_with_timeout(stream, value, limit, WRITE_TIMEOUT)
+}
+
+#[cfg(unix)]
+fn write_frame_with_timeout(stream: &mut std::os::unix::net::UnixStream, value: &Value, limit: usize, timeout: Duration) -> Result<()> {
     use std::io::Write;
     let mut bytes = serde_json::to_vec(value).map_err(|e| AgentError::new("INVALID_JSON", e.to_string()))?;
     if bytes.len() > limit { return Err(AgentError::new("MESSAGE_TOO_LARGE", format!("The JSON message exceeds the {} byte limit.", limit))); }
     bytes.push(b'\n');
-    stream.set_nonblocking(true).map_err(io_error)?;
+    // Wait in the kernel for send-buffer space. Timer-based retries can be
+    // coalesced for a background macOS app and truncate a large export.
+    stream.set_nonblocking(false).map_err(io_error)?;
     let started = std::time::Instant::now();
     let mut written = 0;
     while written < bytes.len() {
-        let remaining = WRITE_TIMEOUT.checked_sub(started.elapsed()).filter(|d| !d.is_zero()).ok_or_else(|| AgentError::new("TIMEOUT", "The local socket write timed out."))?;
+        let remaining = timeout.checked_sub(started.elapsed()).filter(|d| !d.is_zero()).ok_or_else(|| AgentError::new("TIMEOUT", "The local socket write timed out."))?;
+        stream.set_write_timeout(Some(remaining)).map_err(io_error)?;
         match stream.write(&bytes[written..]) {
             Ok(0) => return Err(AgentError::new("SOCKET_UNAVAILABLE", "The local connection closed while writing JSON.")),
             Ok(count) => written += count,
             Err(e) if e.kind() == std::io::ErrorKind::Interrupted => continue,
-            Err(e) if e.kind() == std::io::ErrorKind::WouldBlock => { std::thread::sleep(remaining.min(Duration::from_millis(2))); continue; },
+            Err(e) if matches!(e.kind(), std::io::ErrorKind::WouldBlock | std::io::ErrorKind::TimedOut) => continue,
             Err(e) => return Err(io_error(e)),
         }
     }
@@ -158,5 +166,24 @@ mod tests {
         writer.write_all(b"{unfinished").unwrap(); drop(writer);
         let error = read_frame(&mut reader, 100, Duration::from_secs(1)).unwrap_err();
         assert_eq!(error.code, "INCOMPLETE_MESSAGE", "{}", error.message);
+    }
+    #[test]
+    fn roundtrips_large_export_with_socket_backpressure() {
+        let (mut reader, mut writer) = UnixStream::pair().unwrap();
+        let payload = json!({"content": "export-data ".repeat(800_000)});
+        let expected = payload.clone();
+        let sending = std::thread::spawn(move || write_frame(&mut writer, &payload, MAX_RESPONSE_BYTES));
+        let received = read_frame(&mut reader, MAX_RESPONSE_BYTES, CLIENT_TIMEOUT).unwrap();
+        sending.join().unwrap().unwrap();
+        assert_eq!(serde_json::from_slice::<Value>(&received).unwrap(), expected);
+    }
+    #[test]
+    fn stalled_export_write_has_a_total_deadline() {
+        let (_reader, mut writer) = UnixStream::pair().unwrap();
+        let payload = json!({"content": "export-data ".repeat(800_000)});
+        let started = std::time::Instant::now();
+        let error = write_frame_with_timeout(&mut writer, &payload, MAX_RESPONSE_BYTES, Duration::from_millis(60)).unwrap_err();
+        assert_eq!(error.code, "TIMEOUT");
+        assert!(started.elapsed() < Duration::from_secs(1), "stalled peer must not hold a worker indefinitely");
     }
 }

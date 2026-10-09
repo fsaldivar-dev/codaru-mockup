@@ -1,0 +1,8 @@
+// ENTRELAZO. Geometría de autor. No reproduce un símbolo tradicional.
+canvas 24 24
+background none
+group guardar {
+resource "{\"key\": \"entrelazo-guardar\", \"kind\": \"ui-icon\", \"brand\": \"ENTRELAZO\", \"purpose\": \"Guardar: list\u00f3n entrelazado, acompa\u00f1ado de etiqueta.\", \"identity\": \"Cruce, continuidad y pausa. Interpretaci\u00f3n contempor\u00e1nea de autor para Amealco.\", \"reusable\": true, \"tags\": [\"entrelazo\", \"amealco\", \"original\"]}"
+path hebra_0 { move 6 21; line 6 3; line 18 3; line 18 21; line 12 16; line 6 21; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_1 { move 9 9; line 15 9; fill none; stroke #283472 1.25; cap round; join round }
+}

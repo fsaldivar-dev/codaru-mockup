@@ -1,0 +1,6 @@
+// Musaru controls · original curves generated for this prototype
+canvas 48 48
+background none
+group shuffle {
+path routeA { move 7 13; line 13 13; curve 23 13 25 35 35 35; line 41 35; fill none; stroke #F3F0E4 3; cap round; join round }path routeB { move 7 35; line 13 35; curve 23 35 25 13 35 13; line 41 13; fill none; stroke #F3F0E4 3; cap round; join round }path arrowA { move 36 8; line 41 13; line 36 18; fill none; stroke #F3F0E4 3; cap round; join round }path arrowB { move 36 30; line 41 35; line 36 40; fill none; stroke #F3F0E4 3; cap round; join round }
+}

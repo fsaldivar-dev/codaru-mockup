@@ -1,0 +1,9 @@
+// VENERO 02. Original contemporary geometry, not a traditional symbol.
+canvas 24 24
+background none
+group edicion {
+resource "{\"kind\": \"ui-icon\", \"purpose\": \"Abrir ediciones de VENERO: tres pliegues editoriales.\", \"identity\": \"VENERO 02: tensi\u00f3n, pliegue y vac\u00edo. Interpretaci\u00f3n contempor\u00e1nea original.\", \"reusable\": true, \"tags\": [\"venero-02\", \"amealco\", \"original\"], \"key\": \"venero-02-edicion\", \"brand\": \"VENERO\"}"
+path cubierta { move 4 5; line 18 3; line 20 18; line 6 21; close; fill none; stroke #21191D 1.5; cap round; join round }
+path pliegue { move 9 5; line 11 20; fill none; stroke #21191D 1.5; cap round; join round }
+path pagina { move 14 5; line 16 19; fill none; stroke #21191D 1.5; cap round; join round }
+}

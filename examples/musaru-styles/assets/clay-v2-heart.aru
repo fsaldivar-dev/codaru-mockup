@@ -1,0 +1,10 @@
+// Musaru Clay · original editable matte object.
+canvas 64 64
+background none
+gradient cream linear 120 { stop 0 #FFF4ED; stop 0.5 #F4E2D8; stop 1 #DFC9C1 }
+gradient lavender linear 120 { stop 0 #F3EAFB; stop 0.5 #DFD1EF; stop 1 #BDAACF }
+gradient mint linear 120 { stop 0 #F0F7E8; stop 0.5 #D9E7CA; stop 1 #B0C3A5 }
+gradient rose linear 120 { stop 0 #BC8B9D; stop 0.5 #A46D87; stop 1 #8E526D }
+gradient well linear 120 { stop 0 #BCA7B5; stop 0.5 #DCCCD6; stop 1 #F2E6EC }
+path heart { move 32 53; curve 10 41 4 27 13 18; curve 20 11 29 16 32 23; curve 37 14 48 12 54 21; curve 64 36 45 48 32 53; close; fill rose; }
+path crease { move 16 26; curve 15 21 22 20 25 24; fill none; stroke #FFF7F4 3; cap round; }

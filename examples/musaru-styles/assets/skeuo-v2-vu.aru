@@ -1,0 +1,28 @@
+// Musaru Skeuomorphic · original editable physical geometry.
+canvas 200 130
+background none
+gradient walnut linear 0 { stop 0 #5B3020; stop 0.16 #895036; stop 0.38 #A56642; stop 0.62 #78422C; stop 0.84 #A46643; stop 1 #5C3425 }
+gradient brass linear 90 { stop 0 #F3E4BA; stop 0.19 #C6AC73; stop 0.48 #E5D4AA; stop 0.52 #9D8356; stop 0.9 #D5BE8C; stop 1 #88724C }
+gradient brushed linear 90 { stop 0 #EEE8DC; stop 0.12 #D5CFC3; stop 0.8 #BDB7AC; stop 1 #999488 }
+gradient keycap linear 90 { stop 0 #FAF3E5; stop 0.68 #DED4C2; stop 1 #AEA596 }
+gradient blackkey linear 90 { stop 0 #4B4D47; stop 0.28 #343831; stop 1 #20231F }
+gradient portable linear 90 { stop 0 #D8CBB0; stop 0.38 #C5B797; stop 0.88 #B2A17F; stop 1 #8F8065 }
+rect shadow { at 100 65; size 196 124; corner 9; fill #574E3D; }
+rect bezel { at 100 62; size 194 120; corner 8; fill brushed; }
+rect face { at 100 61; size 176 99; corner 5; fill #E6D7AB; }
+path scale { move 30 77; curve 56 26 144 26 170 77; fill none; stroke #625641 1.2; cap round; }
+path tick0 { move 35.91 72.00; line 43.71 76.50; fill none; stroke #625641 1.5; cap round; }
+path tick1 { move 45.01 59.48; line 51.70 65.51; fill none; stroke #625641 1.5; cap round; }
+path tick2 { move 56.50 49.13; line 61.79 56.41; fill none; stroke #625641 1.5; cap round; }
+path tick3 { move 69.90 41.40; line 73.56 49.62; fill none; stroke #625641 1.5; cap round; }
+path tick4 { move 84.61 36.62; line 86.49 45.42; fill none; stroke #625641 1.5; cap round; }
+path tick5 { move 100.00 35.00; line 100.00 44.00; fill none; stroke #625641 1.5; cap round; }
+path tick6 { move 115.39 36.62; line 113.51 45.42; fill none; stroke #625641 1.5; cap round; }
+path tick7 { move 130.10 41.40; line 126.44 49.62; fill none; stroke #625641 1.5; cap round; }
+path tick8 { move 143.50 49.13; line 138.21 56.41; fill none; stroke #8A3F27 1.5; cap round; }
+path tick9 { move 154.99 59.48; line 148.30 65.51; fill none; stroke #8A3F27 1.5; cap round; }
+path tick10 { move 164.09 72.00; line 156.29 76.50; fill none; stroke #8A3F27 1.5; cap round; }
+path redline { move 139 42; curve 151 50 162 62 168 75; fill none; stroke #8A3F27 3; cap round; }
+path needle { move 100 106; line 126 51; fill none; stroke #713A25 2; cap round; }
+circle pivot { at 100 106; radius 5; fill #51452F; }
+rect bottom { at 100 111; size 176 17; corner 0; fill #C8B78F; }

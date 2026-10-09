@@ -1,0 +1,7 @@
+// Musaru MusicArt · original rounded outline, no fills or effects.
+canvas 48 48
+background none
+path headband { move 8 29; line 8 24; curve 8 2 40 2 40 24; line 40 29; move 13 24; curve 13 8 35 8 35 24; fill none; stroke #2F5148 2.4; cap round; }
+rect leftCup { at 10 31; size 7 14; corner 3; fill none; stroke #2F5148 2.4; }
+rect rightCup { at 38 31; size 7 14; corner 3; fill none; stroke #2F5148 2.4; }
+path cable { move 38 39; curve 37 45 30 45 26 43; fill none; stroke #2F5148 2.4; cap round; }

@@ -1,0 +1,11 @@
+// Musaru Four Colors · original editable color-personalized music objects.
+canvas 64 66
+background none
+gradient mandarin linear 90 { stop 0 #FFAA55; stop 0.18 #F98B33; stop 0.76 #F37522; stop 1 #BF460C }
+gradient fuchsia linear 90 { stop 0 #FF73B4; stop 0.2 #ED4294; stop 0.82 #E32E88; stop 1 #A81659 }
+gradient whiteKey linear 90 { stop 0 #FFFFFF; stop 0.8 #FFFDF7; stop 1 #DFE4E7 }
+ellipse shadow { at 32 57; size 53 9; fill #9B400C26; }
+circle edge { at 32 31; radius 29; fill #DDE4E7; }
+circle face { at 32 28; radius 29; fill #FFFDF7; }
+path glyph { move 25 16; line 25 40; line 41 28; close; fill #202B35; }
+path stop { move 46 16; line 46 40; fill none; stroke #202B35 2.4; cap round; }

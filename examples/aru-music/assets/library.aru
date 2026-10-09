@@ -1,0 +1,6 @@
+// Musaru controls · original curves generated for this prototype
+canvas 48 48
+background none
+group library {
+path spineA { move 10 11; line 10 39; fill none; stroke #F3F0E4 3; cap round; join round }path spineB { move 19 9; line 19 39; fill none; stroke #F3F0E4 3; cap round; join round }path recordSleeve { move 29 10; line 37 36; quad 39 40 34 41; line 27 15; quad 25 11 29 10; fill none; stroke #F3F0E4 3; cap round; join round }
+}

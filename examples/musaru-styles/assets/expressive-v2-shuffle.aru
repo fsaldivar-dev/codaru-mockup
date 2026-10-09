@@ -1,0 +1,5 @@
+// Musaru Expressive · original flat editable shapes.
+canvas 48 48
+background none
+path rise { move 7 34; line 15 34; curve 23 34 24 14 33 14; line 41 14; move 34 7; line 41 14; line 34 21; fill none; stroke #8D3D19 3.2; cap round; }
+path fall { move 7 14; line 15 14; quad 18 14 20 18; move 28 30; quad 30 34 34 34; line 41 34; move 34 27; line 41 34; line 34 41; fill none; stroke #8D3D19 3.2; cap round; }

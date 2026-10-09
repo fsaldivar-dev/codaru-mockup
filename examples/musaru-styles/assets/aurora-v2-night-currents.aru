@@ -1,0 +1,15 @@
+// Musaru Frutiger Aurora · original editable light and glass vector.
+canvas 1200 820
+background none
+gradient ribbon linear 0 { stop 0 #887BD5; stop 0.3 #B1ACF6; stop 0.65 #8EE4D6; stop 1 #D8F9E8 }
+gradient crystal linear 90 { stop 0 #A7ADDE; stop 0.35 #6575AA; stop 0.39 #344F74; stop 1 #182840 }
+gradient edge linear 0 { stop 0 #F4E8FF; stop 0.5 #AABAF8; stop 1 #D4FFF1 }
+gradient sky linear 90 { stop 0 #14172D; stop 0.55 #191C3D; stop 1 #101F31 }
+gradient curtain linear 0 { stop 0 #7265AF44; stop 0.32 #A69AEF9C; stop 0.7 #76DCC599; stop 1 #B9F8D6CC }
+gradient undercurrent linear 0 { stop 0 #5A6DA433; stop 0.5 #8AABEC55; stop 1 #97DBCF22 }
+rect night { at 600 410; size 1200 820; fill sky }
+path upperHaze { move -80 58; curve 211 7 339 207 726 55; curve 967 -40 1101 3 1259 95; line 1259 177; curve 1023 66 893 108 740 141; curve 382 272 225 93 -80 131; close; fill #645FA91A; }
+path distantCurrent { move -80 730; curve 196 413 426 772 686 562; curve 860 421 948 365 1280 435; line 1280 529; curve 968 444 830 523 689 635; curve 426 850 200 558 -80 815; close; fill undercurrent; }
+path mainCurtain { move -100 626; curve 161 451 295 594 470 529; curve 670 455 716 250 973 262; curve 1095 265 1189 312 1298 259; line 1298 333; curve 1116 389 1074 314 973 320; curve 747 322 698 537 489 600; curve 291 660 163 527 -100 713; close; fill curtain; }
+path curtainEdge { move -50 648; curve 173 493 298 616 477 557; curve 682 486 742 285 979 289; curve 1098 296 1184 340 1264 297; fill none; stroke #CCFFEC8A 2; cap round; }
+path lowerSilk { move -30 777; curve 278 634 392 883 715 701; curve 924 582 1043 802 1250 624; fill none; stroke #9BB8F133 2; cap round; }

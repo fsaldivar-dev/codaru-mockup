@@ -1,0 +1,53 @@
+import {createCommentsView} from '../src/comments-view';
+import { createEditor, createEditorView, type CodaruInvoke } from '../src/modular';
+import { createIdentityLabView, renderIdentityEvidence, type IdentityPart, type IdentityServiceRequest, type IdentityServices } from '../src/identity-view';
+import { parseDocument } from '../src/model';
+import design from './hilo-reference/design.codaru.json';
+const el=(id:string)=>document.getElementById(id)!;
+function download(value:unknown,name:string){const url=URL.createObjectURL(new Blob([JSON.stringify(value,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+const fixture=parseDocument(design);fixture.activePageId='entrelazo';
+const editor=createEditor({document:fixture});
+if(!editor.getIdentityLab()){
+ editor.updateIdentityBrief({intent:'Hacer de Amealco un símbolo de deseo contemporáneo, con identidad propia y elegancia.',audience:'Personas que buscan creación, autoría y experiencias extraordinarias.',context:'Exploración de Amealco a partir del proceso creativo HILO, VENERO y ENTRELAZO. Los signos diseñados son interpretaciones originales; no se presentan como símbolos tradicionales.',qualities:['Elegancia','Singularidad','Precisión en líneas y tipografía','Autoría cultural visible'],avoid:['Layouts genéricos','Ruido visual en controles','Confundir lujo con dorado y negro','Usar una cultura como decoración'],constraints:['Editor embebido en IDE Tauri','Escritorio y móvil con composición propia','Conservar recursos editables y exportables']});
+ editor.upsertIdentityReference({id:'tultepec-hilvan',title:'Bordado de San Ildefonso Tultepec',kind:'cultural',source:'https://sic.cultura.gob.mx/ficha.php?table=frpintangible&table_id=113',author:'Sistema de Información Cultural',community:'San Ildefonso Tultepec, Amealco',observations:'Referencia documental al hilván y lomillo utilizada en la exploración previa.',interpretation:'Investigar continuidad, recorrido y ritmo; la rotulación y los iconos de ENTRELAZO son nuevos.',license:'Referencia de investigación. No autoriza reproducir obras.',status:'accepted'});
+ for(const d of [{id:'hilo',name:'HILO / Jardín de voces',intent:'Líneas finas, aire y un lenguaje musical propio.',frameIds:['jardin-desktop','jardin-player'],styleIds:['hilo-jardin']},{id:'venero',name:'VENERO / Origen extraordinario',intent:'Autoría y creación de Amealco como experiencia deseable.',frameIds:['v02-desktop','v02-mobile'],styleIds:['venero-02']},{id:'entrelazo',name:'ENTRELAZO / El origen nos une',intent:'Entrelazar ritmo, rotulación y color en un sistema visual original.',frameIds:['entrelazo-desktop','entrelazo-mobile'],styleIds:['entrelazo']}])editor.upsertIdentityDirection({...d,referenceIds:['tultepec-hilvan'],status:d.id==='entrelazo'?'selected':'exploring'});
+ editor.addIdentityDecision({id:'user-entrelazo-elegance',directionId:'entrelazo',criterion:'Elegancia',observation:'Mejoró; todavía no muestra la elegancia buscada.',next:'Revisar proporciones, jerarquía, tipografía y presencia de los signos antes de añadir decoración.',outcome:'revise',author:'Usuario · valoración de la propuesta previa',at:'2026-10-09T00:00:00.000Z'});
+}
+const native=(window as unknown as {__TAURI_INTERNALS__?:{invoke:CodaruInvoke}}).__TAURI_INTERNALS__;
+const appearance={theme:'light' as const,tokens:{accent:'#283472',selection:'#283472',radius:6}};
+const view=createEditorView(editor,{appearance,invoke:native?.invoke.bind(native),nativeAgent:!!native});
+for(const part of ['canvas','inspector','toolbar','dialogs'] as const)view.mount(part,el(`${part}-slot`));
+function syncScreen(id:string){const frame=editor.getDocument().nodes.find(n=>n.id===id);if(!frame)return;const screen=el('screen') as HTMLSelectElement;if(!Array.from(screen.options).some(option=>option.value===id))screen.add(new Option(frame.name,id));screen.value=id;}
+async function openFrame(id:string){const frame=editor.getDocument().nodes.find(n=>n.id===id);if(!frame)throw new Error('Pantalla ausente.');if(frame.page){const c=await editor.agent('context');if(c.context)await editor.agent('apply',{expectedRevision:c.context.revision,operations:[{op:'page.activate',id:frame.page}]});}editor.select([id]);view.fit(true);syncScreen(id);}
+const lab=createIdentityLabView(editor,{appearance,onOpenFrame:openFrame,onExport:data=>download(data,'identidad.codaru.json')});
+for(const part of ['brief','references','directions','reviews','decisions','handoff'] as IdentityPart[])lab.mount(part,el(`${part}-slot`));
+const dialog=el('ai-bridge') as HTMLDialogElement;
+let pending:{request:unknown;resolve:(result:unknown)=>void;reject:(e:Error)=>void;cleanup:()=>void}|null=null;
+const templates={'comment.review':'{"text":"Propuesta localizada basada en el contexto actual…","authorName":"IA del IDE"}',research:'{"references": [{"id":"nueva-fuente","title":"…","kind":"cultural","source":"https://…","observations":"…","status":"proposed"}]}',explore:'{"directions": [{"id":"nueva-direccion","name":"…","intent":"…","frameIds":[],"styleIds":[],"status":"exploring","proposal":"…"}]}',review:'{"summary":"…","findings":[{"criterion":"Elegancia","assessment":"needs_work","reason":"…","nodeIds":[]}],"evaluator":{"provider":"Proveedor real","model":"Modelo real"}}',refine:'{"proposal":"Propuesta de ajuste localizada…"}'};
+function request(request:{signal:AbortSignal;action:keyof typeof templates;revision:string;direction?:{name:string};instruction?:string;evidence?:{dataURL:string;frameId:string}[];context?:unknown;document?:unknown}):Promise<any>{
+ if(pending)return Promise.reject(new Error('El puente tiene otra solicitud pendiente.'));
+ return new Promise((resolve,reject)=>{const {signal,...serialized}=request;const abort=()=>finish(new Error('Solicitud cancelada por el laboratorio.'));pending={request:serialized,resolve,reject,cleanup:()=>signal.removeEventListener('abort',abort)};signal.addEventListener('abort',abort,{once:true});if(signal.aborted){abort();return;}
+  el('request-summary').textContent=JSON.stringify({action:request.action,direction:request.direction?.name,revision:request.revision,instruction:request.instruction},null,2);el('request-images').replaceChildren();for(const e of request.evidence??[]){const img=document.createElement('img');img.src=e.dataURL;img.alt=e.frameId;el('request-images').append(img);}(el('response') as HTMLTextAreaElement).value='';(el('response') as HTMLTextAreaElement).placeholder=templates[request.action];el('response-error').textContent='';(el('download-request') as HTMLButtonElement).disabled=false;(el('accept-response') as HTMLButtonElement).disabled=false;if(!dialog.open)dialog.showModal();
+ });
+}
+function finish(error?:Error,result?:unknown){const current=pending;if(!current)return;pending=null;current.cleanup();if(error)current.reject(error);else current.resolve(result);dialog.close();(el('accept-response') as HTMLButtonElement).disabled=true;(el('download-request') as HTMLButtonElement).disabled=true;}
+const commentEvents:unknown[]=[];
+editor.subscribeComments(event=>{commentEvents.push(event);if(commentEvents.length>100)commentEvents.shift();});
+const comments=createCommentsView(editor,{appearance,onReveal:ids=>{if(!ids.length)return;const frameId=editor.captureCommentAnchor(ids).frameId;editor.select([frameId]);view.fit(true);editor.select(ids);syncScreen(frameId);},onOpen:()=>{lab.flush();for(const slot of document.querySelectorAll<HTMLElement>('.panel-slot'))slot.hidden=slot.id!=='comments-slot';for(const b of document.querySelectorAll('[data-tab]'))b.setAttribute('aria-pressed',String(b.getAttribute('data-tab')==='comments'));},onAIRequest:async review=>{
+ const before=await editor.agent('context');if(!before.context)throw new Error('No se pudo leer la revisión.');
+ const result=await request({action:'comment.review',revision:before.context.revision,signal:new AbortController().signal,context:review.context,document:review.document,instruction:review.context.thread.messages.at(-1)!.text});
+ const reply=await editor.agent('apply',{expectedRevision:before.context.revision,operations:[{op:'comment.reply',id:review.context.thread.id,message:{id:'reply-'+crypto.randomUUID(),text:result.text,author:{name:result.authorName??'IA del IDE',kind:'ai'},at:new Date().toISOString()}}]});if(!reply.ok)throw new Error(reply.error?.message??'Respuesta rechazada.');
+}});
+comments.mountPanel(el('comments-slot'));comments.mountPins(view.getCanvasViewport());
+const services:IdentityServices={research:request,explore:request,render:renderIdentityEvidence,review:request,refine:request};editor.setIdentityServices(services);
+el('accept-response').onclick=()=>{try{finish(undefined,JSON.parse((el('response') as HTMLTextAreaElement).value));}catch(e){el('response-error').textContent=String(e);}};
+el('cancel-request').onclick=()=>{finish(new Error('Solicitud cancelada en el IDE.'));dialog.close();};dialog.addEventListener('cancel',()=>finish(new Error('Solicitud cancelada en el IDE.')));
+el('download-request').onclick=()=>{if(pending)download(pending.request,'identity-request.json');};el('bridge').onclick=()=>{if(!dialog.open)dialog.showModal();};
+for(const button of document.querySelectorAll<HTMLButtonElement>('[data-tab]'))button.onclick=()=>{lab.flush();comments.flush();for(const slot of document.querySelectorAll<HTMLElement>('.panel-slot'))slot.hidden=slot.id!==`${button.dataset.tab}-slot`;for(const b of document.querySelectorAll('[data-tab]'))b.setAttribute('aria-pressed',String(b===button));};
+el('fit').onclick=()=>view.fit(true);el('undo').onclick=()=>editor.undo();el('save').onclick=()=>{lab.flush();download(editor.exportIdentity(),'identidad.codaru.json');};
+let dark=false;el('theme').onclick=()=>{dark=!dark;const accent=dark?'#b5bfff':'#283472';const a={theme:dark?'dark' as const:'light' as const,tokens:{accent,selection:accent}};view.setAppearance(a);lab.setAppearance(a);comments.setAppearance(a);el('theme').textContent=dark?'Tema claro':'Tema oscuro';};
+(el('screen') as HTMLSelectElement).onchange=e=>{void openFrame((e.target as HTMLSelectElement).value);};
+editor.subscribe(s=>{el('status').textContent=`Copia aislada · ${s.document.identityLab?.directions.length??0} direcciones · ${s.document.identityLab?.decisions.length??0} decisiones · IA provista por el IDE`;});
+editor.select(['entrelazo-desktop']);view.fit(true);
+Object.assign(window,{identityExample:{editor,view,lab,comments,commentEvents,openFrame,pending:()=>pending?.request??null}});
+window.addEventListener('pagehide',()=>editor.destroy(),{once:true});

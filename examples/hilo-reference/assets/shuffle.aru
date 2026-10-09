@@ -1,0 +1,7 @@
+// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.
+canvas 32 32
+background none
+group shuffle {
+path cruce_a { move 4 8; line 8 8; curve 15 8 17 24 24 24; line 28 24; move 24 20; line 28 24; line 24 28; fill none; stroke #1C1917 1.8; cap round; join round }
+path cruce_b { move 4 24; line 8 24; curve 12 24 13 20 14 18; move 18 13; curve 20 8 22 8 28 8; move 24 4; line 28 8; line 24 12; fill none; stroke #1C1917 1.8; cap round; join round }
+}

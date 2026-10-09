@@ -1,0 +1,8 @@
+// Musaru POP: bespoke control, original editable paths
+canvas 128 128
+background none
+path shadow { move 68.0 10.0; line 82.52 23.32; line 102.09 21.08; line 106.01 40.39; line 123.16 50.08; line 114.98 68.0; line 123.16 85.92; line 106.01 95.61; line 102.09 114.92; line 82.52 112.68; line 68.0 126.0; line 53.48 112.68; line 33.91 114.92; line 29.99 95.61; line 12.84 85.92; line 21.02 68.0; line 12.84 50.08; line 29.99 40.39; line 33.91 21.08; line 53.48 23.32; close; fill #252036; }
+path sticker { move 62.0 4.0; line 76.52 17.32; line 96.09 15.08; line 100.01 34.39; line 117.16 44.08; line 108.98 62.0; line 117.16 79.92; line 100.01 89.61; line 96.09 108.92; line 76.52 106.68; line 62.0 120.0; line 47.48 106.68; line 27.91 108.92; line 23.99 89.61; line 6.84 79.92; line 15.02 62.0; line 6.84 44.08; line 23.99 34.39; line 27.91 15.08; line 47.48 17.32; close; fill #FF91CC; stroke #252036 3; cap round; }
+rect pauseA { at 49 62; size 15 43; corner 2; fill #FFF9E8; stroke #252036 3; }
+rect pauseB { at 75 62; size 15 43; corner 2; fill #FFF9E8; stroke #252036 3; }
+

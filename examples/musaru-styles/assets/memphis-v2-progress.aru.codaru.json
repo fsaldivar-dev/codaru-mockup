@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Memphis · original editable printed geometry.\ncanvas 344 26\nbackground none\npath rail { move 2 13; line 338 13; fill none; stroke #20212A 2; cap round; }\nrect played { at 71 13; size 138 6; corner 0; fill #233BC7; }\ncircle marker { at 140 13; radius 8; fill #F7D85B; stroke #20212A 2; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 344 26\" width=\"344\" height=\"26\">\n  <path d=\"M2 13 L338 13\" fill=\"none\" stroke=\"#20212A\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n  <rect x=\"-69\" y=\"-3\" width=\"138\" height=\"6\" transform=\"translate(71 13)\" fill=\"#233BC7\"/>\n  <circle r=\"8\" transform=\"translate(140 13)\" fill=\"#F7D85B\" stroke=\"#20212A\" stroke-width=\"2\"/>\n</svg>",
+  "filename": "memphis-v2-progress.aru"
+}

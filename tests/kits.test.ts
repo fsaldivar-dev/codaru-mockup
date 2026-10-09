@@ -96,11 +96,11 @@ test('all kits inherit default project tokens in an explicitly themed frame', ()
   }
 });
 
-test('insertion rejects invalid containers and nested components without mutating the document', () => {
+test('insertion rejects invalid containers and structural edits to instances without mutating the document', () => {
   const s = new Store(blank()); let id = '', plainGroup = '';
   s.commit(p => { id = insertKitItem(p, 'web', 'button', null, 0, 0); const g = node('group'); plainGroup = g.id; p.nodes.push(g); });
   const before = clone(s.project);
-  assert.throws(() => s.commit(p => { insertKitItem(p, 'web', 'field', id, 0, 0); }), /anidados/);
+  assert.throws(() => s.commit(p => { insertKitItem(p, 'web', 'field', id, 0, 0); }), /edita el maestro/);
   assert.deepEqual(s.project, before);
   assert.throws(() => insertKitItem(s.project, 'web', 'button', 'missing', 0, 0), /Contenedor/);
   assert.throws(() => insertKitItem(s.project, 'web', 'missing', null, 0, 0), /desconocido/);

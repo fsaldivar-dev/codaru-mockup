@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru MusicArt · original rounded outline, no fills or effects.\ncanvas 48 48\nbackground none\npath previousHead { move 34 10; curve 34 8 32 8 30 9; line 14 22; quad 12 24 14 26; line 30 39; quad 34 42 34 38; close; move 9 10; line 9 38; fill none; stroke #2F5148 2.4; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M34 10 C34 8 32 8 30 9 L14 22 Q12 24 14 26 L30 39 Q34 42 34 38 Z M9 10 L9 38\" fill=\"none\" stroke=\"#2F5148\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "outline-v2-previous.aru"
+}

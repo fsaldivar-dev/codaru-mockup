@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru monochrome · original editable geometry.\ncanvas 48 48\nbackground none\npath lens { move 31 20; curve 31 35 9 35 9 20; curve 9 5 31 5 31 20; close; move 29 29; line 40 40; fill none; stroke #FAFAFA 2.4; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M31 20 C31 35 9 35 9 20 C9 5 31 5 31 20 Z M29 29 L40 40\" fill=\"none\" stroke=\"#FAFAFA\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "mono-v2-search.aru"
+}

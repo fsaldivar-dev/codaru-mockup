@@ -1,0 +1,5 @@
+// Musaru Memphis · original editable printed geometry.
+canvas 48 48
+background none
+path heart { move 24 40; curve 6 29 3 17 11 10; curve 17 5 22 9 24 14; curve 28 7 34 6 39 11; curve 47 20 39 32 24 40; close; fill #233BC7; }
+circle notch { at 14 15; radius 3; fill #FFF9EC; }

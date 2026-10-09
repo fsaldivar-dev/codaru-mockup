@@ -1,0 +1,35 @@
+// Musaru style laboratory · original editable illustration
+canvas 600 400
+background none
+gradient beamA linear 90 { stop 0 #29396500; stop 0.22 #7367D744; stop 0.48 #9484FF99; stop 0.62 #B0B6FF; stop 0.77 #7178EA88; stop 1 #DA8CF500 }
+gradient beamB linear 100 { stop 0 #39F9D600; stop 0.3 #6BFFD8; stop 0.65 #65A2EC; stop 1 #786AF900 }
+gradient beamC linear 50 { stop 0 #69FADC00; stop 0.45 #95FFD8; stop 1 #489BF800 }
+gradient orb radial 0.35 0.25 0.75 { stop 0 #B4E9FF; stop 0.45 #7084CE; stop 0.85 #4A387E; stop 1 #1E1939 }
+group ribbons {
+ path ribbonA { move 0 284; curve 190 309 258 -5 600 20; line 600 83; curve 342 61 211 353 0 344; close; fill beamA }
+ path ribbonB { move 0 343; curve 267 338 292 105 600 94; line 600 118; curve 323 142 232 389 0 379; close; fill beamB }
+ path ribbonC { move 128 400; curve 350 251 349 280 600 216; line 600 248; curve 390 300 390 294 196 400; close; fill beamC }
+ path brightEdge { move 0 341; curve 242 331 345 116 600 111; stroke #B9FFE5 2; fill none }
+}
+group orbit {
+ circle halo { at 383 208; radius 107; fill orb; stroke #B4C9FA 1 }
+ circle ringA { at 383 208; radius 92; fill none; stroke #9FB5E7 1 }
+ circle ringB { at 383 208; radius 79; fill none; stroke #9FB5E7 1 }
+ circle ringC { at 383 208; radius 66; fill none; stroke #9FB5E7 1 }
+ circle center { at 383 208; radius 26; fill #D7C3FF }
+ circle hole { at 383 208; radius 6; fill #37275B }
+ path glint { move 304 160; quad 335 120 370 119; stroke #F5F3FF 3; cap round; fill none }
+}
+circle star0 { at 38 52; radius 1.5; fill #D8E9FF;  }
+circle star1 { at 81 120; radius 2; fill #D8E9FF;  }
+circle star2 { at 190 54; radius 1; fill #D8E9FF;  }
+circle star3 { at 278 28; radius 2; fill #D8E9FF;  }
+circle star4 { at 493 53; radius 1.5; fill #D8E9FF;  }
+circle star5 { at 541 181; radius 1; fill #D8E9FF;  }
+circle star6 { at 512 325; radius 2; fill #D8E9FF;  }
+circle star7 { at 232 291; radius 1; fill #D8E9FF;  }
+circle star8 { at 102 211; radius 1; fill #D8E9FF;  }
+circle star9 { at 454 375; radius 1.5; fill #D8E9FF;  }
+circle star10 { at 31 377; radius 1; fill #D8E9FF;  }
+path flare { move 484.0 134.0; line 488.5 144.8; line 500.2 145.7; line 491.3 153.4; line 494.0 164.8; line 484.0 158.7; line 474.0 164.8; line 476.7 153.4; line 467.8 145.7; line 479.5 144.8; close; fill #ECFFFF }
+

@@ -1,0 +1,35 @@
+// ENTRELAZO. Geometría de autor. No reproduce un símbolo tradicional.
+canvas 640 640
+background none
+group flor-abierta {
+resource "{\"key\": \"entrelazo-flor-abierta\", \"kind\": \"illustration\", \"brand\": \"ENTRELAZO\", \"purpose\": \"Ilustraci\u00f3n original: doce hebras abiertas y cuatro p\u00e9talos. Evoca cruce y continuidad; no reproduce un bordado local. Desde 240 px.\", \"identity\": \"Cruce, continuidad y pausa. Interpretaci\u00f3n contempor\u00e1nea de autor para Amealco.\", \"reusable\": true, \"tags\": [\"entrelazo\", \"amealco\", \"original\"]}"
+path hebra_0 { move 307 299; curve 208 215 262 36 320 29; curve 380 36 422 204 334 288; fill none; stroke #283472 1.05; cap round; join round }
+path interior_0 { move 314 280; curve 280 182 300 75 320 52; curve 339 85 352 187 329 267; fill none; stroke #A8C7CF 0.85; cap round; join round }
+path hebra_1 { move 319.242 295.313; curve 275.505 173.067 411.771 45.049 465.5 67.987; curve 513.962 104.049 466.335 270.541 348.124 299.287; fill none; stroke #283472 1.05; cap round; join round }
+path interior_1 { move 334.804 282.359; curve 354.359 180.488 425.179 97.824 454 87.905; curve 453.954 125.984 414.213 220.819 354.294 278.601; fill none; stroke #A8C7CF 0.85; cap round; join round }
+path hebra_2 { move 331.687 298.242; curve 354.933 170.505 536.951 127.771 572.013 174.5; curve 595.951 229.962 471.459 350.335 354.713 316.124; fill none; stroke #283472 1.05; cap round; join round }
+path interior_2 { move 351.641 294.804; curve 419.512 216.359 522.176 180.179 552.095 186; curve 533.016 218.954 451.181 281.213 370.399 301.294; fill none; stroke #A8C7CF 0.85; cap round; join round }
+path hebra_3 { move 341 307; curve 425 208 604 262 611 320; curve 604 380 436 422 352 334; fill none; stroke #283472 1.05; cap round; join round }
+path interior_3 { move 360 314; curve 458 280 565 300 588 320; curve 555 339 453 352 373 329; fill none; stroke #A8C7CF 0.85; cap round; join round }
+path hebra_4 { move 344.687 319.242; curve 466.933 275.505 594.951 411.771 572.013 465.5; curve 535.951 513.962 369.459 466.335 340.713 348.124; fill none; stroke #283472 1.05; cap round; join round }
+path interior_4 { move 357.641 334.804; curve 459.512 354.359 542.176 425.179 552.095 454; curve 514.016 453.954 419.181 414.213 361.399 354.294; fill none; stroke #A8C7CF 0.85; cap round; join round }
+path hebra_5 { move 341.758 331.687; curve 469.495 354.933 512.229 536.951 465.5 572.013; curve 410.038 595.951 289.665 471.459 323.876 354.713; fill none; stroke #283472 1.05; cap round; join round }
+path interior_5 { move 345.196 351.641; curve 423.641 419.512 459.821 522.176 454 552.095; curve 421.046 533.016 358.787 451.181 338.706 370.399; fill none; stroke #A8C7CF 0.85; cap round; join round }
+path hebra_6 { move 333 341; curve 432 425 378 604 320 611; curve 260 604 218 436 306 352; fill none; stroke #283472 1.05; cap round; join round }
+path interior_6 { move 326 360; curve 360 458 340 565 320 588; curve 301 555 288 453 311 373; fill none; stroke #A8C7CF 0.85; cap round; join round }
+path hebra_7 { move 320.758 344.687; curve 364.495 466.933 228.229 594.951 174.5 572.013; curve 126.038 535.951 173.665 369.459 291.876 340.713; fill none; stroke #283472 1.05; cap round; join round }
+path interior_7 { move 305.196 357.641; curve 285.641 459.512 214.821 542.176 186 552.095; curve 186.046 514.016 225.787 419.181 285.706 361.399; fill none; stroke #A8C7CF 0.85; cap round; join round }
+path hebra_8 { move 308.313 341.758; curve 285.067 469.495 103.049 512.229 67.987 465.5; curve 44.049 410.038 168.541 289.665 285.287 323.876; fill none; stroke #283472 1.05; cap round; join round }
+path interior_8 { move 288.359 345.196; curve 220.488 423.641 117.824 459.821 87.905 454; curve 106.984 421.046 188.819 358.787 269.601 338.706; fill none; stroke #A8C7CF 0.85; cap round; join round }
+path hebra_9 { move 299 333; curve 215 432 36 378 29 320; curve 36 260 204 218 288 306; fill none; stroke #283472 1.05; cap round; join round }
+path interior_9 { move 280 326; curve 182 360 75 340 52 320; curve 85 301 187 288 267 311; fill none; stroke #A8C7CF 0.85; cap round; join round }
+path hebra_10 { move 295.313 320.758; curve 173.067 364.495 45.049 228.229 67.987 174.5; curve 104.049 126.038 270.541 173.665 299.287 291.876; fill none; stroke #283472 1.05; cap round; join round }
+path interior_10 { move 282.359 305.196; curve 180.488 285.641 97.824 214.821 87.905 186; curve 125.984 186.046 220.819 225.787 278.601 285.706; fill none; stroke #A8C7CF 0.85; cap round; join round }
+path hebra_11 { move 298.242 308.313; curve 170.505 285.067 127.771 103.049 174.5 67.987; curve 229.962 44.049 350.335 168.541 316.124 285.287; fill none; stroke #283472 1.05; cap round; join round }
+path interior_11 { move 294.804 288.359; curve 216.359 220.488 180.179 117.824 186 87.905; curve 218.954 106.984 281.213 188.819 301.294 269.601; fill none; stroke #A8C7CF 0.85; cap round; join round }
+path petalo_0 { move 322.745 286.572; curve 314.335 209.778 360.949 120.811 376.423 109.428; curve 384.214 165.35 376.463 236.778 342.72 281.571; line 331.628 292.058; close; fill #D8E598; stroke none 0; cap round; join round }
+path petalo_1 { move 353.428 322.745; curve 430.222 314.335 519.189 360.949 530.572 376.423; curve 474.65 384.214 403.222 376.463 358.429 342.72; line 347.942 331.628; close; fill #E9A3BE; stroke none 0; cap round; join round }
+path petalo_2 { move 317.255 353.428; curve 325.665 430.222 279.051 519.189 263.577 530.572; curve 255.786 474.65 263.537 403.222 297.28 358.429; line 308.372 347.942; close; fill #D8E598; stroke none 0; cap round; join round }
+path petalo_3 { move 286.572 317.255; curve 209.778 325.665 120.811 279.051 109.428 263.577; curve 165.35 255.786 236.778 263.537 281.571 297.28; line 292.058 308.372; close; fill #E9A3BE; stroke none 0; cap round; join round }
+path centro { move 298 313; curve 317 277 346 304 331 330; curve 305 354 285 337 298 313; fill none; stroke #283472 1.4; cap round; join round }
+}

@@ -1,0 +1,15 @@
+import { createEditor, createEditorView, type CodaruInvoke } from '../src/modular';
+import { nestedDesign } from './nested-design';
+const fixture = nestedDesign();
+const editor = createEditor({ document: fixture.document });
+const native = (window as unknown as { __TAURI_INTERNALS__?: { invoke: CodaruInvoke } }).__TAURI_INTERNALS__;
+const view = createEditorView(editor, { appearance: { theme: 'light' }, invoke: native?.invoke.bind(native), nativeAgent: !!native });
+const el = (id: string) => document.getElementById(id)!;
+for (const part of ['canvas', 'layers', 'inspector', 'library', 'toolbar', 'dialogs'] as const) view.mount(part, el(`${part}-slot`));
+el('change-master').onclick = () => { const current = editor.getDocument().nodes.find(n => n.id === 'button')!; editor.apply([{ op: 'update', id: 'button', patch: { fill: current.fill === '#7255db' ? '#177c68' : '#7255db' } }]); };
+el('select-local').onclick = () => editor.select([fixture.ids.localLabel]);
+el('undo').onclick = () => editor.undo(); el('fit').onclick = () => view.fit();
+editor.subscribe(state => { (el('undo') as HTMLButtonElement).disabled = !state.canUndo; el('status').textContent = `${state.document.components.length} componentes · ${state.document.nodes.length} capas · Cambios compartidos con personalizaciones locales`; });
+editor.select([fixture.ids.second]); view.fit();
+Object.assign(window, { nestedExample: { editor, view, ids: fixture.ids } });
+window.addEventListener('pagehide', () => editor.destroy(), { once: true });

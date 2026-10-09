@@ -1,0 +1,7 @@
+// Original VENERO concept. Contemporary illustration, not a traditional community emblem.
+canvas 32 32
+background none
+group mirar {
+resource "{\"key\": \"venero-mirar\", \"kind\": \"ui-icon\", \"brand\": \"VENERO\", \"purpose\": \"Explorar Amealco; icono original para 24 px con etiqueta.\", \"identity\": \"Escult\u00f3rico, curvas abiertas y contrapesos; agua, barro y bosque\", \"reusable\": true, \"tags\": [\"venero\", \"amealco\", \"original\"]}"
+path silueta { move 3 16; curve 8 5 24 5 29 16; curve 24 27 8 27 3 16; close; move 21 16; curve 21 23 11 23 11 16; curve 11 9 21 9 21 16; close; fill none; stroke #233D37 2; cap round; join round }
+}

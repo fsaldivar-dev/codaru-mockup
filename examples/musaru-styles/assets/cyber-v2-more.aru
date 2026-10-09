@@ -1,0 +1,6 @@
+// Musaru Cyberpunk · original editable nocturnal frequency geometry.
+canvas 48 48
+background none
+rect a { at 9 24; size 5 5; corner 0; fill #F0F3E8; }
+rect b { at 24 24; size 5 5; corner 0; fill #F0F3E8; }
+rect c { at 39 24; size 5 5; corner 0; fill #F0F3E8; }

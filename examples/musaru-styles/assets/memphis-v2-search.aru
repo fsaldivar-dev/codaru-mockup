@@ -1,0 +1,5 @@
+// Musaru Memphis · original editable printed geometry.
+canvas 48 48
+background none
+circle lens { at 21 21; radius 12; fill none; stroke #20212A 4; }
+path handle { move 30 30; line 42 42; fill none; stroke #233BC7 6; cap round; }

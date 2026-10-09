@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Memphis · original editable printed geometry.\ncanvas 48 48\nbackground none\ncircle a { at 10 24; radius 4; fill #20212A; }\nrect b { at 24 24; size 7 7; corner 0; fill #233BC7; }\npath c { move 38 20; line 45 27; line 38 27; close; fill #20212A; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <circle r=\"4\" transform=\"translate(10 24)\" fill=\"#20212A\"/>\n  <rect x=\"-3.5\" y=\"-3.5\" width=\"7\" height=\"7\" transform=\"translate(24 24)\" fill=\"#233BC7\"/>\n  <path d=\"M38 20 L45 27 L38 27 Z\" fill=\"#20212A\"/>\n</svg>",
+  "filename": "memphis-v2-more.aru"
+}

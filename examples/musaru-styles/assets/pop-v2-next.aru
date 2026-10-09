@@ -1,0 +1,6 @@
+// Musaru POP: bespoke control, original editable paths
+canvas 48 48
+background none
+path wedge { move 6 9; line 31 23; quad 33 24 30 27; line 7 41; close; fill #252036; }
+path stop { move 36 8; line 43 7; line 42 40; line 35 41; close; fill #252036; }
+

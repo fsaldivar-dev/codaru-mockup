@@ -1,0 +1,9 @@
+// Musaru Frutiger Eco · original editable botanical forms.
+canvas 96 96
+background none
+gradient leaf linear 110 { stop 0 #ECF4BE; stop 0.4 #AFD07B; stop 0.6 #6B995C; stop 1 #34674A }
+gradient tender linear 45 { stop 0 #F6F7D5; stop 0.55 #CDE09E; stop 1 #8FB574 }
+gradient glass linear 100 { stop 0 #FFFFFFAF; stop 0.45 #D9E8C64D; stop 0.78 #C1D6B34D; stop 1 #F6FBE2CC }
+gradient earth linear 90 { stop 0 #EFF0D5; stop 0.55 #DFE5BE; stop 1 #B8CA9B }
+path leafKey { move 18 13; curve 51 6 76 21 86 48; curve 72 78 48 89 17 81; curve 27 57 27 39 18 13; close; fill tender; stroke #9EBB7A 1; cap round; }
+path skipRibs { move 39 31; line 61 48; line 39 65; move 62 31; line 62 65; fill none; stroke #254738 4; cap round; }

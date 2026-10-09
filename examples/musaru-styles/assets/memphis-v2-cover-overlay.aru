@@ -1,0 +1,6 @@
+// Musaru Memphis · original editable printed geometry.
+canvas 480 432
+background none
+circle ring { at 240 198; radius 139; fill none; stroke #20212A 3; }
+path cut { move 233 347; line 282 347; line 282 370; fill none; stroke #233BC7 4; cap round; }
+path zigzag { move 301 397; line 316 381; line 332 397; line 348 381; line 364 397; line 380 381; fill none; stroke #20212A 4; cap round; }

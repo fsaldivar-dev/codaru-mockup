@@ -1,0 +1,14 @@
+// Musaru Skeuomorphic · original editable physical geometry.
+canvas 320 28
+background none
+gradient walnut linear 0 { stop 0 #5B3020; stop 0.16 #895036; stop 0.38 #A56642; stop 0.62 #78422C; stop 0.84 #A46643; stop 1 #5C3425 }
+gradient brass linear 90 { stop 0 #F3E4BA; stop 0.19 #C6AC73; stop 0.48 #E5D4AA; stop 0.52 #9D8356; stop 0.9 #D5BE8C; stop 1 #88724C }
+gradient brushed linear 90 { stop 0 #EEE8DC; stop 0.12 #D5CFC3; stop 0.8 #BDB7AC; stop 1 #999488 }
+gradient keycap linear 90 { stop 0 #FAF3E5; stop 0.68 #DED4C2; stop 1 #AEA596 }
+gradient blackkey linear 90 { stop 0 #4B4D47; stop 0.28 #343831; stop 1 #20231F }
+gradient portable linear 90 { stop 0 #D8CBB0; stop 0.38 #C5B797; stop 0.88 #B2A17F; stop 1 #8F8065 }
+rect well { at 160 13; size 318 16; corner 7; fill #9D947D; }
+rect inset { at 160 12; size 314 10; corner 5; fill #C6BDA4; }
+path track { move 8 12; line 310 12; fill none; stroke #8D846D 2; cap round; }
+path played { move 8 12; line 139 12; fill none; stroke #8A3F27 3; cap round; }
+rect head { at 139 12; size 10 21; corner 2; fill brass; }

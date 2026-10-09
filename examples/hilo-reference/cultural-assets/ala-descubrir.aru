@@ -1,0 +1,9 @@
+// HILO / ala-descubrir. Original contemporary interpretation; no copied motif or attributed traditional meaning.
+canvas 32 32
+background none
+group ala-descubrir {
+resource "{\"key\":\"hilo-ala-descubrir\",\"kind\":\"ui-icon\",\"brand\":\"HILO\",\"purpose\":\"Discover music\",\"identity\":\"Fine contours, ribbon rhythm and restrained color\",\"reusable\":true,\"tags\":[\"hilo\",\"cultural-exploration\"]}"
+path ala { move 5 26; curve 4 16 7 8 12 4; curve 14 12 12 21 5 26; close; fill none; stroke #383631 1.65; cap round; join round }
+path liston { move 6 26; curve 11 15 18 6 24 5; curve 24 14 16 23 6 26; close; fill none; stroke #383631 1.65; cap round; join round }
+path borde { move 7 26; curve 17 27 25 23 28 17; fill none; stroke #383631 1.65; cap round; join round }
+}

@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru POP: bespoke control, original editable paths\ncanvas 48 48\nbackground none\npath speaker { move 5 18; line 14 17; line 27 7; line 26 42; line 14 31; line 5 31; close; fill #FFF9E8; stroke #252036 3; cap round; }\npath sound { move 33 15; quad 42 24 33 33; move 39 8; quad 54 24 39 40; fill none; stroke #252036 3; cap round; }\n\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M5 18 L14 17 L27 7 L26 42 L14 31 L5 31 Z\" fill=\"#FFF9E8\" stroke=\"#252036\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n  <path d=\"M33 15 Q42 24 33 33 M39 8 Q54 24 39 40\" fill=\"none\" stroke=\"#252036\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "pop-v2-volume.aru"
+}

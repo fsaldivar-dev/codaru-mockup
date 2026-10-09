@@ -1,0 +1,11 @@
+// Musaru · Console gloss · Blades / NXE · original editable cover
+canvas 600 400
+background none
+gradient blade linear 0 { stop 0 #F6FADD; stop 0.48 #C7DA96; stop 0.5 #8BA54B; stop 1 #B9CE77 }
+path blade0 { move 105 69; quad 193 45 218 110; line 218 313; quad 180 353 105 329; close; fill blade; stroke #829851 2; }
+path blade1 { move 193 69; quad 281 45 306 110; line 306 313; quad 268 353 193 329; close; fill blade; stroke #829851 2; }
+path blade2 { move 281 69; quad 369 45 394 110; line 394 313; quad 356 353 281 329; close; fill blade; stroke #829851 2; }
+path blade3 { move 369 69; quad 457 45 482 110; line 482 313; quad 444 353 369 329; close; fill blade; stroke #829851 2; }
+circle disc { at 334 199; radius 79; fill #294B31;  }
+circle label { at 334 199; radius 27; fill #D3E293;  }
+circle hole { at 334 199; radius 6; fill #294B31;  }

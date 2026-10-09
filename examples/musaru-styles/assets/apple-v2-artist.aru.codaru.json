@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Apple minimal · original editable geometry, not SF Symbols.\ncanvas 48 48\nbackground none\ncircle head { at 24 15; radius 8; fill none; }\npath headOutline { move 32 15; curve 32 26 16 26 16 15; curve 16 4 32 4 32 15; close; fill none; stroke #68686D 2.6; cap round; }\npath shoulders { move 8 40; curve 8 24 40 24 40 40; close; fill none; stroke #68686D 2.6; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <circle r=\"8\" transform=\"translate(24 15)\" fill=\"none\"/>\n  <path d=\"M32 15 C32 26 16 26 16 15 C16 4 32 4 32 15 Z\" fill=\"none\" stroke=\"#68686D\" stroke-width=\"2.6\" stroke-linecap=\"round\"/>\n  <path d=\"M8 40 C8 24 40 24 40 40 Z\" fill=\"none\" stroke=\"#68686D\" stroke-width=\"2.6\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "apple-v2-artist.aru"
+}

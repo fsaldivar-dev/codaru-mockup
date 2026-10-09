@@ -1,0 +1,6 @@
+// Musaru Glass · original editable geometry; material is supplied by host nodes.
+canvas 48 48
+background none
+circle first { at 12 24; radius 2.5; fill #102C3B; }
+circle mid { at 24 24; radius 2.5; fill #102C3B; }
+circle last { at 36 24; radius 2.5; fill #102C3B; }

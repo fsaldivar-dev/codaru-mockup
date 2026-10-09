@@ -1,0 +1,8 @@
+// ENTRELAZO. Geometría de autor. No reproduce un símbolo tradicional.
+canvas 24 24
+background none
+group buscar {
+resource "{\"key\": \"entrelazo-buscar\", \"kind\": \"ui-icon\", \"brand\": \"ENTRELAZO\", \"purpose\": \"Buscar: lupa circular con terminal de aguja.\", \"identity\": \"Cruce, continuidad y pausa. Interpretaci\u00f3n contempor\u00e1nea de autor para Amealco.\", \"reusable\": true, \"tags\": [\"entrelazo\", \"amealco\", \"original\"]}"
+path hebra_0 { move 11 3; curve 0 3 0 17 11 17; curve 22 17 22 3 11 3; close; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_1 { move 16 16; line 22 22; fill none; stroke #283472 1.25; cap round; join round }
+}

@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// VENERO 02. Original contemporary geometry, not a traditional symbol.\ncanvas 24 24\nbackground none\ngroup mas {\nresource \"{\\\"kind\\\": \\\"ui-icon\\\", \\\"purpose\\\": \\\"A\\u00f1adir una lectura a la selecci\\u00f3n personal.\\\", \\\"identity\\\": \\\"VENERO 02: tensi\\u00f3n, pliegue y vac\\u00edo. Interpretaci\\u00f3n contempor\\u00e1nea original.\\\", \\\"reusable\\\": true, \\\"tags\\\": [\\\"venero-02\\\", \\\"amealco\\\", \\\"original\\\"], \\\"key\\\": \\\"venero-02-mas\\\", \\\"brand\\\": \\\"VENERO\\\"}\"\npath horizontal { move 5 12; line 19 12; fill none; stroke #21191D 1.5; cap round; join round }\npath vertical { move 12 5; line 12 19; fill none; stroke #21191D 1.5; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" width=\"24\" height=\"24\">\n  <g>\n    <path d=\"M5 12 L19 12\" fill=\"none\" stroke=\"#21191D\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M12 5 L12 19\" fill=\"none\" stroke=\"#21191D\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "mas.aru"
+}

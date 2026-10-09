@@ -1,0 +1,25 @@
+// Musaru Memphis · original editable printed geometry.
+canvas 480 432
+background none
+rect yellowBand { at 244 42; size 408 52; corner 0; fill #F7D85B; }
+path blueTriangle { move 22 89; line 218 89; line 22 295; close; fill #233BC7; }
+path coralHalf { move 90 238; curve 90 435 390 435 390 238; close; fill #F3868F; }
+circle dot00 { at 376 88; radius 2.5; fill #20212A; }
+circle dot01 { at 390 88; radius 2.5; fill #20212A; }
+circle dot02 { at 404 88; radius 2.5; fill #20212A; }
+circle dot03 { at 418 88; radius 2.5; fill #20212A; }
+circle dot10 { at 376 102; radius 2.5; fill #20212A; }
+circle dot11 { at 390 102; radius 2.5; fill #20212A; }
+circle dot12 { at 404 102; radius 2.5; fill #20212A; }
+circle dot13 { at 418 102; radius 2.5; fill #20212A; }
+circle dot20 { at 376 116; radius 2.5; fill #20212A; }
+circle dot21 { at 390 116; radius 2.5; fill #20212A; }
+circle dot22 { at 404 116; radius 2.5; fill #20212A; }
+circle dot23 { at 418 116; radius 2.5; fill #20212A; }
+circle dot30 { at 376 130; radius 2.5; fill #20212A; }
+circle dot31 { at 390 130; radius 2.5; fill #20212A; }
+circle dot32 { at 404 130; radius 2.5; fill #20212A; }
+circle dot33 { at 418 130; radius 2.5; fill #20212A; }
+path squiggle { move 25 57; curve 42 28 57 78 74 49; curve 91 20 106 70 123 41; fill none; stroke #20212A 4; cap round; }
+path stripeA { move 31 338; line 87 282; move 31 356; line 105 282; move 31 374; line 123 282; fill none; stroke #20212A 3; cap round; }
+path arc { move 407 225; curve 455 225 455 320 407 320; fill none; stroke #20212A 4; cap round; }

@@ -1,0 +1,16 @@
+// ENTRELAZO. Geometría de autor. No reproduce un símbolo tradicional.
+canvas 2040 350
+background none
+group nos-une {
+resource "{\"key\": \"entrelazo-nos-une\", \"kind\": \"illustration\", \"brand\": \"ENTRELAZO\", \"purpose\": \"Rotulaci\u00f3n original: NOS UNE. Exhibici\u00f3n, no texto de lectura.\", \"identity\": \"Cruce, continuidad y pausa. Interpretaci\u00f3n contempor\u00e1nea de autor para Amealco.\", \"reusable\": true, \"tags\": [\"entrelazo\", \"amealco\", \"original\"]}"
+path letra_0_N_0 { move 20 320; line 20 20; line 210 320; line 210 20; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_1_O_0 { move 420 20; curve 570 20 570 320 420 320; curve 270 320 270 20 420 20; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_2_S_0 { move 810 50; curve 660 -60 540 130 710 170; curve 900 220 810 400 620 290; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_4_U_0 { move 1220 20; line 1220 230; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_4_U_1 { move 1220 230; curve 1220 360 1410 360 1410 230; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_4_U_2 { move 1410 230; line 1410 20; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_5_N_0 { move 1520 320; line 1520 20; line 1710 320; line 1710 20; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_6_E_0 { move 2010 20; line 1820 20; line 1820 320; line 2010 320; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_6_E_1 { move 1820 170; line 1930 170; fill none; stroke #283472 7.199999999999999; cap round; join round }
+path letra_6_E_2 { move 1960 170; line 2000 170; fill none; stroke #283472 7.199999999999999; cap round; join round }
+}

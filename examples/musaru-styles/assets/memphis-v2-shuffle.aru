@@ -1,0 +1,5 @@
+// Musaru Memphis · original editable printed geometry.
+canvas 48 48
+background none
+path crossA { move 5 12; line 13 12; line 34 36; line 43 36; move 37 30; line 43 36; line 37 42; fill none; stroke #20212A 3; cap round; }
+path crossB { move 5 36; line 13 36; line 21 27; move 27 20; line 34 12; line 43 12; move 37 6; line 43 12; line 37 18; fill none; stroke #233BC7 3; cap round; }

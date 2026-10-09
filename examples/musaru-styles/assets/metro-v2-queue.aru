@@ -1,0 +1,7 @@
+// Musaru Frutiger Metro · original editable music poster geometry.
+canvas 48 48
+background none
+rect a { at 17 11; size 25 4; corner 1; fill #FAFBEF; }
+rect b { at 24 23; size 39 4; corner 1; fill #FAFBEF; }
+rect c { at 17 35; size 25 4; corner 1; fill #FAFBEF; }
+circle dot { at 39 35; radius 3; fill #D6F03D; }

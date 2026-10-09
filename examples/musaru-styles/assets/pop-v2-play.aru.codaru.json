@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru POP: bespoke control, original editable paths\ncanvas 48 48\nbackground none\npath triangle { move 13 7; quad 12 5 15 7; line 40 23; quad 43 25 39 27; line 15 42; quad 11 44 12 39; close; fill #252036; }\npath shine { move 17 14; line 27 20; fill none; stroke #FF91CC 2; cap round; }\n\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M13 7 Q12 5 15 7 L40 23 Q43 25 39 27 L15 42 Q11 44 12 39 Z\" fill=\"#252036\"/>\n  <path d=\"M17 14 L27 20\" fill=\"none\" stroke=\"#FF91CC\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "pop-v2-play.aru"
+}

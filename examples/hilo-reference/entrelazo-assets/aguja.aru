@@ -1,0 +1,8 @@
+// ENTRELAZO. Geometría de autor. No reproduce un símbolo tradicional.
+canvas 24 24
+background none
+group aguja {
+resource "{\"key\": \"entrelazo-aguja\", \"kind\": \"ui-icon\", \"brand\": \"ENTRELAZO\", \"purpose\": \"Continuar: aguja diagonal con ojo abierto.\", \"identity\": \"Cruce, continuidad y pausa. Interpretaci\u00f3n contempor\u00e1nea de autor para Amealco.\", \"reusable\": true, \"tags\": [\"entrelazo\", \"amealco\", \"original\"]}"
+path hebra_0 { move 3 21; line 18 4; curve 21 1 24 4 20 7; line 7 20; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_1 { move 17 8; line 19 6; fill none; stroke #283472 1.25; cap round; join round }
+}

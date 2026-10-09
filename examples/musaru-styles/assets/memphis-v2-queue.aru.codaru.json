@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Memphis · original editable printed geometry.\ncanvas 48 48\nbackground none\nrect top { at 27 10; size 34 6; corner 0; fill #20212A; }\nrect middle { at 23 24; size 26 6; corner 0; fill #20212A; }\nrect bottom { at 20 38; size 20 6; corner 0; fill #20212A; }\npath arrow { move 35 29; line 46 38; line 35 45; close; fill #233BC7; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <rect x=\"-17\" y=\"-3\" width=\"34\" height=\"6\" transform=\"translate(27 10)\" fill=\"#20212A\"/>\n  <rect x=\"-13\" y=\"-3\" width=\"26\" height=\"6\" transform=\"translate(23 24)\" fill=\"#20212A\"/>\n  <rect x=\"-10\" y=\"-3\" width=\"20\" height=\"6\" transform=\"translate(20 38)\" fill=\"#20212A\"/>\n  <path d=\"M35 29 L46 38 L35 45 Z\" fill=\"#233BC7\"/>\n</svg>",
+  "filename": "memphis-v2-queue.aru"
+}

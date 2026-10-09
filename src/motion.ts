@@ -1,3 +1,4 @@
+import { ContentCache } from './content-cache';
 import { safeColor } from './themes';
 
 /** Motion data is declarative: no script from a document or an SVG is ever executed. */
@@ -155,7 +156,10 @@ export function sanitizeSVG(input: string): string {
 
 export interface VectorLayer { id: string; tag: string; depth: number; }
 /** Animatable layers of a sanitized illustration, in document order. */
+const layerCache = new ContentCache<readonly VectorLayer[]>();
 export function vectorLayers(svg: string): VectorLayer[] {
+  const cached = layerCache.get(svg);
+  if (cached) return cached.map(layer => ({ ...layer }));
   const layers: VectorLayer[] = [], stack: string[] = [];
   for (const [, closing, name, attributes, selfClosing] of svg.matchAll(/<(\/?)([A-Za-z]+)((?:\s[\w:.-]+="[^"]*")*)(\/?)>/g)) {
     if (closing) { stack.pop(); continue; }
@@ -163,6 +167,7 @@ export function vectorLayers(svg: string): VectorLayer[] {
     if (id && layerElements.has(name) && !stack.some(parent => resourceElements.has(parent))) layers.push({ id, tag: name, depth: Math.max(0, stack.length - 1) });
     if (!selfClosing) stack.push(name);
   }
+  layerCache.set(svg, layers.map(layer => ({ ...layer })), layers.length * 160);
   return layers;
 }
 export function vectorSize(svg: string) {
@@ -336,12 +341,11 @@ export function transitionScreens(ghost: HTMLElement, next: HTMLElement, transit
   ghost.animate(leave, options).finished.then(() => ghost.remove(), () => ghost.remove());
 }
 
-const canonical = new Set<string>();
+const canonical = new ContentCache<true>();
 /** Validation runs on every commit; remember illustrations already known to be sanitized. */
 export function isSanitizedSVG(svg: unknown): svg is string {
   if (typeof svg !== 'string') return false;
-  if (canonical.has(svg)) return true;
+  if (canonical.get(svg)) return true;
   try { if (sanitizeSVG(svg) !== svg) return false; } catch { return false; }
-  if (canonical.size > 64) canonical.clear();
-  canonical.add(svg); return true;
+  canonical.set(svg, true); return true;
 }

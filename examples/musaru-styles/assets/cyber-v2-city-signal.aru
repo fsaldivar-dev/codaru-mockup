@@ -1,0 +1,10 @@
+// Musaru Cyberpunk · original editable nocturnal frequency geometry.
+canvas 568 180
+background none
+path silhouette { move 0 180; line 0 84; line 47 84; line 47 58; line 79 58; line 79 102; line 116 102; line 116 36; line 154 36; line 154 56; line 181 56; line 181 104; line 217 104; line 217 80; line 258 80; line 258 14; line 312 14; line 312 73; line 344 73; line 344 111; line 390 111; line 390 46; line 428 46; line 428 86; line 470 86; line 470 62; line 517 62; line 517 104; line 568 104; line 568 180; close; fill #0B1014; }
+path limeWindows { move 128 54; line 140 54; move 128 67; line 140 67; move 270 32; line 299 32; move 270 45; line 299 45; move 402 66; line 416 66; move 402 79; line 416 79; move 481 82; line 503 82; fill none; stroke #D5FF48 2; cap round; }
+path pinkWindows { move 14 104; line 33 104; move 14 117; line 33 117; move 90 119; line 106 119; move 230 95; line 244 95; move 355 127; line 374 127; move 481 96; line 503 96; fill none; stroke #F77EA8 2; cap round; }
+path mast { move 285 14; line 285 3; fill none; stroke #F0F3E8 1.5; cap round; }
+circle beacon { at 285 3; radius 2.5; fill #F77EA8; }
+path signalHalo { move 21 151; line 173 151; line 187 132; line 211 161; line 235 142; line 257 151; line 548 151; fill none; stroke #D5FF4819 12; cap round; }
+path signal { move 21 151; line 173 151; line 187 132; line 211 161; line 235 142; line 257 151; line 548 151; fill none; stroke #D5FF48 2; cap round; }

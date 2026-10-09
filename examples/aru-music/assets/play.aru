@@ -1,0 +1,6 @@
+// Musaru controls · original curves generated for this prototype
+canvas 48 48
+background none
+group play {
+path seed { move 16 10; quad 14 9 14 13; line 14 35; quad 14 40 18 37; line 36 26; quad 39 24 35 22; close; fill #172723 }
+}

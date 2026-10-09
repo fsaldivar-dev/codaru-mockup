@@ -15,6 +15,7 @@ test.beforeEach(async({page})=>{
 test('the Recursos tab searches free icons and photos and inserts them as credited layers',async({page})=>{
   await page.getByRole('button',{name:'Componentes'}).click();
   await page.locator('[data-library="resources"]').click();
+  await page.getByRole('button',{name:'Banco externo ↗',exact:true}).click();
   await expect(page.locator('#resource-search')).toBeVisible();
   await page.locator('#resource-search').fill('music');
   await expect(page.locator('.resource-tile')).toHaveCount(2);

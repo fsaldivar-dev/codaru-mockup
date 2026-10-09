@@ -1,0 +1,11 @@
+// Musaru Aero · original editable vector. Sky and land, no water.
+canvas 64 64
+background none
+gradient chrome linear 90 { stop 0 #FFFFFF; stop 0.42 #E4F3FA; stop 0.52 #A3C6DB; stop 1 #F4FCFF }
+gradient jewel linear 90 { stop 0 #99E4FF; stop 0.46 #39B6ED; stop 0.5 #137ABF; stop 1 #095E94 }
+gradient green linear 90 { stop 0 #ECFF97; stop 0.5 #A5D753; stop 0.52 #70AD2C; stop 1 #4A8822 }
+circle bezel { at 32 32; radius 29; fill chrome; stroke #76A9C5 1; }
+circle inner { at 32 32; radius 25; fill #DDF2FE; stroke #FFFFFF 1; }
+ellipse light { at 32 17; size 38 15; fill #FFFFFFBB; }
+path symbol { move 19 20; line 36 31; line 19 42; close; move 38 20; line 43 20; line 43 42; line 38 42; close; fill #246E97; }
+path edge { move 20 46; quad 32 50 43 46; fill none; stroke #FFFFFF 1; cap round; }

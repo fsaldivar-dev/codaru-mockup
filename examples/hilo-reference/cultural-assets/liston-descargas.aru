@@ -1,0 +1,8 @@
+// HILO / liston-descargas. Original contemporary interpretation; no copied motif or attributed traditional meaning.
+canvas 32 32
+background none
+group liston-descargas {
+resource "{\"key\":\"hilo-liston-descargas\",\"kind\":\"ui-icon\",\"brand\":\"HILO\",\"purpose\":\"Offline downloads\",\"identity\":\"Fine contours, ribbon rhythm and restrained color\",\"reusable\":true,\"tags\":[\"hilo\",\"cultural-exploration\"]}"
+path hebra { move 7 5; curve 7 14 8 20 16 26; curve 24 20 25 14 25 5; fill none; stroke #383631 1.65; cap round; join round }
+path punta { move 11 22; line 16 27; line 21 22; move 16 5; line 16 26; fill none; stroke #383631 1.65; cap round; join round }
+}

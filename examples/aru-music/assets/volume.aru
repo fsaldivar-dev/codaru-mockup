@@ -1,0 +1,6 @@
+// Musaru controls · original curves generated for this prototype
+canvas 48 48
+background none
+group volume {
+path speaker { move 7 20; line 15 20; line 24 12; line 24 36; line 15 28; line 7 28; close; fill none; stroke #F3F0E4 3; cap round; join round }path soundA { move 31 17; quad 38 24 31 31; fill none; stroke #F3F0E4 3; cap round; join round }path soundB { move 36 10; quad 48 24 36 38; fill none; stroke #F3F0E4 3; cap round; join round }
+}

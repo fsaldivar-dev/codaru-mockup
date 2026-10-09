@@ -1,0 +1,6 @@
+// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.
+canvas 32 32
+background none
+group download {
+path descarga { move 16 4; line 16 21; move 10 15; line 16 21; line 22 15; move 5 24; line 5 28; line 27 28; line 27 24; fill none; stroke #1C1917 1.8; cap round; join round }
+}

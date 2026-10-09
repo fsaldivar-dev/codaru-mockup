@@ -1,0 +1,41 @@
+[
+  {
+    "seed": "musaru-1",
+    "id": "113",
+    "source": "picsum",
+    "url": "https://picsum.photos/seed/musaru-1/960/720",
+    "file": "examples/aru-music/assets/photo-musaru-1.jpg",
+    "creator": "Zugr",
+    "page": "https://unsplash.com/photos/yZf1quatKCA",
+    "license": "Unsplash License",
+    "licenseUrl": "https://unsplash.com/license",
+    "width": 960,
+    "height": 720
+  },
+  {
+    "seed": "musaru-2",
+    "id": "869",
+    "source": "picsum",
+    "url": "https://picsum.photos/seed/musaru-2/640/480",
+    "file": "examples/aru-music/assets/photo-musaru-2.jpg",
+    "creator": "Caleb Ralston",
+    "page": "https://unsplash.com/photos/6hxvm0NzYP8",
+    "license": "Unsplash License",
+    "licenseUrl": "https://unsplash.com/license",
+    "width": 640,
+    "height": 480
+  },
+  {
+    "seed": "musaru-3",
+    "id": "112",
+    "source": "picsum",
+    "url": "https://picsum.photos/seed/musaru-3/640/480",
+    "file": "examples/aru-music/assets/photo-musaru-3.jpg",
+    "creator": "Zugr",
+    "page": "https://unsplash.com/photos/kmF_Aq8gkp0",
+    "license": "Unsplash License",
+    "licenseUrl": "https://unsplash.com/license",
+    "width": 640,
+    "height": 480
+  }
+]

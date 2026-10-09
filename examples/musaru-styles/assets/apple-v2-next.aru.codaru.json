@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Apple minimal · original editable geometry, not SF Symbols.\ncanvas 48 48\nbackground none\npath nextA { move 5 10; quad 3 9 3 12; line 3 36; quad 3 39 5 38; line 23 26; quad 25 24 23 22; close; fill #1D1D1F; }\npath nextB { move 25 10; quad 23 9 23 12; line 23 36; quad 23 39 25 38; line 43 26; quad 45 24 43 22; close; fill #1D1D1F; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M5 10 Q3 9 3 12 L3 36 Q3 39 5 38 L23 26 Q25 24 23 22 Z\" fill=\"#1D1D1F\"/>\n  <path d=\"M25 10 Q23 9 23 12 L23 36 Q23 39 25 38 L43 26 Q45 24 43 22 Z\" fill=\"#1D1D1F\"/>\n</svg>",
+  "filename": "apple-v2-next.aru"
+}

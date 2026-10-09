@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru MusicArt · original rounded outline, no fills or effects.\ncanvas 96 96\nbackground none\npath body { move 46 46; curve 26 36 14 50 22 62; curve 6 80 30 96 44 78; curve 58 86 70 72 58 58; close; fill none; stroke #2F5148 1.6; cap round; }\npath neck { move 44 46; line 68 16; line 78 24; line 58 58; move 66 16; line 70 6; line 86 18; line 78 26; fill none; stroke #2F5148 1.6; cap round; }\ncircle soundHole { at 40 62; radius 7; fill none; stroke #2F5148 1.6; }\npath bridge { move 26 74; line 36 82; fill none; stroke #2F5148 1.6; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 96 96\" width=\"96\" height=\"96\">\n  <path d=\"M46 46 C26 36 14 50 22 62 C6 80 30 96 44 78 C58 86 70 72 58 58 Z\" fill=\"none\" stroke=\"#2F5148\" stroke-width=\"1.6\" stroke-linecap=\"round\"/>\n  <path d=\"M44 46 L68 16 L78 24 L58 58 M66 16 L70 6 L86 18 L78 26\" fill=\"none\" stroke=\"#2F5148\" stroke-width=\"1.6\" stroke-linecap=\"round\"/>\n  <circle r=\"7\" transform=\"translate(40 62)\" fill=\"none\" stroke=\"#2F5148\" stroke-width=\"1.6\"/>\n  <path d=\"M26 74 L36 82\" fill=\"none\" stroke=\"#2F5148\" stroke-width=\"1.6\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "outline-v2-guitar-annotation.aru"
+}

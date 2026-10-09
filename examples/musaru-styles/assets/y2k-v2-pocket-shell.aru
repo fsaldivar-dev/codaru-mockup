@@ -1,0 +1,13 @@
+// Musaru Y2K chrome · original editable polished geometry.
+canvas 338 528
+background none
+gradient chrome linear 90 { stop 0 #FFFFFF; stop 0.28 #D3DDE9; stop 0.44 #F4F8FE; stop 0.48 #FFFFFF; stop 0.49 #64758E; stop 0.55 #BCC8D8; stop 0.82 #F7FBFF; stop 1 #7F8DA6 }
+gradient rim linear 90 { stop 0 #4F5C77; stop 0.2 #E9F1FA; stop 0.45 #8E9BB1; stop 0.49 #354259; stop 0.52 #C7D2E0; stop 0.8 #FEFFFF; stop 1 #62728A }
+gradient pinkMetal linear 130 { stop 0 #FFEFFF; stop 0.32 #BBA7D2; stop 0.48 #FFFFFF; stop 0.52 #A77FBE; stop 0.75 #EDE9FF; stop 1 #9784B6 }
+ellipse shadow { at 178 518; size 251 18; fill #5761761C; }
+path rim { move 169 12; curve 65 12 20 91 20 238; curve 20 382 91 502 195 510; curve 291 518 324 409 324 250; curve 324 99 279 12 169 12; close; fill rim; stroke #58677F 1; cap round; }
+path body { move 169 22; curve 76 22 31 97 31 238; curve 31 373 97 491 195 500; curve 280 506 313 405 313 250; curve 313 106 271 22 169 22; close; fill chrome; }
+path sideReflection { move 61 105; curve 36 196 57 353 107 427; curve 71 316 67 193 88 91; close; fill #FFFFFFB0; }
+ellipse photoRim { at 169 112; size 214 142; fill rim; stroke #63718A 1; }
+ellipse photoBed { at 169 112; size 198 128; fill #E8EEF8; }
+path lowerReflection { move 107 427; curve 147 478 205 498 251 451; curve 218 511 153 501 107 427; close; fill #51617D70; }

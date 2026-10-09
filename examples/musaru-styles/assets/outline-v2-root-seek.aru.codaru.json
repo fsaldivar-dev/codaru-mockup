@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru MusicArt · original rounded outline, no fills or effects.\ncanvas 284 24\nbackground none\npath rail { move 4 12; line 280 12; fill none; stroke #2F5148 1.2; cap round; }\npath played { move 4 12; line 112 12; fill none; stroke #2F5148 2.4; cap round; }\ncircle needle { at 112 12; radius 4; fill none; stroke #2F5148 1.2; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 284 24\" width=\"284\" height=\"24\">\n  <path d=\"M4 12 L280 12\" fill=\"none\" stroke=\"#2F5148\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>\n  <path d=\"M4 12 L112 12\" fill=\"none\" stroke=\"#2F5148\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>\n  <circle r=\"4\" transform=\"translate(112 12)\" fill=\"none\" stroke=\"#2F5148\" stroke-width=\"1.2\"/>\n</svg>",
+  "filename": "outline-v2-root-seek.aru"
+}

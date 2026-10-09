@@ -1,0 +1,2780 @@
+{
+  "hilo-aru-volume": {
+    "revision": "aca8c208e138a8c834ef7bf63a9e8672b4d9893f6ca94beb430ca3a6487cd12f",
+    "previewHashes": [
+      "1db1b9b4bdf8515b12f5d06331e085d02bf6f6b838bf4bae103f2b464404f8ef",
+      "6744d575642ef57728d5956a04d2eef5b38a94431b754d8c5de6eb9bd3842ffc"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno legible a 24 px, silueta distinguible, trazo fino coherente y margen sin recortes.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-collection": {
+    "revision": "42c656cc204a84d134ce412b82505311bdfc3d3649c80f289e14cd831e6a205e",
+    "previewHashes": [
+      "97ad434bb28b992f5194c3962db33ed8cc069730962257d982f8985672f56132",
+      "7e730fc74bd57f49d24b0a19c02953e565fb9131b0618cdfc0023770cc278efc"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno legible a 24 px, silueta distinguible, trazo fino coherente y margen sin recortes.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-shuffle": {
+    "revision": "37c5ea91a46db2432fa963fa5de1c57076fbb00af52fd444a447523f32d2d022",
+    "previewHashes": [
+      "81f67265a438188bf86ea3a031581b35fc1ebb26bc97ef1e53684f3a1de4e468",
+      "4f561e74e7d46228e224f89f2f81e162d9615db4d377023f47ab5b215a7e41bc"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno legible a 24 px, silueta distinguible, trazo fino coherente y margen sin recortes.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-previous": {
+    "revision": "603b2edfc33a8d8fbd3b037b3059e53a9d466865e7176a6c8120052dea8f561f",
+    "previewHashes": [
+      "faabb16b96ea54f6ff620b212bd8a633ad60e1a93453ead79c7a836dd9839c23",
+      "087913e5f4504223dadcf45264e7de8121cdad3cadd0bd94e389fbe43fb56c40"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno legible a 24 px, silueta distinguible, trazo fino coherente y margen sin recortes.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-heart": {
+    "revision": "256f7d9f68c1de676554048a7de7ade7313e90dc4fcdb37fc74fa42f634b41ee",
+    "previewHashes": [
+      "d2cf0c9a20ae7ba132578dd0ba8213392f632a5ebfcc33f16f721c5385175ff6",
+      "b3ad5a56c619c7c39670a7a8c9a7e32278156f25aced09337a7cbf7e79828a00"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno legible a 24 px, silueta distinguible, trazo fino coherente y margen sin recortes.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-hilo-app": {
+    "revision": "edd66bff3ba152f523c5591f3161f5ac13190cded50f274baf2b8b1c5cc6dfcf",
+    "previewHashes": [
+      "d856c5e2335780ac1d1a7e645d60f8c14874c66947b4eaabf457921e825c669c",
+      "b1aad26b55e65acacf48a146a6b60173a0bb973fdb8fbb2dff55dd7a28a47d9e"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Monograma H entrelazado reconocible a 24 px, acento cian discreto y contorno rosa coherente con el lenguaje inferido.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-search": {
+    "revision": "1bb946923b3c54b3ce058b0d563cd280b294fb3107c792a43e7530882d8fb94e",
+    "previewHashes": [
+      "916c184984a4a322e4b7f30117ff794eb0462e724e40f72e7fb68610a9beec0a",
+      "188973b05fa27d5179e3dbc7763308aace812cc3b1682dc0d937a83f01d2ffac"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno legible a 24 px, silueta distinguible, trazo fino coherente y margen sin recortes.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-weave": {
+    "revision": "a7a1e8a6877919312c2838b21e66ca2328012384d639b28f80ad77b21be0ed8a",
+    "previewHashes": [
+      "ab88050c9b18691106945837074d79ce81aaa38b22751945f8bbcd6e2d65b035",
+      "4c3b5e294dccaf100a8c74de667c37466d6656a79d22b697b2f79471e089c90b"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno legible a 24 px, silueta distinguible, trazo fino coherente y margen sin recortes.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-repeat": {
+    "revision": "dda8f5b1ccdecb25aae14a7d077c51e580af817e41abe97ada1695ee8228816c",
+    "previewHashes": [
+      "f7878a2f4825312a1cf29201d9c99493a91113ed4ec0ed98149f5eaf3c8e9398",
+      "3ea4f92a16c71b8ef8708223d0bf769162f61154ed1ea17519ee01c0199bb001"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno legible a 24 px, silueta distinguible, trazo fino coherente y margen sin recortes.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-radio": {
+    "revision": "1d6d5ab697752b83d69c1cd9e80cb32babe704b2ef7bfc79cace25268af121f7",
+    "previewHashes": [
+      "a805c6d8ffbe15ef54f361c0d91d3530a6a1bfe5ec805219760b93a12be7d02c",
+      "10db7f0317827b69a21bbd1eb90ff97a875e2d5f98cc9ee6f90ce215fc13433c"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno legible a 24 px, silueta distinguible, trazo fino coherente y margen sin recortes.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-back": {
+    "revision": "ca96fbc88d1b14638b0a597967f6995c2921bc49a801886f765612b7607571d2",
+    "previewHashes": [
+      "5117ba8d6d368211736d15de81977f0656ebea5098dd7a5b4ce69597609abc11",
+      "302a282e06a0ea8e25cf730cc860283eef3154e197cf7bdbc64f94ff6bdc0836"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno legible a 24 px, silueta distinguible, trazo fino coherente y margen sin recortes.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-pause": {
+    "revision": "9f6f671a8ff8b3ed24a42de2b56162a7518c8ee35861cd4021418c010a1ba563",
+    "previewHashes": [
+      "68cd0d01836014c781228a6b5d25f2bbef1b1a20f6eab93c3bbf6d6c935707ea",
+      "584777116034962fda7010a7d77f43ecd5af3542dd26cadbf0329912c8166d67"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno legible a 24 px, silueta distinguible, trazo fino coherente y margen sin recortes.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-resonancia": {
+    "revision": "6c5d6bacc2fb316e19a8adb1f35f9ec58a707a38fa1534214f137e32868cf050",
+    "previewHashes": [
+      "3516251bfeea3049bbe50c2c8d9ca30caf2cc33c8bdb2a7f5259e519b2ef2941",
+      "46ac5fed6dd5b92a1ff396e17b808fd551d3762f585746579620d097b37a048c"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Ondas entrelazadas reconocibles a 64 px y completas a 400 px; rosa y coral sobre marfil, sin clipping.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-next": {
+    "revision": "865c47147d8260740ba58e6c0ec89e404c4b49cb205fe2564c4ba65a4d9b06e4",
+    "previewHashes": [
+      "ae30e6fba42b88b83c8b368843fdd5f31ac926fefdaec2c182cd62ab2f2ee3f9",
+      "4fa507f10de17bbad87dc36f70e91ddb16eccc125b4db5152670aa6846b15d06"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno legible a 24 px, silueta distinguible, trazo fino coherente y margen sin recortes.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-download": {
+    "revision": "1ec99ec49c3389414233053188cd60151fb0f3507569bb0af7a9c5331baa40c7",
+    "previewHashes": [
+      "6790083adef63c0e6ada5d307aee5901d099cd26306526c5b84fb693d35f477c",
+      "8e0c676a433c65730516339a3dd5404de481df699f4aad54e4aaf8ed3ec92101"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno legible a 24 px, silueta distinguible, trazo fino coherente y margen sin recortes.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-queue": {
+    "revision": "d2a1c69252a385ab55113a3dd752136fc0fa1a058d65f7d60cd6ba843b444cd2",
+    "previewHashes": [
+      "94debb6641ff315a4e3c2e46a5659bb8c013433493e5a0014cb9e4412ba96fbb",
+      "a3fb8b4b2ecdaf44addd1d3c87de621d6888925011d6242aee9d1aff76a1ef69"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno legible a 24 px, silueta distinguible, trazo fino coherente y margen sin recortes.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-play": {
+    "revision": "ebb62d404e3bd9bd0f031516b350960cdacc2d70d64183ad0f20bda149a15b03",
+    "previewHashes": [
+      "7cfc16e3d24196c687ace496f9511e5a8fc9c9a51066a7dec4b5605fce260736",
+      "5a2b90290abc8e5f45584852f8c87f2b5b9023a9318f7e47d813213e54a649ca"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno legible a 24 px, silueta distinguible, trazo fino coherente y margen sin recortes.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-close": {
+    "revision": "d7863544a4f5cb6adb7f294e4779f97c7e0c31077456261ccf9522193ba9aa69",
+    "previewHashes": [
+      "14cde160314154ab77652a450bc5c8165d17028cce0a2e3791e4dfe4b68e8dda",
+      "ba140a53b6e53f535ba41d0920be60446af57eb7281682cdd70c561271f822bd"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno legible a 24 px, silueta distinguible, trazo fino coherente y margen sin recortes.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-cast": {
+    "revision": "bd7c20e24f8deacd5a7e22ceb6e8548766802121912d53b6058e063fc0bf9198",
+    "previewHashes": [
+      "20d7e0809c915dd462b865024bbe7f65f1eb12f50b50d751f41432f02e467bb0",
+      "155f174fd4857585edad8e6d73d8b7fe87f5c14ea3dd007b339b74d3ddc46de7"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno legible a 24 px, silueta distinguible, trazo fino coherente y margen sin recortes.",
+        "Revisión visual explícita de Codex en esta sesión; no es un evaluador automático para contenido nuevo."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-encuentro": {
+    "revision": "62fee543c5c94cbcb6fc522387768f5820d6f75ef785e86c64ba764132e87a0c",
+    "previewHashes": [
+      "f2a1744dcc679537d0fd6498c03334d736dfa562f1d72435eaa024894de2cb1b",
+      "cc0c9c05c88aeea22f3d7bf351357c6689d250c42412706452d6a272d1291b9d"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Composición simétrica, contornos continuos y espacios limpios entre aves y flor. La silueta se conserva a 64 px, pero los filamentos pierden contraste: usar desde 280 px, nunca como icono.",
+        "Revisión visual explícita de Codex en esta sesión de los PNG reales del editor y de su uso en la interfaz. No valida autenticidad cultural ni aprueba automáticamente dibujos nuevos."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-canto": {
+    "revision": "2b7a4aa6caf0bf3c15c5d719f371a7cd3fc8b6c4d9f8558fdcd6c5366af2a25b",
+    "previewHashes": [
+      "6c157dce1bfa95d6c7b5cf4cb5786ca24a1530544598241adc4ae559192282ed",
+      "32b0f5d4eb82bd95228f349b2ff2a694055c4d3c3a97618be551a8cd3e8cbbd9"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Ave, flor y línea de apoyo visibles, sin recortes. Se distingue la composición reducida; los detalles requieren al menos 160 px de ancho, como portada.",
+        "Revisión visual explícita de Codex en esta sesión de los PNG reales del editor y de su uso en la interfaz. No valida autenticidad cultural ni aprueba automáticamente dibujos nuevos."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-primer-brote": {
+    "revision": "b34118286a1167f3de1adc68142b2188d52e244cc62fcaf28faa813ebd15d1c5",
+    "previewHashes": [
+      "25abf7bcad33c777cd55a3447622dc0c91754658b612ac10aca6b55abaddfdf6",
+      "41d4ff55c516044855d4f7a2dfe662820a01a950680abf235c39d52e40211d52"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Brote vertical y dos hojas legibles, acento rosa contenido y márgenes holgados. Adecuado al estado vacío; usar desde 160 px para conservar el trazo fino.",
+        "Revisión visual explícita de Codex en esta sesión de los PNG reales del editor y de su uso en la interfaz. No valida autenticidad cultural ni aprueba automáticamente dibujos nuevos."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-un-respiro": {
+    "revision": "d9e085005b7b2c26c8636281d6e686f42e6ca19c15cf06417229fdbf667e8c04",
+    "previewHashes": [
+      "0c163bb45277c3631a77100148f720c601deec8d195a4ba73ff7cc12aabd0c1a",
+      "0436712d1fa0ade4703aa804333b74f2e2e9b44384f1138337d7a2e39c497fc6"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Ave en reposo reconocible y distinguible de la portada; ala y rama separadas, sin cortes. Utilizar desde 160 px para el estado sin conexión.",
+        "Revisión visual explícita de Codex en esta sesión de los PNG reales del editor y de su uso en la interfaz. No valida autenticidad cultural ni aprueba automáticamente dibujos nuevos."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-semilla-inicio": {
+    "revision": "6e68e888a09cbf05ba938bf7f3735b8e1ae4076929d8e9161ec16d52b0da0b69",
+    "previewHashes": [
+      "471d5bcf98291f4be3f7fb6918686ada46b3b0e2391e1cd33636819567da53dc",
+      "751b01d96178630aa6bc30c7f66634dbdc18a8224c51eba18d75257903459aa3"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Silueta cerrada y pliegue interior distinguibles a 24 px. La metáfora de inicio requiere la etiqueta visible utilizada en la interfaz.",
+        "Revisión visual explícita de Codex en esta sesión de los PNG reales del editor y de su uso en la interfaz. No valida autenticidad cultural ni aprueba automáticamente dibujos nuevos."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-ala-descubrir": {
+    "revision": "3413b6f1beaf8c053360b70de1b23cd62c209b9c12593a5ca6bb772f23e3d083",
+    "previewHashes": [
+      "4464a6225c8721137edc31443c10f7484e00561d41e710888f9cac356e511ae5",
+      "6250757e9769717232fe8679039900b5a634d8d51bfee5bd93dc73e730e32f30"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Tres gestos separados conforman un ala reconocible a 24 px. Trazo y márgenes coherentes; acompañar de la etiqueta Descubrir.",
+        "Revisión visual explícita de Codex en esta sesión de los PNG reales del editor y de su uso en la interfaz. No valida autenticidad cultural ni aprueba automáticamente dibujos nuevos."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-brote-coleccion": {
+    "revision": "6e5c6a8b43601a12239f92cced2cd8796b7baca5fff8104409b07729fe2372db",
+    "previewHashes": [
+      "c0b53c695f68e0357d653d153aa7a22a4380bb42fa642e23da81130a39688de6",
+      "ed0b447fae6b48fda53b65f1e9b34482dfc18413bcd13d17d498d9d844065aa9"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Dos hojas y tallo permanecen separados a 24 px, con márgenes suficientes. Acompañar de la etiqueta Colección.",
+        "Revisión visual explícita de Codex en esta sesión de los PNG reales del editor y de su uso en la interfaz. No valida autenticidad cultural ni aprueba automáticamente dibujos nuevos."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-flor-radio": {
+    "revision": "f4613c2b2925eb61c2341e0472ab320df238781bf6982f628b4c626a37f44278",
+    "previewHashes": [
+      "38f557e0c703affd1b51fb5cd80b06c4fca6f9ba020f8f71dd65883071f086fe",
+      "0fa754d053eda1edbcd458ef965a73ff58513d266c9907c72fa594cb7864de9e"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Flor de contorno continuo y tallo visibles a 24 px, distinta de la semilla y del brote. Acompañar de Estaciones para explicar la función.",
+        "Revisión visual explícita de Codex en esta sesión de los PNG reales del editor y de su uso en la interfaz. No valida autenticidad cultural ni aprueba automáticamente dibujos nuevos."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-nudo-favoritas": {
+    "revision": "32f12e2a6a421652501fea6fe111da69be4d9ad0a506836d9d257c0f55ef471f",
+    "previewHashes": [
+      "90aeb1bed3c7d4699a55f429c71139576ad62d0bdbc817b8fb96d232c056edad",
+      "bdeaf95e4e64655b4f990b4559f49665e84e29be6c856d49da6ab988cf9c452e"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Corazón reconocible a 24 px; el hilo interior no impide leer su silueta. Sin recortes y coherente con los controles ligeros.",
+        "Revisión visual explícita de Codex en esta sesión de los PNG reales del editor y de su uso en la interfaz. No valida autenticidad cultural ni aprueba automáticamente dibujos nuevos."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-liston-descargas": {
+    "revision": "0234dd9deee8911bedd1ffda248f7f07d6f13dbfed3151f157419318b2fd6518",
+    "previewHashes": [
+      "641f55a5af9528a19ad947bd054fed75d82c4117338eb9589db739eea70256ba",
+      "7996b08b4bdf6225a22c711015db6b391e8f3f70bf069e0461c14b72646fa280"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno de listón y trazo vertical convergen en una punta inferior a 24 px. La etiqueta Descargas mantiene clara la función.",
+        "Revisión visual explícita de Codex en esta sesión de los PNG reales del editor y de su uso en la interfaz. No valida autenticidad cultural ni aprueba automáticamente dibujos nuevos."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-seguir-la-hebra": {
+    "revision": "205086e7fe674675925ce438aa834e8ae19fe037a56b26adbf83d8608cea163d",
+    "previewHashes": [
+      "5e00bb1323e385cf5053ed8185e8897aac739daa23db1355fb5130c355a3e9b6",
+      "3f4a974e7c40a52c01eb3d96269bfd6d9dc837e8a5be8c525b0b70b7247f1827"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "La hebra conduce a una semilla sin recortes. El bucle y el extremo vegetal siguen distinguiéndose a 64 px; usar desde 180 px para conservar los filamentos.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-lo-que-florece": {
+    "revision": "3b1446c19bde4f17195afba5383ee66ee4a3444278624ec721d619fc147069b4",
+    "previewHashes": [
+      "92ec00da5060ce57ad0ec0588fcfcfb4ee5485e6013cabf3983edc86b0936eee",
+      "0d7b5ff857ca845d85eea17eafb905b7d55f7d56e49d745bc14942564c855f92"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Los tallos forman un corazón abierto, con flores de diferente escala. El contorno se reconoce reducido; usar desde 180 px para conservar hojas y pétalos.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-ramas-en-compas": {
+    "revision": "8b80e2517eddc4bfe3901cf2292f43a2bf89e916b5281b4551ce84f3c899eb6b",
+    "previewHashes": [
+      "6e920fbd1f52fea7c7e4ec246fedccbc913f6c0bd49b1ce71df814ed866d2cc0",
+      "79955cb6e3346a33fde68499e9771e2c2764f5ae21cb4778fc40d1867bcf2f14"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Tres ramas con remates distintos y una base entrelazada dan una portada vertical. Silueta completa y sin recortes; usar desde 180 px, no como icono.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-frecuencia-floral": {
+    "revision": "55c646a05c3f54d1a0f56a1f516a3bdd76e457d3ea389ffc566af59ee98f447a",
+    "previewHashes": [
+      "5440f800b9011ae720f95cbfdede343b75be3156f69c591ab1938167bf4a058c",
+      "2a40d12a31ea39c7d1fed5b1a1c5a29e39a1025c2006aa5724b3a0e31414c3b8"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "La roseta mantiene separación entre pétalos y órbitas. El centro y las órbitas son legibles reducidos; usar desde 180 px para conservar el trazo fino.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-onda-silencio": {
+    "revision": "de5aca1acf8e46f610da693aae501c36016515dff94dec721eaf6db99dec4c0d",
+    "previewHashes": [
+      "008c270c968c32cdc39e174a718193a2b25e1dda2ed561220a4427f211f97bc0",
+      "967e7884750c6ee429309f573326678ca2140d4fcfbaea2c7d0f8a3b982fcc82"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Altavoz y cruz separados a 24 px; distinguible de volumen bajo.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-onda-volumen": {
+    "revision": "0ac316a460d9a39bb5d60d9ead9c3bca93411cbd0d8cacc4444bd2139dfa8bd2",
+    "previewHashes": [
+      "75a10c765cde5a5614540f35262f26e9e3c2249c289311207dffce30c07e7e19",
+      "1f6a0552c63b09af695387059c7005d38e61ce383bf0aee9d302cc435d95262c"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Altavoz y una onda legibles a 24 px; sin cruces ni recortes.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-arco-audifonos": {
+    "revision": "cfa302439a3c264a9102bb81993123e51c2fd2962659c078893a37549cec8142",
+    "previewHashes": [
+      "fd4753c1c426ca388ab5af26ab5107eb5a3a7591908e24d6ae7f92a38066b089",
+      "870dcc5b6aa6034318477f4fc76f11b4f42a9cff1ddc74f0249a1f315351d39c"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Arco y dos almohadillas conservan espacios interiores a 24 px.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-caja-altavoz": {
+    "revision": "7493b82d654c7d096cf9089a0acff3e4ae8351fa8a10cac4346b694998525ced",
+    "previewHashes": [
+      "4f93faeeb144c4fa3f971eb433163b747e76eb97702caa20190a810852380517",
+      "86fb2ab684133c15afae6e2bece9e0e6833de95cbeadf6378f7a7b02b726fbbc"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Caja, tweeter y cono separados a 24 px, con margen exterior suficiente.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-ramas-playlist": {
+    "revision": "32924f840a5bd8863ffeb0d93fccf56ad70f4c9f4dc82c5681c066e25fb85686",
+    "previewHashes": [
+      "a5b49852f095a2712684b4e44cf16ee36c228c609bf3eee8bb96c9405550d2b1",
+      "a43d7acd526b927eb3bf575b30d66c77a5bb61caab6e7f1660566f1220e0720c"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Tres pistas y nota musical distinguibles a 24 px. La etiqueta Playlists aclara el destino.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-sumar-playlist": {
+    "revision": "756e73132fcbbe5ed8fd5a85f0016a0bd1f6890ae2b5af828a755bfb9ad38199",
+    "previewHashes": [
+      "344b12fbc394a11dbea5d14895c078814f1132f73e67868fb2c0b0bb9dde55dd",
+      "c7d10313a644569b2e1c08f2f296dc4c3c14cb4352b541a3cc437ee6ba7d33f6"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Lista y signo más separados y reconocibles a 24 px; distinto del icono Playlists.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-anillo-album": {
+    "revision": "782eaa0cc37ff70bf382a3c138f0f055281fc5642c56f42ec9564f069b431b82",
+    "previewHashes": [
+      "70b56dac6afd426f0dacaaa08080f53f1657b6cea2a93cf37dd0045de263d527",
+      "9bce6a710b5d0b430e83d9b6113b76a268bf383f0e279f0af5599c400f10eb0a"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Disco, eje y surcos abiertos visibles a 24 px, sin recortes.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-canto-artista": {
+    "revision": "5bb29846009becea1e46ba8ed4136f22bea2d9775b7e10d903f8bef613b95d40",
+    "previewHashes": [
+      "ca7ce8d5d5bcd96e2c083c96180787cb99f8e00de210d7d9e5a815847d3bc732",
+      "c1b757dc21a496515c1552769f9008616e0a9cb39238409ab291d3af0841563c"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Micrófono, arco y pie distinguibles a 24 px. La etiqueta Artista define su función.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-tallos-ecualizador": {
+    "revision": "49b87b2f273701c6fe6de80deb7f508be8edd513372c7fd873d333cefa9096cf",
+    "previewHashes": [
+      "63f888514333d735586d9b86db865df68fd98c13c6356859d305da6835d3b321",
+      "723c4b2e71e057c32eca2010858b4b48f8082306fc55a13bf61d9d1ac9dac57c"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Tres tallos con controles a diferentes alturas permanecen separados a 24 px.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-luna-descanso": {
+    "revision": "8d2122c3ba5507a81a51beeb21c10392d37e6999eeb36b9171624574007de690",
+    "previewHashes": [
+      "d37f0df02d97e6ef14d81d938c3e1ff9a024c0d986a2959601e4548697e7079b",
+      "116127851faad26db5d8eabc514aca77582a510c37699da62e065166d4366aa4"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Creciente abierto y reconocible a 24 px; sin detalles innecesarios.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-reloj-temporizador": {
+    "revision": "24b891ad436a371ff8797c810a8c42a3f314b1c6dbab53c9591f6bc4e674ae6e",
+    "previewHashes": [
+      "6d4b0dbce9dd31a24c9a1b1ca9989ef5a61cb91ffdc9a28fc9a3e4dc264d5b0b",
+      "04e208c052bb3cc9e600fd3629d14052d545eb4a260ea42e4b3c2fd51869461e"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Pulsador, esfera y agujas visibles a 24 px. Distinto del historial.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-flor-ajustes": {
+    "revision": "f3092de77c0e727c91023f26adc145eebbc69414f862d994fed67a590d98d0a5",
+    "previewHashes": [
+      "aaded65bbf7d93df737f5c95a31560ca5636b43004f805f3e84f09664bf4a3a2",
+      "1086f546b2fa7a3a07a70aea2bfa952b0d08b12d33fc7a55f03303c9804eebda"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Anillo central y contorno angular conservan lectura de engranaje a 24 px; usar con etiqueta Ajustes.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-ramas-compartir": {
+    "revision": "76cb9b518d0a105ec8851c50f98012459bf5fab21bb92e6f9f70e18249a478da",
+    "previewHashes": [
+      "50d0b4b88efa52d8f6703f757fec26b0d5d202a1e510d4c81cc72b589178f4ed",
+      "65c722fb52247ed5a4dc7795838ff52fcc5e68b9b16e7d36582d9548732f2fd4"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Tres nodos y dos enlaces legibles a 24 px; las ramas no ocultan los nodos.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-lineas-letras": {
+    "revision": "533836c9c47aafe7c4d7392a6cb24c2f4511918ebd0a5940c5ee5b2d5682ac6d",
+    "previewHashes": [
+      "3327811df0d0b0bc8662a30e2e883b284f59a514221f594a87e04295b4892d89",
+      "02fc4b285ff73c118c01d2a0123fcac895c9e3c2e16caefdb0f96933555a0fca"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Hoja y tres versos separados a 24 px; la etiqueta Letra evita ambigüedad con un documento genérico.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-vuelta-historial": {
+    "revision": "34155d81957f450c8aff30ebc3ab8684f33e29ba919604db8b827358d7d3bef3",
+    "previewHashes": [
+      "7384863ff613d3ebc16a390443fa1b48d485506707c791882698880fb9096d05",
+      "eeb3b7bea095803582373754c92329ca799eb6f602ea4db98597ca839399e849"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Flecha de regreso, arco y agujas separados a 24 px, distinguibles del temporizador.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-semillas-mas": {
+    "revision": "892b1d17d51a510e781582edaaa89eb5dbce23ed36512f3d3920135c7ef75894",
+    "previewHashes": [
+      "a9591ad330d5b300fc43e13093c37170d894af7f3f837f863ad36d732b9c6abc",
+      "e6794301c51c23e7480da3d20daced8fa23335bcda054cc99f2a671950c37942"
+    ],
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Tres puntos huecos separados a 24 px, con márgenes consistentes y función de más opciones.",
+        "Revisión visual explícita de Codex de los PNG reales del editor, a tamaño fuente y reducido, y de las composiciones de uso. Cambiar el contenido o el uso requiere otra evaluación."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-venero-nace-el-agua": {
+    "revision": "72e5394070621465f35158ddf0bd13aaeda6a5920c237366607c52bb32783a78",
+    "previewHashes": [
+      "c51328b0937f59786b9550d6a7706a92140a50f6ffc5f3f818b07dced75699be",
+      "5d5de9974fa5b69789f65492b3e0d4711773039af6345bc9e8a5c6aacc1e4bb0"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 31
+    },
+    "purpose": "Imagen de apertura de VENERO: un paisaje imaginado de bosque, agua y tierra; usar desde 240 px.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "El cauce, las capas de bosque y el contrapeso terracota forman una silueta clara. Revisado en escritorio y apertura móvil a 248 px; usar desde 240 px. Es un paisaje imaginado, no cartografía.",
+        "Revisión visual explícita de Codex de los PNG reales, sus tamaños reducidos y las composiciones de uso. Nuevo contenido o uso exige nueva revisión."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-venero-mesa": {
+    "revision": "24da887097679a0927459f731d91b7fe69ef46785af24417c0774cc908e670fe",
+    "previewHashes": [
+      "d189a315088a74a98c7be5df79a7d8912c203bd3ad96988ef02b6624da718085",
+      "386ebf91fec2a217a13fdb0ccba870d3459151ce668caa1bf0d3df5b5e512cf2"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 2
+    },
+    "purpose": "Gastronomía de Amealco; icono original para 24 px con etiqueta.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Cuenco y dos trazos de vapor identificables a 24 px; Sabores aclara su función.",
+        "Revisión visual explícita de Codex de los PNG reales, sus tamaños reducidos y las composiciones de uso. Nuevo contenido o uso exige nueva revisión."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-venero-trama": {
+    "revision": "1c31c8a040456861972b98d5bbe706d84dc811fa53450a1905792edcf4c594fb",
+    "previewHashes": [
+      "6f39954645425ba924d9f82e80b36706ade1e557f6bb326641bd3c616d2df419",
+      "038d1fb86bd79efdb1b2a009c4fb62c16b3fc71e9f32f22b0f15554d6093b4c6"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 2
+    },
+    "purpose": "Textiles y creación local; icono original para 24 px con etiqueta.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Tres hilos verticales y travesaños abiertos conservan la lectura a 24 px; acompañado de Textiles, sin afirmar un motivo tradicional.",
+        "Revisión visual explícita de Codex de los PNG reales, sus tamaños reducidos y las composiciones de uso. Nuevo contenido o uso exige nueva revisión."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-venero-lugar": {
+    "revision": "a0f8526f4cea0da8524fbdd05f2e14ea20dcc4463f6851e2d5c1581ddb92ce8b",
+    "previewHashes": [
+      "b0ae74559750656250b0bedfaa4ad85cfbc6ac40a8b087e7158136f298461c13",
+      "c81b721bc2b7bcadd50fce7c155a412e80fceee9c10ee030829e9ad48db443b2"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 2
+    },
+    "purpose": "Ubicación de la comunidad; icono original para 24 px con etiqueta.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Marcador de ubicación con eje central legible a 24 px y margen suficiente.",
+        "Revisión visual explícita de Codex de los PNG reales, sus tamaños reducidos y las composiciones de uso. Nuevo contenido o uso exige nueva revisión."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-venero-camino": {
+    "revision": "43a72de205efa68d1c6d3354d0e7c04605fa38977a64226a3ee1602afce0f11f",
+    "previewHashes": [
+      "f306682ec153f6e6e261293fb92212224f37287ea41402f676bc1f11c0b9e5ef",
+      "8dc20ff9a040b8f393c57a7936798b4cdace4483d426c4f9765b39c07f780d7d"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 2
+    },
+    "purpose": "Guardar ideas para un recorrido; icono original para 24 px con etiqueta.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Curva en S con remate de flecha abierto; se separa del resto a 24 px, acompañado de Recorrido.",
+        "Revisión visual explícita de Codex de los PNG reales, sus tamaños reducidos y las composiciones de uso. Nuevo contenido o uso exige nueva revisión."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-venero-tiempo-del-bosque": {
+    "revision": "0cbc74086946b15d62deab77822cd178898124e6fd78b6a18f7c332181fbc908",
+    "previewHashes": [
+      "831ebe695029481cca854c3c520593cee348d16e35d91e265c1d8736957bbb31",
+      "e06982be946959d197d9da9f0ae6237ae8a05a5eefa5fcb37d13e9fd79e60512"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 17
+    },
+    "purpose": "Escena original de bosque y sendero; no es un mapa ni una imagen de un lugar específico; desde 180 px.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Árboles de alturas desiguales, luz y sendero dejan profundidad con pocas masas. Los planos se separan a tamaño de uso en el recorrido móvil; desde 180 px.",
+        "Revisión visual explícita de Codex de los PNG reales, sus tamaños reducidos y las composiciones de uso. Nuevo contenido o uso exige nueva revisión."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-venero-sello-venero": {
+    "revision": "8d47cd02ae50fbefdda790e4ec9de0add8e7931ec93031a78728e2e05aa96f49",
+    "previewHashes": [
+      "3ada1dd2957744151b99296578971aac7d16b778b813487d01b205f8a966d5f2",
+      "4bd589ba3fcde0d12a03a40fad304d7f472ebdd98ca60fbeaa1e674256e7e98e"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 5
+    },
+    "purpose": "Marca original VENERO: dos laderas y un cauce; no es un glifo tradicional.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Las laderas dejan un vacío central y la gota permanece separada; se reconoce a 24 px. Es marca de autor, sin significado tradicional atribuido.",
+        "Revisión visual explícita de Codex de los PNG reales, sus tamaños reducidos y las composiciones de uso. Nuevo contenido o uso exige nueva revisión."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-venero-voces": {
+    "revision": "b364c179de4287aab8d76b40689cee4da3d2d8d5eb19cbc444f620c910756457",
+    "previewHashes": [
+      "32055711b91504829ae7680e023bc963b92dd95f37c8df982200f1fca14d739d",
+      "ca2fdef9e1f81e33e6817b962a556b45cc98c9399ab5536ff18d1fe45781699b"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 2
+    },
+    "purpose": "Relatos de habitantes y creadores; icono original para 24 px con etiqueta.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Globo de conversación y dos líneas interiores separados a 24 px; se usa con Historias.",
+        "Revisión visual explícita de Codex de los PNG reales, sus tamaños reducidos y las composiciones de uso. Nuevo contenido o uso exige nueva revisión."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-venero-guardar": {
+    "revision": "d1998b0acaf5b0c91343377a81b1fc0e6ba1090a79e9c31b3ee805dc16a10520",
+    "previewHashes": [
+      "7668ab34b5bddd4865e22ff3ed2d32102e88a28cafd37e1cdb47020d7f814aa5",
+      "024b84ee7ee8fef7eb44aed8c6d16255cf5bc70a39d126e1507175455758210d"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 2
+    },
+    "purpose": "Guardar una lectura o lugar; icono original para 24 px con etiqueta.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Marcador de silueta familiar con corte inferior legible a 24 px; sin ornamentación que confunda la acción.",
+        "Revisión visual explícita de Codex de los PNG reales, sus tamaños reducidos y las composiciones de uso. Nuevo contenido o uso exige nueva revisión."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-venero-mesa-abierta": {
+    "revision": "741744fd663633f5e7377895c0212f4179b464514af45c0526a6817607cb5ef8",
+    "previewHashes": [
+      "25ffb40a1e5682c813300e998e060282802fede29cc7f4e58b88415ba90da5cd",
+      "8e1d487b42d0935db6aa73a16d2cbe61d048242a829c64490f38586bfe08abc8"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 23
+    },
+    "purpose": "Composición original de una mesa, maíz y un cuenco; homenaje editorial a cocinar y compartir, sin reproducir un platillo específico; desde 180 px.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Cuenco, maíz y vapor son reconocibles, con la misma curva escultórica. No se presenta como fotografía ni receta específica. Se revisó en la lectura de sabores; desde 180 px.",
+        "Revisión visual explícita de Codex de los PNG reales, sus tamaños reducidos y las composiciones de uso. Nuevo contenido o uso exige nueva revisión."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-venero-barro": {
+    "revision": "eca59ee55eeb7c9f8d3aba416dbae2f62448d590f0e752d092777fd65577fd06",
+    "previewHashes": [
+      "1c85d59291c5e4b7c8fa1c27369e373e05859b5b3ecf7db200b4514ed52d6af2",
+      "e2f8d140177bd45fb05434c72a45504c4c1978fed2e5a008a8c7577e9412e2e0"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 2
+    },
+    "purpose": "Alfarería y talleres; icono original para 24 px con etiqueta.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Cuello, boca, hombros y base conservan la silueta de una vasija a 24 px; etiquetado como Oficios.",
+        "Revisión visual explícita de Codex de los PNG reales, sus tamaños reducidos y las composiciones de uso. Nuevo contenido o uso exige nueva revisión."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-venero-menu": {
+    "revision": "84be3ab277a5d9a18ccf12a5d543235f11dfeeb547bb8a72a20fcd957ad9c238",
+    "previewHashes": [
+      "bbffaa511396824875021ae4acf87a6377c84236f81d5fb45f854ee9aee6dc75",
+      "4bd802c33366ef0e1e9cfcab12061b4b5072c4de50082b1d4297187a13a35f70"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 2
+    },
+    "purpose": "Abrir las secciones de VENERO; icono original para 24 px con etiqueta.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Tres líneas con ritmo propio y longitud central reducida, suficientemente separadas a 24 px.",
+        "Revisión visual explícita de Codex de los PNG reales, sus tamaños reducidos y las composiciones de uso. Nuevo contenido o uso exige nueva revisión."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-venero-volver": {
+    "revision": "b59679d1eeed0d2a3a88afa936e7f231538f1086d9904ca85496e53fee92876a",
+    "previewHashes": [
+      "ae2bf5b82dcab74b57de700ede02f09635966c56153a3d9253676bb6ee0e14af",
+      "c2e94b9d165f8e0e08eab473f86a9cb0c16576c3bd040ab6e07db02efa42c1d2"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 2
+    },
+    "purpose": "Volver a la pantalla anterior; icono original para 24 px con etiqueta.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Flecha inversa clara a 24 px; no se confunde con un símbolo decorativo.",
+        "Revisión visual explícita de Codex de los PNG reales, sus tamaños reducidos y las composiciones de uso. Nuevo contenido o uso exige nueva revisión."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-venero-mirar": {
+    "revision": "364db879b0555874a5367c7a131d2543cc209b708406ebbbd21753227a6a3d6b",
+    "previewHashes": [
+      "8492382f64d63b8a81fce5a606171d8f5fc13619961bc6aad62d4fb4483f58f2",
+      "21c77de39f5188431b3983b322ce277fde0a84695df46760e2124ec549642f32"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 2
+    },
+    "purpose": "Explorar Amealco; icono original para 24 px con etiqueta.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno del ojo e iris separados a 24 px; función reforzada por Descubrir.",
+        "Revisión visual explícita de Codex de los PNG reales, sus tamaños reducidos y las composiciones de uso. Nuevo contenido o uso exige nueva revisión."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-venero-avanzar": {
+    "revision": "46a42fadd7a31831942380e92a578f7d041e128c6217bec647304c13466ca013",
+    "previewHashes": [
+      "394eaf33e4b174246bc603aae11443fd390927a944f4c02e7c21f37066161e42",
+      "0f8d4c68f30166c17dffb835054092f658750baf728c4c3198ca42722f257b22"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 2
+    },
+    "purpose": "Avanzar o abrir una lectura; icono original para 24 px con etiqueta.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Flecha horizontal abierta, con remate y asta reconocibles a 24 px.",
+        "Revisión visual explícita de Codex de los PNG reales, sus tamaños reducidos y las composiciones de uso. Nuevo contenido o uso exige nueva revisión."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-venero-bosque": {
+    "revision": "b4401e2e5001a04756b5a7800cb093b5f9ff4b37e48888dfba15db230e80d842",
+    "previewHashes": [
+      "b17ccec842ea31fd6b710d3d4d2aa68b82a68b115723b6b2d12027e0a63a51fb",
+      "11e48111a74c327f643001f2d3eaa741a460bc03ef6bd8126b45771015d70b6d"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 2
+    },
+    "purpose": "Bosques y caminos; icono original para 24 px con etiqueta.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Árbol, base y tronco legibles a 24 px; útil con la etiqueta Paisajes.",
+        "Revisión visual explícita de Codex de los PNG reales, sus tamaños reducidos y las composiciones de uso. Nuevo contenido o uso exige nueva revisión."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-venero-dar-forma": {
+    "revision": "2e03ea174af92002b7796da00d999b8634c66bf67f8bf89e168b963d4ffa1233",
+    "previewHashes": [
+      "eba2c6577aef5345c3ffaafc6d6916f652c5759b8bacf3fab34144caed3894d5",
+      "a25dd9fe2a280edfabe0c382a83574e9346c6de3573699010d54affcb2ef8738"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 16
+    },
+    "purpose": "Ilustración editorial de manos modelando barro, original y no retrato de una persona real; desde 180 px.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Dos manos, boca del recipiente y volumen del barro se distinguen sin recortes. El contraste conserva la lectura a 180 px; a 64 px se pierden las líneas del torno, por eso no se admite como icono.",
+        "Revisión visual explícita de Codex de los PNG reales, sus tamaños reducidos y las composiciones de uso. Nuevo contenido o uso exige nueva revisión."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-venero-trama-viva": {
+    "revision": "7d17ce740014b1339017f66810605b8f322cb92ff6ba9c0eebe7b3f5de81d55e",
+    "previewHashes": [
+      "0e89f473bd9445b4c71217baa2902480d00c2a1f74c8ae8cf93aa6e12ce1aad9",
+      "4cc934616d0256d274c1b7108a4c67d1b188897cdf1d77b60631e60ea32fc930"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 20
+    },
+    "purpose": "Una trama original de bandas de color y cruces abiertos, sin reproducir bordados, muñecas ni atribuir un significado tradicional; desde 180 px.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Las bandas y sus cruces alternados mantienen una lectura tejida y color contenido. Se revisó en la pantalla de creación y en 64 px como prueba; usar desde 180 px. No reproduce un bordado tradicional.",
+        "Revisión visual explícita de Codex de los PNG reales, sus tamaños reducidos y las composiciones de uso. Nuevo contenido o uso exige nueva revisión."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-v02-tension": {
+    "revision": "739f6e962ce3a7ed7ac4e03b4a1fe8810b9cfc466a1a9394cacbe2eb05e70084",
+    "previewHashes": [
+      "0f546cfe78b0af376d807cf2d4b4ca3c59bffa50fc655375e73f870964ba9b8c",
+      "344901b5447ad0867f2afba9cb13f6cdd9d5ed7f5f71c10ae70fb69dbb75e7ac"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 33
+    },
+    "purpose": "Ilustración vectorial original: estudio de tensión y pliegues, sin copiar motivos tradicionales. Desde 180 px.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Pliegues rojos y cinta negra diferenciados, sin recorte; se aprueba como ilustración desde 180 px, no como icono pequeño.",
+        "Revisión visual explícita de los renders actual y small en esta sesión; no es un evaluador automático de dibujos futuros."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-v02-menu": {
+    "revision": "563e4fdafa62f489ef5e33211451a03d504678a72df99c695695bb548d36355c",
+    "previewHashes": [
+      "bddcb0d8eb13a41d555cad2d73c130ca86d8fcfcfd55657710bba291aefd97c7",
+      "bddcb0d8eb13a41d555cad2d73c130ca86d8fcfcfd55657710bba291aefd97c7"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 4
+    },
+    "purpose": "Abrir la navegación editorial.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Tres líneas escalonadas legibles a 24 px, remates consistentes y sin recorte.",
+        "Revisión visual explícita de los renders actual y small en esta sesión; no es un evaluador automático de dibujos futuros."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-v02-liston": {
+    "revision": "72de0cd908613c9e007086a0d712111b7d8d8c45a43caa1d061b4173c2fcc82b",
+    "previewHashes": [
+      "50715e5fe6d07ab967b777fdb55c46985a46c9a9d493ad44f6637714ee544497",
+      "50715e5fe6d07ab967b777fdb55c46985a46c9a9d493ad44f6637714ee544497"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 2
+    },
+    "purpose": "Guardar en la selección personal: marcador de listón con vacío central.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Marcador cerrado con punta interior clara a 24 px; apto para guardar con etiqueta.",
+        "Revisión visual explícita de los renders actual y small en esta sesión; no es un evaluador automático de dibujos futuros."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-v02-pliegue": {
+    "revision": "42be3d87256c6c5bdb28d09e056f667aeebe57baebcb63afc30c75a12e5bc827",
+    "previewHashes": [
+      "e00572b9c579b541b986f954a49d76a1d4fe1c266d9ce62e4516d2ad1e0b43cd",
+      "a09f16b921c860e2e663d4705996548abaa2e628c7d741f18d90f95c9eb29858"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 4
+    },
+    "purpose": "Marca original de VENERO 02: una V tensada en dos listones; no es un glifo cultural.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Silueta V reconocible y pliegue interior limpio; marca original, sin atribución de significado tradicional.",
+        "Revisión visual explícita de los renders actual y small en esta sesión; no es un evaluador automático de dibujos futuros."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-v02-mas": {
+    "revision": "5e9b9fa1c090af656dcf629f2c82851ac795392ae3a124824f36d2123baf2b83",
+    "previewHashes": [
+      "582ea674767b1184942c9b718ffd9e0c3e3b37c96bb34917190a98c3b2475179",
+      "582ea674767b1184942c9b718ffd9e0c3e3b37c96bb34917190a98c3b2475179"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 3
+    },
+    "purpose": "Añadir una lectura a la selección personal.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Cruz centrada, separación y peso de trazo claros a 24 px.",
+        "Revisión visual explícita de los renders actual y small en esta sesión; no es un evaluador automático de dibujos futuros."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-v02-volver": {
+    "revision": "321b7dfd72ea2fd06271dda05ad7d7ef80e7483a922ae83389d1d78ec73995d7",
+    "previewHashes": [
+      "aca90441759fbcb856bf51bb7ce61bd84b2ec6b224fb12c9ae7e29cb8de85355",
+      "aca90441759fbcb856bf51bb7ce61bd84b2ec6b224fb12c9ae7e29cb8de85355"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 3
+    },
+    "purpose": "Volver a la edición anterior.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Flecha horizontal reconocible a 24 px; no hay cruces ni cortes.",
+        "Revisión visual explícita de los renders actual y small en esta sesión; no es un evaluador automático de dibujos futuros."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-v02-autoria": {
+    "revision": "04a2cf0030d3a3c6bd691110dce76b831e5af864a0796d6defee663468b0ab59",
+    "previewHashes": [
+      "5eb893d080cb3d326eb88a0a658deb188308b6f847114a42599576b076c723a4",
+      "5eb893d080cb3d326eb88a0a658deb188308b6f847114a42599576b076c723a4"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 3
+    },
+    "purpose": "Conocer a los autores: dos perfiles enfrentados, con etiqueta obligatoria.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Dos perfiles separados y legibles a 24 px; uso con etiqueta Autoría, no como símbolo cultural.",
+        "Revisión visual explícita de los renders actual y small en esta sesión; no es un evaluador automático de dibujos futuros."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-v02-edicion": {
+    "revision": "1e47817b32655b7f67ad514ea3c570559cc179136a9fa2506a79a990a6285e06",
+    "previewHashes": [
+      "0930f87671fa849cab5c04603cf54984ff4fb1d6fc5946585e69f81e056dfd6d",
+      "0930f87671fa849cab5c04603cf54984ff4fb1d6fc5946585e69f81e056dfd6d"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 4
+    },
+    "purpose": "Abrir ediciones de VENERO: tres pliegues editoriales.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Tres planos editoriales diferenciados a 24 px; uso con etiqueta Edición.",
+        "Revisión visual explícita de los renders actual y small en esta sesión; no es un evaluador automático de dibujos futuros."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-v02-flecha": {
+    "revision": "ab71e9d50d81d48cbe81d9fb08d1f3cdccf93ead7cccda3e4096041894296b93",
+    "previewHashes": [
+      "b97b6bffef3995c58c8bfdd947c7feb4804e571d6493c54597e4be4e2621aa50",
+      "b97b6bffef3995c58c8bfdd947c7feb4804e571d6493c54597e4be4e2621aa50"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 3
+    },
+    "purpose": "Abrir una lectura o continuar; flecha diagonal de trazo fino.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Dirección diagonal inequívoca y brazos equilibrados a 24 px.",
+        "Revisión visual explícita de los renders actual y small en esta sesión; no es un evaluador automático de dibujos futuros."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-coleccion": {
+    "revision": "9b1059c098a39b301d63e9beb47b80e6b3b19f489f2aa3761ad5a46f9e8d4cdd",
+    "previewHashes": [
+      "3ad234cff6f88c886cca5b361de257a1fc5ff2586155dd417026471fffb351bc",
+      "3ad234cff6f88c886cca5b361de257a1fc5ff2586155dd417026471fffb351bc"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 5
+    },
+    "purpose": "Colección: dos planos con pliegues abiertos.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Dos planos distintos y contenido interior legible a 24 px.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-origen": {
+    "revision": "68db4bbeaf2d7387aad426715830c82227e19ee05d66dea36fba31eb6a997185",
+    "previewHashes": [
+      "b4e78f1d58681c87cb6fd826d038a4b7bb22d74a6c86b59b3b30b68e1c64c63a",
+      "513deabd9175b8531eff9a5c5383338abfe400540e67e7fe7afaba3bfc91248a"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 14
+    },
+    "purpose": "Rotulación original: ORIGEN. Exhibición, no texto de lectura.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Las seis letras conservan su forma en exhibición; el tamaño de miniatura no es su uso de lectura.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-lugar": {
+    "revision": "bfbaeabd44caa895acf30def1b8502657774ef8fcfd3a16ec5cc1250fccc69f1",
+    "previewHashes": [
+      "2921bafdb14020c2b839d88d43d1c2ef15009f928e8af71d8e5dd8aa5e9933d7",
+      "2921bafdb14020c2b839d88d43d1c2ef15009f928e8af71d8e5dd8aa5e9933d7"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 3
+    },
+    "purpose": "Localizar: contorno de semilla y punto interior.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno cerrado y punto central reconocibles a 24 px.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-menu": {
+    "revision": "34d767b65464e0e906a278704c28845dff435d825bb0a3a2393cca103ecac882",
+    "previewHashes": [
+      "ac6964e5b6b7b02067825707972b0e301a683725bf9b44c24b7e5ff3d0c17805",
+      "ac6964e5b6b7b02067825707972b0e301a683725bf9b44c24b7e5ff3d0c17805"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 7
+    },
+    "purpose": "Abrir menú: tres líneas con pausas alternadas.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Tres líneas de navegación inequívocas; pausas sin pérdida de reconocimiento a 24 px.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-alfabeto": {
+    "revision": "0acf63838a8892db6747e5ef837c90e1cf9614cc834d1047b739360f084ba7bc",
+    "previewHashes": [
+      "f3c81b69901b627b77a1151115bb38e90bbce07c1b9f5b7ec9f5861082306721",
+      "53b1ea17ea54c16468778cd6a72568bada0ff2daf81b1678d696ed2ffdd67b0e"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 72
+    },
+    "purpose": "Alfabeto original A–Z y cifras. Corresponde a Hilván Display, fuente incluida.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Alfabeto A–Z y cifras revisados en SVG y en la fuente TTF real; uso de exhibición, no lectura a 64 px.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-guardar": {
+    "revision": "f587cad8f602f58bbae33d42659776e6a9318b947e021b4a8a57dcf18db4baff",
+    "previewHashes": [
+      "fb01367897348fe00445ec813c7695c6cb6707253dcf51191aa91db60d97ba54",
+      "fb01367897348fe00445ec813c7695c6cb6707253dcf51191aa91db60d97ba54"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 3
+    },
+    "purpose": "Guardar: listón entrelazado, acompañado de etiqueta.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Marcador con recorte inferior claro y hebra interior a 24 px.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-calendario": {
+    "revision": "38a09c0d64c89c2aa1d2571b0790cdad3c5ebb75fe83c33c57282014bbf86c35",
+    "previewHashes": [
+      "d6778e5d0905087782f2e72d882d402a25a631b0b5144aafa1e417a79980bda5",
+      "d6778e5d0905087782f2e72d882d402a25a631b0b5144aafa1e417a79980bda5"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 5
+    },
+    "purpose": "Abrir encuentros: calendario con un hilo cruzado.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Calendario delimitado y dos anclajes claros; el cruce interior no invade su silueta.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-marca": {
+    "revision": "e9692c2ea5ff2537f424b4351355db1f9ddd77caeb8e642512178ccf9a4fbbca",
+    "previewHashes": [
+      "69ce6e7aaf086feacb3ea45786ab6b50aae3c618aca9bc3c1005070be3bfe41f",
+      "115218c5856b3fc6e18011440afbeeb82a43b782f2eca161b973d304846f9002"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 20
+    },
+    "purpose": "Firma vectorial original de nueve letras. Exhibición desde 240 px.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "ENTRELAZO legible con pausas en E y A; usar desde 240 px.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-cruce": {
+    "revision": "21f524086849f7fac694c4db6c93ad7492c1293cedb7b8f3e50bdc61b4c45925",
+    "previewHashes": [
+      "7a091f444efca895588af1f93e75d4dec332b38573571b69cfa5449b58b5af8c",
+      "7a091f444efca895588af1f93e75d4dec332b38573571b69cfa5449b58b5af8c"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 4
+    },
+    "purpose": "Explorar Amealco: dos recorridos cruzados.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Dos recorridos distintos con interrupción central visible; se usa con etiqueta.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-flor-abierta": {
+    "revision": "5b5bbbeebee78e51b14897e319cb7ad556ff4f3cd6171de0621e5699aac8ad80",
+    "previewHashes": [
+      "2f8de5f5cc904b4c4440fff27ab65d59454ed52ad7cf6bf1c4f11c31e48a52e7",
+      "3c579e6d645b18f479a16a6fedbf3c137f46f5d01550ef7d965902a89a138b29"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 30
+    },
+    "purpose": "Ilustración original: doce hebras abiertas y cuatro pétalos. Evoca cruce y continuidad; no reproduce un bordado local. Desde 240 px.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Pétalos abiertos y hebras internas sin recorte en el recurso; paleta coherente. Uso desde 240 px, no como icono.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-volver": {
+    "revision": "3fa080f4e1469db188c1f4921377a54c7e37cfdf84c274ff35dc640f2937f11a",
+    "previewHashes": [
+      "1e0d91e1cfdbba03bd152daaf88fdcba7658fd44d7a4b2242a9710cc9f92575c",
+      "1e0d91e1cfdbba03bd152daaf88fdcba7658fd44d7a4b2242a9710cc9f92575c"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 4
+    },
+    "purpose": "Volver: flecha fina con terminal de hilo.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Flecha horizontal reconocible; la pequeña hebra no altera su dirección.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-amealco": {
+    "revision": "84e3fb8c170fb4731e38a434f2d51dc904ac53413e8efee6e6690e57b8d2156b",
+    "previewHashes": [
+      "bb17b1ea0f35f90e3ce76b53fdc8b81f7a4f6caad9a9b282f4a6f17412a3c04a",
+      "dba43b056025ae50821c511e6f7a20b4bb808eb0c3d2515e4ae59eb3653de3c6"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 14
+    },
+    "purpose": "Rotulación original: AMEALCO. Exhibición, no texto de lectura.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Rotulación AMEALCO con separación consistente y formas completas; uso de exhibición.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-aguja": {
+    "revision": "c351f6f08b7fa1925ec6605f17d3875cd4561010506b4a329b6648f8e91ffb6e",
+    "previewHashes": [
+      "aafc90d4886d23cea066822c67555932d7e8160ca13502077f55fac66319a1e8",
+      "aafc90d4886d23cea066822c67555932d7e8160ca13502077f55fac66319a1e8"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 3
+    },
+    "purpose": "Continuar: aguja diagonal con ojo abierto.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Contorno diagonal y ojo reconocibles; se acompaña de la acción Continuar.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-autoria": {
+    "revision": "a6691074677eaa6e6977bfb203ec44856ab72d27ab02c0d7218643bd33b4e92f",
+    "previewHashes": [
+      "edef3f1c5c351423f439cebcc5857cfde726a21aebd7bb2b79fe993f9ebd5801",
+      "edef3f1c5c351423f439cebcc5857cfde726a21aebd7bb2b79fe993f9ebd5801"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 4
+    },
+    "purpose": "Abrir autoría: dos perfiles unidos por una línea.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Dos perfiles y base común visibles; requiere etiqueta Autoría o Voces.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-entrelaz": {
+    "revision": "b32131322388f1f9a6c7502eec11a1913583cb4705dfbe8925974ef28e4f2b4e",
+    "previewHashes": [
+      "f29bf8b46c1c4e9ee52dcd58f5d9e5422b545ef6b273dd1574bfb4f118031ccc",
+      "4fa4255f05ba78ef4b7c41777eee90c22907e35c4cc07a1b0f4f592402f7d5b9"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 5
+    },
+    "purpose": "Emblema original de cuatro lazos cruzados. No es un glifo tradicional.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Cuatro lazos unidos y negativo central distinguibles a 24 px. Es una marca original, no un glifo tradicional.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-buscar": {
+    "revision": "258c8caed6817e141d7fc84a1fefe2d0902eadf17321040e30e78a57a7d5cdb4",
+    "previewHashes": [
+      "13712bc763dc2c87a72bf3f29948e35e2c834be8b136d34c8abfb8b99caca52c",
+      "13712bc763dc2c87a72bf3f29948e35e2c834be8b136d34c8abfb8b99caca52c"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 3
+    },
+    "purpose": "Buscar: lupa circular con terminal de aguja.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Lupa con lente separado del mango y contorno claro a 24 px.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-nos-une": {
+    "revision": "9d38206b19b0b2f08e998f62276eceb42a048ffb7938323f62d6c46691d2bc74",
+    "previewHashes": [
+      "b06974ca6c28ce7074ce5eed28ef576fc3b6d6f8555e037a79deb296b64ebb23",
+      "d678bb618a81d9a97e54d266133484dba4ced6bdc6ab8a2e285f3d9ec7d4bdfb"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 11
+    },
+    "purpose": "Rotulación original: NOS UNE. Exhibición, no texto de lectura.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "La separación de palabras es intencional; rotulación para titulares, no miniaturas.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-sonido": {
+    "revision": "fc15da4ed67d00393c3fed0adc594a15f988809ca9467c1792f9b0b8d94f32a5",
+    "previewHashes": [
+      "06d8b27aade19048644011672e4e90da9a3e815187050de13354f1ea7217b8f9",
+      "06d8b27aade19048644011672e4e90da9a3e815187050de13354f1ea7217b8f9"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 5
+    },
+    "purpose": "Escuchar: onda que cruza tres hebras.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Onda que cruza hebras claramente visible; requiere etiqueta Escuchar.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-germen": {
+    "revision": "31401dc37e52f48092e5095303a838e0f78a1b020dfe676a02e16df9abe5597d",
+    "previewHashes": [
+      "c89b4c0162de4fa607a49ed419da31b3dd162861b6b27183a779fc500e5db069",
+      "cda62ae502330bdcd18a391d615873106dcb88441e4953ddf664150fa775a8b4"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 17
+    },
+    "purpose": "Ilustración de autor para una colección inicial: semilla con dos hojas entrelazadas. Desde 160 px.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Semilla y dos hojas diferenciadas; grupos completos y legibles desde 160 px. No se usa como retrato.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  },
+  "hilo-aru-entrelazo-cerrar": {
+    "revision": "4da40168fe237390d585f5e56c9ec413b48d92d325f394f2d0754ba619531b47",
+    "previewHashes": [
+      "993eccf202a40d670e3c5759d855bdae0e1b1c2ca14f02dfb7b7ef23d4b6ea26",
+      "993eccf202a40d670e3c5759d855bdae0e1b1c2ca14f02dfb7b7ef23d4b6ea26"
+    ],
+    "technical": {
+      "sanitized": true,
+      "sourceMatches": true,
+      "layers": 4
+    },
+    "purpose": "Cerrar una vista: cruce con pausa.",
+    "verdict": {
+      "status": "approved",
+      "reasons": [
+        "Cruce con cuatro extremos visibles, pausa central y contorno reconocible a 24 px.",
+        "Revisión visual explícita de los renders actual y small y de su uso en pantalla en esta sesión. Esta aprobación sólo corresponde a esta revisión exacta."
+      ],
+      "evaluator": {
+        "provider": "OpenAI",
+        "model": "Codex (revisión visual de esta sesión)"
+      },
+      "checks": {
+        "appearance": "pass",
+        "readability": "pass",
+        "clipping": "pass",
+        "style": "pass",
+        "fidelity": "not_applicable",
+        "animation": "not_applicable"
+      }
+    }
+  }
+}

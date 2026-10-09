@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru MusicArt · original rounded outline, no fills or effects.\ncanvas 48 48\nbackground none\nrect case { at 24 25; size 39 24; corner 4; fill none; stroke #2F5148 2.4; }\npath keys { move 12 22; line 12 36; move 20 22; line 20 36; move 28 22; line 28 36; move 36 22; line 36 36; move 16 14; line 16 24; move 24 14; line 24 24; move 32 14; line 32 24; fill none; stroke #2F5148 2.4; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <rect x=\"-19.5\" y=\"-12\" width=\"39\" height=\"24\" rx=\"4\" transform=\"translate(24 25)\" fill=\"none\" stroke=\"#2F5148\" stroke-width=\"2.4\"/>\n  <path d=\"M12 22 L12 36 M20 22 L20 36 M28 22 L28 36 M36 22 L36 36 M16 14 L16 24 M24 14 L24 24 M32 14 L32 24\" fill=\"none\" stroke=\"#2F5148\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "outline-v2-keyboard.aru"
+}

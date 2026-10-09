@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Material 3 tonal · original editable flat forms.\ncanvas 48 48\nbackground none\nrect pauseLeft { at 17 24; size 6 24; corner 2; fill #FFFFFF; }\nrect pauseRight { at 31 24; size 6 24; corner 2; fill #FFFFFF; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <rect x=\"-3\" y=\"-12\" width=\"6\" height=\"24\" rx=\"2\" transform=\"translate(17 24)\" fill=\"#FFFFFF\"/>\n  <rect x=\"-3\" y=\"-12\" width=\"6\" height=\"24\" rx=\"2\" transform=\"translate(31 24)\" fill=\"#FFFFFF\"/>\n</svg>",
+  "filename": "material-v2-pause.aru"
+}

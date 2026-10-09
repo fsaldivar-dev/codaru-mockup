@@ -1,0 +1,20 @@
+// Musaru Frutiger Eco · original editable botanical forms.
+canvas 390 420
+background none
+gradient leaf linear 110 { stop 0 #ECF4BE; stop 0.4 #AFD07B; stop 0.6 #6B995C; stop 1 #34674A }
+gradient tender linear 45 { stop 0 #F6F7D5; stop 0.55 #CDE09E; stop 1 #8FB574 }
+gradient glass linear 100 { stop 0 #FFFFFFAF; stop 0.45 #D9E8C64D; stop 0.78 #C1D6B34D; stop 1 #F6FBE2CC }
+gradient earth linear 90 { stop 0 #EFF0D5; stop 0.55 #DFE5BE; stop 1 #B8CA9B }
+ellipse soilShadow { at 195 375; size 354 26; fill #71834C1A; }
+path pocketGlass { move 37 328; line 37 153; curve 37 49 108 20 195 20; curve 282 20 353 49 353 153; line 353 328; quad 195 369 37 328; close; fill glass; stroke #ABC39C 1; cap round; }
+path glassRay { move 54 306; line 54 156; curve 54 77 102 43 143 39; fill none; stroke #FFFFFFD9 5; cap round; }
+path oppositeRay { move 338 306; line 338 155; curve 335 78 289 43 247 39; fill none; stroke #FFFFFF99 2; cap round; }
+path leftStem { move 131 345; quad 59 253 54 169; fill none; stroke #789658 2; cap round; }
+path leftFoliage { move 92 284; curve 37 280 19 233 34 203; curve 88 205 109 245 92 284; close; fill leaf; }
+path leftVein { move 40 215; quad 66 246 92 284; fill none; stroke #E8F0BF 1.5; cap round; }
+path rightStem { move 260 345; quad 321 269 327 171; fill none; stroke #789658 2; cap round; }
+path rightFoliage { move 304 258; curve 279 215 306 175 352 170; curve 375 219 343 254 304 258; close; fill tender; }
+path rightVein { move 347 180; quad 321 217 304 258; fill none; stroke #F8F9DB 1.5; cap round; }
+path soilLip { move 25 328; quad 195 371 365 328; line 365 358; quad 195 406 25 358; close; fill earth; stroke #B4C59D 1; cap round; }
+path lipShine { move 40 337; quad 195 376 350 337; fill none; stroke #FFFFF0 3; cap round; }
+ellipse topHandle { at 195 19; size 44 11; fill glass; stroke #ABC39C 1; }

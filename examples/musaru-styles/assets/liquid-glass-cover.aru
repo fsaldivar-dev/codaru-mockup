@@ -1,0 +1,12 @@
+// Musaru · Cristal / Liquid Glass · original editable cover
+canvas 600 400
+background none
+gradient rose radial 0.3 0.25 0.8 { stop 0 #FFF2DE; stop 0.5 #E4B6C3; stop 1 #8B8ABE }
+gradient blue radial 0.3 0.2 0.8 { stop 0 #F2FFFF; stop 0.5 #90C6E0; stop 1 #5681B8 }
+gradient glass linear 110 { stop 0 #FFFFFFCC; stop 0.35 #EFFAFF33; stop 0.6 #E0F6FF55; stop 1 #FFFFFFAA }
+circle orbPink { at 185 190; radius 104; fill rose;  }
+circle orbBlue { at 395 236; radius 124; fill blue;  }
+rect glassTile { at 302 193; size 264 244; corner 62; fill glass; stroke #FFFFFFCC 3; }
+path note { move 276 249; line 276 145; line 344 130; line 344 233; fill none; stroke #345773 13; cap round; }
+ellipse low { at 256 250; size 42 29; fill #345773 }
+ellipse high { at 324 234; size 42 29; fill #345773 }

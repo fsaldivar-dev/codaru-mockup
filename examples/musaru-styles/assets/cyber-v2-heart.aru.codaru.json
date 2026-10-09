@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Cyberpunk · original editable nocturnal frequency geometry.\ncanvas 48 48\nbackground none\npath heart { move 24 39; line 7 23; line 7 13; line 14 7; line 21 7; line 24 12; line 27 7; line 34 7; line 41 13; line 41 23; close; fill none; stroke #F77EA8 3; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M24 39 L7 23 L7 13 L14 7 L21 7 L24 12 L27 7 L34 7 L41 13 L41 23 Z\" fill=\"none\" stroke=\"#F77EA8\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "cyber-v2-heart.aru"
+}

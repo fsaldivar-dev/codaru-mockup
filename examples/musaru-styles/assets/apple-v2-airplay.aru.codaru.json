@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Apple minimal · original editable geometry, not SF Symbols.\ncanvas 48 48\nbackground none\npath screen { move 15 34; line 8 34; quad 5 34 5 31; line 5 10; quad 5 7 8 7; line 40 7; quad 43 7 43 10; line 43 31; quad 43 34 40 34; line 33 34; fill none; stroke #68686D 2.6; cap round; }\npath triangle { move 24 27; line 36 42; line 12 42; close; fill #68686D; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M15 34 L8 34 Q5 34 5 31 L5 10 Q5 7 8 7 L40 7 Q43 7 43 10 L43 31 Q43 34 40 34 L33 34\" fill=\"none\" stroke=\"#68686D\" stroke-width=\"2.6\" stroke-linecap=\"round\"/>\n  <path d=\"M24 27 L36 42 L12 42 Z\" fill=\"#68686D\"/>\n</svg>",
+  "filename": "apple-v2-airplay.aru"
+}

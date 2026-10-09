@@ -1,0 +1,4 @@
+// Musaru monochrome · original editable geometry.
+canvas 48 48
+background none
+path arrow { move 25 10; line 11 24; line 25 38; move 11 24; line 40 24; fill none; stroke #FAFAFA 2.4; cap round; }

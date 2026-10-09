@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Expressive · original flat editable shapes.\ncanvas 300 36\nbackground none\nrect remaining { at 242 18; size 112 4; corner 2; fill #D7BEB0; }\npath playedWave { move 4 18; curve 11 6 21 6 28 18; curve 35 30 45 30 52 18; curve 59 6 69 6 76 18; curve 83 30 93 30 100 18; curve 107 6 117 6 124 18; curve 131 30 141 30 148 18; curve 155 6 165 6 172 18; fill none; stroke #8D3D19 5; cap round; }\nrect handle { at 178 18; size 6 32; corner 3; fill #8D3D19; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 36\" width=\"300\" height=\"36\">\n  <rect x=\"-56\" y=\"-2\" width=\"112\" height=\"4\" rx=\"2\" transform=\"translate(242 18)\" fill=\"#D7BEB0\"/>\n  <path d=\"M4 18 C11 6 21 6 28 18 C35 30 45 30 52 18 C59 6 69 6 76 18 C83 30 93 30 100 18 C107 6 117 6 124 18 C131 30 141 30 148 18 C155 6 165 6 172 18\" fill=\"none\" stroke=\"#8D3D19\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n  <rect x=\"-3\" y=\"-16\" width=\"6\" height=\"32\" rx=\"3\" transform=\"translate(178 18)\" fill=\"#8D3D19\"/>\n</svg>",
+  "filename": "expressive-v2-wavy-seek.aru"
+}

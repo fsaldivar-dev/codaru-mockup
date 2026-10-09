@@ -1,0 +1,10 @@
+// HILO: new thread monogram, not the M from the reference.
+canvas 256 256
+background none
+gradient paper linear 120 { stop 0 #FDF7F5; stop 1 #F5EBE6 }
+rect tile { at 128 128; size 248 248; corner 58; fill paper }
+path left { move 70 66; line 70 190; fill none; stroke #E91E63 6; cap round }
+path right { move 186 66; line 186 190; fill none; stroke #E91E63 6; cap round }
+path rising { move 70 128; curve 97 58 158 198 186 128; fill none; stroke #E91E63 6; cap round }
+path falling { move 70 128; curve 97 198 158 58 186 128; fill none; stroke #E91E63 6; cap round }
+circle cyan { at 186 66; radius 7; fill #00BCD4 }

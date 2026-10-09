@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// HILO / luna-descanso. Original geometry, contemporary interpretation; no attributed traditional meaning.\ncanvas 32 32\nbackground none\ngroup luna-descanso {\nresource \"{\\\"key\\\": \\\"hilo-luna-descanso\\\", \\\"kind\\\": \\\"ui-icon\\\", \\\"brand\\\": \\\"HILO\\\", \\\"purpose\\\": \\\"Activar escucha para descansar; icono de trazo fino para 24 px.\\\", \\\"identity\\\": \\\"Fine contour, open space and folded ribbon gestures\\\", \\\"reusable\\\": true, \\\"tags\\\": [\\\"hilo\\\", \\\"jardin-de-voces\\\"]}\"\npath luna { move 23 4; curve 5 1 0 23 14 28; curve 20 31 27 27 29 22; curve 16 25 11 11 23 4; close; fill none; stroke #383631 1.65; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" width=\"32\" height=\"32\">\n  <g>\n    <path d=\"M23 4 C5 1 0 23 14 28 C20 31 27 27 29 22 C16 25 11 11 23 4 Z\" fill=\"none\" stroke=\"#383631\" stroke-width=\"1.65\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "luna-descanso.aru"
+}

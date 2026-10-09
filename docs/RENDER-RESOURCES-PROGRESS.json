@@ -1,0 +1,29 @@
+{
+  "goal": "Render performance, reusable ARU library with mandatory host AI review, extensible portable styles",
+  "status": "complete",
+  "completed": [
+    "Musaru benchmark: 2022 nodes, 9060819 document bytes, 5 samples for single-text/master/100-update scenarios",
+    "Final Chromium visible p95 application: 165.5/166.5/156.2 ms versus 330.0/336.5/340.4 baseline; 49.8/50.5/54.1% reductions; zero rAF timeouts",
+    "Bounded exact SVG/image/layer caches; indexed validation/render; stable unchanged DOM and single-use validated transactions",
+    "Reusable ARU library with 470 Musaru drawings; identity, metadata, pending/reviewed state, approval-gated reuse and SVG/PNG/mobile export",
+    "Mandatory host compile/render/evaluate ports; PNG/source matching; revision invalidation, concurrency bounds and disposal isolation",
+    "Actual Musaru icon visual assessment at 256/24 px; approved export ZIP with original ARU/SVG and eight verified iOS/Android density PNGs",
+    "Portable external style-package core, modular/iframe UI, CLI catalog/context and Risography example with separate mobile guidance",
+    "Documented embedding, evaluator/persistence integration, animated-renderer requirements and portable style limits",
+    "TypeScript check; 165 model/architecture tests; 117 UI tests and one manual capture opt-in skip; 19 Rust tests; final benchmark and evidence export pass",
+    "Latest tarball installed and exercised in a clean headless/fragmented/iframe consumer, including TypeScript and browser UI checks",
+    "Final native app/CLI compilation; native resource catalog, pending export gate and exact source export verified",
+    "Separate embedded runtime/distribution, optional CLI, tarball and QA bundle sizes recorded in verification report",
+    "Async resource catalogue/thumbnail completion preserves the active library tab; two delayed-response regressions plus all seven resource/style UI checks pass",
+    "Current final native build visible p95 application: 193/177/155 ms and interaction: 22/20/20 ms; zero rAF timeouts; Resources and Styles panels visually confirmed"
+  ],
+  "pending": [],
+  "evidence": {
+    "performance": "artifacts/render-performance",
+    "visualReview": "artifacts/resource-review",
+    "qaSocket": "/tmp/codaru-render-qa/agent.sock",
+    "qaApp": "dev.codaru.render-qa",
+    "verification": "docs/RENDER-RESOURCES-VERIFICATION.md"
+  },
+  "important": "The IDE must supply real compile/render/evaluate services; no model or automatic approval ships. Native baseline was hidden and does not support a native improvement ratio. No publication performed."
+}

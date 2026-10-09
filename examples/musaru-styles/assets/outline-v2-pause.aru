@@ -1,0 +1,5 @@
+// Musaru MusicArt · original rounded outline, no fills or effects.
+canvas 48 48
+background none
+rect pauseLeft { at 16 24; size 6 26; corner 3; fill none; stroke #2F5148 2.4; }
+rect pauseRight { at 32 24; size 6 26; corner 3; fill none; stroke #2F5148 2.4; }

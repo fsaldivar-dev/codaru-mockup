@@ -1,0 +1,6 @@
+// Musaru Expressive · original flat editable shapes.
+canvas 300 36
+background none
+rect remaining { at 242 18; size 112 4; corner 2; fill #D7BEB0; }
+path playedWave { move 4 18; curve 11 6 21 6 28 18; curve 35 30 45 30 52 18; curve 59 6 69 6 76 18; curve 83 30 93 30 100 18; curve 107 6 117 6 124 18; curve 131 30 141 30 148 18; curve 155 6 165 6 172 18; fill none; stroke #8D3D19 5; cap round; }
+rect handle { at 178 18; size 6 32; corner 3; fill #8D3D19; }

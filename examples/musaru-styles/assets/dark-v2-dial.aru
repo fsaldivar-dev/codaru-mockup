@@ -1,0 +1,43 @@
+// Musaru Dark Aero · original editable hi-fi vector.
+canvas 128 128
+background none
+gradient steel linear 90 { stop 0 #E1EAF1; stop 0.27 #6D7C8A; stop 0.49 #AEBBC6; stop 0.51 #3B4855; stop 1 #B3C1CD }
+gradient piano linear 90 { stop 0 #3D4955; stop 0.43 #171D27; stop 0.46 #070A0F; stop 1 #151D28 }
+gradient ice linear 90 { stop 0 #DCFCFF; stop 0.43 #67CBE7; stop 0.48 #1B6B91; stop 1 #082E47 }
+circle case { at 64 64; radius 61; fill #04080B; stroke #405363 1; }
+circle bezel { at 64 64; radius 56; fill steel; }
+circle rim { at 64 64; radius 51; fill #0B1119; stroke #728392 1; }
+circle face { at 64 64; radius 44; fill piano; stroke #3A4857 1; }
+circle tick0 { at 23.69 104.31; radius 0.8; fill #C5D7E8; }
+circle tick1 { at 17.89 97.5; radius 0.8; fill #C5D7E8; }
+circle tick2 { at 13.21 89.88; radius 0.8; fill #C5D7E8; }
+circle tick3 { at 9.79 81.61; radius 0.8; fill #C5D7E8; }
+circle tick4 { at 7.7 72.92; radius 0.8; fill #C5D7E8; }
+circle tick5 { at 7.0 64.0; radius 0.8; fill #C5D7E8; }
+circle tick6 { at 7.7 55.08; radius 0.8; fill #C5D7E8; }
+circle tick7 { at 9.79 46.39; radius 0.8; fill #C5D7E8; }
+circle tick8 { at 13.21 38.12; radius 0.8; fill #C5D7E8; }
+circle tick9 { at 17.89 30.5; radius 0.8; fill #C5D7E8; }
+circle tick10 { at 23.69 23.69; radius 0.8; fill #C5D7E8; }
+circle tick11 { at 30.5 17.89; radius 0.8; fill #C5D7E8; }
+circle tick12 { at 38.12 13.21; radius 0.8; fill #C5D7E8; }
+circle tick13 { at 46.39 9.79; radius 0.8; fill #C5D7E8; }
+circle tick14 { at 55.08 7.7; radius 0.8; fill #C5D7E8; }
+circle tick15 { at 64.0 7.0; radius 0.8; fill #C5D7E8; }
+circle tick16 { at 72.92 7.7; radius 0.8; fill #C5D7E8; }
+circle tick17 { at 81.61 9.79; radius 0.8; fill #C5D7E8; }
+circle tick18 { at 89.88 13.21; radius 0.8; fill #C5D7E8; }
+circle tick19 { at 97.5 17.89; radius 0.8; fill #C5D7E8; }
+circle tick20 { at 104.31 23.69; radius 0.8; fill #C5D7E8; }
+circle tick21 { at 110.11 30.5; radius 0.8; fill #C5D7E8; }
+circle tick22 { at 114.79 38.12; radius 0.8; fill #445767; }
+circle tick23 { at 118.21 46.39; radius 0.8; fill #445767; }
+circle tick24 { at 120.3 55.08; radius 0.8; fill #445767; }
+circle tick25 { at 121.0 64.0; radius 0.8; fill #445767; }
+circle tick26 { at 120.3 72.92; radius 0.8; fill #445767; }
+circle tick27 { at 118.21 81.61; radius 0.8; fill #445767; }
+circle tick28 { at 114.79 89.88; radius 0.8; fill #445767; }
+circle tick29 { at 110.11 97.5; radius 0.8; fill #445767; }
+circle tick30 { at 104.31 104.31; radius 0.8; fill #445767; }
+path pointer { move 94 33; line 86 41; fill none; stroke #83E8FF 3; cap round; }
+path innerShine { move 33 45; quad 56 20 88 39; fill none; stroke #ADBFCB55 1; cap round; }

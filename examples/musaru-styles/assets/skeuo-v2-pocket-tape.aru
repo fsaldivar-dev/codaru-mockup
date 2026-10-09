@@ -1,0 +1,20 @@
+// Musaru Skeuomorphic · original editable physical geometry.
+canvas 244 160
+background none
+gradient walnut linear 0 { stop 0 #5B3020; stop 0.16 #895036; stop 0.38 #A56642; stop 0.62 #78422C; stop 0.84 #A46643; stop 1 #5C3425 }
+gradient brass linear 90 { stop 0 #F3E4BA; stop 0.19 #C6AC73; stop 0.48 #E5D4AA; stop 0.52 #9D8356; stop 0.9 #D5BE8C; stop 1 #88724C }
+gradient brushed linear 90 { stop 0 #EEE8DC; stop 0.12 #D5CFC3; stop 0.8 #BDB7AC; stop 1 #999488 }
+gradient keycap linear 90 { stop 0 #FAF3E5; stop 0.68 #DED4C2; stop 1 #AEA596 }
+gradient blackkey linear 90 { stop 0 #4B4D47; stop 0.28 #343831; stop 1 #20231F }
+gradient portable linear 90 { stop 0 #D8CBB0; stop 0.38 #C5B797; stop 0.88 #B2A17F; stop 1 #8F8065 }
+rect edge { at 122 81; size 242 154; corner 10; fill #81745A; }
+rect lip { at 122 78; size 238 150; corner 8; fill #F1E4C4; }
+rect body { at 122 78; size 225 137; corner 6; fill #41483B; }
+rect label { at 122 34; size 197 34; corner 3; fill #F6EBD4; }
+rect window { at 122 91; size 195 54; corner 17; fill #232B24; }
+path tape { move 65 91; line 180 91; fill none; stroke #8E7958 3; cap round; }
+circle left { at 62 91; radius 24; fill #BDB496; }
+circle lh { at 62 91; radius 10; fill #343D30; }
+circle right { at 182 91; radius 24; fill #BDB496; }
+circle rh { at 182 91; radius 10; fill #343D30; }
+path reflection { move 33 70; line 202 70; line 190 76; line 33 76; close; fill #FFFFFF14; }

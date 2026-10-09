@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.\ncanvas 32 32\nbackground none\ngroup collection {\nrect funda { at 17 18; size 19 19; corner 3; fill none; stroke #1C1917 1.8 }\ncircle disco { at 17 18; radius 5; fill none; stroke #1C1917 1.8 }\ncircle agujero { at 17 18; radius 1; fill #1C1917; stroke #1C1917 1.8 }\npath respaldo { move 5 22; line 5 6; quad 5 4 7 4; line 23 4; fill none; stroke #1C1917 1.8; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" width=\"32\" height=\"32\">\n  <g>\n    <rect x=\"-9.5\" y=\"-9.5\" width=\"19\" height=\"19\" rx=\"3\" transform=\"translate(17 18)\" fill=\"none\" stroke=\"#1C1917\" stroke-width=\"1.8\"/>\n    <circle r=\"5\" transform=\"translate(17 18)\" fill=\"none\" stroke=\"#1C1917\" stroke-width=\"1.8\"/>\n    <circle r=\"1\" transform=\"translate(17 18)\" fill=\"#1C1917\" stroke=\"#1C1917\" stroke-width=\"1.8\"/>\n    <path d=\"M5 22 L5 6 Q5 4 7 4 L23 4\" fill=\"none\" stroke=\"#1C1917\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "collection.aru"
+}

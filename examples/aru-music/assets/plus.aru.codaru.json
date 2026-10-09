@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru controls · original curves generated for this prototype\ncanvas 48 48\nbackground none\ngroup plus {\npath horizontal { move 10 24; line 38 24; fill none; stroke #F3F0E4 3; cap round; join round }path vertical { move 24 10; line 24 38; fill none; stroke #F3F0E4 3; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <g>\n    <path d=\"M10 24 L38 24\" fill=\"none\" stroke=\"#F3F0E4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M24 10 L24 38\" fill=\"none\" stroke=\"#F3F0E4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "plus.aru"
+}

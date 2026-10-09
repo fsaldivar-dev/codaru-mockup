@@ -1,0 +1,7 @@
+// Original VENERO concept. Contemporary illustration, not a traditional community emblem.
+canvas 32 32
+background none
+group camino {
+resource "{\"key\": \"venero-camino\", \"kind\": \"ui-icon\", \"brand\": \"VENERO\", \"purpose\": \"Guardar ideas para un recorrido; icono original para 24 px con etiqueta.\", \"identity\": \"Escult\u00f3rico, curvas abiertas y contrapesos; agua, barro y bosque\", \"reusable\": true, \"tags\": [\"venero\", \"amealco\", \"original\"]}"
+path silueta { move 5 7; curve 14 0 30 10 18 16; curve 3 22 7 31 27 26; move 27 22; line 27 27; line 22 28; fill none; stroke #233D37 2; cap round; join round }
+}

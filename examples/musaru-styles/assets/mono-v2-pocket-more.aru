@@ -1,0 +1,6 @@
+// Musaru monochrome · original editable geometry.
+canvas 48 48
+background none
+circle first { at 10 24; radius 2; fill #FAFAFA; }
+circle middle { at 24 24; radius 2; fill #FAFAFA; }
+circle last { at 38 24; radius 2; fill #FAFAFA; }

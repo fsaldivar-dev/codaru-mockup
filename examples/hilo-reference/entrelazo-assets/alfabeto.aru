@@ -1,0 +1,77 @@
+// ENTRELAZO. Geometría de autor. No reproduce un símbolo tradicional.
+canvas 780 180
+background none
+group alfabeto {
+resource "{\"key\": \"entrelazo-alfabeto\", \"kind\": \"illustration\", \"brand\": \"ENTRELAZO\", \"purpose\": \"Alfabeto original A\u2013Z y cifras. Corresponde a Hilv\u00e1n Display, fuente incluida.\", \"identity\": \"Cruce, continuidad y pausa. Interpretaci\u00f3n contempor\u00e1nea de autor para Amealco.\", \"reusable\": true, \"tags\": [\"entrelazo\", \"amealco\", \"original\"]}"
+path g_A_0 { move 9.5 50.5; line 24.5 5.5; line 39.5 50.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_A_1 { move 15.5 35.5; line 23 35.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_A_2 { move 27.5 35.5; line 33.5 35.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_B_0 { move 70 50.5; line 70 5.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_B_1 { move 70 5.5; curve 104.5 4 101.5 28 71.5 28; fill none; stroke #283472 1.1; cap round; join round }
+path g_B_2 { move 71.5 28; curve 107.5 28 104.5 52 70 50.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_C_0 { move 157.5 10; curve 126 -8 118.5 61 157.5 46; fill none; stroke #283472 1.1; cap round; join round }
+path g_D_0 { move 188 50.5; line 188 5.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_D_1 { move 188 5.5; curve 230 -0.5 230 56.5 188 50.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_E_0 { move 275.5 5.5; line 247 5.5; line 247 50.5; line 275.5 50.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_E_1 { move 247 28; line 263.5 28; fill none; stroke #283472 1.1; cap round; join round }
+path g_E_2 { move 268 28; line 274 28; fill none; stroke #283472 1.1; cap round; join round }
+path g_F_0 { move 334.5 5.5; line 306 5.5; line 306 50.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_F_1 { move 306 28; line 322.5 28; fill none; stroke #283472 1.1; cap round; join round }
+path g_F_2 { move 327 28; line 333 28; fill none; stroke #283472 1.1; cap round; join round }
+path g_G_0 { move 393.5 11.5; curve 362 -9.5 354.5 61 393.5 46; fill none; stroke #283472 1.1; cap round; join round }
+path g_G_1 { move 393.5 46; line 393.5 31; line 380 31; fill none; stroke #283472 1.1; cap round; join round }
+path g_H_0 { move 424 5.5; line 424 50.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_H_1 { move 452.5 5.5; line 452.5 50.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_H_2 { move 424 28; line 436 28; fill none; stroke #283472 1.1; cap round; join round }
+path g_H_3 { move 440.5 28; line 452.5 28; fill none; stroke #283472 1.1; cap round; join round }
+path g_I_0 { move 489 5.5; line 507 5.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_I_1 { move 498 5.5; line 498 50.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_I_2 { move 489 50.5; line 507 50.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_J_0 { move 570.5 5.5; line 570.5 40; fill none; stroke #283472 1.1; cap round; join round }
+path g_J_1 { move 570.5 40; curve 570.5 56.5 540.5 56.5 542 40; fill none; stroke #283472 1.1; cap round; join round }
+path g_K_0 { move 601 5.5; line 601 50.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_K_1 { move 629.5 5.5; line 601 34; fill none; stroke #283472 1.1; cap round; join round }
+path g_K_2 { move 614.5 23.5; line 631 50.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_L_0 { move 660 5.5; line 660 50.5; line 688.5 50.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_M_0 { move 717.5 50.5; line 717.5 5.5; line 734 29.5; line 750.5 5.5; line 750.5 50.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_N_0 { move 11 108.5; line 11 63.5; line 39.5 108.5; line 39.5 63.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_O_0 { move 85 63.5; curve 107.5 63.5 107.5 108.5 85 108.5; curve 62.5 108.5 62.5 63.5 85 63.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_P_0 { move 129 108.5; line 129 63.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_P_1 { move 129 63.5; curve 168 60.5 166.5 89 129 87.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_Q_0 { move 203 63.5; curve 225.5 63.5 225.5 108.5 203 108.5; curve 180.5 108.5 180.5 63.5 203 63.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_Q_1 { move 207.5 96.5; line 222.5 113; fill none; stroke #283472 1.1; cap round; join round }
+path g_R_0 { move 247 108.5; line 247 63.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_R_1 { move 247 63.5; curve 286 60.5 284.5 89 247 87.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_R_2 { move 262 87.5; curve 269.5 92 268 107 280 108.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_S_0 { move 334.5 68; curve 312 51.5 294 80 319.5 86; curve 348 93.5 334.5 120.5 306 104; fill none; stroke #283472 1.1; cap round; join round }
+path g_T_0 { move 363.5 63.5; line 396.5 63.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_T_1 { move 380 63.5; line 380 108.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_U_0 { move 424 63.5; line 424 95; fill none; stroke #283472 1.1; cap round; join round }
+path g_U_1 { move 424 95; curve 424 114.5 452.5 114.5 452.5 95; fill none; stroke #283472 1.1; cap round; join round }
+path g_U_2 { move 452.5 95; line 452.5 63.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_V_0 { move 481.5 63.5; line 498 108.5; line 514.5 63.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_W_0 { move 539 63.5; line 548 108.5; line 557 84.5; line 566 108.5; line 575 63.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_X_0 { move 599.5 63.5; line 632.5 108.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_X_1 { move 632.5 63.5; line 619 81.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_X_2 { move 614.5 87.5; line 599.5 108.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_Y_0 { move 658.5 63.5; line 675 87.5; line 691.5 63.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_Y_1 { move 675 87.5; line 675 108.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_Z_0 { move 717.5 63.5; line 750.5 63.5; line 717.5 108.5; line 750.5 108.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_Z_1 { move 728 86; line 740 86; fill none; stroke #283472 1.1; cap round; join round }
+path g_0_0 { move 26 121.5; curve 48.5 121.5 48.5 166.5 26 166.5; curve 3.5 166.5 3.5 121.5 26 121.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_0_1 { move 33.5 132; line 18.5 156; fill none; stroke #283472 1.1; cap round; join round }
+path g_1_0 { move 77.5 130.5; line 86.5 121.5; line 86.5 166.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_1_1 { move 77.5 166.5; line 97 166.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_2_0 { move 129 132; curve 129 117 162 117 159 135; fill none; stroke #283472 1.1; cap round; join round }
+path g_2_1 { move 159 135; line 129 166.5; line 160.5 166.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_3_0 { move 188 126; curve 219.5 109.5 231.5 142.5 200 144; fill none; stroke #283472 1.1; cap round; join round }
+path g_3_1 { move 200 144; curve 228.5 142.5 222.5 178.5 188 162; fill none; stroke #283472 1.1; cap round; join round }
+path g_4_0 { move 271 166.5; line 271 121.5; line 245.5 154.5; line 280 154.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_5_0 { move 336 121.5; line 307.5 121.5; line 307.5 142.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_5_1 { move 307.5 142.5; curve 348 132 346.5 178.5 306 162; fill none; stroke #283472 1.1; cap round; join round }
+path g_6_0 { move 392 123; curve 368 115.5 357.5 166.5 380 166.5; curve 404 166.5 402.5 139.5 381.5 141; curve 371 141 366.5 148.5 366.5 156; fill none; stroke #283472 1.1; cap round; join round }
+path g_7_0 { move 422.5 121.5; line 455.5 121.5; line 433 166.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_7_1 { move 430 145.5; line 449.5 145.5; fill none; stroke #283472 1.1; cap round; join round }
+path g_8_0 { move 498 144; curve 469.5 138 480 121.5 498 121.5; curve 517.5 121.5 526.5 138 498 144; curve 466.5 151.5 480 166.5 498 166.5; curve 517.5 166.5 528 151.5 498 144; fill none; stroke #283472 1.1; cap round; join round }
+path g_9_0 { move 545 165; curve 569 172.5 579.5 121.5 557 121.5; curve 533 121.5 534.5 148.5 555.5 147; curve 566 147 570.5 139.5 570.5 132; fill none; stroke #283472 1.1; cap round; join round }
+}

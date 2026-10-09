@@ -1,0 +1,7 @@
+// Original VENERO concept. Contemporary illustration, not a traditional community emblem.
+canvas 32 32
+background none
+group mesa {
+resource "{\"key\": \"venero-mesa\", \"kind\": \"ui-icon\", \"brand\": \"VENERO\", \"purpose\": \"Gastronom\u00eda de Amealco; icono original para 24 px con etiqueta.\", \"identity\": \"Escult\u00f3rico, curvas abiertas y contrapesos; agua, barro y bosque\", \"reusable\": true, \"tags\": [\"venero\", \"amealco\", \"original\"]}"
+path silueta { move 4 16; line 28 16; curve 26 25 22 28 16 28; curve 10 28 6 25 4 16; close; move 11 12; curve 7 8 14 7 11 3; move 21 12; curve 17 8 24 7 21 3; fill none; stroke #233D37 2; cap round; join round }
+}

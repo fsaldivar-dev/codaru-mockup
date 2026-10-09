@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Glass · original editable geometry; material is supplied by host nodes.\ncanvas 48 48\nbackground none\npath display { move 14 33; line 8 33; quad 5 33 5 30; line 5 11; quad 5 8 8 8; line 40 8; quad 43 8 43 11; line 43 30; quad 43 33 40 33; line 34 33; fill none; stroke #102C3B 2.8; cap round; }\npath triangle { move 24 27; line 36 41; line 12 41; close; fill #102C3B; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M14 33 L8 33 Q5 33 5 30 L5 11 Q5 8 8 8 L40 8 Q43 8 43 11 L43 30 Q43 33 40 33 L34 33\" fill=\"none\" stroke=\"#102C3B\" stroke-width=\"2.8\" stroke-linecap=\"round\"/>\n  <path d=\"M24 27 L36 41 L12 41 Z\" fill=\"#102C3B\"/>\n</svg>",
+  "filename": "glass-v2-airplay.aru"
+}

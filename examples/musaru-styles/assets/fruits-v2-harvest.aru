@@ -1,0 +1,41 @@
+// Musaru Frutiger Fruits · original editable orchard vector.
+canvas 250 230
+background none
+gradient nectar linear 90 { stop 0 #FFF0A8; stop 0.42 #FFC452; stop 0.55 #FFAB31; stop 1 #F37526 }
+gradient citrus linear 90 { stop 0 #FFE79B; stop 0.5 #FFB132; stop 1 #F98320 }
+gradient leaf linear 90 { stop 0 #E1F28A; stop 0.45 #A7CB40; stop 0.52 #7BA32B; stop 1 #477A1E }
+gradient berry linear 90 { stop 0 #FFB7C0; stop 0.48 #F7798D; stop 1 #C94562 }
+ellipse shadow { at 145 213; size 234 14; fill #9D79291A; }
+path leafBack { move 72 99; curve 45 44 73 16 129 7; curve 149 64 106 98 72 99; close; fill leaf; }
+path vein { move 74 99; quad 102 53 125 17; fill none; stroke #EBF9A6 2; cap round; }
+circle orangeRind { at 151 130; radius 83; fill nectar; stroke #EB9C3F 1.5; }
+circle pith { at 151 130; radius 74.7; fill #FFF2BC; }
+path segment0 { move 160.12 130.32; line 218.19 132.35; quad 222.83 153.34 206.74 167.59; line 158.57 135.1; close; fill citrus; }
+path segment1 { move 158.19 135.62; line 203.97 171.4; quad 195.4 191.11 174.0 193.17; line 154.12 138.58; close; fill citrus; }
+path segment2 { move 153.52 138.78; line 169.53 194.63; quad 151.0 205.53 132.47 194.63; line 148.48 138.78; close; fill citrus; }
+path segment3 { move 147.88 138.58; line 128.0 193.17; quad 106.6 191.11 98.03 171.4; line 143.81 135.62; close; fill citrus; }
+path segment4 { move 143.43 135.1; line 95.26 167.59; quad 79.17 153.34 83.81 132.35; line 141.88 130.32; close; fill citrus; }
+path segment5 { move 141.88 129.68; line 83.81 127.65; quad 79.17 106.66 95.26 92.41; line 143.43 124.9; close; fill citrus; }
+path segment6 { move 143.81 124.38; line 98.03 88.6; quad 106.6 68.89 128.0 66.83; line 147.88 121.42; close; fill citrus; }
+path segment7 { move 148.48 121.22; line 132.47 65.37; quad 151.0 54.47 169.53 65.37; line 153.52 121.22; close; fill citrus; }
+path segment8 { move 154.12 121.42; line 174.0 66.83; quad 195.4 68.89 203.97 88.6; line 158.19 124.38; close; fill citrus; }
+path segment9 { move 158.57 124.9; line 206.74 92.41; quad 222.83 106.66 218.19 127.65; line 160.12 129.68; close; fill citrus; }
+circle core { at 151 130; radius 8.3; fill #FFF9DC; }
+path rindShine { move 92.9 88.5; quad 121.95 50.32000000000001 159.3 56.959999999999994; fill none; stroke #FFFBD1AA 3; cap round; }
+ellipse kiwiRind { at 54 166; size 93 83; fill #8E9560; }
+ellipse kiwiPith { at 53 164; size 86 76; fill #DCF394; }
+ellipse kiwiFlesh { at 53 164; size 73 65; fill leaf; }
+ellipse kiwiCore { at 53 164; size 23 34; fill #EFFFC1; }
+ellipse kiwiSeed0 { at 77.0 164.0; size 2.8 4.5; fill #4C5E2D; }
+ellipse kiwiSeed1 { at 73.8 176.5; size 2.8 4.5; fill #4C5E2D; }
+ellipse kiwiSeed2 { at 65.0 185.7; size 2.8 4.5; fill #4C5E2D; }
+ellipse kiwiSeed3 { at 53.0 189.0; size 2.8 4.5; fill #4C5E2D; }
+ellipse kiwiSeed4 { at 41.0 185.7; size 2.8 4.5; fill #4C5E2D; }
+ellipse kiwiSeed5 { at 32.2 176.5; size 2.8 4.5; fill #4C5E2D; }
+ellipse kiwiSeed6 { at 29.0 164.0; size 2.8 4.5; fill #4C5E2D; }
+ellipse kiwiSeed7 { at 32.2 151.5; size 2.8 4.5; fill #4C5E2D; }
+ellipse kiwiSeed8 { at 41.0 142.3; size 2.8 4.5; fill #4C5E2D; }
+ellipse kiwiSeed9 { at 53.0 139.0; size 2.8 4.5; fill #4C5E2D; }
+ellipse kiwiSeed10 { at 65.0 142.3; size 2.8 4.5; fill #4C5E2D; }
+ellipse kiwiSeed11 { at 73.8 151.5; size 2.8 4.5; fill #4C5E2D; }
+ellipse kiwiPolish { at 40 141; size 30 11; fill #FFFFFF55; }

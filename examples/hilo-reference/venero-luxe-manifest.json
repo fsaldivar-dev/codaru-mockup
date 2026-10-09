@@ -1,0 +1,74 @@
+{
+  "pliegue": {
+    "label": "Pliegue / marca",
+    "purpose": "Marca original de VENERO 02: una V tensada en dos listones; no es un glifo cultural.",
+    "kind": "app-icon",
+    "width": 128,
+    "height": 128,
+    "minWidth": 120
+  },
+  "flecha": {
+    "label": "Seguir",
+    "purpose": "Abrir una lectura o continuar; flecha diagonal de trazo fino.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "liston": {
+    "label": "Guardar",
+    "purpose": "Guardar en la selección personal: marcador de listón con vacío central.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "edicion": {
+    "label": "Ediciones",
+    "purpose": "Abrir ediciones de VENERO: tres pliegues editoriales.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "autoria": {
+    "label": "Autoría",
+    "purpose": "Conocer a los autores: dos perfiles enfrentados, con etiqueta obligatoria.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "mas": {
+    "label": "Añadir",
+    "purpose": "Añadir una lectura a la selección personal.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "volver": {
+    "label": "Volver",
+    "purpose": "Volver a la edición anterior.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "menu": {
+    "label": "Menú",
+    "purpose": "Abrir la navegación editorial.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "tension": {
+    "label": "Tensión / estudio de pliegues",
+    "purpose": "Ilustración vectorial original: estudio de tensión y pliegues, sin copiar motivos tradicionales. Desde 180 px.",
+    "kind": "illustration",
+    "width": 560,
+    "height": 420,
+    "minWidth": 120
+  }
+}

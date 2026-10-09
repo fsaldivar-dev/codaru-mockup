@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// HILO / liston-descargas. Original contemporary interpretation; no copied motif or attributed traditional meaning.\ncanvas 32 32\nbackground none\ngroup liston-descargas {\nresource \"{\\\"key\\\":\\\"hilo-liston-descargas\\\",\\\"kind\\\":\\\"ui-icon\\\",\\\"brand\\\":\\\"HILO\\\",\\\"purpose\\\":\\\"Offline downloads\\\",\\\"identity\\\":\\\"Fine contours, ribbon rhythm and restrained color\\\",\\\"reusable\\\":true,\\\"tags\\\":[\\\"hilo\\\",\\\"cultural-exploration\\\"]}\"\npath hebra { move 7 5; curve 7 14 8 20 16 26; curve 24 20 25 14 25 5; fill none; stroke #383631 1.65; cap round; join round }\npath punta { move 11 22; line 16 27; line 21 22; move 16 5; line 16 26; fill none; stroke #383631 1.65; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" width=\"32\" height=\"32\">\n  <g>\n    <path d=\"M7 5 C7 14 8 20 16 26 C24 20 25 14 25 5\" fill=\"none\" stroke=\"#383631\" stroke-width=\"1.65\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M11 22 L16 27 L21 22 M16 5 L16 26\" fill=\"none\" stroke=\"#383631\" stroke-width=\"1.65\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "liston-descargas.aru"
+}

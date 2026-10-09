@@ -1,0 +1,8 @@
+// Musaru Y2K chrome · original editable polished geometry.
+canvas 338 180
+background none
+gradient chrome linear 90 { stop 0 #FFFFFF; stop 0.28 #D3DDE9; stop 0.44 #F4F8FE; stop 0.48 #FFFFFF; stop 0.49 #64758E; stop 0.55 #BCC8D8; stop 0.82 #F7FBFF; stop 1 #7F8DA6 }
+gradient rim linear 90 { stop 0 #4F5C77; stop 0.2 #E9F1FA; stop 0.45 #8E9BB1; stop 0.49 #354259; stop 0.52 #C7D2E0; stop 0.8 #FEFFFF; stop 1 #62728A }
+gradient pinkMetal linear 130 { stop 0 #FFEFFF; stop 0.32 #BBA7D2; stop 0.48 #FFFFFF; stop 0.52 #A77FBE; stop 0.75 #EDE9FF; stop 1 #9784B6 }
+path arc { move 78 153; curve 29 111 43 39 130 27; curve 224 9 300 91 263 144; curve 283 91 217 26 134 39; curve 59 49 47 108 78 153; close; fill pinkMetal; stroke #748197 0.6; cap round; }
+path glint { move 81 145; curve 61 115 62 77 95 55; fill none; stroke #FFFFFF 1.8; cap round; }

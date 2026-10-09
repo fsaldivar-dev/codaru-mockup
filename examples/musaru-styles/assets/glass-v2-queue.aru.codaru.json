@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Glass · original editable geometry; material is supplied by host nodes.\ncanvas 48 48\nbackground none\nrect rowA { at 23 11; size 32 3; corner 1.5; fill #102C3B; }\nrect rowB { at 23 22; size 32 3; corner 1.5; fill #102C3B; }\nrect rowC { at 16 33; size 18 3; corner 1.5; fill #102C3B; }\npath next { move 32 29; line 42 36; line 32 43; close; fill #102C3B; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <rect x=\"-16\" y=\"-1.5\" width=\"32\" height=\"3\" rx=\"1.5\" transform=\"translate(23 11)\" fill=\"#102C3B\"/>\n  <rect x=\"-16\" y=\"-1.5\" width=\"32\" height=\"3\" rx=\"1.5\" transform=\"translate(23 22)\" fill=\"#102C3B\"/>\n  <rect x=\"-9\" y=\"-1.5\" width=\"18\" height=\"3\" rx=\"1.5\" transform=\"translate(16 33)\" fill=\"#102C3B\"/>\n  <path d=\"M32 29 L42 36 L32 43 Z\" fill=\"#102C3B\"/>\n</svg>",
+  "filename": "glass-v2-queue.aru"
+}

@@ -1,0 +1,13 @@
+// Musaru Frutiger Metro · original editable music poster geometry.
+canvas 220 270
+background none
+circle head { at 92 65; radius 24; fill #17232B; }
+path hair { move 68 60; curve 62 27 106 27 117 50; line 115 72; curve 105 67 103 45 84 47; line 73 67; close; fill #17232B; }
+path neck { move 80 84; line 103 83; line 107 112; line 76 116; close; fill #17232B; }
+path body { move 70 105; curve 98 98 125 108 134 137; line 147 238; line 32 256; curve 40 209 32 141 70 105; close; fill #17232B; }
+path armLeft { move 71 108; line 37 120; curve 25 124 18 137 20 152; line 30 193; line 49 190; line 41 146; line 78 132; close; fill #17232B; }
+path armRight { move 118 114; line 146 140; line 175 130; line 197 102; curve 204 96 213 103 207 111; line 188 145; line 151 165; curve 145 168 139 165 133 160; line 107 136; close; fill #17232B; }
+path band { move 64 59; curve 66 20 114 20 120 59; fill none; stroke #FAFBEF 5; cap round; }
+rect earL { at 65 66; size 9 25; corner 3; fill #FAFBEF; }
+rect earR { at 120 66; size 9 25; corner 3; fill #FAFBEF; }
+path cable { move 121 81; curve 155 119 87 159 103 201; fill none; stroke #FAFBEF 2.4; cap round; }

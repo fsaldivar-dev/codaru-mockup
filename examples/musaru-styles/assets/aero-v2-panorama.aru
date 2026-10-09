@@ -1,0 +1,15 @@
+// Musaru Aero · original editable vector. Sky and land, no water.
+canvas 1200 820
+background none
+gradient chrome linear 90 { stop 0 #FFFFFF; stop 0.42 #E4F3FA; stop 0.52 #A3C6DB; stop 1 #F4FCFF }
+gradient jewel linear 90 { stop 0 #99E4FF; stop 0.46 #39B6ED; stop 0.5 #137ABF; stop 1 #095E94 }
+gradient green linear 90 { stop 0 #ECFF97; stop 0.5 #A5D753; stop 0.52 #70AD2C; stop 1 #4A8822 }
+gradient sky linear 90 { stop 0 #65B8E8; stop 0.55 #D1F0FA; stop 1 #F7FDE8 }
+gradient hills linear 90 { stop 0 #CBE986; stop 0.4 #9CCB54; stop 1 #4E932F }
+rect sky { at 600.0 410.0; size 1200 820; fill sky }
+circle sun { at 1016 154; radius 68; fill #FFFED380; }
+path cloudA { move -25 210; curve 17 133 89 166 110 183; curve 126 92 256 123 265 180; curve 340 135 375 216 344 235; line -25 235; close; fill #FFFFFF88; }
+path cloudB { move 777 132; curve 798 98 835 99 858 123; curve 886 60 959 79 964 123; curve 1006 104 1032 153 1009 165; line 777 165; close; fill #FFFFFF77; }
+path hillFar { move 0 681; curve 288 508 562 777 1200 554; line 1200 820; line 0 820; close; fill #BEDF7B; }
+path hillNear { move 0 797; curve 344 588 715 879 1200 684; line 1200 820; line 0 820; close; fill hills; }
+path landLight { move 0 808; curve 357 620 718 901 1200 697; fill none; stroke #F0FFD1 5; cap round; }

@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Memphis · original editable printed geometry.\ncanvas 48 48\nbackground none\npath crossA { move 5 12; line 13 12; line 34 36; line 43 36; move 37 30; line 43 36; line 37 42; fill none; stroke #20212A 3; cap round; }\npath crossB { move 5 36; line 13 36; line 21 27; move 27 20; line 34 12; line 43 12; move 37 6; line 43 12; line 37 18; fill none; stroke #233BC7 3; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M5 12 L13 12 L34 36 L43 36 M37 30 L43 36 L37 42\" fill=\"none\" stroke=\"#20212A\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n  <path d=\"M5 36 L13 36 L21 27 M27 20 L34 12 L43 12 M37 6 L43 12 L37 18\" fill=\"none\" stroke=\"#233BC7\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "memphis-v2-shuffle.aru"
+}

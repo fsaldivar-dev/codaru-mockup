@@ -1,0 +1,9 @@
+// ENTRELAZO. Geometría de autor. No reproduce un símbolo tradicional.
+canvas 24 24
+background none
+group cerrar {
+resource "{\"key\": \"entrelazo-cerrar\", \"kind\": \"ui-icon\", \"brand\": \"ENTRELAZO\", \"purpose\": \"Cerrar una vista: cruce con pausa.\", \"identity\": \"Cruce, continuidad y pausa. Interpretaci\u00f3n contempor\u00e1nea de autor para Amealco.\", \"reusable\": true, \"tags\": [\"entrelazo\", \"amealco\", \"original\"]}"
+path hebra_0 { move 5 5; line 19 19; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_1 { move 19 5; line 14 10; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_2 { move 10 14; line 5 19; fill none; stroke #283472 1.25; cap round; join round }
+}

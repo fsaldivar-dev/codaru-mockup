@@ -1,0 +1,5 @@
+// Musaru Glass · original editable geometry; material is supplied by host nodes.
+canvas 48 48
+background none
+path speaker { move 7 19; line 15 19; line 25 11; quad 27 10 27 13; line 27 35; quad 27 38 25 37; line 15 29; line 7 29; close; fill #102C3B; }
+path wave { move 34 16; curve 42 20 42 28 34 32; fill none; stroke #102C3B 2.8; cap round; }

@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru POP: bespoke control, original editable paths\ncanvas 48 48\nbackground none\nrect one { at 22 11; size 33 8; corner 2; fill #FFF9E8; stroke #252036 3; }\nrect two { at 26 24; size 33 8; corner 2; fill #D3FF62; stroke #252036 3; }\nrect three { at 22 37; size 33 8; corner 2; fill #FF91CC; stroke #252036 3; }\n\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <rect x=\"-16.5\" y=\"-4\" width=\"33\" height=\"8\" rx=\"2\" transform=\"translate(22 11)\" fill=\"#FFF9E8\" stroke=\"#252036\" stroke-width=\"3\"/>\n  <rect x=\"-16.5\" y=\"-4\" width=\"33\" height=\"8\" rx=\"2\" transform=\"translate(26 24)\" fill=\"#D3FF62\" stroke=\"#252036\" stroke-width=\"3\"/>\n  <rect x=\"-16.5\" y=\"-4\" width=\"33\" height=\"8\" rx=\"2\" transform=\"translate(22 37)\" fill=\"#FF91CC\" stroke=\"#252036\" stroke-width=\"3\"/>\n</svg>",
+  "filename": "pop-v2-queue.aru"
+}

@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Apple minimal · original editable geometry, not SF Symbols.\ncanvas 48 48\nbackground none\npath first { move 6 12; line 13 12; curve 23 12 25 35 34 35; line 41 35; move 35 29; line 41 35; line 35 41; fill none; stroke #68686D 2.7; cap round; }\npath second { move 6 35; line 13 35; quad 18 35 21 29; move 27 18; quad 30 12 34 12; line 41 12; move 35 6; line 41 12; line 35 18; fill none; stroke #68686D 2.7; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M6 12 L13 12 C23 12 25 35 34 35 L41 35 M35 29 L41 35 L35 41\" fill=\"none\" stroke=\"#68686D\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n  <path d=\"M6 35 L13 35 Q18 35 21 29 M27 18 Q30 12 34 12 L41 12 M35 6 L41 12 L35 18\" fill=\"none\" stroke=\"#68686D\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "apple-v2-shuffle.aru"
+}

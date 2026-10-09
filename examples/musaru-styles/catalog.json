@@ -1,0 +1,434 @@
+[
+  {
+    "id": "outline-rounded",
+    "slug": "outline-rounded",
+    "name": "Outline redondeado · MusicArt",
+    "desktop": "style-outline-rounded",
+    "mobile": "style-outline-rounded-mobile",
+    "cues": [
+      "Contornos sin relleno, un solo color #2F5148 y grosor uniforme de 1.2 px sobre retícula de 24 (equivale a 2.4 unidades sobre retícula de 48)",
+      "Puntas y uniones redondas; curvas suaves, silueta clara y partes semánticas editables",
+      "Compartir proporciones ópticas y espaciado entre instrumentos; conservar solo rasgos que se lean a 24 y 32 px",
+      "El host adapta el color monocromático al tema: #2F5148 sobre claro, #BFD6C4 sobre oscuro, sin cambiar geometría"
+    ],
+    "avoid": [
+      "Placas de app, fondos o contenedores decorativos",
+      "Volúmenes rellenos, gradientes, brillos, sombras, texturas y transparencias en el trazo",
+      "Cuerdas y mecanismos diminutos que se fusionan al reducir"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/outline-review/index.html"
+  },
+  {
+    "id": "material-3",
+    "slug": "material-3",
+    "name": "Material 3 tonal",
+    "desktop": "style-material-3",
+    "mobile": "style-material-3-mobile",
+    "cues": [
+      "Formas claras, esquinas suaves y jerarquía tonal",
+      "Paleta coordinada con buen contraste; evitar relieve por defecto"
+    ],
+    "avoid": [
+      "Detalles ilegibles a 24 px",
+      "Pérdida de la función del producto"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/material-review/index.html"
+  },
+  {
+    "id": "material-3-expressive",
+    "slug": "material-3-expressive",
+    "name": "Material 3 Expressive",
+    "desktop": "style-material-3-expressive",
+    "mobile": "style-material-3-expressive-mobile",
+    "cues": [
+      "Formas más expresivas y variación controlada de siluetas",
+      "Color tonal, acentos vivos y legibilidad a tamaño pequeño"
+    ],
+    "avoid": [
+      "Detalles ilegibles a 24 px",
+      "Pérdida de la función del producto"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/expressive-review/index.html"
+  },
+  {
+    "id": "apple-minimal",
+    "slug": "apple-minimal",
+    "name": "Apple minimalista",
+    "desktop": "style-apple-minimal",
+    "mobile": "style-apple-minimal-mobile",
+    "cues": [
+      "Silueta equilibrada, curvas limpias y espacio generoso",
+      "Detalles mínimos y coherencia óptica; evitar adornos gratuitos"
+    ],
+    "avoid": [
+      "Detalles ilegibles a 24 px",
+      "Pérdida de la función del producto"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/apple-review/index.html"
+  },
+  {
+    "id": "monochrome",
+    "slug": "monochrome",
+    "name": "Minimalista monocromático",
+    "desktop": "style-monochrome",
+    "mobile": "style-monochrome-mobile",
+    "cues": [
+      "Un color principal, contraste claro y trazos coherentes",
+      "Iconos reconocibles sin depender de textura"
+    ],
+    "avoid": [
+      "Detalles ilegibles a 24 px",
+      "Pérdida de la función del producto"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/mono-review/index.html"
+  },
+  {
+    "id": "liquid-glass",
+    "slug": "liquid-glass",
+    "name": "Cristal / Liquid Glass",
+    "desktop": "style-liquid-glass",
+    "mobile": "style-liquid-glass-mobile",
+    "cues": [
+      "Superficie pulida, reflejos discretos y profundidad",
+      "Conservar el símbolo nítido y fondo opaco"
+    ],
+    "avoid": [
+      "Detalles ilegibles a 24 px",
+      "Pérdida de la función del producto"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/glass-review/index.html"
+  },
+  {
+    "id": "futuristic-minimal",
+    "slug": "futuristic-minimal",
+    "name": "Futurista minimalista",
+    "desktop": "style-futuristic-minimal",
+    "mobile": "style-futuristic-minimal-mobile",
+    "cues": [
+      "Geometría precisa, siluetas compactas y pocos acentos",
+      "Evitar el exceso de detalles tecnológicos"
+    ],
+    "avoid": [
+      "Detalles ilegibles a 24 px",
+      "Pérdida de la función del producto"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/future-review/index.html"
+  },
+  {
+    "id": "clay",
+    "slug": "clay",
+    "name": "Clay / relieve suave",
+    "desktop": "style-clay",
+    "mobile": "style-clay-mobile",
+    "cues": [
+      "Volumen mate y formas compactas redondeadas",
+      "Sombras contenidas y contornos legibles"
+    ],
+    "avoid": [
+      "Detalles ilegibles a 24 px",
+      "Pérdida de la función del producto"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/clay-review/index.html"
+  },
+  {
+    "id": "cyberpunk",
+    "slug": "cyberpunk",
+    "name": "Cyberpunk / neón",
+    "desktop": "style-cyberpunk",
+    "mobile": "style-cyberpunk-mobile",
+    "cues": [
+      "Acentos luminosos y contraste oscuro",
+      "Mantener el símbolo claro sin halos que tapen el contorno"
+    ],
+    "avoid": [
+      "Detalles ilegibles a 24 px",
+      "Pérdida de la función del producto"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/cyber-review/index.html"
+  },
+  {
+    "id": "memphis",
+    "slug": "memphis",
+    "name": "Memphis retro",
+    "desktop": "style-memphis",
+    "mobile": "style-memphis-mobile",
+    "cues": [
+      "Geometría lúdica, colores contrastantes y ritmo gráfico",
+      "Pocos elementos que sobrevivan a 24 px"
+    ],
+    "avoid": [
+      "Detalles ilegibles a 24 px",
+      "Pérdida de la función del producto"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/memphis-review/index.html"
+  },
+  {
+    "id": "y2k-chrome",
+    "slug": "y2k-chrome",
+    "name": "Y2K cromado",
+    "desktop": "style-y2k-chrome",
+    "mobile": "style-y2k-chrome-mobile",
+    "cues": [
+      "Siluetas dinámicas y metal pulido de los 2000",
+      "Reflejos concentrados y un símbolo claramente ligado a la app"
+    ],
+    "avoid": [
+      "Detalles ilegibles a 24 px",
+      "Pérdida de la función del producto"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/y2k-review/index.html"
+  },
+  {
+    "id": "skeuomorphic",
+    "slug": "skeuomorphic",
+    "name": "Esqueumórfico",
+    "desktop": "style-skeuomorphic",
+    "mobile": "style-skeuomorphic-mobile",
+    "cues": [
+      "Representar objetos funcionales con volumen y materiales",
+      "Detalles útiles y legibles, sin decoración ajena al propósito"
+    ],
+    "avoid": [
+      "Detalles ilegibles a 24 px",
+      "Pérdida de la función del producto"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/skeuo-review/index.html"
+  },
+  {
+    "id": "pop-cartoon",
+    "slug": "pop",
+    "name": "Pop / cartoon / slime",
+    "desktop": "style-pop",
+    "mobile": "style-pop-mobile",
+    "cues": [
+      "Formas orgánicas, trazos expresivos y colores vivos",
+      "Usar personajes o slime solo si ayudan al concepto"
+    ],
+    "avoid": [
+      "Detalles ilegibles a 24 px",
+      "Pérdida de la función del producto"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/pop-review/index.html"
+  },
+  {
+    "id": "frutiger-aero",
+    "slug": "aero",
+    "name": "Frutiger Aero · sin aqua",
+    "desktop": "style-aero",
+    "mobile": "style-aero-mobile",
+    "cues": [
+      "Brillo de interfaces y productos de los 2000",
+      "Volumen, biseles y gradientes limpios",
+      "Investigar Dark Aero, Aurora, Eco, Fruits o DORFic y elegir una dirección pertinente para el producto"
+    ],
+    "avoid": [
+      "Escenas submarinas",
+      "Peces",
+      "Burbujas acuáticas",
+      "Gotas de agua como motivo central"
+    ],
+    "reviewStatus": "revised"
+  },
+  {
+    "id": "dark-aero",
+    "slug": "dark",
+    "name": "Dark Aero",
+    "desktop": "style-dark",
+    "mobile": "style-dark-mobile",
+    "cues": [
+      "Negro piano, grafito y vidrio ahumado",
+      "Brillos de borde y reflejos controlados",
+      "Acentos luminosos sobre una silueta fuerte"
+    ],
+    "avoid": [
+      "Escenas submarinas",
+      "Peces",
+      "Burbujas acuáticas",
+      "Gotas de agua como motivo central",
+      "Convertirlo en cyberpunk genérico"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/dark-review/index.html"
+  },
+  {
+    "id": "frutiger-fruits",
+    "slug": "fruits",
+    "name": "Frutiger Fruits",
+    "desktop": "style-fruits",
+    "mobile": "style-fruits-mobile",
+    "cues": [
+      "Colores cítricos y frutales saturados",
+      "Superficies pulidas con sensación de frescura",
+      "Formas orgánicas compactas y translúcidas"
+    ],
+    "avoid": [
+      "Escenas submarinas",
+      "Peces",
+      "Burbujas acuáticas",
+      "Gotas de agua como motivo central",
+      "Añadir una fruta literal si contradice la función de la app"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/fruits-review/index.html"
+  },
+  {
+    "id": "frutiger-aurora",
+    "slug": "aurora",
+    "name": "Frutiger Aurora",
+    "desktop": "style-aurora",
+    "mobile": "style-aurora-mobile",
+    "cues": [
+      "Bandas de luz y auroras",
+      "Gradientes violeta, azul y verde",
+      "Cristal luminoso y profundidad suave"
+    ],
+    "avoid": [
+      "Escenas submarinas",
+      "Peces",
+      "Burbujas acuáticas",
+      "Gotas de agua como motivo central",
+      "Llenar el icono de estrellas y ruido"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/aurora-review/index.html"
+  },
+  {
+    "id": "frutiger-eco",
+    "slug": "eco",
+    "name": "Frutiger Eco",
+    "desktop": "style-eco",
+    "mobile": "style-eco-mobile",
+    "cues": [
+      "Naturaleza y tecnología limpia",
+      "Verde, blanco, hojas y superficies brillantes",
+      "Metáfora del producto por encima del decorado natural"
+    ],
+    "avoid": [
+      "Escenas submarinas",
+      "Peces",
+      "Burbujas acuáticas",
+      "Gotas de agua como motivo central",
+      "Usar una hoja genérica para cualquier producto"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/eco-review/index.html"
+  },
+  {
+    "id": "dorfic",
+    "slug": "dorfic",
+    "name": "DORFic",
+    "desktop": "style-dorfic",
+    "mobile": "style-dorfic-mobile",
+    "cues": [
+      "Naranja, blanco y luz diurna",
+      "Geometría tecnológica y sensación optimista",
+      "Profundidad limpia con detalles de interfaz"
+    ],
+    "avoid": [
+      "Escenas submarinas",
+      "Peces",
+      "Burbujas acuáticas",
+      "Gotas de agua como motivo central",
+      "Confundirlo con una escena nocturna de neón"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/dorfic-review/index.html"
+  },
+  {
+    "id": "frutiger-metro",
+    "slug": "frutiger-metro",
+    "name": "Frutiger Metro",
+    "desktop": "style-frutiger-metro",
+    "mobile": "style-frutiger-metro-mobile",
+    "cues": [
+      "Formas vectoriales, curvas y composiciones dinámicas",
+      "Paletas vivas y siluetas recortadas",
+      "Ritmo gráfico con pocos elementos legibles"
+    ],
+    "avoid": [
+      "Escenas submarinas",
+      "Peces",
+      "Burbujas acuáticas",
+      "Gotas de agua como motivo central",
+      "Confundirlo con el dashboard Metro de Xbox de 2011",
+      "Aplicar vidrio 3D por defecto"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/metro-review/index.html"
+  },
+  {
+    "id": "funky-seasons",
+    "slug": "funky-seasons",
+    "name": "Funky Seasons / Four Colors",
+    "desktop": "style-funky-seasons",
+    "mobile": "style-funky-seasons-mobile",
+    "cues": [
+      "Verde lima, azul cielo, rosa intenso y naranja vivo",
+      "Siluetas claras y energía pop",
+      "Color como identidad: considerar variantes del mismo símbolo, sin exigir los cuatro colores en un único icono"
+    ],
+    "avoid": [
+      "Escenas submarinas",
+      "Peces",
+      "Burbujas acuáticas",
+      "Gotas de agua como motivo central",
+      "Confundirlo con slime",
+      "Sustituir la identidad por manchas de cuatro colores"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/funky-review/index.html"
+  },
+  {
+    "id": "skeuomorphic-scifi",
+    "slug": "skeuomorphic-scifi",
+    "name": "Sci-fi industrial skeuomorfo",
+    "desktop": "style-skeuomorphic-scifi",
+    "mobile": "style-skeuomorphic-scifi-mobile",
+    "cues": [
+      "Carcasa, piezas ensambladas y biseles",
+      "Materiales de metal o plástico con volumen",
+      "Pantalla luminosa y controles físicos legibles"
+    ],
+    "avoid": [
+      "Copiar armaduras, logos o símbolos de Halo",
+      "Añadir controles diminutos que se pierden a 24 px"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/scifi-review/index.html"
+  },
+  {
+    "id": "console-gloss",
+    "slug": "console-gloss",
+    "name": "Console gloss · Blades / NXE",
+    "desktop": "style-console-gloss",
+    "mobile": "style-console-gloss-mobile",
+    "cues": [
+      "Paneles curvos y plástico pulido",
+      "Pestañas con profundidad para Blades; tarjetas en perspectiva para NXE",
+      "Acentos verdes o cálidos y navegación visual clara"
+    ],
+    "avoid": [
+      "Escenas submarinas",
+      "Peces",
+      "Burbujas acuáticas",
+      "Gotas de agua como motivo central",
+      "Mezclar Blades, NXE y el dashboard Metro como si fueran la misma interfaz",
+      "Copiar el logo Xbox"
+    ],
+    "reviewStatus": "revised",
+    "review": "artifacts/musaru-styles/console-review/index.html"
+  }
+]

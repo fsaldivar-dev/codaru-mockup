@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// HILO / flor-radio. Original contemporary interpretation; no copied motif or attributed traditional meaning.\ncanvas 32 32\nbackground none\ngroup flor-radio {\nresource \"{\\\"key\\\":\\\"hilo-flor-radio\\\",\\\"kind\\\":\\\"ui-icon\\\",\\\"brand\\\":\\\"HILO\\\",\\\"purpose\\\":\\\"Radio stations\\\",\\\"identity\\\":\\\"Fine contours, ribbon rhythm and restrained color\\\",\\\"reusable\\\":true,\\\"tags\\\":[\\\"hilo\\\",\\\"cultural-exploration\\\"]}\"\npath flor { move 16 13; curve 6 7 12 2 16 10; curve 20 2 26 7 19 13; curve 29 12 29 21 20 18; curve 24 27 15 29 16 21; curve 11 29 5 24 12 18; curve 3 21 2 12 12 14; fill none; stroke #383631 1.65; cap round; join round }\npath tallo { move 16 21; line 16 29; fill none; stroke #383631 1.65; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" width=\"32\" height=\"32\">\n  <g>\n    <path d=\"M16 13 C6 7 12 2 16 10 C20 2 26 7 19 13 C29 12 29 21 20 18 C24 27 15 29 16 21 C11 29 5 24 12 18 C3 21 2 12 12 14\" fill=\"none\" stroke=\"#383631\" stroke-width=\"1.65\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M16 21 L16 29\" fill=\"none\" stroke=\"#383631\" stroke-width=\"1.65\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "flor-radio.aru"
+}

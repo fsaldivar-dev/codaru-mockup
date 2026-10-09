@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru POP: bespoke control, original editable paths\ncanvas 280 54\nbackground none\npath track { move 5 28; quad 13 14 21 27; quad 28 43 37 28; quad 45 10 54 27; quad 62 46 70 28; quad 79 9 88 28; quad 96 44 105 27; quad 114 10 123 28; quad 131 42 140 27; quad 148 13 157 27; line 270 27; fill none; stroke #252036 5; cap round; }\ncircle handle { at 141 27; radius 11; fill #FF91CC; stroke #252036 3; }\n\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 280 54\" width=\"280\" height=\"54\">\n  <path d=\"M5 28 Q13 14 21 27 Q28 43 37 28 Q45 10 54 27 Q62 46 70 28 Q79 9 88 28 Q96 44 105 27 Q114 10 123 28 Q131 42 140 27 Q148 13 157 27 L270 27\" fill=\"none\" stroke=\"#252036\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n  <circle r=\"11\" transform=\"translate(141 27)\" fill=\"#FF91CC\" stroke=\"#252036\" stroke-width=\"3\"/>\n</svg>",
+  "filename": "pop-v2-wave.aru"
+}

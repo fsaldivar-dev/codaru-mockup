@@ -1,28 +1,47 @@
-import type { DesignNode, Kind, Project } from './model';
+import type { CodaruEditor } from './editor-core';
+import type { ResourceRecord, ResourceServices } from './contracts';
+export type { DesignStylePackage } from './contracts';
+export type { ResourceCandidate, ResourceRecord, ResourceSummary, ResourceServices, ResourcePreview, ResourceReviewRequest, ResourceReviewVerdict } from './contracts';
+import type { ComponentPropertyState, ComponentPropertyValue } from './component-properties';
+export type { ComponentProperty, ComponentPropertyValue, ComponentPropertyState } from './component-properties';
+import type { AssetOptions, AssetExport } from './asset-export';
+import type { DesignNode, Project } from './model';
+import type { AruSource, AruAsset, IllustrationRequest, ComponentImplementations, ImplementationReference, ImplementationRequest, AgentResponse, EditorOperation, CodaruInvoke } from './contracts';
+export type { AruSource, AruAsset, IllustrationRequest, ComponentImplementations, ImplementationReference, ImplementationRequest, AgentRequest, AgentResponse, EditorOperation, CodaruInvoke } from './contracts';
+import type { LocalizationConfig, LocalizationState, LocalizationIssue, TranslationRequest } from './localization';
+import { applyAppearance, readAppearanceTokens, type EditorAppearance } from './ui-theme';
+export type { EditorAppearance, EditorAppearanceTokens } from './ui-theme';
+export type { LocalizationConfig, LocalizationState, LocalizationIssue, TranslationRequest } from './localization';
 // Pure helpers a host can use on a document; the headless SVG renderer lives in `codaru-mockup/svg`.
 export { screens, roleOf, pagesOf, pageView, type FrameRole, type Page, type ScreenInfo } from './model';
 
-export type CodaruInvoke = <T = unknown>(command: string, args?: Record<string, unknown>) => Promise<T>;
 export interface EmbeddedOptions {
+  resourceServices?: ResourceServices;
+  onResourceLibraryChange?: (records: ResourceRecord[]) => void;
   document?: Project;
   invoke?: CodaruInvoke;
   nativeAgent?: boolean;
   onChange?: (document: Project) => void;
+  localization?: LocalizationConfig | null;
+  onImplementationRequest?: (request: ImplementationRequest) => void | Promise<void>;
+  onIllustrationRequest?: (request: IllustrationRequest) => void | Promise<void>;
+  onTranslationRequest?: (request: TranslationRequest) => void | Promise<void>;
 }
-export type EditorOperation =
-  | { op: 'add'; node: Partial<DesignNode> & { type: Kind } }
-  | { op: 'update'; id: string; patch: Partial<DesignNode> }
-  | { op: 'remove'; ids: string[] }
-  | { op: 'component'; id: string }
-  | { op: 'instance'; componentId: string; parentId: string | null; x: number; y: number };
-export interface AgentResponse {
-  ok: boolean;
-  context?: { revision: string; [key: string]: unknown };
-  error?: { code: string; message: string };
-  [key: string]: unknown;
-}
-export interface EditorAPI {
+export interface EditorAPI extends Pick<CodaruEditor,'getComments'|'captureCommentAnchor'|'getCommentContext'|'subscribeComments'|'getStyles'|'getStyle'|'importStyle'|'applyStyle'|'getResourceLibrary'|'getResource'|'stageResource'|'reviewResource'|'requestResourceEdit'|'setResourceServices'|'insertResource'|'exportResource'> {
   getDocument(): Project;
+  getPreviewDocument(): Project;
+  getLocalization(): LocalizationConfig | null;
+  getLocalizationState(): LocalizationState;
+  getLocalizationIssues(): LocalizationIssue[];
+  setLocalization(config: LocalizationConfig | null): void;
+  setLocale(locale: string | null): void;
+  requestTranslation(nodeId: string): Promise<void>;
+  getImplementations(nodeId: string): ComponentImplementations | null;
+  setImplementation(componentId: string, platform: string, reference: ImplementationReference | null): Project;
+  requestImplementation(nodeId: string, platform: string): Promise<void>;
+  requestIllustration(nodeId: string): Promise<void>;
+  getComponentProperties(nodeId: string): ComponentPropertyState[];
+  setComponentProperty(nodeId: string, key: string, value: ComponentPropertyValue | null): Project;
   getSelection(): DesignNode[];
   getSelectionScope(): string | null;
   select(ids: string[]): void;
@@ -32,12 +51,15 @@ export interface EditorAPI {
   undo(): void | Promise<void>;
   redo(): void | Promise<void>;
   exportHTML(): string;
+  exportAsset(options?: Omit<AssetOptions, 'ids'> & { ids?: string[] }): Promise<AssetExport>;
 }
 interface EmbeddedEditorAPI extends EditorAPI {
   initializeEmbedded(options: EmbeddedOptions): void | Promise<void>;
   disposeEmbedded(): Project | Promise<Project>;
 }
 export interface MountCodaruOptions extends EmbeddedOptions {
+  /** Shared chrome appearance; omitted tokens inherit --codaru-* from the host. */
+  appearance?: EditorAppearance;
   /** Same-origin editor page. Defaults to the editor distributed beside this module. */
   editorUrl?: string | URL;
   /** null (the default) never reads or writes the standalone editor's draft. */
@@ -48,6 +70,8 @@ export interface MountCodaruOptions extends EmbeddedOptions {
 export interface CodaruHandle {
   element: HTMLIFrameElement;
   ready: Promise<EditorAPI>;
+  /** Partial update, also allowed while loading. Does not change document themes. */
+  setAppearance(appearance: EditorAppearance): void;
   /** Flushes committed data, returns its snapshot, and removes the iframe. Idempotent. */
   destroy(): Promise<Project | undefined>;
 }
@@ -64,6 +88,10 @@ export function mountCodaru(container: HTMLElement, options: MountCodaruOptions 
   url.searchParams.set('codaruEmbed', '1');
   if (options.storageKey == null) url.searchParams.delete('storageKey'); else url.searchParams.set('storageKey', options.storageKey);
   const initialDocument = options.document === undefined ? undefined : structuredClone(options.document);
+  const initialLocalization = options.localization === undefined ? undefined : structuredClone(options.localization);
+  let appearance = structuredClone(options.appearance ?? {});
+  const validationElement = hostDocument.createElement('div');
+  applyAppearance(validationElement, appearance);
   const iframe = hostDocument.createElement('iframe');
   iframe.title = 'Editor de mockups Codaru'; iframe.loading = 'eager';
   iframe.style.cssText = 'display:block;width:100%;height:100%;border:0;';
@@ -75,6 +103,21 @@ export function mountCodaru(container: HTMLElement, options: MountCodaruOptions 
   // An early destroy is an expected lifecycle action even if a host hasn't awaited ready yet.
   void ready.catch(() => {});
   const asError = (error: unknown) => error instanceof Error ? error : new Error(String(error));
+  function refreshAppearance() {
+    const root = iframe.contentDocument?.documentElement;
+    if (!root) return;
+    const tokens = readAppearanceTokens(container);
+    for (const [key, value] of Object.entries(appearance.tokens ?? {})) {
+      if (value !== null && value !== undefined) Object.assign(tokens, { [key]: value });
+    }
+    applyAppearance(root, { ...appearance, tokens });
+  }
+  function setAppearance(next: EditorAppearance) {
+    if (destroyed) throw new Error('El editor ya fue desmontado.');
+    applyAppearance(validationElement, next);
+    appearance = { ...appearance, ...next, tokens: { ...appearance.tokens, ...next.tokens } };
+    if (loaded) refreshAppearance();
+  }
   function report(error: Error) {
     iframe.dispatchEvent(new CustomEvent('codaru:error', { detail: error, bubbles: true }));
     options.onError?.(error);
@@ -108,10 +151,17 @@ export function mountCodaru(container: HTMLElement, options: MountCodaruOptions 
       const candidate = (iframe.contentWindow as (Window & { codaru?: EmbeddedEditorAPI }) | null)?.codaru;
       if (!candidate || typeof candidate.initializeEmbedded !== 'function' || typeof candidate.disposeEmbedded !== 'function' || typeof candidate.getDocument !== 'function') throw new Error('La página no expone una API embebible de Codaru compatible.');
       api = candidate;
+      refreshAppearance();
       initialization = Promise.resolve(candidate.initializeEmbedded({
         ...(initialDocument === undefined ? {} : { document: initialDocument }),
         ...(options.invoke === undefined ? {} : { invoke: options.invoke }),
         ...(options.nativeAgent === undefined ? {} : { nativeAgent: options.nativeAgent }),
+        ...(initialLocalization === undefined ? {} : { localization: initialLocalization }),
+        resourceServices: options.resourceServices,
+        onResourceLibraryChange: records => { if (!destroyed) options.onResourceLibraryChange?.(structuredClone(records)); },
+        onTranslationRequest: options.onTranslationRequest,
+        onImplementationRequest: options.onImplementationRequest,
+        onIllustrationRequest: options.onIllustrationRequest,
         onChange: document => { if (!destroyed) options.onChange?.(structuredClone(document)); },
       }));
       await initialization;
@@ -123,5 +173,5 @@ export function mountCodaru(container: HTMLElement, options: MountCodaruOptions 
   iframe.addEventListener('load', onLoad); iframe.addEventListener('error', onLoadError);
   iframe.src = url.href;
   container.append(iframe);
-  return { element: iframe, ready, destroy };
+  return { element: iframe, ready, setAppearance, destroy };
 }

@@ -1,0 +1,7 @@
+// HILO / luna-descanso. Original geometry, contemporary interpretation; no attributed traditional meaning.
+canvas 32 32
+background none
+group luna-descanso {
+resource "{\"key\": \"hilo-luna-descanso\", \"kind\": \"ui-icon\", \"brand\": \"HILO\", \"purpose\": \"Activar escucha para descansar; icono de trazo fino para 24 px.\", \"identity\": \"Fine contour, open space and folded ribbon gestures\", \"reusable\": true, \"tags\": [\"hilo\", \"jardin-de-voces\"]}"
+path luna { move 23 4; curve 5 1 0 23 14 28; curve 20 31 27 27 29 22; curve 16 25 11 11 23 4; close; fill none; stroke #383631 1.65; cap round; join round }
+}

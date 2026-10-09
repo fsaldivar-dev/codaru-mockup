@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.8.0 — 2026-10-09
+
+- Comentarios del layout: hilos anclados a una selección, marcadores en el lienzo, respuestas, resolver/reabrir, borradores preservados y aviso cuando cambia o desaparece el objeto. Panel opcional `codaru-mockup/comments`, hooks `subscribeComments` y comando CLI `comments`. La IA del IDE propone; los ajustes al diseño siguen las transacciones con revisión.
+- Identity Lab: brief vivo, referencias con procedencia, direcciones comparables, crítica ligada a renders y revisión exacta, decisiones, refinamiento localizado y entrega portable. Seis paneles independientes en `codaru-mockup/identity`; el host aporta la IA y persistencia.
+- Composición reutilizable: instancias anidadas, propagación por dependencias, validación de ciclos, propiedades semánticas y slots intercambiables. Sobrescrituras locales y cambios estructurales en maestros; referencias de implementación por plataforma mediante puertos del IDE.
+- Localización: claves, catálogos proporcionados por el IDE, cambios de idioma en la vista previa y solicitudes de traducción. No duplica pantallas ni incorpora un servicio de traducción.
+- Recursos ARU: helper opcional para conservar fuentes editables, insertarlas y animarlas. Biblioteca local con candidatos, renders reales y admisión por evaluación visual de la IA del IDE; exportaciones SVG, PNG, fuente ARU y ZIP con imagesets iOS/drawables Android.
+- Estilos importables: tokens, degradados y guías de composición propias. La biblioteca no obliga a una plantilla de layout. Los ejemplos Musaru y HILO demuestran composiciones de escritorio y móvil.
+- Paneles coherentes: sistema común de apariencia, densidad, estados y controles; fragmentos personalizables en Shadow DOM, con nonce CSP heredado para Tauri. Los marcadores de comentario son transparentes y no interfieren con gestos del lienzo.
+- Render: reutilización de contenido y cachés locales a la sesión, notificaciones de cámara sin snapshots extra y carga progresiva de miniaturas. Las cifras de rendimiento se mantienen en pruebas y evidencia local, sin atribuir mejoras a todos los consumidores.
+- Compatibilidad: mantiene documentos v1/v2, aislamiento entre instancias, persistencia explícita y desmontaje que confirma ediciones. Declaraciones TypeScript compatibles con Bundler y NodeNext. El editor continúa sin dependencias de interfaz ni servidor Node en ejecución. El plugin Rust se distribuye como fuente; no se publica en crates.io.
+
 ## 0.7.0 — 2026-10-07
 
 - Render headless: `renderScreenToSVG(document, { screen?, theme?, maxWidth?, mode: 'static' })` dibuja una pantalla como SVG autocontenido sin `window`, `document` ni canvas, y `renderScreenToDataURL` lo devuelve como URL `data:` apta para `<img src>` y Markdown. Valida el documento como `renderMockup` y se ve como la vista previa estática (prueba de píxeles: menos del 1 % distinto en cinco pantallas). Nueva entrada `codaru-mockup/svg` (119,7 kB, 39,2 kB gzip); también en `preview` y `core`. `core` pasa de 128 kB a 144 kB porque su exportación SVG usa ahora este dibujo.

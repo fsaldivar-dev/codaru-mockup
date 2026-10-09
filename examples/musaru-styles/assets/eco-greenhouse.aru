@@ -1,0 +1,28 @@
+// Musaru style laboratory · original editable illustration
+canvas 600 400
+background none
+gradient glass linear 110 { stop 0 #F1FFDF; stop 0.4 #D2ECB7; stop 1 #8ABC6D }
+gradient leaf linear 100 { stop 0 #B6D875; stop 1 #46894C }
+gradient pot linear 90 { stop 0 #FFFFFF; stop 0.5 #EAF3DC; stop 1 #C6D8B9 }
+path ground { move 37 349; quad 263 295 558 349; quad 315 398 37 349; close; fill #D4E6C4 }
+group greenhouse {
+ path frame { move 143 321; line 143 128; line 292 37; line 442 128; line 442 321; close; fill glass; stroke #5B865B 5 }
+ path roof { move 143 128; line 292 155; line 442 128; move 292 37; line 292 323; stroke #6C9768 4; fill none }
+ path highlight { move 165 141; line 165 285; move 182 145; line 182 230; stroke #FFFFFFAA 6; cap round; fill none }
+}
+group listeningTree {
+ path trunk { move 297 304; quad 275 206 302 120; stroke #52704A 9; cap round; fill none }
+ path branchA { move 290 223; quad 248 201 239 174; stroke #52704A 5; fill none }
+ path branchB { move 294 189; quad 336 164 349 135; stroke #52704A 5; fill none }
+ path leafA { move 270 207; curve 202 209 182 165 203 139; curve 255 138 277 174 270 207; close; fill leaf }
+ path leafB { move 320 166; curve 312 106 351 90 388 105; curve 396 148 365 181 320 166; close; fill leaf }
+ path leafC { move 294 145; curve 257 101 275 68 312 67; curve 341 99 326 132 294 145; close; fill #72AB5E }
+ path headphones { move 230 207; curve 211 120 367 117 367 207; stroke #254C39 12; cap round; fill none }
+ rect earA { at 233 211; size 24 43; corner 10; fill #254C39 }
+ rect earB { at 365 211; size 24 43; corner 10; fill #254C39 }
+ path pot { move 248 282; line 339 282; line 328 334; quad 292 348 259 334; close; fill pot; stroke #8FAB7C 2 }
+}
+path sunshine { move 491.0 57.0; line 499.7 78.0; line 522.4 79.8; line 505.1 94.6; line 510.4 116.7; line 491.0 104.8; line 471.6 116.7; line 476.9 94.6; line 459.6 79.8; line 482.3 78.0; close; fill #E9C853 }
+circle pollenA { at 84 225; radius 8; fill #BCD77C;  }
+circle pollenB { at 499 251; radius 5; fill #A2C762;  }
+

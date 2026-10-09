@@ -4,6 +4,7 @@ const container = document.querySelector<HTMLElement>('#editor-container')!;
 const status = document.querySelector<HTMLElement>('#host-status')!;
 const toggle = document.querySelector<HTMLButtonElement>('#host-toggle')!;
 const context = document.querySelector<HTMLButtonElement>('#host-context')!;
+const styles = document.querySelector<HTMLButtonElement>('#host-styles')!;
 const native = (window as unknown as { __TAURI_INTERNALS__?: { invoke: <T>(command: string, args?: Record<string, unknown>) => Promise<T> } }).__TAURI_INTERNALS__;
 let mounted: CodaruHandle | undefined;
 async function showEditor() {
@@ -17,7 +18,7 @@ async function showEditor() {
   });
   const editor = await mounted.ready;
   status.textContent = `${editor.getDocument().name} · Editor integrado`;
-  toggle.textContent = 'Ocultar editor';context.disabled = false;
+  toggle.textContent = 'Ocultar editor';context.disabled = false;styles.disabled=false;
 }
 toggle.onclick = async () => {
   toggle.disabled = true;
@@ -31,5 +32,13 @@ context.onclick = async () => {
   const editor=await mounted.ready;
   const result=await editor.agent('context',{depth:0}) as {ok:boolean;context?:{counts:{frames:number;nodes:number}}};
   status.textContent=result.ok&&result.context?`Contexto IA · ${result.context.counts.frames} pantallas · ${result.context.counts.nodes} capas`:'No se pudo obtener contexto';
+};
+styles.onclick = async () => {
+  styles.disabled=true;toggle.disabled=true;context.disabled=true;
+  try {
+    // Flush the host's document before opening an independent example session.
+    if(mounted){await mounted.destroy();mounted=undefined;}
+    location.href=new URL('./musaru-styles/index.html',location.href).href;
+  } catch(error){status.textContent=String(error);styles.disabled=false;toggle.disabled=false;context.disabled=false;}
 };
 void showEditor().catch(error=>{status.textContent=String(error);});

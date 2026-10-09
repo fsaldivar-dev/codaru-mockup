@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru controls · original curves generated for this prototype\ncanvas 48 48\nbackground none\ngroup repeat {\npath loopA { move 37 15; line 15 15; curve 5 15 5 33 13 33; fill none; stroke #F3F0E4 3; cap round; join round }path loopB { move 11 33; line 33 33; curve 43 33 43 15 37 15; fill none; stroke #F3F0E4 3; cap round; join round }path arrowA { move 31 9; line 37 15; line 31 21; fill none; stroke #F3F0E4 3; cap round; join round }path arrowB { move 17 27; line 11 33; line 17 39; fill none; stroke #F3F0E4 3; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <g>\n    <path d=\"M37 15 L15 15 C5 15 5 33 13 33\" fill=\"none\" stroke=\"#F3F0E4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M11 33 L33 33 C43 33 43 15 37 15\" fill=\"none\" stroke=\"#F3F0E4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M31 9 L37 15 L31 21\" fill=\"none\" stroke=\"#F3F0E4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M17 27 L11 33 L17 39\" fill=\"none\" stroke=\"#F3F0E4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "repeat.aru"
+}

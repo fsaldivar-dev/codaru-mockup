@@ -1,0 +1,58 @@
+{
+  "plan": "Codaru Identity Lab",
+  "status": "complete",
+  "started": "2026-10-09",
+  "scope": [
+    "brief vivo",
+    "referencias con procedencia",
+    "direcciones comparables",
+    "critica visual real",
+    "refinamiento localizado",
+    "paneles embebibles y entrega"
+  ],
+  "excluded": [
+    "Comentarios fueron propuesta en el plan inicial; implementados luego por autorización humana separada. Ver docs/COMMENTS-PROGRESS.json."
+  ],
+  "activeWork": {
+    "core": "terminado y verificado",
+    "uiAndIntegration": "Completado y verificado en paquete instalado y app Tauri aislada final."
+  },
+  "evidence": [
+    "Nucleo, CLI y 12 tests de Identity implementados por identity_core; suite de modelo 177/177",
+    "Paneles independientes y renderer PNG opcional implementados; ejemplo de puente IDE creado",
+    "TypeScript check y 177/177 pruebas de modelo/arquitectura pasan",
+    "28/28 pruebas UI identidad+modular+embed; 5/5 Identity incluyendo ejemplo real pasan",
+    "package:build y tarball local codaru-mockup@0.7.0; npm install en /tmp/codaru-identity-consumer verifica imports sin DOM y TypeScript",
+    "Consumidor limpio visible: edicion preservada al desmontar y remontar panel",
+    "native:build compila CLI y app aislada Codaru Identity QA.app correctamente",
+    "Verificacion final: 177/177 modelo + 31/31 UI (Identity, modular, embed), paquete reconstruido e instalado nuevamente en consumidor limpio",
+    "Paneles reciben invalidaciones sin snapshots publicos extra; 50 cambios de camara verificados",
+    "La UI permite vincular referencias a direcciones y descartar fichas sin publicar",
+    "Consumidor instalado final revisado visualmente: Borrador conservado en paquete final al desmontar/remontar",
+    "Recompilacion Tauri final exit0: artifacts/identity-lab/native-build-final.log; CLI ya compilado con native:build",
+    "Mac desbloqueado. Copia nativa anterior preservada en native-before-reload.json antes de reiniciar el build final aislado.",
+    "Seis paneles inspeccionados en dev.codaru.identity-qa; controles finales de descartar borrador y limpiar instruccion visibles.",
+    "CLI socket aislado /tmp/codaru-identity-qa/agent.sock: context/schema correctos, mismo lote dry-run y apply ok; patch sin cambiar la intencion.",
+    "Puente IDE nativo rasterizo escritorio 1024x711 y movil 393x852; Codex observo los renders y devolvio critica real con identificador de modelo no expuesto declarado.",
+    "Critica vigente guardada con targetRevision f018f0fbd9e9e8bbc62dd30e5b0852edc61dfbecf2afb04cb77e722465c6c952 y dos PNG verificados; nodos identicos a la copia inicial.",
+    "Exportaciones nativas JSON, SVG y PNG correctas. Boton Exportar identidad genero codaru-identity-package/1 con 1212 nodos, 1 critica y issues vacio: artifacts/identity-lab/identidad.codaru.json.",
+    "Tema oscuro aplicado a paneles fragmentados y editor en Tauri; captura artifacts/identity-lab/native-handoff-mobile.png. Critica visible: native-review-final.png.",
+    "Entrega exportada por Tauri importada con paquete instalado en /tmp/codaru-identity-consumer: 1212 nodos, critica vigente y issues vacio.",
+    "Revision visual detecto selector de pantalla desactualizado y acento azul oscuro con poco contraste. Se corrigio examples/identity-host.ts para sincronizar pantalla y usar #b5bfff en oscuro.",
+    "Prueba UI del ejemplo ampliada con navegacion movil y acento oscuro: 1/1 paso. Recompilacion Tauri final exit0.",
+    "Reinicio para revisar estas dos correcciones detenido por Mac bloqueado; la critica y entrega originales estan preservadas.",
+    "Cierre tras desbloqueo: selector ENTRELAZO · Móvil sincronizado y acento #b5bfff con contraste revisados en el build nativo final dev.codaru.comments-qa. Imagen artifacts/comments/native-thread-final.png. No se reinició ni modificó la app Identity QA que usa la persona."
+  ],
+  "next": null,
+  "blocker": null,
+  "package": {
+    "filename": "codaru-mockup-0.7.0.tgz",
+    "size": 444624,
+    "unpackedSize": 1471673,
+    "integrity": "sha512-ooB8/QcWYBOoUzaB963dTx0tCvPX0mpqc5cCFjgaucg12vLvbW8fU3nKLJ4Mky00k0MMQYtnZ0n/PX6LYDaW4Q=="
+  },
+  "lastCheck": {
+    "at": "2026-10-09T15:28:58.821790+00:00",
+    "result": "Plan Identity Lab completo; verificaciones finales del ejemplo en copia nativa aislada. Pausar heartbeat. Heartbeat PAUSED confirmado por automation_update."
+  }
+}

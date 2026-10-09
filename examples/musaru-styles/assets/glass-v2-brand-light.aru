@@ -1,0 +1,5 @@
+// Musaru Glass · original editable geometry; material is supplied by host nodes.
+canvas 48 48
+background none
+path lensA { move 8 24; curve 8 7 30 7 30 24; curve 30 41 8 41 8 24; close; fill none; stroke #F8FDFF 2.5; cap round; }
+path lensB { move 18 24; curve 18 7 40 7 40 24; curve 40 41 18 41 18 24; close; fill none; stroke #F8FDFF 2.5; cap round; }

@@ -1,0 +1,31 @@
+// Original VENERO concept. Contemporary illustration, not a traditional community emblem.
+canvas 480 420
+background none
+group mesa-abierta {
+resource "{\"key\": \"venero-mesa-abierta\", \"kind\": \"illustration\", \"brand\": \"VENERO\", \"purpose\": \"Composici\u00f3n original de una mesa, ma\u00edz y un cuenco; homenaje editorial a cocinar y compartir, sin reproducir un platillo espec\u00edfico; desde 180 px.\", \"identity\": \"Escult\u00f3rico, curvas abiertas y contrapesos; agua, barro y bosque\", \"reusable\": true, \"tags\": [\"venero\", \"amealco\", \"original\"]}"
+circle mantel { at 240 210; radius 168; fill #D9B995; stroke none 2 }
+group mesa {
+path cuenco { move 89 213; line 391 213; curve 372 297 325 332 240 332; curve 155 332 108 297 89 213; close; fill #A4472F; stroke none 2; cap round; join round }
+path interior { move 89 213; curve 117 166 363 166 391 213; curve 363 256 117 256 89 213; close; fill #233D37; stroke none 2; cap round; join round }
+path comida { move 116 216; curve 147 182 325 185 363 216; curve 305 241 173 241 116 216; close; fill #C79853; stroke none 2; cap round; join round }
+path trazo_0 { move 163 207; curve 172 198 186 199 192 207; fill none; stroke #F5F0E6 2.5; cap round; join round }
+path trazo_1 { move 207 211; curve 216 202 230 203 236 211; fill none; stroke #F5F0E6 2.5; cap round; join round }
+path trazo_2 { move 252 204; curve 261 195 275 196 281 204; fill none; stroke #F5F0E6 2.5; cap round; join round }
+path trazo_3 { move 300 212; curve 309 203 323 204 329 212; fill none; stroke #F5F0E6 2.5; cap round; join round }
+path borde { move 127 257; curve 183 278 297 278 353 257; fill none; stroke #D9B995 2; cap round; join round }
+}
+group maiz {
+path hoja { move 175 146; curve 124 119 124 59 110 32; curve 165 40 193 80 175 146; close; fill #71816B; stroke none 2; cap round; join round }
+path mazorca { move 175 146; curve 149 96 162 39 182 33; curve 210 49 210 109 175 146; close; fill #C79853; stroke none 2; cap round; join round }
+path grano_0 { move 170 61; line 193 62; fill none; stroke #F5F0E6 2; cap round; join round }
+path grano_1 { move 170 78; line 193 79; fill none; stroke #F5F0E6 2; cap round; join round }
+path grano_2 { move 170 95; line 193 96; fill none; stroke #F5F0E6 2; cap round; join round }
+path grano_3 { move 170 112; line 193 113; fill none; stroke #F5F0E6 2; cap round; join round }
+path hoja_alta { move 175 146; curve 183 89 215 76 230 71; curve 229 116 204 143 175 146; close; fill #233D37; stroke none 2; cap round; join round }
+}
+group vapor {
+path vapor_uno { move 290 150; curve 266 127 307 117 286 91; fill none; stroke #A4472F 2.6; cap round; join round }
+path vapor_dos { move 320 157; curve 300 139 332 123 318 112; fill none; stroke #A4472F 1.8; cap round; join round }
+}
+path suelo { move 80 375; line 400 375; fill none; stroke #233D37 1.4; cap round; join round }
+}

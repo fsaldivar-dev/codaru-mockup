@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.\ncanvas 32 32\nbackground none\ngroup next {\npath triangulo { move 8 8; line 22 16; line 8 24; close; fill none; stroke #1C1917 1.8; cap round; join round }\npath tope { move 25 8; line 25 24; fill none; stroke #1C1917 1.8; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" width=\"32\" height=\"32\">\n  <g>\n    <path d=\"M8 8 L22 16 L8 24 Z\" fill=\"none\" stroke=\"#1C1917\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M25 8 L25 24\" fill=\"none\" stroke=\"#1C1917\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "next.aru"
+}

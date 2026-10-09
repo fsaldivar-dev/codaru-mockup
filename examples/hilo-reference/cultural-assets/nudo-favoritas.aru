@@ -1,0 +1,8 @@
+// HILO / nudo-favoritas. Original contemporary interpretation; no copied motif or attributed traditional meaning.
+canvas 32 32
+background none
+group nudo-favoritas {
+resource "{\"key\":\"hilo-nudo-favoritas\",\"kind\":\"ui-icon\",\"brand\":\"HILO\",\"purpose\":\"Favorite songs\",\"identity\":\"Fine contours, ribbon rhythm and restrained color\",\"reusable\":true,\"tags\":[\"hilo\",\"cultural-exploration\"]}"
+path lazo { move 16 25; curve 7 20 2 14 6 8; curve 10 3 16 10 16 13; curve 16 10 22 3 26 8; curve 30 14 25 20 16 25; close; fill none; stroke #383631 1.65; cap round; join round }
+path hilvan { move 16 13; curve 14 17 18 20 16 25; fill none; stroke #383631 1.65; cap round; join round }
+}

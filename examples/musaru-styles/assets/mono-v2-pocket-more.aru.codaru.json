@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru monochrome · original editable geometry.\ncanvas 48 48\nbackground none\ncircle first { at 10 24; radius 2; fill #FAFAFA; }\ncircle middle { at 24 24; radius 2; fill #FAFAFA; }\ncircle last { at 38 24; radius 2; fill #FAFAFA; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <circle r=\"2\" transform=\"translate(10 24)\" fill=\"#FAFAFA\"/>\n  <circle r=\"2\" transform=\"translate(24 24)\" fill=\"#FAFAFA\"/>\n  <circle r=\"2\" transform=\"translate(38 24)\" fill=\"#FAFAFA\"/>\n</svg>",
+  "filename": "mono-v2-pocket-more.aru"
+}

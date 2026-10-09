@@ -1,0 +1,22 @@
+// Original VENERO concept. Contemporary illustration, not a traditional community emblem.
+canvas 480 420
+background none
+group tiempo-del-bosque {
+resource "{\"key\": \"venero-tiempo-del-bosque\", \"kind\": \"illustration\", \"brand\": \"VENERO\", \"purpose\": \"Escena original de bosque y sendero; no es un mapa ni una imagen de un lugar espec\u00edfico; desde 180 px.\", \"identity\": \"Escult\u00f3rico, curvas abiertas y contrapesos; agua, barro y bosque\", \"reusable\": true, \"tags\": [\"venero\", \"amealco\", \"original\"]}"
+path fondo { move 22 369; line 22 175; curve 22 -40 458 -40 458 175; line 458 369; close; fill #BDCED0; stroke none 2; cap round; join round }
+circle claro { at 336 113; radius 50; fill #F5F0E6; stroke none 2 }
+path loma { move 22 276; curve 165 180 221 256 458 222; line 458 370; line 22 370; close; fill #71816B; stroke none 2; cap round; join round }
+path sombra { move 22 331; curve 142 259 268 314 458 279; line 458 370; line 22 370; close; fill #233D37; stroke none 2; cap round; join round }
+path sendero { move 280 261; curve 231 303 280 306 300 326; curve 321 348 301 357 283 370; line 212 370; curve 248 343 255 344 238 327; curve 205 297 243 281 280 261; close; fill #D9B995; stroke none 2; cap round; join round }
+path copa_0 { move 41 316; curve 41 243.76 72 204.2 78 144; curve 84 204.2 115 243.76 115 316; close; fill #233D37; stroke none 2; cap round; join round }
+path tronco_0 { move 78 251; line 78 350; fill none; stroke #16342F 5; cap round; join round }
+path copa_1 { move 121 271; curve 121 183.64 158 135.79999999999998 164 63; curve 170 135.79999999999998 207 183.64 207 271; close; fill #16342F; stroke none 2; cap round; join round }
+path tronco_1 { move 164 206; line 164 305; fill none; stroke #16342F 5; cap round; join round }
+path copa_2 { move 338 290; curve 338 219.86 363 181.45 369 123; curve 375 181.45 400 219.86 400 290; close; fill #233D37; stroke none 2; cap round; join round }
+path tronco_2 { move 369 225; line 369 324; fill none; stroke #16342F 5; cap round; join round }
+path copa_3 { move 392 291; curve 392 208.26 421 162.95 427 94; curve 433 162.95 462 208.26 462 291; close; fill #16342F; stroke none 2; cap round; join round }
+path tronco_3 { move 427 226; line 427 325; fill none; stroke #16342F 5; cap round; join round }
+path rayo { move 239 93; line 218 165; fill none; stroke #F5F0E6 2; cap round; join round }
+path rayo_dos { move 254 107; line 237 165; fill none; stroke #F5F0E6 1; cap round; join round }
+path suelo { move 22 391; line 458 391; fill none; stroke #233D37 1.4; cap round; join round }
+}

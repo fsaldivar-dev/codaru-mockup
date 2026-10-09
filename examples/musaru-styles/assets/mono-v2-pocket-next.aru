@@ -1,0 +1,5 @@
+// Musaru monochrome · original editable geometry.
+canvas 48 48
+background none
+path triangle { move 14 10; line 34 24; line 14 38; close; fill #FAFAFA; }
+rect stop { at 39 24; size 3 28; corner 0; fill #FAFAFA; }

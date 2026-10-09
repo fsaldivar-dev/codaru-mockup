@@ -1,0 +1,10 @@
+// ENTRELAZO. Geometría de autor. No reproduce un símbolo tradicional.
+canvas 24 24
+background none
+group calendario {
+resource "{\"key\": \"entrelazo-calendario\", \"kind\": \"ui-icon\", \"brand\": \"ENTRELAZO\", \"purpose\": \"Abrir encuentros: calendario con un hilo cruzado.\", \"identity\": \"Cruce, continuidad y pausa. Interpretaci\u00f3n contempor\u00e1nea de autor para Amealco.\", \"reusable\": true, \"tags\": [\"entrelazo\", \"amealco\", \"original\"]}"
+path hebra_0 { move 3 7; line 21 7; line 21 21; line 3 21; close; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_1 { move 7 3; line 7 10; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_2 { move 17 3; line 17 10; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_3 { move 7 17; line 10 14; line 13 17; line 17 13; fill none; stroke #283472 1.25; cap round; join round }
+}

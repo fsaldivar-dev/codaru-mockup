@@ -1,0 +1,5 @@
+// Musaru Expressive · original flat editable shapes.
+canvas 48 48
+background none
+rect barLeft { at 16 24; size 7 26; corner 3.5; fill #FFFFFF; }
+rect barRight { at 32 24; size 7 26; corner 3.5; fill #FFFFFF; }

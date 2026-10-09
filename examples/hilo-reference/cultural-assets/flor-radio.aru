@@ -1,0 +1,8 @@
+// HILO / flor-radio. Original contemporary interpretation; no copied motif or attributed traditional meaning.
+canvas 32 32
+background none
+group flor-radio {
+resource "{\"key\":\"hilo-flor-radio\",\"kind\":\"ui-icon\",\"brand\":\"HILO\",\"purpose\":\"Radio stations\",\"identity\":\"Fine contours, ribbon rhythm and restrained color\",\"reusable\":true,\"tags\":[\"hilo\",\"cultural-exploration\"]}"
+path flor { move 16 13; curve 6 7 12 2 16 10; curve 20 2 26 7 19 13; curve 29 12 29 21 20 18; curve 24 27 15 29 16 21; curve 11 29 5 24 12 18; curve 3 21 2 12 12 14; fill none; stroke #383631 1.65; cap round; join round }
+path tallo { move 16 21; line 16 29; fill none; stroke #383631 1.65; cap round; join round }
+}

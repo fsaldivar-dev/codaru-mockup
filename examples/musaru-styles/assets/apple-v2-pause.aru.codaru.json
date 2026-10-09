@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Apple minimal · original editable geometry, not SF Symbols.\ncanvas 48 48\nbackground none\nrect left { at 16 24; size 6 28; corner 2; fill #1D1D1F; }\nrect right { at 32 24; size 6 28; corner 2; fill #1D1D1F; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <rect x=\"-3\" y=\"-14\" width=\"6\" height=\"28\" rx=\"2\" transform=\"translate(16 24)\" fill=\"#1D1D1F\"/>\n  <rect x=\"-3\" y=\"-14\" width=\"6\" height=\"28\" rx=\"2\" transform=\"translate(32 24)\" fill=\"#1D1D1F\"/>\n</svg>",
+  "filename": "apple-v2-pause.aru"
+}

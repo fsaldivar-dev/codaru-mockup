@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Original VENERO concept. Contemporary illustration, not a traditional community emblem.\ncanvas 32 32\nbackground none\ngroup lugar {\nresource \"{\\\"key\\\": \\\"venero-lugar\\\", \\\"kind\\\": \\\"ui-icon\\\", \\\"brand\\\": \\\"VENERO\\\", \\\"purpose\\\": \\\"Ubicaci\\u00f3n de la comunidad; icono original para 24 px con etiqueta.\\\", \\\"identity\\\": \\\"Escult\\u00f3rico, curvas abiertas y contrapesos; agua, barro y bosque\\\", \\\"reusable\\\": true, \\\"tags\\\": [\\\"venero\\\", \\\"amealco\\\", \\\"original\\\"]}\"\npath silueta { move 25 12; curve 25 21 16 29 16 29; curve 16 29 7 21 7 12; curve 7 0 25 0 25 12; close; move 19 12; curve 19 16 13 16 13 12; curve 13 8 19 8 19 12; close; fill none; stroke #233D37 2; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" width=\"32\" height=\"32\">\n  <g>\n    <path d=\"M25 12 C25 21 16 29 16 29 C16 29 7 21 7 12 C7 0 25 0 25 12 Z M19 12 C19 16 13 16 13 12 C13 8 19 8 19 12 Z\" fill=\"none\" stroke=\"#233D37\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "lugar.aru"
+}

@@ -1,0 +1,8 @@
+// HILO / lineas-letras. Original geometry, contemporary interpretation; no attributed traditional meaning.
+canvas 32 32
+background none
+group lineas-letras {
+resource "{\"key\": \"hilo-lineas-letras\", \"kind\": \"ui-icon\", \"brand\": \"HILO\", \"purpose\": \"Mostrar la letra de la canci\u00f3n; icono de trazo fino para 24 px.\", \"identity\": \"Fine contour, open space and folded ribbon gestures\", \"reusable\": true, \"tags\": [\"hilo\", \"jardin-de-voces\"]}"
+path hoja { move 8 4; line 22 4; curve 27 4 28 6 28 10; line 28 22; curve 28 26 26 28 22 28; line 8 28; curve 4 28 4 25 4 22; line 4 9; curve 4 5 5 4 8 4; close; fill none; stroke #383631 1.65; cap round; join round }
+path versos { move 9 10; line 23 10; move 9 16; line 23 16; move 9 22; curve 12 22 16 21 19 22; fill none; stroke #383631 1.65; cap round; join round }
+}

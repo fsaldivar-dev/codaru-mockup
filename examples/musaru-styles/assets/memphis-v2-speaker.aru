@@ -1,0 +1,9 @@
+// Musaru Memphis · original editable printed geometry.
+canvas 124 104
+background none
+rect block { at 72 44; size 70 76; corner 0; fill #233BC7; }
+path triangle { move 6 10; line 65 10; line 6 70; close; fill #F3868F; }
+circle speaker { at 72 42; radius 22; fill #FFF9EC; }
+circle core { at 72 42; radius 7; fill #20212A; }
+path foot { move 25 90; line 112 90; fill none; stroke #20212A 4; cap round; }
+path arch { move 7 50; curve 7 100 48 100 48 66; fill none; stroke #F7D85B 8; cap round; }

@@ -1,0 +1,9 @@
+// Musaru Dark Aero · original editable hi-fi vector.
+canvas 64 64
+background none
+gradient steel linear 90 { stop 0 #E1EAF1; stop 0.27 #6D7C8A; stop 0.49 #AEBBC6; stop 0.51 #3B4855; stop 1 #B3C1CD }
+gradient piano linear 90 { stop 0 #3D4955; stop 0.43 #171D27; stop 0.46 #070A0F; stop 1 #151D28 }
+gradient ice linear 90 { stop 0 #DCFCFF; stop 0.43 #67CBE7; stop 0.48 #1B6B91; stop 1 #082E47 }
+rect slot { at 32 31; size 50 47; corner 6; fill piano; }
+path lines { move 17 20; line 45 20; move 17 30; line 45 30; move 17 40; line 34 40; fill none; stroke #B5C8D4 3; cap round; }
+circle led { at 44 43; radius 3; fill #83E8FF; }

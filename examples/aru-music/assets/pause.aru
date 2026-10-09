@@ -1,0 +1,6 @@
+// Musaru controls · original curves generated for this prototype
+canvas 48 48
+background none
+group pause {
+rect stemA { at 18 24; size 7 26; corner 3; fill #172723 }rect stemB { at 30 24; size 7 26; corner 3; fill #172723 }
+}

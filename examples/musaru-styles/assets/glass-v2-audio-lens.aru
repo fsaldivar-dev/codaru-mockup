@@ -1,0 +1,12 @@
+// Musaru Glass · original editable geometry; material is supplied by host nodes.
+canvas 300 310
+background none
+gradient lens linear 135 { stop 0 #F8FDFFDD; stop 0.35 #B5E4F780; stop 0.7 #458DA7A0; stop 1 #D9F3FFCC }
+gradient rim linear 90 { stop 0 #FFFFFF; stop 0.45 #D4F2FF; stop 0.55 #80ABC0; stop 1 #E3F8FF }
+ellipse rearLens { at 174 142; size 229 262; fill lens; stroke #D4F2FFBB 1.5; }
+ellipse frontLens { at 131 158; size 224 264; fill lens; stroke #FFFFFFDD 2; }
+path upperReflection { move 57 104; curve 69 45 137 15 184 66; fill none; stroke #FFFFFFDD 4; cap round; }
+path lowerReflection { move 72 249; curve 131 298 198 245 216 204; fill none; stroke #D4F3FF 3; cap round; }
+path soundStem { move 130 201; line 130 110; line 183 99; line 183 183; fill none; stroke #F7FDFF 8; cap round; }
+ellipse noteA { at 114 203; size 37 25; fill rim; }
+ellipse noteB { at 167 185; size 37 25; fill rim; }

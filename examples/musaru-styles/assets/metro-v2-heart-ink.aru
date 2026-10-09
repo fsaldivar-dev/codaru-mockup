@@ -1,0 +1,4 @@
+// Musaru Frutiger Metro · original editable music poster geometry.
+canvas 48 48
+background none
+path heart { move 24 40; curve 6 31 1 19 11 10; curve 17 5 23 10 24 15; curve 28 6 36 6 41 13; curve 47 24 35 35 24 40; close; fill none; stroke #17232B 3.4; cap round; }

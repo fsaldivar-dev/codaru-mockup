@@ -1,0 +1,26 @@
+// Musaru · Sci-fi industrial skeuomorfo · original editable cover
+canvas 600 400
+background none
+gradient armor linear 100 { stop 0 #617471; stop 0.4 #354742; stop 0.5 #1F2F2F; stop 1 #4E6360 }
+gradient lcd linear 90 { stop 0 #A5BA85; stop 1 #58745F }
+path armor { move 107 53; line 443 53; line 492 100; line 492 293; line 441 347; line 107 347; line 60 293; line 60 100; close; fill armor; stroke #84968A 4; }
+rect lcd { at 276 184; size 323 167; corner 7; fill lcd; stroke #142521 8; }
+rect meter0 { at 150 205; size 15 24; corner 1; fill #233B32;  }
+rect meter1 { at 177 205; size 15 45; corner 1; fill #233B32;  }
+rect meter2 { at 204 205; size 15 65; corner 1; fill #233B32;  }
+rect meter3 { at 231 205; size 15 90; corner 1; fill #233B32;  }
+rect meter4 { at 258 205; size 15 55; corner 1; fill #233B32;  }
+rect meter5 { at 285 205; size 15 34; corner 1; fill #233B32;  }
+rect meter6 { at 312 205; size 15 77; corner 1; fill #233B32;  }
+rect meter7 { at 339 205; size 15 110; corner 1; fill #233B32;  }
+rect meter8 { at 366 205; size 15 66; corner 1; fill #233B32;  }
+rect meter9 { at 393 205; size 15 42; corner 1; fill #233B32;  }
+circle control0 { at 148 300; radius 15; fill #263C37; stroke #84968A 3; }
+circle control1 { at 213 300; radius 15; fill #263C37; stroke #84968A 3; }
+circle control2 { at 278 300; radius 15; fill #263C37; stroke #84968A 3; }
+circle control3 { at 343 300; radius 15; fill #263C37; stroke #84968A 3; }
+circle control4 { at 408 300; radius 15; fill #263C37; stroke #84968A 3; }
+circle bolt0 { at 93 87; radius 9; fill #D8C885; stroke #263C37 2; }
+circle bolt1 { at 457 87; radius 9; fill #D8C885; stroke #263C37 2; }
+circle bolt2 { at 93 314; radius 9; fill #D8C885; stroke #263C37 2; }
+circle bolt3 { at 457 314; radius 9; fill #D8C885; stroke #263C37 2; }

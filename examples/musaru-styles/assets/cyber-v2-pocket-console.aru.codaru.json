@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Cyberpunk · original editable nocturnal frequency geometry.\ncanvas 350 154\nbackground none\npath spine { move 14 4; line 342 4; line 342 136; line 329 149; line 111 149; line 111 105; line 4 105; line 4 14; close; fill #151E24; stroke #3B5058 1.5; cap round; }\npath edge { move 135 4; line 257 4; move 342 87; line 342 136; line 329 149; line 286 149; fill none; stroke #D5FF48 1.5; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 350 154\" width=\"350\" height=\"154\">\n  <path d=\"M14 4 L342 4 L342 136 L329 149 L111 149 L111 105 L4 105 L4 14 Z\" fill=\"#151E24\" stroke=\"#3B5058\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n  <path d=\"M135 4 L257 4 M342 87 L342 136 L329 149 L286 149\" fill=\"none\" stroke=\"#D5FF48\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "cyber-v2-pocket-console.aru"
+}

@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru controls · original curves generated for this prototype\ncanvas 48 48\nbackground none\ngroup volume {\npath speaker { move 7 20; line 15 20; line 24 12; line 24 36; line 15 28; line 7 28; close; fill none; stroke #F3F0E4 3; cap round; join round }path soundA { move 31 17; quad 38 24 31 31; fill none; stroke #F3F0E4 3; cap round; join round }path soundB { move 36 10; quad 48 24 36 38; fill none; stroke #F3F0E4 3; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <g>\n    <path d=\"M7 20 L15 20 L24 12 L24 36 L15 28 L7 28 Z\" fill=\"none\" stroke=\"#F3F0E4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M31 17 Q38 24 31 31\" fill=\"none\" stroke=\"#F3F0E4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M36 10 Q48 24 36 38\" fill=\"none\" stroke=\"#F3F0E4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "volume.aru"
+}

@@ -1,0 +1,7 @@
+// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.
+canvas 32 32
+background none
+group search {
+circle lente { at 14 13; radius 8; fill none; stroke #1C1917 1.8 }
+path mango { move 20 19; line 27 26; fill none; stroke #1C1917 1.8; cap round; join round }
+}

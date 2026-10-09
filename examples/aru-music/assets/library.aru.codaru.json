@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru controls · original curves generated for this prototype\ncanvas 48 48\nbackground none\ngroup library {\npath spineA { move 10 11; line 10 39; fill none; stroke #F3F0E4 3; cap round; join round }path spineB { move 19 9; line 19 39; fill none; stroke #F3F0E4 3; cap round; join round }path recordSleeve { move 29 10; line 37 36; quad 39 40 34 41; line 27 15; quad 25 11 29 10; fill none; stroke #F3F0E4 3; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <g>\n    <path d=\"M10 11 L10 39\" fill=\"none\" stroke=\"#F3F0E4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M19 9 L19 39\" fill=\"none\" stroke=\"#F3F0E4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M29 10 L37 36 Q39 40 34 41 L27 15 Q25 11 29 10\" fill=\"none\" stroke=\"#F3F0E4\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "library.aru"
+}

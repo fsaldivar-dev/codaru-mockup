@@ -1,0 +1,6 @@
+// Musaru POP: bespoke control, original editable paths
+canvas 48 48
+background none
+path heart { move 24 41; curve 11 32 3 25 6 15; curve 9 4 19 5 24 13; curve 29 3 40 5 43 15; curve 47 27 34 33 24 41; close; fill #FF91CC; stroke #252036 3; cap round; }
+path gleam { move 11 15; quad 13 10 17 13; fill none; stroke #FFF9E8 3; cap round; }
+

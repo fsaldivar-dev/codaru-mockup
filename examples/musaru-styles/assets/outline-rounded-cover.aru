@@ -1,0 +1,9 @@
+// Musaru · Outline redondeado · MusicArt · original editable cover
+canvas 600 400
+background none
+path headband { move 181 223; line 181 168; curve 181 32 419 32 419 168; line 419 223; fill none; stroke #2F5148 6; cap round; }
+rect earA { at 181 229; size 61 111; corner 28; fill none; stroke #2F5148 6; }
+rect earB { at 419 229; size 61 111; corner 28; fill none; stroke #2F5148 6; }
+path music { move 277 252; line 277 157; line 343 145; line 343 240; fill none; stroke #2F5148 6; cap round; }
+ellipse noteA { at 259 252; size 38 26; fill none; stroke #2F5148 6 }
+ellipse noteB { at 325 240; size 38 26; fill none; stroke #2F5148 6 }

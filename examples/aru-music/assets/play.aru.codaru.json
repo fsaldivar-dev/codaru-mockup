@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru controls · original curves generated for this prototype\ncanvas 48 48\nbackground none\ngroup play {\npath seed { move 16 10; quad 14 9 14 13; line 14 35; quad 14 40 18 37; line 36 26; quad 39 24 35 22; close; fill #172723 }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <g>\n    <path d=\"M16 10 Q14 9 14 13 L14 35 Q14 40 18 37 L36 26 Q39 24 35 22 Z\" fill=\"#172723\"/>\n  </g>\n</svg>",
+  "filename": "play.aru"
+}

@@ -72,7 +72,7 @@ test('borders sit inside the box, children are offset by the border, frames clip
   p.nodes.push(node('frame', { id: 'boxed', name: 'Con borde', parentId: null, x: 0, y: 900, width: 200, height: 100, stroke: '#ff0000', strokeWidth: 4, radius: 12, role: 'screen' }), node('rect', { id: 'inner', parentId: 'boxed', x: 0, y: 0, width: 300, height: 20, fill: '#00ff00' }));
   const svg = renderScreenToSVG(p, { screen: 'boxed' });
   assert.ok(svg.includes('stroke="#ff0000" stroke-width="4"')); assert.match(svg, /<path d="M12 2H188A10 10 0 0 1 198 12[^"]*" fill="none" stroke="#ff0000"/, 'stroke path inset by half the border');
-  assert.match(svg, /<path d="M14 4H294A10 10 0 0 1 304 14[^"]*" fill="#00ff00"/, 'child starts inside the border'); assert.match(svg, /<g clip-path="url\(#cboxed-k\d+\)">/);
+  assert.match(svg, /<path d="M14 4H294A10 10 0 0 1 304 14[^"]*" fill="#00ff00"/, 'child starts inside the border'); assert.match(svg, /<g clip-path="url\(#cboxed-[a-f0-9]+-k\d+\)">/);
   const phone = demoDevices(), shot = renderScreenToSVG(phone, { screen: screens(phone).find(s => s.skin?.startsWith('iphone'))!.id });
   assert.ok(shot.includes('>9:41</text>') && shot.includes('fill="#050506"'), 'status bar and Dynamic Island');
   assert.ok(!shot.includes('236, 72, 120') && !shot.includes('#ec4878'), 'no safe-area editing aids');

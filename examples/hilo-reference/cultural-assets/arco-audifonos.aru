@@ -1,0 +1,8 @@
+// HILO / arco-audifonos. Original geometry, contemporary interpretation; no attributed traditional meaning.
+canvas 32 32
+background none
+group arco-audifonos {
+resource "{\"key\": \"hilo-arco-audifonos\", \"kind\": \"ui-icon\", \"brand\": \"HILO\", \"purpose\": \"Elegir o conectar aud\u00edfonos; icono de trazo fino para 24 px.\", \"identity\": \"Fine contour, open space and folded ribbon gestures\", \"reusable\": true, \"tags\": [\"hilo\", \"jardin-de-voces\"]}"
+path arco { move 5 18; line 5 14; curve 5 1 27 1 27 14; line 27 18; fill none; stroke #383631 1.65; cap round; join round }
+path almohadillas { move 5 15; line 9 15; curve 11 17 11 24 9 26; line 5 26; close; move 27 15; line 23 15; curve 21 17 21 24 23 26; line 27 26; close; fill none; stroke #383631 1.65; cap round; join round }
+}

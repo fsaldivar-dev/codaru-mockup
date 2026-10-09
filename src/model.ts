@@ -1,6 +1,13 @@
+import { validateIdentityLab } from './identity';
+import {validateComments} from './comments';
+import { validateStylePackages } from './style-package';
+import { ContentCache, sameData } from './content-cache';
 import { defaultDesignTheme, effectiveTheme, resolveColor, safeColor, validateDesignThemes, validateNodeThemeRefs, type DesignTheme } from './themes';
 import { isIconReference } from './icon-data';
 import { deviceSkins } from './devices';
+import { validateImplementations } from './implementations';
+import type { AruSource, ImplementationReference } from './contracts';
+import { validateAruSource } from './aru-asset';
 import { isSanitizedSVG, validateAnimations, validateTransition, vectorLayers, type NodeAnimation, type Transition } from './motion';
 export type Kind = 'frame' | 'rect' | 'ellipse' | 'text' | 'button' | 'input' | 'card' | 'group' | 'image' | 'icon' | 'vector';
 export type Layout = 'free' | 'vertical' | 'horizontal';
@@ -15,6 +22,8 @@ export interface DesignNode {
   /** Custom gradient with any number of stops. Without it, fill and gradientEnd are the two stops. */
   gradientStops?: Array<{ color: string; position: number }>;
   text: string; fontSize: number; fontWeight: number; fontFamily: string; lineHeight: number;
+  /** Translation key supplied by the IDE; text remains the editable source/fallback. */
+  textKey?: string;
   textAlign: 'left' | 'center' | 'right';
   layout: Layout; padding: number; gap: number; sizing: 'fixed' | 'fill';
   /** Auto layout refinements; absent means the defaults: uniform padding, start, stretch, one line, fixed size. */
@@ -41,6 +50,8 @@ export interface DesignNode {
   themeId?: string; themeMode?: 'inherit' | Theme; kitId?: string;
   /** Sanitized SVG of an illustration (type vector). */
   svg?: string;
+  /** Original ARU source for round-trip authoring; not evaluated by this editor. */
+  aruSource?: AruSource;
   /** Keyframe animations, played in the prototype only. */
   animations?: NodeAnimation[];
   /** How the prototype moves to targetId. */
@@ -59,12 +70,33 @@ export interface DesignNode {
 }
 export interface Component {
   id: string; name: string; masterId: string; template: DesignNode[];
+  /** Optional per-platform locations, resolved by the IDE and shared by instances. */
+  implementations?: Record<string, ImplementationReference>;
+  /** Public controls bound to layers of this definition. Values remain on the layers. */
+  properties?: Record<string, ComponentProperty>;
   /** Variant set this definition belongs to, its display name and this member's axis values (Estado=Activo, Tamaño=M). */
   set?: string; setName?: string; variant?: Record<string, string>;
   /** Design-system notes: when to use it, good and bad practice. Shared by every member of a set. */
   doc?: ComponentDoc;
   /** Signature of the template when the notes were last saved; a different signature means the notes may be stale. */
   docHash?: string;
+}
+export type ComponentProperty =
+  | { type: 'text' | 'icon' | 'visibility'; targetId: string; label: string }
+  | { type: 'variant'; targetId: string; label: string; axis: string }
+  | { type: 'slot'; targetId: string; label: string; allowedComponents: string[] };
+export function validateComponentProperties(properties: unknown): asserts properties is Record<string, ComponentProperty> {
+  if (!properties || typeof properties !== 'object' || Array.isArray(properties) || Object.keys(properties).length > 32) throw new Error('Un componente admite hasta 32 propiedades públicas');
+  for (const [key, input] of Object.entries(properties)) {
+    if (!/^[A-Za-z][A-Za-z0-9_-]{0,63}$/.test(key) || ['constructor', 'prototype', '__proto__'].includes(key)) throw new Error('Clave de propiedad inválida: usa letras, números, guion o guion bajo (hasta 64 caracteres)');
+    if (!input || typeof input !== 'object' || Array.isArray(input)) throw new Error('Definición de propiedad inválida');
+    const prop = input as ComponentProperty;
+    if (!['text', 'icon', 'visibility', 'variant', 'slot'].includes(prop.type) || typeof prop.label !== 'string' || !prop.label.trim() || prop.label.length > 80 || typeof prop.targetId !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(prop.targetId)) throw new Error('Tipo, etiqueta o capa de propiedad inválidos');
+    if (Object.keys(prop).some(k => !['type', 'targetId', 'label', ...(prop.type === 'variant' ? ['axis'] : prop.type === 'slot' ? ['allowedComponents'] : [])].includes(k))) throw new Error('Campo desconocido en propiedad pública');
+    if (prop.type === 'slot' && (!Array.isArray(prop.allowedComponents) || !prop.allowedComponents.length || prop.allowedComponents.length > 32 || new Set(prop.allowedComponents).size !== prop.allowedComponents.length || prop.allowedComponents.some(id => typeof id !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(id)))) throw new Error('Un slot requiere entre 1 y 32 componentes permitidos, sin duplicados');
+    if (prop.type === 'variant') cleanVariant({ [prop.axis]: 'Base' });
+    if (prop.type === 'variant' && typeof prop.axis !== 'string') throw new Error('Eje de propiedad inválido');
+  }
 }
 /** A component page answers four questions: what it is, why, when and how. Guideline lines may end in `[ejemplo: ID]` to show a layer of the document beside them. */
 export interface ComponentDoc { description?: string; why?: string; when?: string; how?: string; do?: string; dont?: string; /** Older documents: when + why in one field. */ usage?: string; }
@@ -75,6 +107,9 @@ export interface Project {
   theme: Theme; themes: Record<Theme, Record<string, string>>;
   designThemes: Record<string, DesignTheme>; activeThemeId: string;
   nodes: DesignNode[]; components: Component[];
+  identityLab?: import('./contracts').IdentityLab;
+  comments?: import('./contracts').LayoutComments;
+  stylePackages?: Record<string, import('./contracts').DesignStylePackage>;
   designSystem?: DesignSystemNotes;
   /** Signature of the active theme when the notes were last saved. */
   designSystemHash?: string;
@@ -175,7 +210,7 @@ export function applyVersion(p: Project, payload: Partial<Project>) {
 }
 /** What changed between a version payload and the current design, by screen. */
 export function compareVersion(current: Project, payload: Partial<Project>) {
-  const sig = (p: Project, frame: DesignNode) => signature(subtree(p, frame.id).map(n => [n.id, n.type, n.name, n.text, n.x, n.y, n.width, n.height, n.fill, n.color, n.radius, n.fontSize]));
+  const sig = (p: Project, frame: DesignNode) => signature(subtree(p, frame.id).map(n => [n.id, n.type, n.name, n.text, n.textKey, n.x, n.y, n.width, n.height, n.fill, n.color, n.radius, n.fontSize]));
   const old = { ...current, nodes: payload.nodes ?? [], components: payload.components ?? [] } as Project;
   const oldFrames = new Map(old.nodes.filter(n => n.type === 'frame').map(n => [n.id, n])), newFrames = new Map(current.nodes.filter(n => n.type === 'frame').map(n => [n.id, n]));
   const added = [...newFrames.values()].filter(n => !oldFrames.has(n.id)).map(n => n.name), removed = [...oldFrames.values()].filter(n => !newFrames.has(n.id)).map(n => n.name);
@@ -236,6 +271,8 @@ export function absolute(p: Project, n: DesignNode) { return ancestors(p, n.id).
 export function isUnavailable(p: Project, n: DesignNode) { return n.hidden || n.locked || ancestors(p, n.id).some(a => a.hidden || a.locked); }
 export function updateNode(p: Project, id: string, patch: Partial<DesignNode>) {
   const n = p.nodes.find(n => n.id === id); if (!n) throw new Error('Elemento no encontrado');
+  // A plain SVG replacement no longer represents the stored ARU authoring source.
+  if ('svg' in patch && !('aruSource' in patch) && n.aruSource) patch = { ...patch, aruSource: undefined };
   if (n.instanceOf || n.componentKey) n.overrides = [...new Set([...(n.overrides || []), ...Object.keys(patch).filter(k => !['id', 'overrides'].includes(k))])];
   Object.assign(n, patch);
 }
@@ -294,39 +331,180 @@ export function layoutProject(p: Project) {
 }
 export function createComponent(p: Project, id: string) {
   const root = p.nodes.find(n => n.id === id); if (!root || root.type === 'frame') throw new Error('Selecciona un elemento o grupo dentro de una pantalla');
-  if (root.instanceOf || ancestors(p, id).some(n => n.instanceOf || n.componentId) || subtree(p, id).some(n => n.componentId || n.instanceOf)) throw new Error('Los componentes anidados quedan fuera de esta versión');
+  if (root.instanceOf || ancestors(p, id).some(n => n.instanceOf)) throw new Error('Edita el maestro o desvincula la instancia antes de crear un componente');
+  if (ancestors(p, id).some(n => n.componentId) || subtree(p, id).some(n => n.componentId)) throw new Error('Compón con instancias: los maestros deben vivir fuera de otros componentes');
   const c: Component = { id: uid(), name: root.name, masterId: id, template: [] }; root.componentId = c.id;
   p.components.push(c); syncComponents(p); return c;
 }
+
+export type ComponentSlot = Extract<ComponentProperty, { type: 'slot' }>;
+/** Slots belong to the nearest component boundary; a slot cannot reach inside another instance. */
+export function componentSlot(p: Project, n: DesignNode): ComponentSlot | undefined {
+  const owner = ancestors(p, n.id).find(up => up.componentId || up.instanceOf);
+  if (!owner) return;
+  const c = p.components.find(c => c.id === (owner.componentId ?? owner.instanceOf));
+  const key = owner.componentId ? n.id : n.componentKey;
+  return Object.values(c?.properties ?? {}).find((prop): prop is ComponentSlot => prop.type === 'slot' && prop.targetId === key);
+}
+const slotFields = ['x', 'y', 'width', 'height', 'sizing', 'minWidth', 'maxWidth', 'minHeight', 'maxHeight', 'hugWidth', 'hugHeight', 'name', 'hidden', 'locked'] as const;
+function slotPlacement(target: DesignNode, source: DesignNode) {
+  for (const key of slotFields) {
+    if (source[key] === undefined) delete (target as unknown as Record<string, unknown>)[key];
+    else (target as unknown as Record<string, unknown>)[key] = source[key];
+  }
+}
+const structuralKeys = new Set(['id', 'type', 'componentId', 'componentKey', 'instanceOf', 'parentId', 'overrides']);
+function copyOverrides(target: DesignNode, source: DesignNode, keys = source.overrides ?? []) {
+  for (const key of keys) if (!structuralKeys.has(key)) {
+    const value = (source as unknown as Record<string, unknown>)[key];
+    if (value === undefined) delete (target as unknown as Record<string, unknown>)[key];
+    else (target as unknown as Record<string, unknown>)[key] = clone(value);
+  }
+}
+/** Indexed, bounded traversal is also used before validation, on transaction drafts. */
+function componentTree(nodes: DesignNode[]) {
+  const byId = new Map(nodes.map(n => [n.id, n])), kids = childrenIndex({ nodes } as Project);
+  if (byId.size !== nodes.length) throw new Error('Elemento inválido o identificador repetido');
+  for (const n of nodes) {
+    const seen = new Set([n.id]); let up = n.parentId;
+    while (up) {
+      if (seen.has(up) || seen.size > 30) throw new Error('Jerarquía cíclica o demasiado profunda');
+      seen.add(up); const parent = byId.get(up);
+      if (!parent || !containerKinds.includes(parent.type)) throw new Error('Contenedor inválido');
+      up = parent.parentId;
+    }
+  }
+  const branch = (id: string): DesignNode[] => { const n = byId.get(id); return n ? [n, ...(kids.get(id) ?? []).flatMap(k => branch(k.id))] : []; };
+  const inInstance = (n: DesignNode) => { let up = n.parentId ? byId.get(n.parentId) : undefined; while (up) { if (up.instanceOf) return true; up = up.parentId ? byId.get(up.parentId) : undefined; } return false; };
+  return { byId, kids, branch, inInstance };
+}
+/** Dependencies come before consumers, including saved templates without a live master. */
+function componentOrder(p: Project) {
+  const definitions = new Map(p.components.map(c => [c.id, c])), edges = new Map(p.components.map(c => [c.id, new Set<string>()]));
+  const tree = componentTree(p.nodes);
+  for (const n of p.nodes) if (tree.inInstance(n) && !n.componentKey) throw new Error('Para añadir capas a una instancia, edita su maestro o desvincúlala');
+  const connect = (from: string, to: string) => { if (!definitions.has(to)) throw new Error('Referencia a componente inválida'); edges.get(from)!.add(to); };
+  for (const c of p.components) {
+    const master = tree.byId.get(c.masterId);
+    const ns = master?.componentId === c.id ? tree.branch(master.id) : c.template;
+    componentTree(ns.map(n => n.id === ns[0]?.id ? { ...n, parentId: null } : n));
+    if (c.properties !== undefined) validateComponentProperties(c.properties);
+    const targets = new Set<string>();
+    for (const prop of Object.values(c.properties ?? {})) if (prop.type === 'slot') {
+      if (targets.has(prop.targetId)) throw new Error('Una capa solo puede pertenecer a un slot'); targets.add(prop.targetId);
+      for (const allowed of prop.allowedComponents) connect(c.id, allowed);
+      const target = ns.find(n => n.id === prop.targetId);
+      if (target) {
+        if (!target.instanceOf || ancestors({ ...p, nodes: ns }, target.id).some(up => up.instanceOf)) throw new Error('El slot debe vincular una instancia propia del maestro');
+        if (!prop.allowedComponents.includes(target.instanceOf)) throw new Error('Incluye el contenido predeterminado entre los componentes permitidos del slot');
+      }
+    }
+    for (const n of ns) if (n.instanceOf) connect(c.id, n.instanceOf);
+  }
+  // Instance-specific variant choices must not introduce recursion either.
+  for (const n of p.nodes) if (n.instanceOf) {
+    if (!definitions.has(n.instanceOf)) throw new Error('Referencia a componente inválida');
+    const slot = componentSlot(p, n); if (slot && n.overrides?.includes('instanceOf') && !slot.allowedComponents.includes(n.instanceOf)) throw new Error('El contenido actual no está permitido en el slot; restablécelo antes de cambiar su contrato');
+    if (n.overrides?.includes('instanceOf')) {
+      let up = n.parentId ? tree.byId.get(n.parentId) : undefined;
+      while (up) { if (up.instanceOf) connect(up.instanceOf, n.instanceOf); up = up.parentId ? tree.byId.get(up.parentId) : undefined; }
+    }
+  }
+  const visiting = new Set<string>(), done = new Set<string>(), ordered: Component[] = [];
+  function visit(id: string, depth: number) {
+    if (visiting.has(id)) throw new Error('Referencia cíclica entre componentes');
+    if (depth > 30) throw new Error('Composición de componentes demasiado profunda');
+    if (done.has(id)) return;
+    visiting.add(id); for (const dep of edges.get(id)!) visit(dep, depth + 1);
+    visiting.delete(id); done.add(id); ordered.push(definitions.get(id)!);
+  }
+  for (const c of p.components) visit(c.id, 0);
+  return ordered;
+}
+
+/** Keys belong to the closest containing instance; nested roots belong to the outer scope.
+ * Template values are inherited defaults. Only edits in this use become its overrides. */
+function rebuildInstance(p: Project, c: Component, instance: DesignNode, existing: DesignNode[]) {
+  const result: DesignNode[] = [];
+  function scope(source: DesignNode[], previous: DesignNode[], root: DesignNode, nested: boolean, chain: string[], owner: Component) {
+    if (chain.length > 30 || new Set(chain).size !== chain.length) throw new Error('Referencia cíclica o composición demasiado profunda');
+    const srcTree = componentTree(source.map(n => n === source[0] ? { ...n, parentId: null } : n));
+    const oldTree = componentTree(previous.map(n => n === previous[0] ? { ...n, parentId: null } : n));
+    const oldKeys = new Map<string, DesignNode>();
+    // The root itself is an instance; only its descendants' nested boundaries count here.
+    function scopedKeys(n: DesignNode) {
+      for (const k of oldTree.kids.get(n.id) ?? []) {
+        if (k.componentKey) { if (oldKeys.has(k.componentKey)) throw new Error('Para duplicar capas dentro de una instancia, edita su maestro'); oldKeys.set(k.componentKey, k); }
+        if (!k.instanceOf) scopedKeys(k);
+      }
+    }
+    if (previous[0]) scopedKeys(previous[0]);
+    function copy(src: DesignNode, parentId: string | null, isRoot = false) {
+      const key = nested ? src.componentKey ?? src.id : src.id;
+      const old = isRoot ? previous[0] : oldKeys.get(key);
+      const fresh = clone(src); fresh.id = isRoot ? root.id : old?.id ?? uid(); fresh.parentId = parentId;
+      fresh.componentKey = isRoot ? root.componentKey : key; delete fresh.componentId; delete fresh.overrides;
+      if (old) { copyOverrides(fresh, old); if (old.overrides?.length) fresh.overrides = [...old.overrides]; }
+      if (isRoot) Object.assign(fresh, { instanceOf: root.instanceOf, x: root.x, y: root.y });
+      if (!isRoot && src.instanceOf) {
+        const slot = Object.values(owner.properties ?? {}).find((prop): prop is ComponentSlot => prop.type === 'slot' && prop.targetId === key);
+        let branch = srcTree.branch(src.id), usingKeys = true, previousBranch = old ? oldTree.branch(old.id) : [];
+        if (old?.instanceOf && old.instanceOf !== src.instanceOf && !old.overrides?.includes('instanceOf')) {
+          const before = componentOf(p, old.instanceOf), after = componentOf(p, src.instanceOf);
+          if (slot || (before.set && before.set === after.set && after.variant)) {
+            // A master switched its nested variant. Rebase this use's keys before inheriting it.
+            const local = { ...p, nodes: clone(previousBranch) };
+            replaceInstance(local, old.id, after.id, !!slot, false); previousBranch = local.nodes;
+          }
+        }
+        if (old?.overrides?.includes('instanceOf') && old.instanceOf !== src.instanceOf) {
+          const chosen = p.components.find(d => d.id === old.instanceOf), base = p.components.find(d => d.id === src.instanceOf);
+          if (!chosen || (slot ? !slot.allowedComponents.includes(chosen.id) : !base?.set || chosen.set !== base.set)) throw new Error('Reemplazo anidado inválido: restablece el contenido antes de quitar el slot o su opción');
+          branch = clone(chosen.template); if (slot) slotPlacement(branch[0], src); else copyOverrides(branch[0], src);
+          Object.assign(branch[0], { x: src.x, y: src.y }); usingKeys = false; fresh.instanceOf = chosen.id;
+        }
+        scope(branch, previousBranch, fresh, usingKeys, [...chain, fresh.instanceOf!], componentOf(p, fresh.instanceOf!));
+        return;
+      }
+      result.push(fresh); if (result.length > 3000) throw new Error('La composición supera el límite de 3000 capas');
+      for (const child of srcTree.kids.get(src.id) ?? []) copy(child, fresh.id);
+    }
+    copy(source[0], root.parentId, true);
+  }
+  scope(c.template, existing, { ...instance, componentKey: instance.componentKey ?? c.template[0].id }, false, [c.id], c);
+  return result;
+}
+
 export function instantiate(p: Project, componentId: string, parentId: string | null, x: number, y: number): string {
   const c = p.components.find(c => c.id === componentId); if (!c) throw new Error('Componente no encontrado');
-  const map = new Map(c.template.map(n => [n.id, uid()]));
-  for (const src of c.template) {
-    const n = clone(src); n.id = map.get(src.id)!; n.componentKey = src.id; delete n.componentId;
-    n.parentId = src.id === c.template[0].id ? parentId : map.get(src.parentId!)!;
-    if (src.id === c.template[0].id) { n.instanceOf = c.id; n.x = x; n.y = y; n.name = c.name; }
-    p.nodes.push(n);
-  }
-  return map.get(c.template[0].id)!;
+  const parent = parentId ? p.nodes.find(n => n.id === parentId) : undefined;
+  if (parent && (parent.instanceOf || ancestors(p, parent.id).some(n => n.instanceOf))) throw new Error('Para añadir capas a una instancia, edita su maestro o desvincúlala');
+  const root = { ...clone(c.template[0]), id: uid(), instanceOf: c.id, parentId, x, y, name: c.name };
+  const rebuilt = rebuildInstance(p, c, root, []);
+  if (p.nodes.length + rebuilt.length > 3000) throw new Error('La composición supera el límite de 3000 capas');
+  p.nodes.push(...rebuilt); return root.id;
 }
 export function syncComponents(p: Project) {
-  for (const c of p.components) {
-    const master = p.nodes.find(n => n.id === c.masterId && n.componentId === c.id);
-    if (master) { c.name = master.name; c.template = clone(subtree(p, master.id)); c.template[0].parentId = null; c.template[0].x = 0; c.template[0].y = 0; for (const n of c.template) { delete n.componentId; delete n.overrides; } }
-    for (const instance of p.nodes.filter(n => n.instanceOf === c.id)) {
-      const existing = subtree(p, instance.id); const rootKey = c.template[0].id;
-      const map = new Map(c.template.map(src => [src.id, src.id === rootKey ? instance.id : existing.find(n => n.componentKey === src.id)?.id || uid()]));
-      const rebuilt = c.template.map(src => {
-        const old = existing.find(n => n.id === map.get(src.id)); const fresh = clone(src);
-        fresh.id = map.get(src.id)!; fresh.componentKey = src.id; delete fresh.componentId;
-        fresh.parentId = src.id === rootKey ? instance.parentId : map.get(src.parentId!)!;
-        if (old) { for (const key of old.overrides || []) if (!['id', 'componentId', 'componentKey', 'instanceOf', 'parentId'].includes(key)) (fresh as unknown as Record<string, unknown>)[key] = (old as unknown as Record<string, unknown>)[key]; fresh.overrides = old.overrides; }
-        if (src.id === rootKey) { fresh.x = instance.x; fresh.y = instance.y; fresh.instanceOf = c.id; }
-        return fresh;
-      });
-      const ids = new Set(existing.map(n => n.id)); const insertion = p.nodes.findIndex(n => n.id === instance.id);
-      p.nodes = p.nodes.filter(n => !ids.has(n.id)); p.nodes.splice(insertion, 0, ...rebuilt);
+  function refresh(nodes: DesignNode[], only?: string) {
+    const tree = componentTree(nodes), replacements = new Map<string, DesignNode[]>(), removed = new Set<string>();
+    for (const instance of nodes) if (instance.instanceOf && (!only || instance.instanceOf === only) && !tree.inInstance(instance)) {
+      const existing = tree.branch(instance.id), c = p.components.find(c => c.id === instance.instanceOf);
+      if (!c) throw new Error('Referencia a componente inválida');
+      const rebuilt = rebuildInstance(p, c, instance, existing);
+      replacements.set(instance.id, rebuilt); for (const n of existing) removed.add(n.id);
     }
+    const next = nodes.flatMap(n => replacements.get(n.id) ?? (removed.has(n.id) ? [] : [n]));
+    if (next.length > 3000) throw new Error('La composición supera el límite de 3000 capas');
+    return next;
+  }
+  for (const c of componentOrder(p)) {
+    const master = p.nodes.find(n => n.id === c.masterId && n.componentId === c.id);
+    if (master) {
+      c.name = master.name; c.template = clone(subtree(p, master.id));
+      c.template[0].parentId = null; c.template[0].x = 0; c.template[0].y = 0;
+      delete c.template[0].componentId; delete c.template[0].overrides;
+    } else c.template = refresh(c.template);
+    p.nodes = refresh(p.nodes, c.id);
   }
 }
 const variantText = (value: unknown): value is string => typeof value === 'string' && value.trim().length > 0 && value.length <= 40 && !/[=,]/.test(value);
@@ -352,7 +530,8 @@ export function mergeNotes<T extends object>(current: T | undefined, patch: unkn
 }
 /** Small stable hash (FNV-1a) so documents can tell whether a component or theme changed after being documented. */
 export function signature(value: unknown): string { const text = JSON.stringify(value); let h = 0x811c9dc5; for (let i = 0; i < text.length; i++) { h ^= text.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); }
-export const templateSignature = (c: Component) => signature(c.template.map(n => [n.type, n.name, n.text, n.fill, n.color, n.stroke, n.strokeWidth, Math.round(n.width), Math.round(n.height), n.radius, n.fontSize, n.fontWeight, n.fontFamily, n.layout, n.gap, n.padding, n.opacity, n.shadow, n.gradient, n.svg?.length ?? 0, n.animations?.length ?? 0, n.iconName]));
+const visualTemplateSignature = (c: Component) => signature(c.template.map(n => [n.type, n.name, n.text, n.textKey, n.fill, n.color, n.stroke, n.strokeWidth, Math.round(n.width), Math.round(n.height), n.radius, n.fontSize, n.fontWeight, n.fontFamily, n.layout, n.gap, n.padding, n.opacity, n.shadow, n.gradient, n.svg?.length ?? 0, n.animations?.length ?? 0, n.iconName]));
+export const templateSignature = (c: Component) => c.properties ? signature([visualTemplateSignature(c), c.properties]) : visualTemplateSignature(c);
 export const themeSignature = (p: Project) => { const t = p.designThemes[p.activeThemeId]; return signature(t ? [t.id, t.modes.light.colors, t.modes.dark.colors, t.modes.light.typography, t.modes.light.radii, Object.keys(t.modes.light.gradients)] : null); };
 /** True when the component changed after its notes were written. */
 export const docStale = (c: Component) => !!c.doc && !!c.docHash && c.docHash !== templateSignature(c);
@@ -405,7 +584,7 @@ export function createVariant(p: Project, componentId: string, variant: Record<s
   }
   const ns = subtree(p, master.id), map = new Map(ns.map(n => [n.id, uid()]));
   for (const original of ns) {
-    const n = clone(original); n.id = map.get(original.id)!; n.parentId = map.get(original.parentId!) ?? original.parentId; delete n.componentId; delete n.overrides;
+    const n = clone(original); n.id = map.get(original.id)!; n.parentId = map.get(original.parentId!) ?? original.parentId; delete n.componentId;
     if (n.targetId && map.has(n.targetId)) n.targetId = map.get(n.targetId)!;
     if (original.id === master.id) { n.parentId = containerId; n.x = master.x + master.width + 24; n.name = `${c.setName} / ${variantLabel(target)}`; }
     p.nodes.push(n);
@@ -413,6 +592,8 @@ export function createVariant(p: Project, componentId: string, variant: Record<s
   layoutNode(p, container);
   const created = createComponent(p, map.get(master.id)!);
   created.set = c.set; created.setName = c.setName; created.variant = target;
+  if (c.implementations) created.implementations = clone(c.implementations);
+  if (c.properties) created.properties = Object.fromEntries(Object.entries(c.properties).map(([key, prop]) => [key, { ...prop, targetId: map.get(prop.targetId) ?? prop.targetId }]));
   return { componentId: created.id, masterId: created.masterId, containerId };
 }
 /** Point an instance at the member of its set that matches these values, keeping overrides by layer name and the instance id. */
@@ -422,27 +603,100 @@ export function switchVariant(p: Project, instanceId: string, variant: Record<st
   const target = { ...(c.variant ?? {}), ...cleanVariant(variant) };
   const next = variantSet(p, c.set).find(s => Object.entries(target).every(([axis, value]) => (s.variant ?? {})[axis] === value));
   if (!next) throw new Error(`No hay una variante ${variantLabel(target)} en ${c.setName ?? c.name}`);
-  if (next.id === c.id) return c.id;
-  const old = subtree(p, inst.id), kept = old.filter(n => n.overrides?.length).map(n => ({ node: n, src: n.id === inst.id ? c.template[0] : c.template.find(t => t.id === n.componentKey) }));
-  const index = p.nodes.findIndex(n => n.id === inst.id), ids = new Set(old.map(n => n.id));
-  p.nodes = p.nodes.filter(n => !ids.has(n.id));
-  const rootId = instantiate(p, next.id, inst.parentId, inst.x, inst.y), fresh = subtree(p, rootId);
-  p.nodes = p.nodes.filter(n => !fresh.includes(n)); p.nodes.splice(index, 0, ...fresh);
-  for (const n of fresh) if (n.parentId === rootId) n.parentId = inst.id;
-  fresh[0].id = inst.id;
-  for (const { node: oldNode, src } of kept) {
-    const match = oldNode.id === inst.id ? fresh[0] : src ? fresh.find(f => { const t = next.template.find(t => t.id === f.componentKey); return !!t && t.type === src.type && t.name === src.name; }) : undefined;
-    if (!match) continue;
-    const fields = (oldNode.overrides ?? []).filter(key => !['id', 'componentId', 'componentKey', 'instanceOf', 'parentId', 'x', 'y'].includes(key) && !(oldNode.id === inst.id && key === 'name' && oldNode.name === c.name));
-    for (const key of fields) (match as unknown as Record<string, unknown>)[key] = (oldNode as unknown as Record<string, unknown>)[key];
-    if (fields.length) match.overrides = fields;
+  const slot = componentSlot(p, inst);
+  if (slot && !slot.allowedComponents.includes(next.id)) throw new Error('Esa variante no está permitida en el slot');
+  return replaceInstance(p, instanceId, next.id, !!slot);
+}
+export function switchSlot(p: Project, instanceId: string, componentId: string) {
+  const inst = p.nodes.find(n => n.id === instanceId), slot = inst && componentSlot(p, inst);
+  if (!inst?.instanceOf || !slot || !slot.allowedComponents.includes(componentId)) throw new Error('Elige un componente permitido para este slot');
+  return replaceInstance(p, instanceId, componentId, true);
+}
+/** Shared replacement. Only public variant/slot entry points authorize a choice. */
+function replaceInstance(p: Project, instanceId: string, componentId: string, slotMode: boolean, markChoice = true) {
+  const inst = p.nodes.find(n => n.id === instanceId)!;
+  const c = componentOf(p, inst.instanceOf!), next = componentOf(p, componentId);
+  if (next.id === c.id) {
+    if (slotMode && markChoice && ancestors(p, inst.id).some(n => n.instanceOf)) inst.overrides = [...new Set([...(inst.overrides ?? []), 'instanceOf'])];
+    return c.id;
   }
+  const old = subtree(p, inst.id), index = p.nodes.findIndex(n => n.id === inst.id), ids = new Set(old.map(n => n.id));
+  let fresh = rebuildInstance(p, next, { ...inst, instanceOf: next.id }, []);
+  // Full layer paths disambiguate repeated labels/buttons in different nested instances.
+  const paths = (ns: DesignNode[], definition: Component) => {
+    const tree = componentTree(ns.map(n => n === ns[0] ? { ...n, parentId: null } : n)), map = new Map<string, DesignNode>();
+    function visit(n: DesignNode, path: string, owner: Component) {
+      map.set(path, n); const counts = new Map<string, number>();
+      for (const child of tree.kids.get(n.id) ?? []) {
+        const src = owner.template.find(t => t.id === child.componentKey) ?? child;
+        const slot = Object.entries(owner.properties ?? {}).find(([,prop]) => prop.type === 'slot' && prop.targetId === child.componentKey);
+        const key = JSON.stringify(slot ? ['slot', slot[0]] : [src.type, src.name]), count = counts.get(key) ?? 0; counts.set(key, count + 1);
+        visit(child, `${path}/${key}:${count}`, child.instanceOf ? componentOf(p, child.instanceOf) : owner);
+      }
+    }
+    visit(ns[0], '', definition); return map;
+  };
+  const previous = paths(old, c), remap = new Map<string, string>();
+  for (const [path, oldNode] of previous) if (path && oldNode.instanceOf && oldNode.overrides?.includes('instanceOf')) {
+    const match = paths(fresh, next).get(path); if (!match?.instanceOf || match.instanceOf === oldNode.instanceOf) continue;
+    const chosen = componentOf(p, oldNode.instanceOf), base = componentOf(p, match.instanceOf);
+    const slot = componentSlot({ ...p, nodes: fresh }, match);
+    if (slot ? !slot.allowedComponents.includes(chosen.id) : !base.set || base.set !== chosen.set) continue;
+    const branch = subtree({ nodes: fresh } as Project, match.id), gone = new Set(branch.map(n => n.id)), at = fresh.indexOf(match);
+    fresh = fresh.filter(n => !gone.has(n.id)); const replaced = rebuildInstance(p, chosen, { ...match, instanceOf: chosen.id }, []); if (slot) slotPlacement(replaced[0], match); fresh.splice(at, 0, ...replaced);
+  }
+  for (const [path, match] of paths(fresh, next)) {
+    const oldNode = previous.get(path); if (!oldNode || oldNode.type !== match.type) continue;
+    remap.set(match.id, oldNode.id);
+    const fields = (oldNode.overrides ?? []).filter(key => !(slotMode && oldNode.id === inst.id && key === 'instanceOf') && !(key === 'instanceOf' && oldNode.instanceOf !== match.instanceOf) && !['x', 'y'].includes(key) && !(oldNode.id === inst.id && key === 'name' && oldNode.name === c.name));
+    copyOverrides(match, oldNode, fields);
+    if (fields.length) match.overrides = fields;
+    if (oldNode !== old[0] && fields.includes('instanceOf')) match.instanceOf = oldNode.instanceOf;
+  }
+  for (const n of fresh) { n.id = remap.get(n.id) ?? n.id; n.parentId = remap.get(n.parentId!) ?? n.parentId; }
+  if (slotMode) {
+    slotPlacement(fresh[0], inst);
+    // A master owns the slot box; an instance inherits that box unless explicitly resized.
+    if (markChoice && !ancestors(p, inst.id).some(n => n.instanceOf)) fresh[0].overrides = [...new Set([...(fresh[0].overrides ?? []), ...slotFields.filter(key => !['x', 'y'].includes(key))])];
+  }
+  fresh[0].componentKey = inst.componentKey;
+  if (markChoice && ancestors(p, inst.id).some(n => n.instanceOf)) fresh[0].overrides = [...new Set([...(fresh[0].overrides ?? []), 'instanceOf'])];
+  p.nodes = p.nodes.filter(n => !ids.has(n.id)); p.nodes.splice(index, 0, ...fresh);
   return next.id;
 }
-export function detach(p: Project, id: string) { for (const n of subtree(p, id)) { delete n.instanceOf; delete n.componentKey; delete n.overrides; } }
+export function detach(p: Project, id: string) {
+  if (ancestors(p, id).some(n => n.instanceOf)) throw new Error('Desvincula primero la instancia exterior o edita su maestro');
+  const ns = subtree(p, id), tree = componentTree(ns.map(n => n === ns[0] ? { ...n, parentId: null } : n));
+  function visit(n: DesignNode) {
+    if (n.id !== id && n.instanceOf) {
+      const c = componentOf(p, n.instanceOf); n.componentKey = c.template[0].id;
+      // Defaults inherited from the outer component become local changes on this independent use.
+      const keyed = (nodes: DesignNode[]) => {
+        const kids = childrenIndex({ nodes } as Project), entries = new Map<string, DesignNode>();
+        function walk(current: DesignNode, scope: string[]) {
+          entries.set(current === nodes[0] ? 'root' : JSON.stringify([...scope, current.componentKey]), current);
+          const next = current !== nodes[0] && current.instanceOf ? [...scope, current.componentKey!] : scope;
+          for (const child of kids.get(current.id) ?? []) walk(child, next);
+        }
+        walk(nodes[0], []); return entries;
+      };
+      const defaults = keyed(rebuildInstance(p, c, n, []));
+      for (const [key, child] of keyed(subtree(p, n.id))) {
+        const src = defaults.get(key);
+        if (src) child.overrides = [...new Set([...(child.overrides ?? []), ...Object.keys(child).filter(k => !structuralKeys.has(k) && JSON.stringify(child[k as keyof DesignNode]) !== JSON.stringify(src[k as keyof DesignNode]))])];
+      }
+      return;
+    }
+    delete n.instanceOf; delete n.componentKey; delete n.overrides;
+    for (const child of tree.kids.get(n.id) ?? []) visit(child);
+  }
+  if (ns[0]) visit(ns[0]);
+}
 /** Delete a definition nobody uses, with its master; a variants container left empty goes with it. Instances keep a definition alive. */
 export function removeComponent(p: Project, componentId: string) {
-  const c = componentOf(p, componentId), used = p.nodes.filter(n => n.instanceOf === c.id).length;
+  const c = componentOf(p, componentId);
+  if (p.components.some(owner => Object.values(owner.properties ?? {}).some(prop => prop.type === 'slot' && prop.allowedComponents.includes(componentId)))) throw new Error('Quita el componente de los slots que lo permiten antes de borrarlo');
+  const used = p.nodes.filter(n => n.instanceOf === c.id).length + p.components.filter(other => other.id !== c.id && !p.nodes.some(n => n.id === other.masterId && n.componentId === other.id)).reduce((count, other) => count + other.template.filter(n => n.instanceOf === c.id).length, 0);
   if (used) throw new Error(`«${c.name}» tiene ${used} ${used === 1 ? 'instancia' : 'instancias'}: sepáralas o elimínalas antes de borrar el componente`);
   const master = p.nodes.find(n => n.id === c.masterId && n.componentId === c.id);
   if (master) {
@@ -485,6 +739,12 @@ export function ungroup(p: Project, id: string) {
   const kids = children(p, id); for (const k of kids) { k.parentId = n.parentId; k.x += n.x; k.y += n.y; }
   p.nodes = p.nodes.filter(x => x.id !== id); return kids.map(k => k.id);
 }
+const validImages = new ContentCache<true>();
+function isLocalImage(value: string) {
+  if (validImages.get(value)) return true;
+  if (!/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(value)) return false;
+  validImages.set(value, true); return true;
+}
 export function validate(input: unknown, trusted = false): Project {
   if (!input || typeof input !== 'object') throw new Error('Archivo de proyecto inválido');
   const source = input as Record<string, unknown>;
@@ -514,7 +774,10 @@ export function validate(input: unknown, trusted = false): Project {
     p.version = 2; p.designThemes = { project: theme }; p.activeThemeId = 'project';
   }
   validateDesignThemes(p);
-  const overrideKeys = new Set([...Object.keys(node('rect')), 'radiusTR', 'radiusBR', 'radiusBL', 'componentId', 'instanceOf', 'componentKey', 'overrides', 'fillToken', 'materialToken', 'typographyToken', 'radiusToken', 'themeId', 'themeMode', 'kitId', 'iconPack', 'iconName', 'svg', 'animations', 'transition', 'gradientStops', 'device', 'fold', 'foldPair', 'safeArea', 'skin', 'paddingSides', 'justify', 'align', 'wrap', 'hugWidth', 'hugHeight', 'minWidth', 'maxWidth', 'minHeight', 'maxHeight']);
+  if(p.stylePackages!==undefined)validateStylePackages(p.stylePackages);
+  if(p.identityLab!==undefined)validateIdentityLab(p.identityLab);
+  if(p.comments!==undefined)validateComments(p.comments);
+  const overrideKeys = new Set([...Object.keys(node('rect')), 'radiusTR', 'radiusBR', 'radiusBL', 'componentId', 'instanceOf', 'componentKey', 'overrides', 'textKey', 'fillToken', 'materialToken', 'typographyToken', 'radiusToken', 'themeId', 'themeMode', 'kitId', 'iconPack', 'iconName', 'svg', 'aruSource', 'animations', 'transition', 'gradientStops', 'device', 'fold', 'foldPair', 'safeArea', 'skin', 'paddingSides', 'justify', 'align', 'wrap', 'hugWidth', 'hugHeight', 'minWidth', 'maxWidth', 'minHeight', 'maxHeight']);
   function validateNodes(ns: DesignNode[]) {
     const ids = new Set<string>();
     for (const n of ns) {
@@ -526,10 +789,11 @@ export function validate(input: unknown, trusted = false): Project {
       for (const key of ['radiusTR', 'radiusBR', 'radiusBL'] as const) if (n[key] !== undefined && (!Number.isFinite(n[key]) || n[key]! < 0 || n[key]! > 10000)) throw new Error('Radio inválido');
       if (n.width < 1 || n.height < 1 || n.fontSize < 1 || n.opacity < 0 || n.opacity > 100 || n.padding < 0 || n.gap < 0) throw new Error('Tamaño inválido');
       for (const key of ['name', 'text', 'image'] as const) if (typeof n[key] !== 'string') throw new Error('Contenido inválido');
+      if (n.textKey !== undefined && (typeof n.textKey !== 'string' || !n.textKey.trim() || n.textKey.length > 200 || /[\u0000-\u001f\u007f]/.test(n.textKey) || !['text','button','input'].includes(n.type))) throw new Error('textKey requiere una clave de 1–200 caracteres en un texto, botón o campo.');
       if ((n.type === 'icon' || n.iconPack !== undefined || n.iconName !== undefined) && !isIconReference(n.iconPack, n.iconName)) throw new Error('Referencia de icono inválida');
       for (const key of ['fill', 'color', 'stroke', 'gradientEnd'] as const) if (!safeColor(n[key])) throw new Error('Color inválido');
       if (!['none', 'linear', 'radial'].includes(n.gradient) || !['free', 'vertical', 'horizontal'].includes(n.layout) || !['fixed', 'fill'].includes(n.sizing) || !['left', 'center', 'right'].includes(n.textAlign) || !['system', 'serif', 'mono'].includes(n.fontFamily)) throw new Error('Estilo inválido');
-      if (n.image && !/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(n.image)) throw new Error('Solo se admiten imágenes locales PNG, JPEG, WebP o GIF');
+      if (n.image && !isLocalImage(n.image)) throw new Error('Solo se admiten imágenes locales PNG, JPEG, WebP o GIF');
       if (n.device !== undefined && (typeof n.device !== 'string' || !/^[a-z0-9][a-z0-9-]{0,63}$/.test(n.device))) throw new Error('Dispositivo inválido');
       if (n.fold !== undefined && (n.type !== 'frame' || !n.fold || typeof n.fold !== 'object' || Object.keys(n.fold).some(key => key !== 'axis' && key !== 'gap' && key !== 'panels') || (n.fold.panels !== undefined && n.fold.panels !== 2 && n.fold.panels !== 3) || !['vertical', 'horizontal'].includes(n.fold.axis) || !Number.isFinite(n.fold.gap) || n.fold.gap < 0 || n.fold.gap > 200)) throw new Error('Pliegue inválido: solo pantallas, axis vertical u horizontal y gap de 0 a 200.');
       if (n.foldPair !== undefined && (n.type !== 'frame' || typeof n.foldPair !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(n.foldPair) || n.foldPair === n.id)) throw new Error('Pantalla emparejada inválida.');
@@ -549,15 +813,17 @@ export function validate(input: unknown, trusted = false): Project {
         }
       }
       if ((n.type === 'vector') !== (n.svg !== undefined) || (n.svg !== undefined && !isSanitizedSVG(n.svg))) throw new Error('Ilustración inválida: importa el SVG desde el editor o con la operación vector.');
+      if (n.aruSource !== undefined) { if (n.type !== 'vector') throw new Error('La fuente ARU requiere una ilustración vectorial.'); validateAruSource(n.aruSource); }
       if (n.transition !== undefined) validateTransition(n.transition);
       if (n.animations !== undefined) validateAnimations(n.animations, n.svg ? vectorLayers(n.svg).map(layer => layer.id) : []);
       if (n.overrides && (!Array.isArray(n.overrides) || n.overrides.some(k => typeof k !== 'string' || !overrideKeys.has(k)))) throw new Error('Propiedades de instancia inválidas');
     }
+    const nodesById = new Map(ns.map(n => [n.id, n]));
     for (const n of ns) {
-      if (n.parentId !== null && !ns.some(x => x.id === n.parentId && containerKinds.includes(x.type))) throw new Error('Contenedor inválido');
+      if (n.parentId !== null && !containerKinds.includes(nodesById.get(n.parentId)?.type as Kind)) throw new Error('Contenedor inválido');
       if (n.type === 'frame' && n.parentId) throw new Error('Las pantallas deben estar en el lienzo');
       const seen = new Set([n.id]); let parent = n.parentId; let depth = 0;
-      while (parent) { if (seen.has(parent) || ++depth > 30) throw new Error('Jerarquía cíclica o demasiado profunda'); seen.add(parent); parent = ns.find(x => x.id === parent)?.parentId || null; }
+      while (parent) { if (seen.has(parent) || ++depth > 30) throw new Error('Jerarquía cíclica o demasiado profunda'); seen.add(parent); parent = nodesById.get(parent)?.parentId || null; }
     }
   }
   validateNodes(p.nodes); const componentIds = new Set<string>();
@@ -566,10 +832,12 @@ export function validate(input: unknown, trusted = false): Project {
     if (c.set !== undefined && (typeof c.set !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(c.set))) throw new Error('Conjunto de variantes inválido');
     if (c.setName !== undefined && (typeof c.setName !== 'string' || c.setName.length > 80)) throw new Error('Nombre de conjunto inválido');
     if (c.variant !== undefined) cleanVariant(c.variant);
+    if (c.properties !== undefined) validateComponentProperties(c.properties);
     if (c.doc !== undefined) mergeNotes(undefined, c.doc, 'doc');
+    if (c.implementations !== undefined) validateImplementations(c.implementations);
     if (c.docHash !== undefined && (typeof c.docHash !== 'string' || c.docHash.length > 64)) throw new Error('Firma de documentación inválida');
     componentIds.add(c.id); validateNodes(c.template);
-    if (c.template.filter(n => !n.parentId).length !== 1) throw new Error('Plantilla de componente inválida');
+    if (c.template.filter(n => !n.parentId).length !== 1 || c.template[0].parentId !== null || c.template[0].instanceOf || c.template.some(n => n.componentId)) throw new Error('Plantilla de componente inválida');
     const master = p.nodes.find(n => n.id === c.masterId);
     const context = effectiveTheme(p, master);
     const templateProject = { ...p, nodes: c.template, activeThemeId: context.id, theme: context.mode };
@@ -579,11 +847,19 @@ export function validate(input: unknown, trusted = false): Project {
   for (const n of p.nodes) {
     validateNodeThemeRefs(p, n, byId);
     if ((n.instanceOf && !componentIds.has(n.instanceOf)) || (n.componentId && !componentIds.has(n.componentId))) throw new Error('Referencia a componente inválida');
-    if (n.instanceOf) { for (let up = n.parentId ? byId.get(n.parentId) : undefined, hops = 0; up && hops < 64; up = up.parentId ? byId.get(up.parentId) : undefined, hops++) if (up.instanceOf || up.componentId) throw new Error('Componentes anidados no admitidos'); }
+    if (n.componentId && (n.instanceOf || ancestors(p, n.id).some(up => up.instanceOf || up.componentId))) throw new Error('Compón con instancias: los maestros deben vivir fuera de otros componentes');
     if (n.targetId !== null && !frames.has(n.targetId)) throw new Error('Destino de navegación inválido');
   }
+  for (const c of p.components) for (const n of c.template) if (n.instanceOf && !componentIds.has(n.instanceOf)) throw new Error('Referencia a componente inválida');
+  componentOrder(p);
   return p;
 }
+/** Opaque validated transaction. Its snapshot is never exposed by reference. */
+export interface PreparedTransaction { getDocument(): Project; }
+const preparedTransactions = new WeakMap<PreparedTransaction, Project>();
+const normalizedProjects = new WeakSet<Project>();
+/** @internal Whether component sync and layout already ran for this committed snapshot. */
+export const isNormalizedProject = (p: Project) => normalizedProjects.has(p);
 export class Store {
   project: Project; undoStack: Project[] = []; redoStack: Project[] = [];
   private cache = ''; private cacheFor: Project | undefined;
@@ -592,12 +868,23 @@ export class Store {
   /** Forget the cached serialization after an in-place change that is not a commit (view state kept in the document). */
   touch() { this.cacheFor = undefined; }
   serialize() { if (this.cacheFor !== this.project) { this.cache = JSON.stringify(this.project); this.cacheFor = this.project; } return this.cache; }
-  commit(edit: (p: Project) => void) {
-    const before = this.project, beforeSerialized = this.serialize(), draft = clone(before);
-    try { edit(draft); syncComponents(draft); layoutProject(draft); this.project = validate(draft); }
-    catch (e) { this.project = before; throw e; }
-    if (this.serialize() !== beforeSerialized) { this.undoStack.push(before); if (this.undoStack.length > 60) this.undoStack.shift(); this.redoStack = []; }
+  prepare(edit: (p: Project) => void): PreparedTransaction {
+    const draft = clone(this.project);
+    edit(draft); syncComponents(draft); layoutProject(draft);
+    // validate clones again: a caller may have kept a reference to its mutable edit draft.
+    const next = validate(draft); normalizedProjects.add(next);
+    const prepared = Object.freeze({ getDocument: () => clone(next) });
+    preparedTransactions.set(prepared, next); return prepared;
   }
+  commitPrepared(prepared: PreparedTransaction) {
+    const next = preparedTransactions.get(prepared);
+    if (!next) throw new Error('Transacción inválida o ya aplicada.');
+    preparedTransactions.delete(prepared);
+    const before = this.project;
+    if (!sameData(before, next)) { this.undoStack.push(before); if (this.undoStack.length > 60) this.undoStack.shift(); this.redoStack = []; }
+    this.project = next;
+  }
+  commit(edit: (p: Project) => void) { this.commitPrepared(this.prepare(edit)); }
   undo() { const p = this.undoStack.pop(); if (p) { this.redoStack.push(this.project); this.project = p; } }
   redo() { const p = this.redoStack.pop(); if (p) { this.undoStack.push(this.project); this.project = p; } }
 }

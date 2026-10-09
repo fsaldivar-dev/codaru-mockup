@@ -1,0 +1,9 @@
+// HILO / anillo-album. Original geometry, contemporary interpretation; no attributed traditional meaning.
+canvas 32 32
+background none
+group anillo-album {
+resource "{\"key\": \"hilo-anillo-album\", \"kind\": \"ui-icon\", \"brand\": \"HILO\", \"purpose\": \"Abrir un \u00e1lbum musical; icono de trazo fino para 24 px.\", \"identity\": \"Fine contour, open space and folded ribbon gestures\", \"reusable\": true, \"tags\": [\"hilo\", \"jardin-de-voces\"]}"
+path disco { move 28 16; curve 28 32 4 32 4 16; curve 4 0 28 0 28 16; close; fill none; stroke #383631 1.65; cap round; join round }
+path eje { move 19 16; curve 19 20 13 20 13 16; curve 13 12 19 12 19 16; close; fill none; stroke #383631 1.65; cap round; join round }
+path surco { move 8 14; curve 9 10 11 8 15 8; move 24 18; curve 23 22 21 24 17 24; fill none; stroke #383631 1.65; cap round; join round }
+}

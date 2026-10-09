@@ -1,0 +1,8 @@
+// HILO / onda-volumen. Original geometry, contemporary interpretation; no attributed traditional meaning.
+canvas 32 32
+background none
+group onda-volumen {
+resource "{\"key\": \"hilo-onda-volumen\", \"kind\": \"ui-icon\", \"brand\": \"HILO\", \"purpose\": \"Volumen de audio bajo; icono de trazo fino para 24 px.\", \"identity\": \"Fine contour, open space and folded ribbon gestures\", \"reusable\": true, \"tags\": [\"hilo\", \"jardin-de-voces\"]}"
+path altavoz { move 5 12; line 10 12; line 18 6; line 18 26; line 10 20; line 5 20; close; fill none; stroke #383631 1.65; cap round; join round }
+path onda { move 23 10; curve 28 13 28 19 23 22; fill none; stroke #383631 1.65; cap round; join round }
+}

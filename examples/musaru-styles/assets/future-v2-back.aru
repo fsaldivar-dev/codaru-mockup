@@ -1,0 +1,4 @@
+// Musaru Future minimal · original editable precision geometry.
+canvas 48 48
+background none
+path arrow { move 25 10; line 11 24; line 25 38; move 11 24; line 39 24; fill none; stroke #142C38 2.5; cap round; }

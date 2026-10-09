@@ -1,0 +1,9 @@
+// Musaru Frutiger Aurora · original editable light and glass vector.
+canvas 282 32
+background none
+gradient ribbon linear 0 { stop 0 #887BD5; stop 0.3 #B1ACF6; stop 0.65 #8EE4D6; stop 1 #D8F9E8 }
+gradient crystal linear 90 { stop 0 #A7ADDE; stop 0.35 #6575AA; stop 0.39 #344F74; stop 1 #182840 }
+gradient edge linear 0 { stop 0 #F4E8FF; stop 0.5 #AABAF8; stop 1 #D4FFF1 }
+path well { move 5 21; curve 67 1 154 36 277 9; fill none; stroke #54678C 5; cap round; }
+path played { move 5 21; curve 37 11 64 12 106 18; fill none; stroke #C3F5DF 4; cap round; }
+ellipse light { at 106 18; size 11 11; fill #F2FFF7; }

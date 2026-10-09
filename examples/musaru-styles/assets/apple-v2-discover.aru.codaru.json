@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Apple minimal · original editable geometry, not SF Symbols.\ncanvas 48 48\nbackground none\npath star { move 24 5; curve 26 17 30 21 42 24; curve 30 27 26 31 24 43; curve 22 31 18 27 6 24; curve 18 21 22 17 24 5; close; fill none; stroke #68686D 2.5; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M24 5 C26 17 30 21 42 24 C30 27 26 31 24 43 C22 31 18 27 6 24 C18 21 22 17 24 5 Z\" fill=\"none\" stroke=\"#68686D\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "apple-v2-discover.aru"
+}

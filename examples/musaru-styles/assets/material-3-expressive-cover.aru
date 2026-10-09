@@ -1,0 +1,10 @@
+// Musaru · Material 3 Expressive · original editable cover
+canvas 600 400
+background none
+path flower { move 463.0 196.0; line 461.6 216.6; line 435.4 230.9; line 429.7 247.7; line 441.8 275.0; line 430.3 292.2; line 400.5 291.5; line 387.2 303.1; line 384.0 332.8; line 365.5 342.0; line 339.9 326.4; line 322.6 329.8; line 305.0 354.0; line 284.4 352.6; line 270.1 326.4; line 253.3 320.7; line 226.0 332.8; line 208.8 321.3; line 209.5 291.5; line 197.9 278.2; line 168.2 275.0; line 159.0 256.5; line 174.6 230.9; line 171.2 213.6; line 147.0 196.0; line 148.4 175.4; line 174.6 161.1; line 180.3 144.3; line 168.2 117.0; line 179.7 99.8; line 209.5 100.5; line 222.8 88.9; line 226.0 59.2; line 244.5 50.0; line 270.1 65.6; line 287.4 62.2; line 305.0 38.0; line 325.6 39.4; line 339.9 65.6; line 356.7 71.3; line 384.0 59.2; line 401.2 70.7; line 400.5 100.5; line 412.1 113.8; line 441.8 117.0; line 451.0 135.5; line 435.4 161.1; line 438.8 178.4; close; fill #A43A66;  }
+circle disc { at 305 196; radius 100; fill #DAE99D;  }
+circle groove { at 305 196; radius 70; fill none; stroke #3F213B 2; }
+circle label { at 305 196; radius 26; fill #FFDADF;  }
+circle hole { at 305 196; radius 7; fill #A43A66;  }
+circle smallSeed { at 101 299; radius 28; fill #DAE99D;  }
+rect rhythm { at 506 101; size 46 89; corner 24; fill #DAE99D;  }

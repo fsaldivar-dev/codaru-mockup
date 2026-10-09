@@ -1,8 +1,12 @@
 # Integrar piezas de Codaru en un IDE
 
+La dirección del proyecto y sus límites actuales están en [Arquitectura](ARCHITECTURE.md). Los contratos `EditorOperation`, `AgentRequest` y `AgentResponse` se exportan desde `codaru-mockup/core`, `codaru-mockup/modular` y el paquete raíz; los imports existentes siguen funcionando.
+
 Esta guía describe la API modular disponible desde `codaru-mockup` 0.2.0 (medidas de la 0.5.0) en los puntos de entrada `codaru-mockup/core` y `codaru-mockup/modular`. Desde el repositorio, compila el paquete con `npm run package:build`.
 
 Codaru separa el documento de su interfaz. El IDE decide dónde monta el lienzo, qué paneles utiliza y cómo los viste. Todas las piezas de una sesión comparten selección, historial, componentes, temas del diseño y operaciones de IA. No hay iframe en la integración modular ni un servidor Node necesario para ejecutar la app.
+
+La integración de [textos localizables](LOCALIZATION.md) agrega un fragmento `locale`, `textKey` en capas y catálogos proporcionados por el host, sin persistencia implícita. Ejemplo: `examples/localization-host.html`.
 
 ## Una sesión, varias piezas
 
@@ -89,6 +93,7 @@ Son sistemas independientes. `setAppearance()` viste los controles del editor. L
 ```ts
 view.setAppearance({
   theme: 'dark',
+  density: 'compact',
   tokens: { accent: '#0a84ff', fontFamily: 'system-ui', fontSize: 13, radius: 5 },
 });
 // También puedes personalizar una sola pieza.
@@ -96,7 +101,7 @@ layers.setAppearance({ tokens: { surface: '#20242b' } });
 layers.setAppearance({ tokens: { surface: null } }); // Restaura herencia/default.
 ```
 
-Las actualizaciones son parciales: un token omitido conserva su valor anterior. `null` elimina la personalización de ese token. `fontSize` y `radius` aceptan números en píxeles o longitudes CSS; los colores y la familia tipográfica son cadenas CSS.
+Las actualizaciones son parciales: un token omitido conserva su valor anterior. `null` elimina la personalización de ese token. Los tamaños (`fontSize`, `radius`, `controlHeight`, `rowHeight`, `panelPadding`, `gap`) aceptan números en píxeles o longitudes CSS; los colores y la familia tipográfica son cadenas CSS. `density: 'compact' | 'comfortable'` cambia el espaciado base; un token explícito de tamaño tiene prioridad. Los controles conservan espacio para la fuente configurada.
 
 | Token de la API | Variable CSS heredable |
 | --- | --- |
@@ -107,6 +112,24 @@ Las actualizaciones son parciales: un token omitido conserva su valor anterior. 
 | `accent`, `accentText` | `--codaru-accent`, `--codaru-accent-text` |
 | `canvas`, `grid`, `selection` | `--codaru-canvas`, `--codaru-grid`, `--codaru-selection` |
 | `fontFamily`, `fontSize`, `radius` | `--codaru-font-family`, `--codaru-font-size`, `--codaru-radius` |
+| `controlHeight`, `rowHeight` | `--codaru-control-height`, `--codaru-row-height` |
+| `panelPadding`, `gap` | `--codaru-panel-padding`, `--codaru-gap` |
+| `danger`, `warning`, `success`, `info` | `--codaru-danger`, `--codaru-warning`, `--codaru-success`, `--codaru-info` |
+
+Los tokens nuevos son opcionales: los objetos `EditorAppearanceTokens` existentes siguen siendo válidos. Se conservan los nombres de fragmentos, selectores y parts de sus raíces. El inspector expone además `inspector-section`, `section-heading` y `section-toggle`. Sus secciones se pueden plegar; ese estado pertenece a la vista y no modifica el documento ni su historial.
+
+El editor completo utiliza la misma base visual. `mountCodaru(container, { appearance })` y `handle.setAppearance()` aceptan el mismo contrato que la vista modular:
+
+```ts
+const handle = mountCodaru(container, {
+  document,
+  appearance: { theme: 'light', density: 'compact' },
+});
+handle.setAppearance({ tokens: { accent: '#008060', panelPadding: 14 } });
+await handle.ready;
+```
+
+En un iframe, las variables CSS no se heredan automáticamente. El montaje copia las variables `--codaru-*` del contenedor al cargar y al llamar a `handle.setAppearance()`; llamar con `{}` vuelve a leerlas. Los tokens explícitos mantienen prioridad y `null` restaura el valor del contenedor. Un cambio de apariencia no modifica el proyecto ni confirma o interrumpe una edición enfocada.
 
 Los fragmentos viven en Shadow DOM: sus estilos no contaminan el IDE. Los tokens CSS pueden heredarse de un contenedor, por lo que también funcionan los temas del host sin llamar a JavaScript. Cada raíz expone un CSS part con el nombre de la pieza:
 
@@ -150,7 +173,7 @@ Para dos documentos abiertos crea dos `createEditor()` y dos `createEditorView()
 
 `codaru-mockup/core` crea sesiones sin montar DOM ni instalar estilos. Permite consultar y modificar documentos, validar transacciones, manejar historial y utilizar `editor.agent(command, params)` para contexto, catálogo, esquema y lotes de operaciones. El contexto mantiene el contrato de revisiones documentado en [CLI.md](../CLI.md). Ambos puntos de entrada exportan además helpers puros sobre un documento: `screens(document)` (pantallas en orden de lectura con id estable, nombre, rol y página), `roleOf(p, n)`, `pagesOf(p)`, `pageView(p, pageId)`, y `core` el render sin DOM `renderScreenToSVG` / `renderScreenToDataURL`, también disponible solo en `codaru-mockup/svg` (ver [MARKDOWN.md](MARKDOWN.md#imágenes-sin-montar-nada)).
 
-La exportación JSON es `JSON.stringify(editor.getDocument())`. Las exportaciones `exportHTML()` y `exportSVG(frameId)` necesitan un DOM de navegador; SVG también mide texto con canvas. `command()` ejecuta acciones de la vista y requiere una vista conectada. Un núcleo sin interfaz no implementa por sí solo diálogos, archivos del sistema ni renderizado para Node.
+La exportación JSON es `JSON.stringify(editor.getDocument())`. Las exportaciones `exportHTML()` y `exportSVG(frameId)` necesitan un DOM de navegador; SVG también mide texto con canvas. `exportAsset({ ids?, format: 'svg'|'png'|'assets', platform: 'ios'|'android'|'all', width?, name? })` extrae selecciones; sin IDs usa la selección de la sesión. SVG funciona sin DOM; PNG/ZIP necesitan canvas. [Contrato completo de assets](ASSETS.md). `command()` ejecuta acciones de la vista y requiere una vista conectada. Un núcleo sin interfaz no implementa por sí solo diálogos ni archivos del sistema.
 
 Para Tauri, pasa el `invoke` del host a `createEditorView` y registra `tauri-plugin-codaru` como se explica en [su README](../packages/tauri-plugin-codaru/README.md). El puente CLI nativo es opcional; usa `nativeAgent: false` en vistas secundarias y ejemplos que no deban adueñarse del documento activo del CLI. La API JavaScript del editor y su contexto de IA siguen disponibles sin ese puente.
 
@@ -174,3 +197,38 @@ Medidos sobre `packages/editor/dist` tras `npm run package:build`, sumando cada 
 Con `npm run dev`, abre `http://127.0.0.1:1432/examples/modular-host.html`. El ejemplo también está incluido en el build para Tauri. [modular-host.ts](../examples/modular-host.ts) monta cada pieza en un layout de IDE, reparte los controles de `viewbar` entre su barra de pestañas y su barra de acciones, añade un inspector de ancho propio, permite desmontar/remontar el inspector y alterna la apariencia sin cambiar los tokens del diseño.
 
 El ejemplo inicia Forma en memoria, no usa el borrador existente y mantiene el agente CLI nativo desactivado. Su enlace «Editor completo» permite regresar a la integración original. Exporta los cambios que quieras conservar antes de abandonar el ejemplo.
+
+## Estilos bajo la CSP de Tauri
+
+Los fragmentos copian el nonce del primer `<style nonce>` del documento anfitrión. Tauri asigna ese nonce a los estilos de tu HTML al compilar. Si tu host gestiona otra política, entrega el nonce autorizado con `createEditorView(editor, { styleNonce })`. No es necesario desactivar la CSP. Si tu HTML solo usa hojas externas, puedes incluir un `<style></style>` para que Tauri lo autorice y el editor reutilice su nonce. Consulta [CSP de Tauri](https://v2.tauri.app/security/csp/).
+
+### Componentes anidados
+
+Un maestro puede contener instancias de otros componentes: símbolo → botón → tarjeta. Las APIs existentes `component`, `instance`, `update` y `variant.switch` sirven también para esta composición. Las actualizaciones conservan IDs y personalizaciones por uso; se rechazan referencias circulares antes de confirmar la transacción. `examples/nested-host.html` muestra la biblioteca, el lienzo y el inspector montados por separado, con un botón del host que cambia el maestro.
+
+Para cambiar la estructura de una instancia, el host debe dirigir al maestro; textos, estilos y variantes se editan directamente en su uso. Desvincular la instancia exterior deja sus componentes interiores independientes. La biblioteca montada por separado se actualiza aunque el host mantenga visible también el árbol de capas.
+
+## Propiedades públicas de componentes
+
+`getComponentProperties(id)` descubre controles de texto, icono, visibilidad y variante; `setComponentProperty(id, clave, valor)` permite construir controles propios del IDE. `null` restablece solo esa propiedad. También están disponibles las operaciones `component.property.define`, `.remove` y `.set` en `apply` y en el agente. Los textos conservan sus claves de localización.
+
+Consulta `docs/COMPONENT-PROPERTIES.md` en el repositorio y `examples/properties-host.html` para un host sin persistencia implícita.
+
+Los controles también admiten `type: "slot"` con `allowedComponents`: un componente intercambiable por espacio, predeterminado heredado y elecciones por instancia. Se descubren con `getComponentProperties` y se editan con `setComponentProperty(id, clave, componentId)`; `null` restablece. Consulta `docs/COMPONENT-SLOTS.md` y el ejemplo `examples/slots-host.html` en el repositorio.
+
+
+## Navegar del diseño al código
+
+Configura `onImplementationRequest` en `createEditor` o `mountCodaru` para que tu IDE reciba `{nodeId, ownerId, componentId, platform, reference}` y resuelva el símbolo o archivo. El inspector muestra «Abrir implementación»; sin el callback, explica que la navegación aún no está conectada. No hay acceso implícito al sistema de archivos.
+
+`getImplementations(nodeId)` consulta el componente más cercano; `setImplementation(componentId, platform, reference)` guarda un vínculo compartido y `null` lo elimina. `requestImplementation(nodeId, platform)` solicita la navegación sin cambiar el diseño. Los tres métodos están disponibles en el núcleo modular y el iframe. Consulta [el contrato completo](IMPLEMENTATION-LINKS.md) y `examples/implementations-host.html`.
+
+## Ilustraciones ARU
+
+`onIllustrationRequest({nodeId,source})` y `editor.requestIllustration(nodeId)` conectan un ilustrador del IDE con la capa ARU seleccionada. La fuente se entrega como copia, sin escribir archivos ni modificar el documento; el host prepara y aplica el resultado explícitamente mediante una operación `aru`, con revisión si usa el agente. Este callback opcional funciona en ambas formas de montaje. [Preparación, importación y animación](ARU.md).
+
+## Biblioteca con revisión visual y estilos externos
+
+Los nuevos puertos `resourceServices` y `onResourceLibraryChange` son opcionales y funcionan en el núcleo, fragmentos e iframe. La biblioteca descubre dibujos del proyecto como candidatos; el IDE proporciona compilación ARU, evaluación real por IA, edición y persistencia. Sin evaluador quedan pendientes, con reutilización/exportación desde biblioteca deshabilitadas. [Contrato de recursos](RESOURCE-LIBRARY.md).
+
+`importStyle`, `getStyles`, `getStyle` y `applyStyle` admiten paquetes `codaru-style/1`, con tokens y guías distintas para móvil. No cambian el layout del host ni generan composiciones repetidas. [Contrato portátil](STYLE-PACKAGES.md). La API y CSS de personalización existentes se mantienen.

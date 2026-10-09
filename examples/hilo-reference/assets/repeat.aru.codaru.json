@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.\ncanvas 32 32\nbackground none\ngroup repeat {\npath vuelta { move 7 11; curve 10 4 24 4 27 13; move 23 10; line 27 13; line 28 8; move 25 21; curve 22 28 8 28 5 19; move 9 22; line 5 19; line 4 24; fill none; stroke #1C1917 1.8; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" width=\"32\" height=\"32\">\n  <g>\n    <path d=\"M7 11 C10 4 24 4 27 13 M23 10 L27 13 L28 8 M25 21 C22 28 8 28 5 19 M9 22 L5 19 L4 24\" fill=\"none\" stroke=\"#1C1917\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "repeat.aru"
+}

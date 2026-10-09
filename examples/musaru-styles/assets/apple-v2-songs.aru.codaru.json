@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Apple minimal · original editable geometry, not SF Symbols.\ncanvas 48 48\nbackground none\npath note { move 17 34; line 17 10; line 38 6; line 38 29; fill none; stroke #68686D 3; cap round; }\npath beam { move 17 17; line 38 13; fill none; stroke #68686D 3; cap round; }\npath first { move 17 34; curve 17 42 5 44 5 37; curve 5 31 17 28 17 34; close; fill #68686D; }\npath second { move 38 29; curve 38 37 26 39 26 32; curve 26 26 38 23 38 29; close; fill #68686D; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M17 34 L17 10 L38 6 L38 29\" fill=\"none\" stroke=\"#68686D\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n  <path d=\"M17 17 L38 13\" fill=\"none\" stroke=\"#68686D\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n  <path d=\"M17 34 C17 42 5 44 5 37 C5 31 17 28 17 34 Z\" fill=\"#68686D\"/>\n  <path d=\"M38 29 C38 37 26 39 26 32 C26 26 38 23 38 29 Z\" fill=\"#68686D\"/>\n</svg>",
+  "filename": "apple-v2-songs.aru"
+}

@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Original VENERO concept. Contemporary illustration, not a traditional community emblem.\ncanvas 32 32\nbackground none\ngroup trama {\nresource \"{\\\"key\\\": \\\"venero-trama\\\", \\\"kind\\\": \\\"ui-icon\\\", \\\"brand\\\": \\\"VENERO\\\", \\\"purpose\\\": \\\"Textiles y creaci\\u00f3n local; icono original para 24 px con etiqueta.\\\", \\\"identity\\\": \\\"Escult\\u00f3rico, curvas abiertas y contrapesos; agua, barro y bosque\\\", \\\"reusable\\\": true, \\\"tags\\\": [\\\"venero\\\", \\\"amealco\\\", \\\"original\\\"]}\"\npath silueta { move 7 4; line 7 28; move 16 4; line 16 28; move 25 4; line 25 28; move 4 9; line 28 9; move 4 23; line 28 23; move 4 16; curve 11 10 21 22 28 16; fill none; stroke #233D37 2; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" width=\"32\" height=\"32\">\n  <g>\n    <path d=\"M7 4 L7 28 M16 4 L16 28 M25 4 L25 28 M4 9 L28 9 M4 23 L28 23 M4 16 C11 10 21 22 28 16\" fill=\"none\" stroke=\"#233D37\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "trama.aru"
+}

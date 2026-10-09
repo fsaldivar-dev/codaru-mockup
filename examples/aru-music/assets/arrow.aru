@@ -1,0 +1,6 @@
+// Musaru controls · original curves generated for this prototype
+canvas 48 48
+background none
+group arrow {
+path stem { move 9 24; line 39 24; fill none; stroke #F3F0E4 3; cap round; join round }path head { move 29 14; line 39 24; line 29 34; fill none; stroke #F3F0E4 3; cap round; join round }
+}

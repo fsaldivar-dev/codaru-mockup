@@ -1,0 +1,67 @@
+// Musaru Dark Aero · original editable hi-fi vector.
+canvas 240 48
+background none
+gradient steel linear 90 { stop 0 #E1EAF1; stop 0.27 #6D7C8A; stop 0.49 #AEBBC6; stop 0.51 #3B4855; stop 1 #B3C1CD }
+gradient piano linear 90 { stop 0 #3D4955; stop 0.43 #171D27; stop 0.46 #070A0F; stop 1 #151D28 }
+gradient ice linear 90 { stop 0 #DCFCFF; stop 0.43 #67CBE7; stop 0.48 #1B6B91; stop 1 #082E47 }
+rect well { at 120 24; size 238 46; corner 4; fill #02070B; }
+rect segment0-0 { at 9.0 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-1 { at 16.6 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-2 { at 24.2 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-3 { at 31.799999999999997 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-4 { at 39.4 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-5 { at 47.0 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-6 { at 54.599999999999994 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-7 { at 62.199999999999996 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-8 { at 69.8 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-9 { at 77.39999999999999 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-10 { at 85.0 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-11 { at 92.6 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-12 { at 100.19999999999999 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-13 { at 107.8 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-14 { at 115.39999999999999 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-15 { at 123.0 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-16 { at 130.6 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-17 { at 138.2 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-18 { at 145.79999999999998 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-19 { at 153.4 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-20 { at 161.0 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-21 { at 168.6 15; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment0-22 { at 176.2 15; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment0-23 { at 183.79999999999998 15; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment0-24 { at 191.39999999999998 15; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment0-25 { at 199.0 15; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment0-26 { at 206.6 15; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment0-27 { at 214.2 15; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment0-28 { at 221.79999999999998 15; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment0-29 { at 229.39999999999998 15; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment1-0 { at 9.0 31; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment1-1 { at 16.6 31; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment1-2 { at 24.2 31; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment1-3 { at 31.799999999999997 31; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment1-4 { at 39.4 31; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment1-5 { at 47.0 31; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment1-6 { at 54.599999999999994 31; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment1-7 { at 62.199999999999996 31; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment1-8 { at 69.8 31; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment1-9 { at 77.39999999999999 31; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment1-10 { at 85.0 31; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment1-11 { at 92.6 31; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment1-12 { at 100.19999999999999 31; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment1-13 { at 107.8 31; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment1-14 { at 115.39999999999999 31; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment1-15 { at 123.0 31; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment1-16 { at 130.6 31; size 4.3 8; corner 0.8; fill #86E7FD; }
+rect segment1-17 { at 138.2 31; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment1-18 { at 145.79999999999998 31; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment1-19 { at 153.4 31; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment1-20 { at 161.0 31; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment1-21 { at 168.6 31; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment1-22 { at 176.2 31; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment1-23 { at 183.79999999999998 31; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment1-24 { at 191.39999999999998 31; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment1-25 { at 199.0 31; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment1-26 { at 206.6 31; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment1-27 { at 214.2 31; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment1-28 { at 221.79999999999998 31; size 4.3 8; corner 0.8; fill #122F3E; }
+rect segment1-29 { at 229.39999999999998 31; size 4.3 8; corner 0.8; fill #122F3E; }

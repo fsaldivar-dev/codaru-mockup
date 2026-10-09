@@ -59,3 +59,18 @@ test('a user change during revision calculation is not overwritten',async()=>{
   h.store.commit(p=>{p.name='Cambio humano';});
   const result=await pending;assert.equal(result.error.code,'revision_conflict');assert.equal(h.store.project.name,'Cambio humano');assert.equal(h.store.project.nodes.length,0);
 });
+
+test('dry-run validates the final atomic graph, reports errors, and never publishes prepared work', async () => {
+  const h = harness(); let published = 0;
+  h.host.commitPrepared = transaction => { published++; h.store.commitPrepared(transaction); };
+  const expectedRevision = await revision(h.store.project);
+  // A child may precede its parent within the same atomic batch.
+  const operations = [{ op: 'add', node: { id: 'child', type: 'text', parentId: 'later' } }, { op: 'add', node: { id: 'later', type: 'frame' } }];
+  const dry = await h.call('apply', { expectedRevision, operations, dryRun: true });
+  assert.equal(dry.ok, true, JSON.stringify(dry)); assert.equal(published, 0); assert.equal(h.store.project.nodes.length, 0);
+  const live = await h.call('apply', { expectedRevision, operations });
+  assert.equal(live.ok, true); assert.equal(published, 1); assert.equal(h.store.undoStack.length, 1);
+  assert.equal(live.revision, live.context.revision); assert.equal(live.revision, await revision(h.store.project));
+  const bad = await h.call('apply', { expectedRevision: live.revision, dryRun: true, operations: [{ op: 'update', id: 'missing', patch: { text: 'No' } }, { op: 'remove', ids: ['also-missing'] }] });
+  assert.equal(bad.ok, false); assert.ok(bad.errors.length >= 1); assert.equal(published, 1);
+});

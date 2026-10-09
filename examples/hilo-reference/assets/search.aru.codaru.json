@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.\ncanvas 32 32\nbackground none\ngroup search {\ncircle lente { at 14 13; radius 8; fill none; stroke #1C1917 1.8 }\npath mango { move 20 19; line 27 26; fill none; stroke #1C1917 1.8; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" width=\"32\" height=\"32\">\n  <g>\n    <circle r=\"8\" transform=\"translate(14 13)\" fill=\"none\" stroke=\"#1C1917\" stroke-width=\"1.8\"/>\n    <path d=\"M20 19 L27 26\" fill=\"none\" stroke=\"#1C1917\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "search.aru"
+}

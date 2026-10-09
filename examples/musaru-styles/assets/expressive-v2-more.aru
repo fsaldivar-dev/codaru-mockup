@@ -1,0 +1,6 @@
+// Musaru Expressive · original flat editable shapes.
+canvas 48 48
+background none
+circle first { at 11 24; radius 3; fill #2F211B; }
+circle second { at 24 24; radius 3; fill #2F211B; }
+circle third { at 37 24; radius 3; fill #2F211B; }

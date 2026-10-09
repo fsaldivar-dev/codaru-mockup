@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Glass · original editable geometry; material is supplied by host nodes.\ncanvas 48 48\nbackground none\nrect left { at 17 24; size 6 25; corner 3; fill #F8FDFF; }\nrect right { at 31 24; size 6 25; corner 3; fill #F8FDFF; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <rect x=\"-3\" y=\"-12.5\" width=\"6\" height=\"25\" rx=\"3\" transform=\"translate(17 24)\" fill=\"#F8FDFF\"/>\n  <rect x=\"-3\" y=\"-12.5\" width=\"6\" height=\"25\" rx=\"3\" transform=\"translate(31 24)\" fill=\"#F8FDFF\"/>\n</svg>",
+  "filename": "glass-v2-pause.aru"
+}

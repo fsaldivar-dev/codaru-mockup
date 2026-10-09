@@ -1,0 +1,7 @@
+// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.
+canvas 32 32
+background none
+group pause {
+rect barra_izquierda { at 12 16; size 3 18; corner 1.5; fill none; stroke #1C1917 1.8 }
+rect barra_derecha { at 21 16; size 3 18; corner 1.5; fill none; stroke #1C1917 1.8 }
+}

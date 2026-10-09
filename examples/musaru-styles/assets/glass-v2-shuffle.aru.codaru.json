@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Glass · original editable geometry; material is supplied by host nodes.\ncanvas 48 48\nbackground none\npath crossA { move 7 13; line 13 13; curve 24 13 25 35 34 35; line 40 35; move 34 29; line 40 35; line 34 41; fill none; stroke #102C3B 2.7; cap round; }\npath crossB { move 7 35; line 13 35; quad 18 35 21 29; move 27 19; quad 30 13 34 13; line 40 13; move 34 7; line 40 13; line 34 19; fill none; stroke #102C3B 2.7; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M7 13 L13 13 C24 13 25 35 34 35 L40 35 M34 29 L40 35 L34 41\" fill=\"none\" stroke=\"#102C3B\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n  <path d=\"M7 35 L13 35 Q18 35 21 29 M27 19 Q30 13 34 13 L40 13 M34 7 L40 13 L34 19\" fill=\"none\" stroke=\"#102C3B\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "glass-v2-shuffle.aru"
+}

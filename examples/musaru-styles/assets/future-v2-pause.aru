@@ -1,0 +1,5 @@
+// Musaru Future minimal · original editable precision geometry.
+canvas 48 48
+background none
+rect left { at 17 24; size 4 27; corner 1; fill #F8FDFF; }
+rect right { at 31 24; size 4 27; corner 1; fill #F8FDFF; }

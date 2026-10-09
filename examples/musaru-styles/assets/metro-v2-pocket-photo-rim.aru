@@ -1,0 +1,19 @@
+// Musaru Frutiger Metro · original editable music poster geometry.
+canvas 200 200
+background none
+circle outer { at 100 100; radius 98; fill #17232B; }
+circle rim { at 100 100; radius 91; fill #FAFBEF; }
+circle middle { at 100 100; radius 85; fill #D81B65; }
+circle inside { at 100 100; radius 79; fill #D6F03D; }
+circle tick0 { at 195.0 100.0; radius 2.5; fill #D6F03D; }
+circle tick1 { at 182.27 147.5; radius 2.5; fill #D6F03D; }
+circle tick2 { at 147.5 182.27; radius 2.5; fill #D6F03D; }
+circle tick3 { at 100.0 195.0; radius 2.5; fill #D6F03D; }
+circle tick4 { at 52.5 182.27; radius 2.5; fill #D6F03D; }
+circle tick5 { at 17.73 147.5; radius 2.5; fill #D6F03D; }
+circle tick6 { at 5.0 100.0; radius 2.5; fill #D6F03D; }
+circle tick7 { at 17.73 52.5; radius 2.5; fill #D6F03D; }
+circle tick8 { at 52.5 17.73; radius 2.5; fill #D6F03D; }
+circle tick9 { at 100.0 5.0; radius 2.5; fill #D6F03D; }
+circle tick10 { at 147.5 17.73; radius 2.5; fill #D6F03D; }
+circle tick11 { at 182.27 52.5; radius 2.5; fill #D6F03D; }

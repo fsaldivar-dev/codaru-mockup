@@ -1,0 +1,9 @@
+// HILO / canto-artista. Original geometry, contemporary interpretation; no attributed traditional meaning.
+canvas 32 32
+background none
+group canto-artista {
+resource "{\"key\": \"hilo-canto-artista\", \"kind\": \"ui-icon\", \"brand\": \"HILO\", \"purpose\": \"Abrir la p\u00e1gina de un artista; icono de trazo fino para 24 px.\", \"identity\": \"Fine contour, open space and folded ribbon gestures\", \"reusable\": true, \"tags\": [\"hilo\", \"jardin-de-voces\"]}"
+path microfono { move 11 7; curve 11 0 21 0 21 7; line 21 16; curve 21 23 11 23 11 16; close; fill none; stroke #383631 1.65; cap round; join round }
+path base { move 7 14; line 7 16; curve 7 28 25 28 25 16; line 25 14; move 16 25; line 16 29; move 11 29; line 21 29; fill none; stroke #383631 1.65; cap round; join round }
+path pliegue { move 13 9; line 16 9; move 13 13; line 16 13; fill none; stroke #383631 1.65; cap round; join round }
+}

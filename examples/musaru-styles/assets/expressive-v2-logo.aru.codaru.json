@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Expressive · original flat editable shapes.\ncanvas 48 48\nbackground none\npath waveBud { move 8 24; curve 8 11 18 9 24 20; curve 30 9 40 11 40 24; curve 40 37 30 39 24 28; curve 18 39 8 37 8 24; close; fill #8D3D19; }\nrect soundCenter { at 24 24; size 4 20; corner 2; fill #FFDCC8; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M8 24 C8 11 18 9 24 20 C30 9 40 11 40 24 C40 37 30 39 24 28 C18 39 8 37 8 24 Z\" fill=\"#8D3D19\"/>\n  <rect x=\"-2\" y=\"-10\" width=\"4\" height=\"20\" rx=\"2\" transform=\"translate(24 24)\" fill=\"#FFDCC8\"/>\n</svg>",
+  "filename": "expressive-v2-logo.aru"
+}

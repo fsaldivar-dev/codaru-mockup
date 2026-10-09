@@ -1,0 +1,5 @@
+// Musaru monochrome · original editable geometry.
+canvas 48 48
+background none
+path lines { move 7 10; line 40 10; move 7 22; line 40 22; move 7 34; line 25 34; fill none; stroke #161616 2.4; cap round; }
+path play { move 32 29; line 42 36; line 32 43; close; fill #161616; }

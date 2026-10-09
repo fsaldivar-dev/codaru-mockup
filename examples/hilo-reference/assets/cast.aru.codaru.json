@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.\ncanvas 32 32\nbackground none\ngroup cast {\nrect pantalla { at 16 13; size 24 17; corner 3; fill none; stroke #1C1917 1.8 }\npath pie { move 10 28; line 16 22; line 22 28; close; fill none; stroke #1C1917 1.8; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" width=\"32\" height=\"32\">\n  <g>\n    <rect x=\"-12\" y=\"-8.5\" width=\"24\" height=\"17\" rx=\"3\" transform=\"translate(16 13)\" fill=\"none\" stroke=\"#1C1917\" stroke-width=\"1.8\"/>\n    <path d=\"M10 28 L16 22 L22 28 Z\" fill=\"none\" stroke=\"#1C1917\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "cast.aru"
+}

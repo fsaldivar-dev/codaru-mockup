@@ -1,0 +1,18 @@
+// Musaru orbital receiver · original editable industrial assembly.
+canvas 346 572
+background none
+gradient titanium linear 90 { stop 0 #73848C; stop 0.08 #43545F; stop 0.46 #273944; stop 0.88 #23333D; stop 1 #101D26 }
+gradient bezel linear 90 { stop 0 #16252E; stop 0.46 #0B161F; stop 1 #72858D }
+gradient metal linear 90 { stop 0 #D2DBDC; stop 0.2 #80939D; stop 0.49 #4A5D69; stop 0.51 #273A47; stop 0.8 #6A7E88; stop 1 #B0C0C6 }
+gradient key linear 90 { stop 0 #5A6F7A; stop 0.15 #314753; stop 0.85 #1B303D; stop 1 #10222E }
+gradient amber linear 90 { stop 0 #FFE0AB; stop 0.2 #FFD18A; stop 0.8 #F3AF55; stop 1 #D58A32 }
+ellipse shadow { at 173 560; size 315 15; fill #00000045; }
+path edge { move 23 9; line 323 9; line 346 32; line 346 541; line 323 564; line 23 564; line 0 541; line 0 32; close; fill #09141D; }
+path body { move 23 0; line 323 0; line 346 23; line 346 533; line 323 556; line 23 556; line 0 533; line 0 23; close; fill titanium; }
+path topLip { move 26 5; line 319 5; line 340 26; fill none; stroke #AFBDC1 1.5; cap round; }
+path capSeam { move 17 488; line 329 488; fill none; stroke #0F222E 2; cap round; }
+path capLight { move 17 491; line 329 491; fill none; stroke #596F7B 1; cap round; }
+rect rubbertl { at 11.0 45.5; size 22 63; corner 6; fill #122530; }
+rect rubbertr { at 335.0 45.5; size 22 63; corner 6; fill #122530; }
+rect rubberbl { at 11.0 498.5; size 22 67; corner 6; fill #122530; }
+rect rubberbr { at 335.0 498.5; size 22 67; corner 6; fill #122530; }

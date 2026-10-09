@@ -6,7 +6,7 @@ use std::sync::{atomic::{AtomicU64, Ordering}, mpsc, Arc, Mutex};
 use std::time::Instant;
 
 const MAX_PENDING: usize = 8;
-const COMMANDS: &[&str] = &["schema", "context", "apply", "catalog", "select", "undo", "redo", "export", "lint", "find", "versions"];
+const COMMANDS: &[&str] = &["schema", "context", "apply", "catalog", "select", "undo", "redo", "export", "lint", "find", "versions", "locale", "comments"];
 
 #[derive(Clone, Serialize, Debug)]
 pub struct AgentRequest { pub id: String, pub command: String, pub params: Value }
@@ -30,7 +30,7 @@ struct Queue {
 struct Shared { queue: Mutex<Queue>, counter: AtomicU64 }
 impl Shared {
     fn enqueue(&self, request: WireRequest) -> Result<(String, mpsc::Receiver<Value>)> {
-        if !COMMANDS.contains(&request.command.as_str()) { return Err(AgentError::new("UNKNOWN_COMMAND", "Use schema, context, apply, catalog, select, undo, redo, export, lint, find, or versions.")); }
+        if !COMMANDS.contains(&request.command.as_str()) { return Err(AgentError::new("UNKNOWN_COMMAND", "Use schema, context, apply, catalog, select, undo, redo, export, lint, find, versions, locale, or comments.")); }
         if !request.params.is_object() { return Err(AgentError::new("INVALID_REQUEST", "Command params must be a JSON object.")); }
         let mut queue = self.queue.lock().unwrap_or_else(|e| e.into_inner());
         if queue.replies.len() >= MAX_PENDING { return Err(AgentError::new("BRIDGE_BUSY", "The local command queue is full. Wait for the current commands and retry.")); }
@@ -217,6 +217,23 @@ mod unix {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn comments_reach_the_editor_without_bypassing_queue_validation() {
+        let shared = Shared::default();
+        assert_eq!(shared.enqueue(WireRequest { command: "comments".into(), params: json!("invalid") }).unwrap_err().code, "INVALID_REQUEST");
+        let (id, reply) = shared.enqueue(WireRequest { command: "comments".into(), params: json!({"id":"thread-1"}) }).unwrap();
+        let request = shared.poll().unwrap();
+        assert_eq!(request.command, "comments"); assert_eq!(request.params["id"], "thread-1");
+        shared.respond(&id, json!({"ok":true})).unwrap(); assert_eq!(reply.recv().unwrap()["ok"], true);
+    }
+    #[test]
+    fn locale_reaches_the_editor_with_its_requested_language() {
+        let shared = Shared::default();
+        let (id, reply) = shared.enqueue(WireRequest { command: "locale".into(), params: json!({"locale":"en"}) }).unwrap();
+        let request = shared.poll().unwrap();
+        assert_eq!(request.command, "locale"); assert_eq!(request.params["locale"], "en");
+        shared.respond(&id, json!({"ok":true})).unwrap(); assert_eq!(reply.recv().unwrap()["ok"], true);
+    }
     #[test]
     fn queue_serializes_commands_and_releases_after_response() {
         let shared = Shared::default();

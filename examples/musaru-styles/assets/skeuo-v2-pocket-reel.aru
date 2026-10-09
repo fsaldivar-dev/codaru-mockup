@@ -1,0 +1,8 @@
+// Musaru handheld cassette · editable compact three-hole spool.
+canvas 48 48
+background none
+circle rim { at 24 24; radius 23; fill #BDB496; stroke #8C8268 0.7 }
+circle center { at 24 24; radius 4; fill #343D30 }
+circle hole0 { at 35.00 24.00; radius 4; fill #343D30 }
+circle hole1 { at 18.50 33.53; radius 4; fill #343D30 }
+circle hole2 { at 18.50 14.47; radius 4; fill #343D30 }

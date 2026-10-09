@@ -1,0 +1,7 @@
+// Original VENERO concept. Contemporary illustration, not a traditional community emblem.
+canvas 32 32
+background none
+group barro {
+resource "{\"key\": \"venero-barro\", \"kind\": \"ui-icon\", \"brand\": \"VENERO\", \"purpose\": \"Alfarer\u00eda y talleres; icono original para 24 px con etiqueta.\", \"identity\": \"Escult\u00f3rico, curvas abiertas y contrapesos; agua, barro y bosque\", \"reusable\": true, \"tags\": [\"venero\", \"amealco\", \"original\"]}"
+path silueta { move 11 5; line 21 5; curve 18 10 20 11 24 15; curve 29 21 24 28 21 28; line 11 28; curve 8 28 3 21 8 15; curve 12 11 14 10 11 5; close; move 10 23; curve 14 25 18 25 22 23; fill none; stroke #233D37 2; cap round; join round }
+}

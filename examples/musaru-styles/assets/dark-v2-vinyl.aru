@@ -1,0 +1,40 @@
+// Musaru Dark Aero · original editable hi-fi vector.
+canvas 480 480
+background none
+gradient steel linear 90 { stop 0 #E1EAF1; stop 0.27 #6D7C8A; stop 0.49 #AEBBC6; stop 0.51 #3B4855; stop 1 #B3C1CD }
+gradient piano linear 90 { stop 0 #3D4955; stop 0.43 #171D27; stop 0.46 #070A0F; stop 1 #151D28 }
+gradient ice linear 90 { stop 0 #DCFCFF; stop 0.43 #67CBE7; stop 0.48 #1B6B91; stop 1 #082E47 }
+circle rim { at 240 240; radius 233; fill #05080B; stroke #657787 2; }
+circle record { at 240 240; radius 227; fill #080D13; stroke #15212C 3; }
+circle groove92 { at 240 240; radius 92; fill none; stroke #24323D 0.8; }
+circle groove97 { at 240 240; radius 97; fill none; stroke #101B24 0.8; }
+circle groove102 { at 240 240; radius 102; fill none; stroke #24323D 0.8; }
+circle groove107 { at 240 240; radius 107; fill none; stroke #101B24 0.8; }
+circle groove112 { at 240 240; radius 112; fill none; stroke #24323D 0.8; }
+circle groove117 { at 240 240; radius 117; fill none; stroke #101B24 0.8; }
+circle groove122 { at 240 240; radius 122; fill none; stroke #24323D 0.8; }
+circle groove127 { at 240 240; radius 127; fill none; stroke #101B24 0.8; }
+circle groove132 { at 240 240; radius 132; fill none; stroke #24323D 0.8; }
+circle groove137 { at 240 240; radius 137; fill none; stroke #101B24 0.8; }
+circle groove142 { at 240 240; radius 142; fill none; stroke #24323D 0.8; }
+circle groove147 { at 240 240; radius 147; fill none; stroke #101B24 0.8; }
+circle groove152 { at 240 240; radius 152; fill none; stroke #24323D 0.8; }
+circle groove157 { at 240 240; radius 157; fill none; stroke #101B24 0.8; }
+circle groove162 { at 240 240; radius 162; fill none; stroke #24323D 0.8; }
+circle groove167 { at 240 240; radius 167; fill none; stroke #101B24 0.8; }
+circle groove172 { at 240 240; radius 172; fill none; stroke #24323D 0.8; }
+circle groove177 { at 240 240; radius 177; fill none; stroke #101B24 0.8; }
+circle groove182 { at 240 240; radius 182; fill none; stroke #24323D 0.8; }
+circle groove187 { at 240 240; radius 187; fill none; stroke #101B24 0.8; }
+circle groove192 { at 240 240; radius 192; fill none; stroke #24323D 0.8; }
+circle groove197 { at 240 240; radius 197; fill none; stroke #101B24 0.8; }
+circle groove202 { at 240 240; radius 202; fill none; stroke #24323D 0.8; }
+circle groove207 { at 240 240; radius 207; fill none; stroke #101B24 0.8; }
+circle groove212 { at 240 240; radius 212; fill none; stroke #24323D 0.8; }
+circle groove217 { at 240 240; radius 217; fill none; stroke #101B24 0.8; }
+circle groove222 { at 240 240; radius 222; fill none; stroke #24323D 0.8; }
+path leftGlint { move 240 240; line 33 153; curve 42 121 59 98 82 77; close; fill #9FDFFF16; }
+path rightGlint { move 240 240; line 438 347; curve 413 391 382 419 341 438; close; fill #A9DBFF14; }
+path edgeGlint { move 42 145; curve 88 43 205 5 311 32; fill none; stroke #A5C8D455 1; cap round; }
+circle labelWell { at 240 240; radius 83; fill piano; stroke #6A7F90 1; }
+circle labelRing { at 240 240; radius 72; fill #0A141F; stroke #62BED9 1; }

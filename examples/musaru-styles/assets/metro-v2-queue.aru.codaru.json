@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Frutiger Metro · original editable music poster geometry.\ncanvas 48 48\nbackground none\nrect a { at 17 11; size 25 4; corner 1; fill #FAFBEF; }\nrect b { at 24 23; size 39 4; corner 1; fill #FAFBEF; }\nrect c { at 17 35; size 25 4; corner 1; fill #FAFBEF; }\ncircle dot { at 39 35; radius 3; fill #D6F03D; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <rect x=\"-12.5\" y=\"-2\" width=\"25\" height=\"4\" rx=\"1\" transform=\"translate(17 11)\" fill=\"#FAFBEF\"/>\n  <rect x=\"-19.5\" y=\"-2\" width=\"39\" height=\"4\" rx=\"1\" transform=\"translate(24 23)\" fill=\"#FAFBEF\"/>\n  <rect x=\"-12.5\" y=\"-2\" width=\"25\" height=\"4\" rx=\"1\" transform=\"translate(17 35)\" fill=\"#FAFBEF\"/>\n  <circle r=\"3\" transform=\"translate(39 35)\" fill=\"#D6F03D\"/>\n</svg>",
+  "filename": "metro-v2-queue.aru"
+}

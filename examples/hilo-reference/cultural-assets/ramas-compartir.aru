@@ -1,0 +1,8 @@
+// HILO / ramas-compartir. Original geometry, contemporary interpretation; no attributed traditional meaning.
+canvas 32 32
+background none
+group ramas-compartir {
+resource "{\"key\": \"hilo-ramas-compartir\", \"kind\": \"ui-icon\", \"brand\": \"HILO\", \"purpose\": \"Compartir una canci\u00f3n o playlist; icono de trazo fino para 24 px.\", \"identity\": \"Fine contour, open space and folded ribbon gestures\", \"reusable\": true, \"tags\": [\"hilo\", \"jardin-de-voces\"]}"
+path ramas { move 10 14; curve 14 13 18 9 22 8; move 10 18; curve 14 19 18 23 22 24; fill none; stroke #383631 1.65; cap round; join round }
+path nodos { move 11 16; curve 11 23 3 23 3 16; curve 3 9 11 9 11 16; close; move 29 7; curve 29 13 21 13 21 7; curve 21 1 29 1 29 7; close; move 29 25; curve 29 31 21 31 21 25; curve 21 19 29 19 29 25; close; fill none; stroke #383631 1.65; cap round; join round }
+}

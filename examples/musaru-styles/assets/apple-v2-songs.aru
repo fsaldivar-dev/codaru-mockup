@@ -1,0 +1,7 @@
+// Musaru Apple minimal · original editable geometry, not SF Symbols.
+canvas 48 48
+background none
+path note { move 17 34; line 17 10; line 38 6; line 38 29; fill none; stroke #68686D 3; cap round; }
+path beam { move 17 17; line 38 13; fill none; stroke #68686D 3; cap round; }
+path first { move 17 34; curve 17 42 5 44 5 37; curve 5 31 17 28 17 34; close; fill #68686D; }
+path second { move 38 29; curve 38 37 26 39 26 32; curve 26 26 38 23 38 29; close; fill #68686D; }

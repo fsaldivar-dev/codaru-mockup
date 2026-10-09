@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru controls · original curves generated for this prototype\ncanvas 48 48\nbackground none\ngroup pause {\nrect stemA { at 18 24; size 7 26; corner 3; fill #172723 }rect stemB { at 30 24; size 7 26; corner 3; fill #172723 }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <g>\n    <rect x=\"-3.5\" y=\"-13\" width=\"7\" height=\"26\" rx=\"3\" transform=\"translate(18 24)\" fill=\"#172723\"/>\n    <rect x=\"-3.5\" y=\"-13\" width=\"7\" height=\"26\" rx=\"3\" transform=\"translate(30 24)\" fill=\"#172723\"/>\n  </g>\n</svg>",
+  "filename": "pause.aru"
+}

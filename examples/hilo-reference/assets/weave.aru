@@ -1,0 +1,6 @@
+// HILO: original geometry inferred from the supplied HTML; no preset or copied SVG.
+canvas 32 32
+background none
+group weave {
+path hilvan { move 5 7; line 5 25; move 27 7; line 27 25; move 5 16; curve 8 4 24 28 27 16; move 5 16; curve 8 28 24 4 27 16; fill none; stroke #1C1917 1.8; cap round; join round }
+}

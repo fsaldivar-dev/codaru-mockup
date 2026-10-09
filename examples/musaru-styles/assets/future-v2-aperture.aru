@@ -1,0 +1,9 @@
+// Musaru Future minimal · original editable precision geometry.
+canvas 448 448
+background none
+circle remaining { at 224 224; radius 197; fill none; stroke #C5D8E0 2; }
+path played { move 224 27; curve 333 27 421 115 421 224; curve 421 288 390 348 343 382; fill none; stroke #0B6476 4; cap round; }
+circle innerTrack { at 224 224; radius 171; fill none; stroke #DFEAEE 1; }
+path ticks { move 224 8; line 224 17; move 431 224; line 440 224; move 224 431; line 224 440; move 8 224; line 17 224; fill none; stroke #8FAAB7 1.5; cap round; }
+circle pointer { at 343 382; radius 5; fill #0B6476; }
+path signalEcho { move 92 134; curve 112 100 149 78 184 72; fill none; stroke #4CBAD1 2; cap round; }

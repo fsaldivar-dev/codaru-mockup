@@ -1,0 +1,8 @@
+// VENERO 02. Original contemporary geometry, not a traditional symbol.
+canvas 24 24
+background none
+group flecha {
+resource "{\"kind\": \"ui-icon\", \"purpose\": \"Abrir una lectura o continuar; flecha diagonal de trazo fino.\", \"identity\": \"VENERO 02: tensi\u00f3n, pliegue y vac\u00edo. Interpretaci\u00f3n contempor\u00e1nea original.\", \"reusable\": true, \"tags\": [\"venero-02\", \"amealco\", \"original\"], \"key\": \"venero-02-flecha\", \"brand\": \"VENERO\"}"
+path trazo { move 5 19; line 19 5; line 6 5; fill none; stroke #21191D 1.5; cap round; join round }
+path trazo_dos { move 19 5; line 19 18; fill none; stroke #21191D 1.5; cap round; join round }
+}

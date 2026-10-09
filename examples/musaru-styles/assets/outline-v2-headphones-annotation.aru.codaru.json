@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru MusicArt · original rounded outline, no fills or effects.\ncanvas 96 96\nbackground none\npath headband { move 16 58; line 16 48; curve 16 4 80 4 80 48; line 80 58; move 26 48; curve 26 16 70 16 70 48; fill none; stroke #2F5148 1.6; cap round; }\nrect leftCup { at 20 62; size 14 28; corner 6; fill none; stroke #2F5148 1.6; }\nrect rightCup { at 76 62; size 14 28; corner 6; fill none; stroke #2F5148 1.6; }\npath cable { move 76 78; curve 74 90 60 90 52 86; fill none; stroke #2F5148 1.6; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 96 96\" width=\"96\" height=\"96\">\n  <path d=\"M16 58 L16 48 C16 4 80 4 80 48 L80 58 M26 48 C26 16 70 16 70 48\" fill=\"none\" stroke=\"#2F5148\" stroke-width=\"1.6\" stroke-linecap=\"round\"/>\n  <rect x=\"-7\" y=\"-14\" width=\"14\" height=\"28\" rx=\"6\" transform=\"translate(20 62)\" fill=\"none\" stroke=\"#2F5148\" stroke-width=\"1.6\"/>\n  <rect x=\"-7\" y=\"-14\" width=\"14\" height=\"28\" rx=\"6\" transform=\"translate(76 62)\" fill=\"none\" stroke=\"#2F5148\" stroke-width=\"1.6\"/>\n  <path d=\"M76 78 C74 90 60 90 52 86\" fill=\"none\" stroke=\"#2F5148\" stroke-width=\"1.6\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "outline-v2-headphones-annotation.aru"
+}

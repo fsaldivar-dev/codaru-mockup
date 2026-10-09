@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Original VENERO concept. Contemporary illustration, not a traditional community emblem.\ncanvas 32 32\nbackground none\ngroup voces {\nresource \"{\\\"key\\\": \\\"venero-voces\\\", \\\"kind\\\": \\\"ui-icon\\\", \\\"brand\\\": \\\"VENERO\\\", \\\"purpose\\\": \\\"Relatos de habitantes y creadores; icono original para 24 px con etiqueta.\\\", \\\"identity\\\": \\\"Escult\\u00f3rico, curvas abiertas y contrapesos; agua, barro y bosque\\\", \\\"reusable\\\": true, \\\"tags\\\": [\\\"venero\\\", \\\"amealco\\\", \\\"original\\\"]}\"\npath silueta { move 5 5; line 27 5; line 27 23; line 14 23; line 7 29; line 7 23; line 5 23; close; move 10 11; line 22 11; move 10 17; line 18 17; fill none; stroke #233D37 2; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" width=\"32\" height=\"32\">\n  <g>\n    <path d=\"M5 5 L27 5 L27 23 L14 23 L7 29 L7 23 L5 23 Z M10 11 L22 11 M10 17 L18 17\" fill=\"none\" stroke=\"#233D37\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "voces.aru"
+}

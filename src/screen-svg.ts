@@ -72,14 +72,13 @@ export function withTheme(p: Project, theme: ScreenTheme | undefined, frames: De
     overrides[key] = clean;
   }
   if (!Object.keys(overrides).length) return p;
-  const ids = new Set(frames.map(f => effectiveTheme(p, rootOf(p, f)).id));
+  const ids = new Set(frames.map(f => effectiveTheme(p, f).id));
   for (const id of ids) for (const mode of ['light', 'dark'] as const) {
     const set = p.designThemes[id]?.modes[mode]; if (set) set.colors = { ...set.colors, ...overrides };
     if (id === 'project') p.themes[mode] = { ...p.themes[mode], ...overrides };
   }
   return p;
 }
-function rootOf(p: Project, n: DesignNode) { let cur = n; while (cur.parentId) { const up = p.nodes.find(x => x.id === cur.parentId); if (!up) break; cur = up; } return cur; }
 
 // ---- text metrics ---------------------------------------------------------------------------
 // Advance widths in 1/1000 em for ASCII 32–126 (Helvetica regular and bold), close to the system
@@ -108,9 +107,10 @@ export const metricMeasure: TextMeasure = (text, { family, size, weight }) => {
 export function wrapText(text: string, width: number, font: { family: string; size: number; weight: number }, measure: TextMeasure = metricMeasure): string[] {
   const lines: string[] = [], fits = (s: string) => measure(s, font) <= width + .5;
   for (const paragraph of text.split('\n')) {
-    let line = '';
-    for (const word of paragraph.split(' ')) {
-      const next = line ? `${line} ${word}` : word;
+    const indent = /^ */.exec(paragraph)![0];
+    let line = indent, first = true;
+    for (const word of paragraph.slice(indent.length).split(' ')) {
+      const next = first ? line + word : line ? `${line} ${word}` : word; first = false;
       if (fits(next) || (!line && !word)) { line = next; continue; }
       if (line) lines.push(line);
       line = '';
@@ -158,7 +158,8 @@ const SIGNAL = '<rect x="0" y="8" width="3" height="5" rx="1"/><rect x="5" y="6"
 
 /** Draw a validated frame at the origin. `measure` defaults to the built-in metrics. */
 export function frameToSVG(p: Project, frame: DesignNode, options: { measure?: TextMeasure; maxWidth?: number; licenses?: boolean } = {}): string {
-  const measure = options.measure ?? metricMeasure, scope = 'c' + frame.id.replace(/[^A-Za-z0-9_-]/g, '');
+  const measure = options.measure ?? metricMeasure;
+  const scope = 'c' + frame.id.replace(/[^A-Za-z0-9_-]/g, '');
   const defs: string[] = [], body: string[] = [], filters = new Map<string, string>();
   let next = 0;
   const id = (kind: string) => `${scope}-${kind}${next++}`;
@@ -262,9 +263,15 @@ export function frameToSVG(p: Project, frame: DesignNode, options: { measure?: T
   }
 
   draw(frame, 0, 0);
+  // Hash the rendered drawing, not unrelated nodes or volatile document metadata.
+  // Identical renders stay deterministic; inline theme variants cannot share paint resources.
+  let drawing = `${defs.length ? `<defs>${defs.join('')}</defs>` : ''}${body.join('')}`;
+  let hash = 2166136261; for (let i = 0; i < drawing.length; i++) hash = Math.imul(hash ^ drawing.charCodeAt(i), 16777619);
+  const resource = (ref: string) => ref.startsWith(scope + '-') ? `${scope}-${(hash >>> 0).toString(16)}-${ref.slice(scope.length + 1)}` : ref;
+  drawing = drawing.replace(/\sid="([^"]+)"/g, (_, ref) => ` id="${resource(ref)}"`).replace(/url\(#([^)]+)\)/g, (_, ref) => `url(#${resource(ref)})`).replace(/\shref="#([^"]+)"/g, (_, ref) => ` href="#${resource(ref)}"`);
   const scale = options.maxWidth && frame.width > options.maxWidth ? options.maxWidth / frame.width : 1;
   const notices = options.licenses === false ? '' : iconLicenseNotice(p.nodes.filter(n => n.type === 'icon' && isInside(p, n, frame)).map(n => n.iconPack!));
   const material = p.nodes.some(n => n.materialToken && isInside(p, n, frame));
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${num(frame.width * scale)}" height="${num(frame.height * scale)}" viewBox="0 0 ${num(frame.width)} ${num(frame.height)}" role="img" aria-label="${escape(frame.name)}"><title>${escape(frame.name)}</title>${notices ? `<metadata id="codaru-icon-licenses">${escape(notices)}</metadata>` : ''}${material ? '<desc>Los materiales de cristal se dibujan como tinte y borde; el desenfoque del fondo se conserva en la vista HTML.</desc>' : ''}${defs.length ? `<defs>${defs.join('')}</defs>` : ''}${body.join('')}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${num(frame.width * scale)}" height="${num(frame.height * scale)}" viewBox="0 0 ${num(frame.width)} ${num(frame.height)}" role="img" aria-label="${escape(frame.name)}"><title>${escape(frame.name)}</title>${notices ? `<metadata id="codaru-icon-licenses">${escape(notices)}</metadata>` : ''}${material ? '<desc>Los materiales de cristal se dibujan como tinte y borde; el desenfoque del fondo se conserva en la vista HTML.</desc>' : ''}${drawing}</svg>`;
 }
 function isInside(p: Project, n: DesignNode, frame: DesignNode) { let cur: DesignNode | undefined = n; while (cur) { if (cur.id === frame.id) return true; const parent: string | null = cur.parentId; cur = parent ? p.nodes.find(x => x.id === parent) : undefined; } return false; }

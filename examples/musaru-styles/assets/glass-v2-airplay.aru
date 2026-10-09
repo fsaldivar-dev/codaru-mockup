@@ -1,0 +1,5 @@
+// Musaru Glass · original editable geometry; material is supplied by host nodes.
+canvas 48 48
+background none
+path display { move 14 33; line 8 33; quad 5 33 5 30; line 5 11; quad 5 8 8 8; line 40 8; quad 43 8 43 11; line 43 30; quad 43 33 40 33; line 34 33; fill none; stroke #102C3B 2.8; cap round; }
+path triangle { move 24 27; line 36 41; line 12 41; close; fill #102C3B; }

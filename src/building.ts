@@ -1,8 +1,9 @@
+import { sameData } from './content-cache';
 // Visual feedback while an agent builds the design: particles that settle into each new or
 // changed element, a "Diseñando…" pill with a magnifying bubble, and skeletons for frames an
 // agent created but has not filled yet. Nothing here touches the model.
 import type { DesignNode, Project } from './model';
-import { absolute, clone, layoutProject, syncComponents, validate } from './model';
+import { absolute, clone, isNormalizedProject, layoutProject, syncComponents, validate } from './model';
 
 export type Camera = () => { pan: { x: number; y: number }; zoom: number };
 
@@ -36,25 +37,39 @@ export function createBuildingFeedback(options: { stage: HTMLElement; artboards:
   // Compare against what the store itself would produce, so the one-time normalization of a freshly
   // opened document (component sync, auto layout, defaults) never reads as agent changes.
   function snapshot(p: Project) {
-    let base = clone(p);
-    try { syncComponents(base); layoutProject(base); base = validate(base); } catch { base = p; }
-    return new Map(base.nodes.map(n => [n.id, JSON.stringify(n)]));
+    let base = p;
+    if (!isNormalizedProject(p)) {
+      base = clone(p);
+      try { syncComponents(base); layoutProject(base); base = validate(base); } catch { base = p; }
+    }
+    return new Map(base.nodes.map(n => [n.id, n]));
   }
 
   // Called around an agent commit: diff the project before/after and start a burst per node that
   // appeared or changed. Returns the ids so the caller can mark their DOM.
-  function track(before: Map<string, string>, p: Project) {
+  function track(before: Map<string, DesignNode>, p: Project) {
     const now = performance.now(), touched: string[] = [];
     for (const n of p.nodes) {
       const prev = before.get(n.id);
-      if (prev === JSON.stringify(n)) continue;
+      if (sameData(prev, n)) continue;
       touched.push(n.id);
       if (prev === undefined && n.type === 'frame') created.set(n.id, now);
       const frame = frameIdOf(p, n); if (frame) frames.add(frame);
     }
     if (!touched.length) return touched;
     changes += touched.length; lastApply = now;
-    if (!reduced()) for (const id of touched) { const n = p.nodes.find(x => x.id === id)!; if (!n.hidden) bursts.push({ node: id, start: now, particles: scatter(p, n) }); }
+    if (!reduced()) {
+      const nodes = new Map(p.nodes.map(n => [n.id, n])), rect = options.stage.getBoundingClientRect(), camera = options.camera();
+      let budget = Math.max(0, 1200 - bursts.reduce((sum, b) => sum + b.particles.length, 0));
+      for (const id of touched) {
+        if (!budget) break;
+        const n = nodes.get(id)!; if (n.hidden) continue;
+        const at = absolute(p, n), x = at.x * camera.zoom + camera.pan.x, y = at.y * camera.zoom + camera.pan.y;
+        if (x > rect.width || y > rect.height || x + n.width * camera.zoom < 0 || y + n.height * camera.zoom < 0) continue;
+        const particles = scatter(p, n).slice(0, budget); budget -= particles.length;
+        bursts.push({ node: id, start: now, particles });
+      }
+    }
     showPill(); tick();
     return touched;
   }

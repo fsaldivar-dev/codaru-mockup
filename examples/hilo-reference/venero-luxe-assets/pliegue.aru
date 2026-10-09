@@ -1,0 +1,9 @@
+// VENERO 02. Original contemporary geometry, not a traditional symbol.
+canvas 128 128
+background none
+group pliegue {
+resource "{\"kind\": \"app-icon\", \"purpose\": \"Marca original de VENERO 02: una V tensada en dos listones; no es un glifo cultural.\", \"identity\": \"VENERO 02: tensi\u00f3n, pliegue y vac\u00edo. Interpretaci\u00f3n contempor\u00e1nea original.\", \"reusable\": true, \"tags\": [\"venero-02\", \"amealco\", \"original\"], \"key\": \"venero-02-pliegue\", \"brand\": \"VENERO\"}"
+path liston_izquierdo { move 12 18; line 34 18; curve 40 47 49 69 64 91; line 64 116; curve 37 80 23 48 12 18; close; fill #21191D; stroke none 1.5; cap round; join round }
+path liston_derecho { move 81 18; line 116 18; curve 104 52 83 76 64 116; line 64 91; curve 72 63 82 47 81 18; close; fill #21191D; stroke none 1.5; cap round; join round }
+path pliegue_interior { move 83 26; curve 80 50 74 69 67 87; fill none; stroke #F5F3EF 1.5; cap round; join round }
+}

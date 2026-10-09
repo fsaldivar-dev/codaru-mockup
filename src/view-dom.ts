@@ -4,10 +4,11 @@ export const partSelectors = {
   toolbar: '.toolbar', header: '.topbar', viewbar: '.canvas-top', breadcrumb: '.scope-bar',
   status: '.canvas-bottom', insert: '.insert-panel', pages: '.project-panel', system: '#system-index',
   modes: '.mode-switch', designTheme: '.theme-switch', fit: '.fit-button',
+  locale: '.locale-switch',
 } as const;
 export type EditorPart = keyof typeof partSelectors | 'dialogs';
 /** Controls that live inside viewbar until they are mounted on their own. */
-export const viewbarParts: readonly EditorPart[] = ['modes', 'designTheme', 'fit'];
+export const viewbarParts: readonly EditorPart[] = ['modes', 'designTheme', 'locale', 'fit'];
 
 export function createViewDOM(app: HTMLDivElement, modular: boolean) {
   const owner = app.ownerDocument, win = owner.defaultView!;

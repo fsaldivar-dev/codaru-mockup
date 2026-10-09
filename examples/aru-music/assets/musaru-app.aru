@@ -1,0 +1,10 @@
+// Musaru · a listening seed, with separate editable pieces
+canvas 256 256
+background none
+gradient enamel linear 125 { stop 0 #EAF589; stop 0.5 #CDE865; stop 1 #A9CE57 }
+rect tile { at 128 128; size 248 248; corner 62; fill enamel }
+path arch { move 65 133; line 65 112; curve 65 31 191 31 191 112; line 191 133; stroke #172723 17; cap round; fill none }
+group leftEar { rect shell { at 65 145; size 35 66; corner 16; fill #172723 } rect pad { at 76 145; size 12 42; corner 6; fill #F6F3E8 } }
+group rightEar { rect shell { at 191 145; size 35 66; corner 16; fill #172723 } rect pad { at 180 145; size 12 42; corner 6; fill #F6F3E8 } }
+group record { circle vinyl { at 128 143; radius 36; fill #172723 } circle groove { at 128 143; radius 25; fill none; stroke #48603A 2 } circle label { at 128 143; radius 12; fill #EC916B } circle hole { at 128 143; radius 3; fill #172723 } }
+path smile { move 107 197; quad 128 207 149 197; fill none; stroke #172723 6; cap round }

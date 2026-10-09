@@ -1,0 +1,5 @@
+// Musaru MusicArt · original rounded outline, no fills or effects.
+canvas 48 48
+background none
+path loopA { move 39 17; curve 33 4 15 5 9 17; move 9 17; line 9 8; move 9 17; line 18 17; fill none; stroke #2F5148 2.4; cap round; }
+path loopB { move 9 31; curve 15 44 33 43 39 31; move 39 31; line 39 40; move 39 31; line 30 31; fill none; stroke #2F5148 2.4; cap round; }

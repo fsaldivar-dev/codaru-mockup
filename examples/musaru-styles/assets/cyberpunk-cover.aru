@@ -1,0 +1,13 @@
+// Musaru · Cyberpunk / neón · original editable cover
+canvas 600 400
+background none
+path frame { move 126 83; line 433 83; line 470 120; line 470 282; line 434 318; line 128 318; line 93 282; line 93 120; close; fill none; stroke #DB62BC 3; }
+rect signal0 { at 160 206; size 13 47; corner 3; fill #F1EC67;  }
+rect signal1 { at 198 206; size 13 91; corner 3; fill #DB62BC;  }
+rect signal2 { at 236 206; size 13 133; corner 3; fill #F1EC67;  }
+rect signal3 { at 274 206; size 13 75; corner 3; fill #DB62BC;  }
+rect signal4 { at 312 206; size 13 165; corner 3; fill #F1EC67;  }
+rect signal5 { at 350 206; size 13 105; corner 3; fill #DB62BC;  }
+rect signal6 { at 388 206; size 13 53; corner 3; fill #F1EC67;  }
+rect signal7 { at 426 206; size 13 118; corner 3; fill #DB62BC;  }
+path slash { move 482 83; line 513 54; move 482 112; line 528 68; fill none; stroke #F1EC67 4; cap round; }

@@ -41,7 +41,11 @@ El botón **IA / CLI** explica el recorrido desde la propia aplicación. Cierra 
 ./codaru export --format html --page pagos --output pagos.html
 ./codaru export --format html --output prototipo.html
 ./codaru export --format json --output proyecto.codaru.json
+./codaru export --format assets --ids ID_ILUSTRACION --platform all --output assets.zip
+./codaru export --format png --ids ID_ILUSTRACION --width 240 --scale 2 --output ilustracion.png
 ```
+
+Para entregar una ilustración o componente, `export --format svg|png|assets --ids ID` extrae solamente esa selección sobre fondo transparente. Sin IDs usa la selección actual. `assets` genera un ZIP con SVG fuente, catálogo iOS (1x/2x/3x) y recursos Android (mdpi a xxxhdpi); `--platform ios|android|all` acota su contenido. PNG y ZIP requieren `--output` y se escriben como binarios, sin base64 en stdout. [Contrato de assets, tamaños e integración](docs/ASSETS.md).
 
 `apply --file -` acepta JSON por stdin. Todos los comandos, excepto la ayuda, responden JSON. Un error devuelve `ok:false` y un código de salida distinto de cero. `select` sin IDs limpia la selección. `undo` y `redo` operan sobre el historial compartido: revisa el contexto antes de usarlos si la persona ha continuado editando.
 
@@ -172,3 +176,48 @@ npm run native:build
 ```
 
 Rust y las herramientas web son dependencias de desarrollo. El CLI y la aplicación compilados funcionan sin ellas. La API equivalente para un host de la vista web es `window.codaru.agent(command, params)`; usa el mismo contrato y las mismas transacciones que el CLI.
+
+## Textos localizables del IDE
+
+`codaru locale` muestra el idioma de vista previa y los idiomas que el host entregó. `codaru locale en` cambia la vista previa; `codaru locale source` regresa al texto de origen. No cambian la revisión ni el historial y respetan `editor_busy`.
+
+Descubre claves con `codaru catalog --kind texts --query welcome.`. La respuesta incluye como máximo 100 claves y respeta `truncated` y `textTruncated`. El contexto de una capa incluye `textKey`, `translation` y avisos de traducciones faltantes o recortes. Vincula una clave con `update {id,patch:{textKey:"welcome.start"}}` mediante un lote validado con su revisión; `textKey:null` desvincula. El IDE controla los archivos del catálogo.
+
+SVG, HTML, PNG y assets exportan el idioma de vista previa. JSON conserva el origen y las claves, sin incluir traducciones. Consulta `docs/LOCALIZATION.md`.
+
+### Composición de componentes
+
+`component` convierte un grupo con instancias en un nuevo maestro. `instance` permite insertar componentes en otro maestro: símbolo → botón → tarjeta. Los cambios se propagan por dependencias conservando IDs y personalizaciones locales. `variant.switch` funciona también sobre una instancia interior. Los ciclos se rechazan antes de confirmar el lote.
+
+Cada maestro vive fuera de otros componentes. Para cambiar la estructura de una instancia, usa el `masterId` de su definición; sus textos, estilos y variantes sí se pueden personalizar directamente con las operaciones existentes. Los proyectos siguen en formato v2 y el lector conserva compatibilidad con v1.
+
+## Propiedades públicas de componentes
+
+`context --scope ID --depth 0` devuelve `properties` del maestro o instancia: clave, tipo, valor, disponibilidad y opciones. Usa `component.property.set` con `{id,key,value}` para editar por clave; `null` restablece la propiedad. Texto conserva `textKey`. `component.property.define` recibe `{componentId,key,property:{type,targetId,label,axis?}}`; `component.property.remove` elimina el control y conserva los valores. Usa IDs de capa del maestro al definir, IDs de instancias al personalizar. Consulta `schema` y `docs/COMPONENT-PROPERTIES.md`. Los textos mayores de 240 caracteres se identifican con `textTruncated`.
+
+### Slots: contenido intercambiable
+
+Una propiedad `type: "slot"` devuelve `value` y `defaultComponentId` (IDs de definición), `options` (IDs permitidos) y `components` (`{id,name}`). Descúbrelos con `context --scope ID --depth 0`. `component.property.set` usa `{id: ID_INSTANCIA, key: CLAVE_SLOT, value: ID_COMPONENTE_PERMITIDO}`; `null` restaura el predeterminado. Para definirlo usa `component.property.define` con `{componentId, key, property:{type:"slot",label,targetId,allowedComponents:[...]}}`: targetId es una instancia propia del maestro. La lista debe incluir su contenido actual. Se rechazan ciclos y opciones incompatibles con reemplazos activos. No inventes IDs: lee el contexto.
+
+
+### Vincular una implementación
+
+`component.implementation.set` recibe `{componentId,platform,reference:{symbol,path?,module?}}`; `reference:null` desvincula. Se guarda en la definición y sus instancias lo comparten. Hay hasta 16 plataformas por definición, con claves en minúsculas de hasta 32 caracteres; `symbol` hasta 200, `path` relativo al workspace hasta 512 y `module` hasta 200. No se aceptan rutas absolutas, URLs ni segmentos `..`.
+
+`context --scope ID --depth 0` incluye `nodes[].implementation`, resuelto desde el componente más cercano (también en variantes y slots), sin incluir código fuente ni vínculos de otras definiciones. Consulta `schema` y usa revisión/dry-run como en cualquier transacción. La apertura es una intención de la UI/API al IDE, no un comando que lea o ejecute archivos. Véase `docs/IMPLEMENTATION-LINKS.md`.
+
+## ARU: autoría de iconos e ilustraciones
+
+ARU 0.7.0 es un helper opcional, separado del editor. `codaru-aru fuente.aru --out recurso.aru.codaru.json` prepara SVG y fuente editable. Usa el contenido del paquete en `{op:'aru',data:PAQUETE,id?,parentId?,x?,y?,width?}`. Un ID de vector existente actualiza el recurso manteniendo geometría y animaciones compatibles. Valida y aplica con la revisión actual como cualquier lote. `context` devuelve metadatos de autoría y capas animables, sin el fuente completo; `export --format aru --ids ID --output fuente.aru` lo recupera. `animate` controla el movimiento de forma declarativa. [Integración, límites y prueba Musaru](docs/ARU.md).
+
+### Biblioteca y estilos externos
+
+- `catalog --kind resources [--query TEXTO]` descubre candidatos/aprobados con ID, revisión, uso, etiquetas y capas del documento; máximo 100 resultados por respuesta, respeta `truncated`.
+- `export --resource ID --format svg|png|assets|aru --output RUTA` exporta la biblioteca. SVG/PNG/ZIP requieren aprobación por la IA conectada al IDE; ARU permite corregir candidatos. No mezcles `--resource` con nodos, frame o página. No existe una aprobación CLI autoemitida.
+- `catalog --kind styles [--kit ID]` descubre estilos portátiles y sus guías móviles/ARU. `style.import {data:paquete}` y `style.apply {id,frameId?,mode?}` usan el mismo lote con revisión y dry-run. Aplican tokens, conservando geometría; la IA diseña la composición conforme a las guías.
+
+Contratos: `docs/RESOURCE-LIBRARY.md` y `docs/STYLE-PACKAGES.md`.
+
+## Comentarios
+
+comments lista hilos y devuelve el ancla de la selección; comments --id ID devuelve contexto, revisión, nodos (hasta 200), truncated y capas ausentes. Las operaciones comment.* se descubren con schema y usan el lote de apply habitual. Los hooks se suscriben dentro del IDE con subscribeComments; el CLI no ejecuta un modelo ni aplica propuestas automáticamente.

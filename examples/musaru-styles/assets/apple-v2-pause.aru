@@ -1,0 +1,5 @@
+// Musaru Apple minimal · original editable geometry, not SF Symbols.
+canvas 48 48
+background none
+rect left { at 16 24; size 6 28; corner 2; fill #1D1D1F; }
+rect right { at 32 24; size 6 28; corner 2; fill #1D1D1F; }

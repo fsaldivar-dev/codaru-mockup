@@ -33,6 +33,11 @@ function backgroundFor(p: Project, n: DesignNode, material?: MaterialToken): str
 }
 /** `preview` makes the screen interactive (fields, links, motion); `clean` leaves out the editing aids (safe-area bands). */
 export function element(p: Project, n: DesignNode, preview = false, clean = preview): HTMLElement {
+  const byParent = new Map<string | null, DesignNode[]>();
+  for (const child of p.nodes) { const list = byParent.get(child.parentId); if (list) list.push(child); else byParent.set(child.parentId, [child]); }
+  return renderElement(p, n, preview, clean, byParent);
+}
+function renderElement(p: Project, n: DesignNode, preview: boolean, clean: boolean, byParent: Map<string | null, DesignNode[]>): HTMLElement {
   n = { ...n, ...resolveNodeStyle(p, n) };
   const el = document.createElement('div'); el.className = 'design-node'; el.dataset.node = n.id; el.dataset.kind = n.type; el.setAttribute('aria-label', n.name);
   const context = effectiveTheme(p, n), material = n.materialToken ? context.tokens.materials[n.materialToken] : undefined;
@@ -81,7 +86,7 @@ export function element(p: Project, n: DesignNode, preview = false, clean = prev
     el.append(text);
   }
   if (preview && n.targetId) { el.dataset.target = n.targetId; if (n.transition) el.dataset.transition = JSON.stringify(n.transition); el.tabIndex = 0; el.setAttribute('role', 'button'); el.style.cursor = 'pointer'; }
-  for (const child of children(p, n.id)) el.append(element(p, child, preview, clean));
+  for (const child of byParent.get(n.id) ?? []) el.append(renderElement(p, child, preview, clean, byParent));
   if (n.type === 'frame' && preview) { const style = document.createElement('style'); style.textContent = fieldFocusCSS; el.prepend(style); const group = postureGroup(p, n.id); if (group.length > 1) el.dataset.postures = group.map(f => f.id).join(' '); el.dataset.panels = String(panelsOf(n)); }
   // Screens far from the viewport are skipped by the browser until they come into view.
   if (n.type === 'frame' && !preview && n.parentId === null) { el.style.setProperty('content-visibility', 'auto'); el.style.setProperty('contain-intrinsic-size', `${n.width}px ${n.height}px`); }
@@ -138,11 +143,12 @@ export function exportHTML(p: Project): string {
   return `<!doctype html><html lang="es"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escape(p.name)}</title>${iconNotices ? `<script type="application/json" id="codaru-icon-licenses">${JSON.stringify(iconNotices).replaceAll('<', '\\u003c')}</script>` : ''}<style>body{margin:0;background:#ececf0;font-family:system-ui}nav{padding:14px;text-align:center;background:#fff;border-bottom:1px solid #ddd}nav button{padding:8px 14px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer}[hidden]{display:none!important}.screen{box-shadow:0 10px 60px #0001;max-width:none}#viewport{overflow:auto;overflow-x:clip;position:relative;min-height:calc(100vh - 62px)}[data-target]:focus-visible{outline:3px solid #7c5ce7;outline-offset:3px}</style><nav><button id="back">← Atrás</button> <button id="posture" hidden>Cambiar postura ⇄</button> <span id="screen-name">${escape(screens[0]?.name || '')}</span></nav><main id="viewport">${content}</main><script>const startMotion=${startMotion.toString()};const transitionScreens=${transitionScreens.toString()};const history=[];function go(id,transition,reverse){const next=document.getElementById(id);if(!next||!next.classList.contains('screen'))return;const current=document.querySelector('.screen:not([hidden])');if(current===next)return;let ghost;if(current){history.push({id:current.id,transition});if(transition){ghost=current.cloneNode(true);ghost.removeAttribute('id');ghost.classList.remove('screen');Object.assign(ghost.style,{position:'absolute',margin:'0',left:current.offsetLeft+'px',top:current.offsetTop+'px'})}}document.querySelectorAll('.screen').forEach(s=>s.hidden=s!==next);document.getElementById('screen-name').textContent=next.getAttribute('aria-label');const viewport=document.getElementById('viewport');viewport.scrollTo(0,0);if(ghost){viewport.append(ghost);transitionScreens(ghost,next,transition,reverse)}startMotion(next)}const linked=el=>{const target=el.closest('[data-target]');if(target)go(target.dataset.target,target.dataset.transition?JSON.parse(target.dataset.transition):undefined);return target};document.addEventListener('click',e=>{linked(e.target)});document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.tagName!=='INPUT'&&linked(e.target))e.preventDefault()});document.getElementById('back').onclick=()=>{const last=history.pop();if(last){go(last.id,last.transition,true);history.pop()}};const posture=document.getElementById('posture');const nextPosture=()=>{const current=document.querySelector('.screen:not([hidden])'),ids=((current&&current.dataset.postures)||'').split(' ').filter(Boolean);return ids.length>1?document.getElementById(ids[(ids.indexOf(current.id)+1)%ids.length]):null};const syncPosture=()=>{posture.hidden=!nextPosture()};posture.onclick=()=>{const current=document.querySelector('.screen:not([hidden])'),other=nextPosture();if(other)go(other.id,{type:+other.dataset.panels>+current.dataset.panels?'unfold':'fold',duration:700,easing:'ease-in-out'})};new MutationObserver(syncPosture).observe(document.getElementById('viewport'),{attributes:true,subtree:true,attributeFilter:['hidden']});syncPosture();startMotion(document.querySelector('.screen:not([hidden])')||document.body);</script></html>`;
 }
 let domMeasure: TextMeasure | undefined;
+let measureProbe: HTMLSpanElement | undefined;
 /** SVG of one frame, as the headless renderer draws it, with text measured by the browser's own layout for exact wrapping. */
 export function exportSVG(p: Project, frame: DesignNode): string {
   if (!domMeasure && typeof document !== 'undefined' && document.body) {
     // A hidden span measures like the preview does; canvas picks a different face for intermediate system weights.
-    const probe = document.createElement('span'), cache = new Map<string, number>();
+    const probe = measureProbe = document.createElement('span'), cache = new Map<string, number>();
     probe.setAttribute('aria-hidden', 'true'); Object.assign(probe.style, { position: 'absolute', left: '-99999px', top: '0', whiteSpace: 'pre', visibility: 'hidden', pointerEvents: 'none' });
     domMeasure = (text, font) => {
       const key = `${font.weight}|${font.size}|${font.family}|${text}`, known = cache.get(key); if (known !== undefined) return known;
@@ -151,5 +157,5 @@ export function exportSVG(p: Project, frame: DesignNode): string {
       const width = probe.getBoundingClientRect().width; if (cache.size > 5000) cache.clear(); cache.set(key, width); return width;
     };
   }
-  try { return frameToSVG(p, frame, { measure: domMeasure }); } finally { if (typeof document !== 'undefined') document.querySelectorAll('body > span[aria-hidden="true"][style*="-99999px"]').forEach(el => el.remove()); }
+  try { return frameToSVG(p, frame, { measure: domMeasure }); } finally { measureProbe?.remove(); }
 }

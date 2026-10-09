@@ -1,0 +1,5 @@
+// Musaru Apple minimal · original editable geometry, not SF Symbols.
+canvas 48 48
+background none
+path screen { move 15 34; line 8 34; quad 5 34 5 31; line 5 10; quad 5 7 8 7; line 40 7; quad 43 7 43 10; line 43 31; quad 43 34 40 34; line 33 34; fill none; stroke #68686D 2.6; cap round; }
+path triangle { move 24 27; line 36 42; line 12 42; close; fill #68686D; }

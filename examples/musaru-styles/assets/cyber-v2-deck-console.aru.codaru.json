@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Cyberpunk · original editable nocturnal frequency geometry.\ncanvas 570 190\nbackground none\npath body { move 18 4; line 565 4; line 565 157; line 538 185; line 4 185; line 4 18; close; fill #151E24; stroke #3B5058 1.5; cap round; }\npath edge { move 18 4; line 176 4; move 4 28; line 4 106; fill none; stroke #D5FF48 2; cap round; }\npath pauseKey { move 245 88; line 327 88; line 327 155; line 313 169; line 232 169; line 232 101; close; fill #D5FF48; }\npath notches { move 22 173; line 42 173; move 48 173; line 68 173; move 74 173; line 94 173; fill none; stroke #3B5058 2; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 570 190\" width=\"570\" height=\"190\">\n  <path d=\"M18 4 L565 4 L565 157 L538 185 L4 185 L4 18 Z\" fill=\"#151E24\" stroke=\"#3B5058\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n  <path d=\"M18 4 L176 4 M4 28 L4 106\" fill=\"none\" stroke=\"#D5FF48\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n  <path d=\"M245 88 L327 88 L327 155 L313 169 L232 169 L232 101 Z\" fill=\"#D5FF48\"/>\n  <path d=\"M22 173 L42 173 M48 173 L68 173 M74 173 L94 173\" fill=\"none\" stroke=\"#3B5058\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "cyber-v2-deck-console.aru"
+}

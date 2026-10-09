@@ -1,0 +1,8 @@
+// HILO / semilla-inicio. Original contemporary interpretation; no copied motif or attributed traditional meaning.
+canvas 32 32
+background none
+group semilla-inicio {
+resource "{\"key\":\"hilo-semilla-inicio\",\"kind\":\"ui-icon\",\"brand\":\"HILO\",\"purpose\":\"Home / beginning\",\"identity\":\"Fine contours, ribbon rhythm and restrained color\",\"reusable\":true,\"tags\":[\"hilo\",\"cultural-exploration\"]}"
+path semilla { move 16 27; curve 5 21 7 11 16 4; curve 25 11 27 21 16 27; close; fill none; stroke #383631 1.65; cap round; join round }
+path pliegue { move 16 5; curve 12 13 13 21 16 27; fill none; stroke #383631 1.65; cap round; join round }
+}

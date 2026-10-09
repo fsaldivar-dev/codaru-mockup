@@ -1,0 +1,7 @@
+// Musaru POP: bespoke control, original editable paths
+canvas 48 48
+background none
+rect one { at 22 11; size 33 8; corner 2; fill #FFF9E8; stroke #252036 3; }
+rect two { at 26 24; size 33 8; corner 2; fill #D3FF62; stroke #252036 3; }
+rect three { at 22 37; size 33 8; corner 2; fill #FF91CC; stroke #252036 3; }
+

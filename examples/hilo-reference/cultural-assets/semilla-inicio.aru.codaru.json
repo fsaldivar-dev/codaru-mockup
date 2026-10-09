@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// HILO / semilla-inicio. Original contemporary interpretation; no copied motif or attributed traditional meaning.\ncanvas 32 32\nbackground none\ngroup semilla-inicio {\nresource \"{\\\"key\\\":\\\"hilo-semilla-inicio\\\",\\\"kind\\\":\\\"ui-icon\\\",\\\"brand\\\":\\\"HILO\\\",\\\"purpose\\\":\\\"Home / beginning\\\",\\\"identity\\\":\\\"Fine contours, ribbon rhythm and restrained color\\\",\\\"reusable\\\":true,\\\"tags\\\":[\\\"hilo\\\",\\\"cultural-exploration\\\"]}\"\npath semilla { move 16 27; curve 5 21 7 11 16 4; curve 25 11 27 21 16 27; close; fill none; stroke #383631 1.65; cap round; join round }\npath pliegue { move 16 5; curve 12 13 13 21 16 27; fill none; stroke #383631 1.65; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\" width=\"32\" height=\"32\">\n  <g>\n    <path d=\"M16 27 C5 21 7 11 16 4 C25 11 27 21 16 27 Z\" fill=\"none\" stroke=\"#383631\" stroke-width=\"1.65\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M16 5 C12 13 13 21 16 27\" fill=\"none\" stroke=\"#383631\" stroke-width=\"1.65\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "semilla-inicio.aru"
+}

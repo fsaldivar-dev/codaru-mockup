@@ -1,13 +1,18 @@
+export type { DesignStylePackage } from './contracts';
+export type { ResourceCandidate, ResourceRecord, ResourceSummary, ResourceServices, ResourcePreview, ResourceReviewRequest, ResourceReviewVerdict } from './contracts';
+export type { ComponentProperty, ComponentPropertyValue, ComponentPropertyState } from './component-properties';
 import { type CodaruEditor, getEditorSession } from './editor-core';
 import { createEditorRuntime } from './editor-runtime';
-import type { CodaruInvoke } from './embed';
+import type { CodaruInvoke } from './contracts';
+export type { AruSource, AruAsset, IllustrationRequest, ComponentImplementations, ImplementationReference, ImplementationRequest, AgentRequest, AgentResponse, EditorOperation, CodaruInvoke } from './contracts';
 import { applyAppearance, type EditorAppearance } from './ui-theme';
 import { viewbarParts, type EditorPart } from './view-dom';
 import baseStyles from './style.css?inline';
+import chromeStyles from './chrome-style.css?inline';
 import fragmentStyles from './fragment-style.css?inline';
 
 export { createEditor } from './editor-core';
-export type { CodaruEditor, EditorState, EditorTool, EditorMode } from './editor-core';
+export type { CodaruEditor, EditorState, EditorTool, EditorMode, CreateEditorOptions, LocalizationConfig, LocalizationState, LocalizationIssue, TranslationRequest } from './editor-core';
 export type { EditorPart } from './view-dom';
 export { applyAppearance, editorAppearanceDefaults } from './ui-theme';
 export type { EditorAppearance, EditorAppearanceTokens } from './ui-theme';
@@ -18,6 +23,8 @@ export interface EditorViewOptions {
   appearance?: EditorAppearance;
   /** The document that owns all fragment containers. Defaults to window.document. */
   ownerDocument?: Document;
+  /** CSP nonce for fragment styles. Defaults to the nonce of a host style element (including Tauri's injected nonce). */
+  styleNonce?: string;
   invoke?: CodaruInvoke;
   nativeAgent?: boolean;
 }
@@ -28,9 +35,11 @@ export interface FragmentHandle {
   destroy(): void;
 }
 export interface EditorView {
+  /** Actual viewport origin for optional overlays such as comment pins. */
+  getCanvasViewport():HTMLElement;
   /**
    * One active mounting per part; unmount and mount again to relocate.
-   * modes, designTheme and fit belong to viewbar until mounted separately, and return to it when destroyed.
+   * modes, designTheme, locale and fit belong to viewbar until mounted separately, and return to it when destroyed.
    */
   mount(part: EditorPart, container: HTMLElement, options?: { appearance?: EditorAppearance }): FragmentHandle;
   setAppearance(appearance: EditorAppearance): void;
@@ -44,6 +53,8 @@ export function createEditorView(editor: CodaruEditor, options: EditorViewOption
   const session = getEditorSession(editor);
   if (session.hasView()) throw new Error('Esta sesión ya tiene una vista montada.');
   const owner = options.ownerDocument ?? document;
+  const styleNonce = options.styleNonce ?? owner.querySelector<HTMLStyleElement>('style[nonce]')?.nonce;
+  applyAppearance(owner.createElement('div'), options.appearance ?? {});
   const app = owner.createElement('div');
   const mounted = new Map<EditorPart, FragmentHandle>();
   let disposed = false, appearance = options.appearance ?? {};
@@ -57,6 +68,7 @@ export function createEditorView(editor: CodaruEditor, options: EditorViewOption
     mounted.clear();
   }
   return {
+    getCanvasViewport(){assertActive();return runtime.parts.canvas;},
     mount(part, container, config = {}) {
       assertActive();
       if (!Object.hasOwn(runtime.parts, part)) throw new Error(`Parte desconocida: ${part}`);
@@ -66,11 +78,12 @@ export function createEditorView(editor: CodaruEditor, options: EditorViewOption
       element.style.cssText = viewbarParts.includes(part)
         ? 'display:inline-flex;align-items:stretch;min-width:0;vertical-align:middle;'
         : 'display:block;width:100%;height:100%;min-width:0;min-height:0;';
+      applyAppearance(element, appearance); if (config.appearance) applyAppearance(element, config.appearance);
       const shadow = element.attachShadow({ mode: 'open' });
-      const style = owner.createElement('style'); style.textContent = baseStyles + '\n' + fragmentStyles;
+      const style = owner.createElement('style'); style.textContent = baseStyles + '\n' + chromeStyles + '\n' + fragmentStyles;
+      if (styleNonce) style.nonce = styleNonce;
       const content = runtime.parts[part]; content.setAttribute('part', part);
       shadow.append(style, content);
-      applyAppearance(element, appearance); if (config.appearance) applyAppearance(element, config.appearance);
       container.append(element);
       let removed = false;
       const handle: FragmentHandle = {
@@ -87,7 +100,8 @@ export function createEditorView(editor: CodaruEditor, options: EditorViewOption
       return handle;
     },
     setAppearance(next) {
-      assertActive(); appearance = { ...appearance, ...next, tokens: { ...appearance.tokens, ...next.tokens } };
+      assertActive(); applyAppearance(owner.createElement('div'), next);
+      appearance = { ...appearance, ...next, tokens: { ...appearance.tokens, ...next.tokens } };
       for (const handle of mounted.values()) handle.setAppearance(next);
     },
     fit(selectionOnly = false) { assertActive(); runtime.fit(selectionOnly); },

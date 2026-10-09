@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// ENTRELAZO. Geometría de autor. No reproduce un símbolo tradicional.\ncanvas 24 24\nbackground none\ngroup buscar {\nresource \"{\\\"key\\\": \\\"entrelazo-buscar\\\", \\\"kind\\\": \\\"ui-icon\\\", \\\"brand\\\": \\\"ENTRELAZO\\\", \\\"purpose\\\": \\\"Buscar: lupa circular con terminal de aguja.\\\", \\\"identity\\\": \\\"Cruce, continuidad y pausa. Interpretaci\\u00f3n contempor\\u00e1nea de autor para Amealco.\\\", \\\"reusable\\\": true, \\\"tags\\\": [\\\"entrelazo\\\", \\\"amealco\\\", \\\"original\\\"]}\"\npath hebra_0 { move 11 3; curve 0 3 0 17 11 17; curve 22 17 22 3 11 3; close; fill none; stroke #283472 1.25; cap round; join round }\npath hebra_1 { move 16 16; line 22 22; fill none; stroke #283472 1.25; cap round; join round }\n}\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" width=\"24\" height=\"24\">\n  <g>\n    <path d=\"M11 3 C0 3 0 17 11 17 C22 17 22 3 11 3 Z\" fill=\"none\" stroke=\"#283472\" stroke-width=\"1.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n    <path d=\"M16 16 L22 22\" fill=\"none\" stroke=\"#283472\" stroke-width=\"1.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n  </g>\n</svg>",
+  "filename": "buscar.aru"
+}

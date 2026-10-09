@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Glass · original editable geometry; material is supplied by host nodes.\ncanvas 48 48\nbackground none\npath lensA { move 8 24; curve 8 7 30 7 30 24; curve 30 41 8 41 8 24; close; fill none; stroke #F8FDFF 2.5; cap round; }\npath lensB { move 18 24; curve 18 7 40 7 40 24; curve 40 41 18 41 18 24; close; fill none; stroke #F8FDFF 2.5; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M8 24 C8 7 30 7 30 24 C30 41 8 41 8 24 Z\" fill=\"none\" stroke=\"#F8FDFF\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n  <path d=\"M18 24 C18 7 40 7 40 24 C40 41 18 41 18 24 Z\" fill=\"none\" stroke=\"#F8FDFF\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "glass-v2-brand-light.aru"
+}

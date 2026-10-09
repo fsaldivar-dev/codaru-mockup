@@ -1,0 +1,162 @@
+{
+  "marca": {
+    "label": "ENTRELAZO / firma",
+    "purpose": "Firma vectorial original de nueve letras. Exhibición desde 240 px.",
+    "kind": "illustration",
+    "width": 2640,
+    "height": 350,
+    "minWidth": 160
+  },
+  "origen": {
+    "label": "Origen / titular",
+    "purpose": "Rotulación original: ORIGEN. Exhibición, no texto de lectura.",
+    "kind": "illustration",
+    "width": 1740,
+    "height": 350,
+    "minWidth": 160
+  },
+  "nos-une": {
+    "label": "Nos une / titular",
+    "purpose": "Rotulación original: NOS UNE. Exhibición, no texto de lectura.",
+    "kind": "illustration",
+    "width": 2040,
+    "height": 350,
+    "minWidth": 160
+  },
+  "amealco": {
+    "label": "Amealco / titular",
+    "purpose": "Rotulación original: AMEALCO. Exhibición, no texto de lectura.",
+    "kind": "illustration",
+    "width": 2040,
+    "height": 350,
+    "minWidth": 160
+  },
+  "alfabeto": {
+    "label": "Alfabeto / Hilván Display",
+    "purpose": "Alfabeto original A–Z y cifras. Corresponde a Hilván Display, fuente incluida.",
+    "kind": "illustration",
+    "width": 780,
+    "height": 180,
+    "minWidth": 160
+  },
+  "cruce": {
+    "label": "Explorar",
+    "purpose": "Explorar Amealco: dos recorridos cruzados.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "autoria": {
+    "label": "Autoría",
+    "purpose": "Abrir autoría: dos perfiles unidos por una línea.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "aguja": {
+    "label": "Continuar",
+    "purpose": "Continuar: aguja diagonal con ojo abierto.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "guardar": {
+    "label": "Guardar",
+    "purpose": "Guardar: listón entrelazado, acompañado de etiqueta.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "calendario": {
+    "label": "Encuentros",
+    "purpose": "Abrir encuentros: calendario con un hilo cruzado.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "lugar": {
+    "label": "Lugar",
+    "purpose": "Localizar: contorno de semilla y punto interior.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "volver": {
+    "label": "Volver",
+    "purpose": "Volver: flecha fina con terminal de hilo.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "menu": {
+    "label": "Menú",
+    "purpose": "Abrir menú: tres líneas con pausas alternadas.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "cerrar": {
+    "label": "Cerrar",
+    "purpose": "Cerrar una vista: cruce con pausa.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "sonido": {
+    "label": "Escuchar",
+    "purpose": "Escuchar: onda que cruza tres hebras.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "coleccion": {
+    "label": "Colección",
+    "purpose": "Colección: dos planos con pliegues abiertos.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "buscar": {
+    "label": "Buscar",
+    "purpose": "Buscar: lupa circular con terminal de aguja.",
+    "kind": "icon",
+    "width": 24,
+    "height": 24,
+    "minWidth": 24
+  },
+  "entrelaz": {
+    "label": "Entrelaz / emblema",
+    "purpose": "Emblema original de cuatro lazos cruzados. No es un glifo tradicional.",
+    "kind": "app-icon",
+    "width": 128,
+    "height": 128,
+    "minWidth": 160
+  },
+  "flor-abierta": {
+    "label": "Flor abierta / construcción",
+    "purpose": "Ilustración original: doce hebras abiertas y cuatro pétalos. Evoca cruce y continuidad; no reproduce un bordado local. Desde 240 px.",
+    "kind": "illustration",
+    "width": 640,
+    "height": 640,
+    "minWidth": 160
+  },
+  "germen": {
+    "label": "Germen / comienzo",
+    "purpose": "Ilustración de autor para una colección inicial: semilla con dos hojas entrelazadas. Desde 160 px.",
+    "kind": "illustration",
+    "width": 360,
+    "height": 420,
+    "minWidth": 160
+  }
+}

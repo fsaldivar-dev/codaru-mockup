@@ -1,3 +1,6 @@
+import { implementationsDesign } from '../../examples/implementations-design';
+import { slotsDesign } from '../../examples/slots-design';
+import { propertiesDesign } from '../../examples/properties-design';
 import { test, expect, type Page } from '@playwright/test';
 import { existsSync } from 'node:fs';
 
@@ -139,4 +142,66 @@ test('@package generated bundle mounts using its own editor assets and default U
   expect(requests.filter(path => path.startsWith('/src/'))).toEqual([]);
   const snapshot = await page.evaluate(async () => (window as any).packageTest.handle.destroy());
   expect(snapshot.nodes).toHaveLength(2); await expect(page.locator('iframe')).toHaveCount(0); expect(errors).toEqual([]);
+});
+
+
+test('iframe exposes semantic component controls and persists the same shared operations', async ({ page }) => {
+  const fixture = propertiesDesign(); await mount(page, 'properties', { document: fixture.document });
+  const result = await page.evaluate(({ id, component }) => {
+    const api = (window as any).embedTest.records.properties.api;
+    api.setComponentProperty(id, 'titulo', 'Desde iframe');
+    api.apply([{ op: 'component.property.define', componentId: component, key: 'detalle', property: { type: 'text', label: 'Detalle', targetId: 'card-copy' } }, { op: 'component.property.set', id, key: 'detalle', value: 'Texto con clave' }]);
+    return api.getComponentProperties(id);
+  }, { id: fixture.ids.second, component: fixture.ids.card });
+  expect(result.find((p: any) => p.key === 'titulo').value).toBe('Desde iframe');
+  expect(result.find((p: any) => p.key === 'detalle').textKey).toBe('card.description');
+  await expect(editor(page, 'properties').locator('#stage')).toContainText('Desde iframe');
+  const final = await page.evaluate(async () => (window as any).embedTest.records.properties.handle.destroy());
+  expect(final.nodes.some((n: any) => n.text === 'Texto con clave')).toBe(true);
+});
+
+
+test('iframe exposes slot choices and renders replacement content through its public API',async({page})=>{
+  const fixture=slotsDesign();await mount(page,'slots',{document:fixture.document});
+  const result=await page.evaluate(({id,choice})=>{const api=(window as any).embedTest.records.slots.api;api.setComponentProperty(id,'cabecera',choice);api.select([id]);return api.getComponentProperties(id)[0];},{id:fixture.ids.second,choice:fixture.ids.status});
+  expect(result.type).toBe('slot');expect(result.components).toHaveLength(3);expect(result.value).toBe(fixture.ids.status);
+  await expect(editor(page,'slots').locator('#inspector').getByLabel('Cabecera',{exact:true})).toHaveValue(fixture.ids.status);
+  await expect(editor(page,'slots').locator('#stage')).toContainText('Disponible');
+  const saved=await page.evaluate(async()=>(window as any).embedTest.records.slots.handle.destroy());
+  expect(saved.components.find((c:any)=>c.id===fixture.ids.card).properties.cabecera.type).toBe('slot');
+});
+
+test('@package slots work through the distributed iframe without source imports',async({page})=>{
+  const fixture=slotsDesign();const requested:string[]=[];page.on('request',r=>requested.push(new URL(r.url()).pathname));
+  await page.goto('/tests/fixtures/embed-package.html');await page.waitForFunction(()=>!!(window as any).packageTest?.api);
+  const result=await page.evaluate(({document,id,choice})=>{const api=(window as any).packageTest.api;api.importDocument(document);api.setComponentProperty(id,'cabecera',choice);api.select([id]);return api.getComponentProperties(id)[0];},{document:fixture.document,id:fixture.ids.second,choice:fixture.ids.status});
+  expect(result.value).toBe(fixture.ids.status);await expect(page.frameLocator('iframe').locator('#inspector').getByLabel('Cabecera',{exact:true})).toHaveValue(fixture.ids.status);
+  await expect(page.frameLocator('iframe').locator('#stage')).toContainText('Disponible');
+  expect(requested.filter(path=>path.startsWith('/src/'))).toEqual([]);
+  await page.evaluate(()=>(window as any).packageTest.handle.destroy());
+});
+
+
+test('@package implementation links cross the iframe boundary with isolated host intents', async ({ page }) => {
+  const fixture = implementationsDesign(), requests: string[] = [];
+  page.on('request', r => requests.push(new URL(r.url()).pathname));
+  await page.goto('/tests/fixtures/embed-package.html'); await page.waitForFunction(() => !!(window as any).packageTest?.api);
+  const result = await page.evaluate(async ({ document, id, componentId }) => {
+    const t = (window as any).packageTest;
+    t.api.importDocument(document); t.api.select([id]);
+    t.api.setImplementation(componentId, 'macos', { symbol: 'MacCard', module: 'App' });
+    await t.api.requestImplementation(id, 'macos');
+    return { links: t.api.getImplementations(id), intent: t.implementationRequests[0] };
+  }, { document: fixture.document, id: fixture.ids.second, componentId: fixture.ids.card });
+  expect(result.links.implementations.macos.symbol).toBe('MacCard'); expect(result.intent.reference).toEqual({ symbol: 'MacCard', module: 'App' });
+  await page.frameLocator('iframe').getByRole('button', { name: 'Abrir implementación ios', exact: true }).click();
+  expect(await page.evaluate(() => (window as any).packageTest.implementationRequests.map((r: any) => r.platform))).toEqual(['macos', 'ios']);
+  expect(requests.filter(path => path.startsWith('/src/'))).toEqual([]);
+  const saved = await page.evaluate(async () => {
+    const t = (window as any).packageTest, doc = await t.handle.destroy();
+    let error = ''; try { await t.api.requestImplementation(t.implementationRequests[0].nodeId, 'ios'); } catch (e) { error = String(e); }
+    return { doc, error, count: t.implementationRequests.length };
+  });
+  expect(saved.doc.components.find((c: any) => c.id === fixture.ids.card).implementations.macos.symbol).toBe('MacCard');
+  expect(saved.error).toContain('desmontado'); expect(saved.count).toBe(2);
 });

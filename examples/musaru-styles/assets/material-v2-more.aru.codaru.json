@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Material 3 tonal · original editable flat forms.\ncanvas 48 48\nbackground none\ncircle dotA { at 12 24; radius 2.5; fill #49454F; }\ncircle dotB { at 24 24; radius 2.5; fill #49454F; }\ncircle dotC { at 36 24; radius 2.5; fill #49454F; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <circle r=\"2.5\" transform=\"translate(12 24)\" fill=\"#49454F\"/>\n  <circle r=\"2.5\" transform=\"translate(24 24)\" fill=\"#49454F\"/>\n  <circle r=\"2.5\" transform=\"translate(36 24)\" fill=\"#49454F\"/>\n</svg>",
+  "filename": "material-v2-more.aru"
+}

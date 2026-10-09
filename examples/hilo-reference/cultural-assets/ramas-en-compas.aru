@@ -1,0 +1,38 @@
+// HILO / ramas-en-compas. Original geometry, contemporary interpretation; no attributed traditional meaning.
+canvas 420 420
+background none
+group ramas-en-compas {
+resource "{\"key\": \"hilo-ramas-en-compas\", \"kind\": \"illustration\", \"brand\": \"HILO\", \"purpose\": \"Portada de playlist de HILO: tres ramas y un entrelazado inferior. Ilustraci\u00f3n desde 180 px.\", \"identity\": \"Fine contour, open space and folded ribbon gestures\", \"reusable\": true, \"tags\": [\"hilo\", \"jardin-de-voces\"]}"
+group ritmos {
+path tallo_izquierdo { move 208 343; curve 173 280 154 206 135 138; fill none; stroke #788A75 1.8; cap round; join round }
+path tallo_central { move 211 344; curve 228 252 221 167 235 87; fill none; stroke #788A75 1.8; cap round; join round }
+path tallo_derecho { move 215 344; curve 265 284 287 244 303 193; fill none; stroke #788A75 1.8; cap round; join round }
+path hoja_uno { move 174 248; curve 174.4 230.3 138 211.06 104 211; curve 123.2 239.06 159.6 258.3 174 248; close; fill none; stroke #788A75 1.6; cap round; join round }
+path hoja_dos { move 224 209; curve 240.5 216.5 273.26 189.98 287 158; curve 252.86 164.78 220.1 191.3 224 209; close; fill #E3E9DE; stroke #788A75 1.6; cap round; join round }
+path hoja_tres { move 273 263; curve 281.2 276.4 317.6 273.28 343 257; curve 315.2 245.28 278.8 248.4 273 263; close; fill none; stroke #788A75 1.6; cap round; join round }
+}
+group flores {
+group flor_abierta {
+path petalo_0 { move 142 125; curve 145.2 131.4 161.84 131.4 174 125; curve 161.84 118.6 145.2 118.6 142 125; close; fill none; stroke #D32F63 1.6; cap round; join round }
+path petalo_1 { move 138.5 131.062; curve 134.557 137.033 142.877 151.444 154.5 158.775; curve 153.963 145.044 145.643 130.633 138.5 131.062; close; fill none; stroke #D32F63 1.6; cap round; join round }
+path petalo_2 { move 131.5 131.062; curve 124.357 130.633 116.037 145.044 115.5 158.775; curve 127.123 151.444 135.443 137.033 131.5 131.062; close; fill #F3DCE4; stroke #D32F63 1.6; cap round; join round }
+path petalo_3 { move 128 125; curve 124.8 118.6 108.16 118.6 96 125; curve 108.16 131.4 124.8 131.4 128 125; close; fill none; stroke #D32F63 1.6; cap round; join round }
+path petalo_4 { move 131.5 118.938; curve 135.443 112.967 127.123 98.5559 115.5 91.225; curve 116.037 104.956 124.357 119.367 131.5 118.938; close; fill none; stroke #D32F63 1.6; cap round; join round }
+path petalo_5 { move 138.5 118.938; curve 145.643 119.367 153.963 104.956 154.5 91.225; curve 142.877 98.5559 134.557 112.967 138.5 118.938; close; fill none; stroke #D32F63 1.6; cap round; join round }
+circle centro { at 135 125; radius 3; fill #D32F63 }
+}
+path boton { move 234 100; curve 245 95 246.04 66.92 236 46; curve 224.44 66.12 223.4 94.2 234 100; close; fill #F3DCE4; stroke #D32F63 1.75; cap round; join round }
+path pliegue { move 235 96; curve 225 76 232 59 235 48; fill none; stroke #D32F63 1.1; cap round; join round }
+path abanico_0 { move 302 195; curve 303.5 188 290.5 177.6 277 175; curve 282.5 187.6 295.5 198 302 195; close; fill none; stroke #278D9B 1.6; cap round; join round }
+path abanico_1 { move 302 195; curve 308.3 190.1 304.66 171.9 295 160; curve 290.66 174.7 294.3 192.9 302 195; close; fill none; stroke #278D9B 1.6; cap round; join round }
+path abanico_2 { move 302 195; curve 309 194.5 315.24 179.42 314 166; curve 303.64 174.62 297.4 189.7 302 195; close; fill none; stroke #278D9B 1.6; cap round; join round }
+path abanico_3 { move 302 195; curve 306.7 199.4 320.74 194.2 329 185; curve 316.74 183.4 302.7 188.6 302 195; close; fill none; stroke #278D9B 1.6; cap round; join round }
+}
+group entrelazado {
+path base_uno { move 85 348; curve 135 308 178 383 223 348; curve 261 318 304 326 342 349; fill none; stroke #383631 1.7; cap round; join round }
+path base_dos { move 85 348; curve 135 387 178 312 223 348; curve 261 378 304 371 342 349; fill none; stroke #D32F63 1.5; cap round; join round }
+path aire { move 122 383; curve 186 389 263 377 309 382; fill none; stroke #383631 1.1; cap round; join round }
+}
+circle semilla { at 318 87; radius 3; fill #278D9B }
+circle polen { at 98 248; radius 2.5; fill #D32F63 }
+}

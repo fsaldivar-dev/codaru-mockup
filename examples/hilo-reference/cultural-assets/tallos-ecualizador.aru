@@ -1,0 +1,8 @@
+// HILO / tallos-ecualizador. Original geometry, contemporary interpretation; no attributed traditional meaning.
+canvas 32 32
+background none
+group tallos-ecualizador {
+resource "{\"key\": \"hilo-tallos-ecualizador\", \"kind\": \"ui-icon\", \"brand\": \"HILO\", \"purpose\": \"Configurar el ecualizador; icono de trazo fino para 24 px.\", \"identity\": \"Fine contour, open space and folded ribbon gestures\", \"reusable\": true, \"tags\": [\"hilo\", \"jardin-de-voces\"]}"
+path tallos { move 7 5; line 7 11; move 7 17; line 7 27; move 16 5; line 16 18; move 16 24; line 16 27; move 25 5; line 25 7; move 25 13; line 25 27; fill none; stroke #383631 1.65; cap round; join round }
+path semillas { move 10 14; curve 10 18 4 18 4 14; curve 4 10 10 10 10 14; close; move 19 21; curve 19 25 13 25 13 21; curve 13 17 19 17 19 21; close; move 28 10; curve 28 14 22 14 22 10; curve 22 6 28 6 28 10; close; fill none; stroke #383631 1.65; cap round; join round }
+}

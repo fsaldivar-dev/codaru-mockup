@@ -1,0 +1,22 @@
+// ENTRELAZO. Geometría de autor. No reproduce un símbolo tradicional.
+canvas 360 420
+background none
+group germen {
+resource "{\"key\": \"entrelazo-germen\", \"kind\": \"illustration\", \"brand\": \"ENTRELAZO\", \"purpose\": \"Ilustraci\u00f3n de autor para una colecci\u00f3n inicial: semilla con dos hojas entrelazadas. Desde 160 px.\", \"identity\": \"Cruce, continuidad y pausa. Interpretaci\u00f3n contempor\u00e1nea de autor para Amealco.\", \"reusable\": true, \"tags\": [\"entrelazo\", \"amealco\", \"original\"]}"
+path tallo { move 179 386; curve 195 278 155 217 182 91; fill none; stroke #283472 1.5; cap round; join round }
+path hoja_i_0 { move 178 300; curve 64 282 65 119 178 243; fill none; stroke #A93663 1; cap round; join round }
+path hoja_d_0 { move 182 242; curve 297 205 292 61 182 185; fill none; stroke #283472 1; cap round; join round }
+path hoja_i_1 { move 178 293; curve 71 275 72 126 178 243; fill none; stroke #A93663 1; cap round; join round }
+path hoja_d_1 { move 182 235; curve 290 198 285 68 182 185; fill none; stroke #283472 1; cap round; join round }
+path hoja_i_2 { move 178 286; curve 78 268 79 133 178 243; fill none; stroke #A93663 1; cap round; join round }
+path hoja_d_2 { move 182 228; curve 283 191 278 75 182 185; fill none; stroke #283472 1; cap round; join round }
+path hoja_i_3 { move 178 279; curve 85 261 86 140 178 243; fill none; stroke #A93663 1; cap round; join round }
+path hoja_d_3 { move 182 221; curve 276 184 271 82 182 185; fill none; stroke #283472 1; cap round; join round }
+path hoja_i_4 { move 178 272; curve 92 254 93 147 178 243; fill none; stroke #A93663 1; cap round; join round }
+path hoja_d_4 { move 182 214; curve 269 177 264 89 182 185; fill none; stroke #283472 1; cap round; join round }
+path hoja_i_5 { move 178 265; curve 99 247 100 154 178 243; fill none; stroke #A93663 1; cap round; join round }
+path hoja_d_5 { move 182 207; curve 262 170 257 96 182 185; fill none; stroke #283472 1; cap round; join round }
+path hoja_i_6 { move 178 258; curve 106 240 107 161 178 243; fill none; stroke #A93663 1; cap round; join round }
+path hoja_d_6 { move 182 200; curve 255 163 250 103 182 185; fill none; stroke #283472 1; cap round; join round }
+path brote { move 182 133; curve 130 83 158 29 182 18; curve 219 45 221 91 182 133; close; fill #D8E598; stroke #283472 1; cap round; join round }
+}

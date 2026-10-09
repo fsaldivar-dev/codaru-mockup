@@ -1,0 +1,7 @@
+// HILO / semillas-mas. Original geometry, contemporary interpretation; no attributed traditional meaning.
+canvas 32 32
+background none
+group semillas-mas {
+resource "{\"key\": \"hilo-semillas-mas\", \"kind\": \"ui-icon\", \"brand\": \"HILO\", \"purpose\": \"Abrir m\u00e1s opciones; icono de trazo fino para 24 px.\", \"identity\": \"Fine contour, open space and folded ribbon gestures\", \"reusable\": true, \"tags\": [\"hilo\", \"jardin-de-voces\"]}"
+path semillas { move 8 16; curve 8 20 3 20 3 16; curve 3 12 8 12 8 16; close; move 18.5 16; curve 18.5 20 13.5 20 13.5 16; curve 13.5 12 18.5 12 18.5 16; close; move 29 16; curve 29 20 24 20 24 16; curve 24 12 29 12 29 16; close; fill none; stroke #383631 1.65; cap round; join round }
+}

@@ -1,0 +1,4 @@
+// Musaru MusicArt · original rounded outline, no fills or effects.
+canvas 48 48
+background none
+path backArrow { move 22 10; line 8 24; line 22 38; move 8 24; line 41 24; fill none; stroke #2F5148 2.4; cap round; }

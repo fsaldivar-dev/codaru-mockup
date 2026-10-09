@@ -1,0 +1,46 @@
+// Musaru style laboratory · original editable illustration
+canvas 600 400
+background none
+gradient orange linear 100 { stop 0 #FFF796; stop 0.3 #FFD445; stop 0.65 #FF972C; stop 1 #ED5A22 }
+gradient green linear 115 { stop 0 #EAFFB1; stop 0.5 #97D558; stop 1 #369251 }
+gradient pink linear 90 { stop 0 #FFE0DF; stop 0.4 #FC86A1; stop 1 #DF3167 }
+group citrus {
+ circle shell { at 295 207; radius 151; fill orange; stroke #FFDB74 7 }
+ circle pith { at 295 207; radius 128; fill #FFF8D5 }
+ circle flesh { at 295 207; radius 114; fill #FFAA32 }
+path membrane0 { move 295 207; line 400.0 207.0; stroke #FFF2B9 5; cap round; fill none }
+path membrane1 { move 295 207; line 379.9 268.7; stroke #FFF2B9 5; cap round; fill none }
+path membrane2 { move 295 207; line 327.4 306.9; stroke #FFF2B9 5; cap round; fill none }
+path membrane3 { move 295 207; line 262.6 306.9; stroke #FFF2B9 5; cap round; fill none }
+path membrane4 { move 295 207; line 210.1 268.7; stroke #FFF2B9 5; cap round; fill none }
+path membrane5 { move 295 207; line 190.0 207.0; stroke #FFF2B9 5; cap round; fill none }
+path membrane6 { move 295 207; line 210.1 145.3; stroke #FFF2B9 5; cap round; fill none }
+path membrane7 { move 295 207; line 262.6 107.1; stroke #FFF2B9 5; cap round; fill none }
+path membrane8 { move 295 207; line 327.4 107.1; stroke #FFF2B9 5; cap round; fill none }
+path membrane9 { move 295 207; line 379.9 145.3; stroke #FFF2B9 5; cap round; fill none }
+circle core { at 295 207; radius 13; fill #FFF8D5 }
+path shine { move 184 138; curve 219 72 334 59 383 119; stroke #FFFFFFAA 14; cap round; fill none }
+}
+path leaf { move 342 65; curve 344 12 420 8 442 38; curve 427 85 381 87 342 65; close; fill green; stroke #4A9B50 2 }
+path vein { move 352 64; quad 399 38 428 40; stroke #F5FFD3 3; fill none }
+circle berry { at 438 285; radius 67; fill pink; stroke #FFB1BF 3 }
+ellipse berryLight { at 422 253; size 66 25; fill #FFFFFF77 }
+group kiwi {
+ circle skin { at 130 287; radius 67; fill #89AA38 }
+ circle inside { at 130 287; radius 58; fill green }
+ circle core { at 130 287; radius 23; fill #F6FFD4 }
+circle seed0 { at 166.0 287.0; radius 3; fill #355527;  }
+circle seed1 { at 161.18 305.0; radius 3; fill #355527;  }
+circle seed2 { at 148.0 318.18; radius 3; fill #355527;  }
+circle seed3 { at 130.0 323.0; radius 3; fill #355527;  }
+circle seed4 { at 112.0 318.18; radius 3; fill #355527;  }
+circle seed5 { at 98.82 305.0; radius 3; fill #355527;  }
+circle seed6 { at 94.0 287.0; radius 3; fill #355527;  }
+circle seed7 { at 98.82 269.0; radius 3; fill #355527;  }
+circle seed8 { at 112.0 255.82; radius 3; fill #355527;  }
+circle seed9 { at 130.0 251.0; radius 3; fill #355527;  }
+circle seed10 { at 148.0 255.82; radius 3; fill #355527;  }
+circle seed11 { at 161.18 269.0; radius 3; fill #355527;  }
+}
+path fresh { move 495.0 95.0; line 501.3 110.3; line 517.8 111.6; line 505.3 122.3; line 509.1 138.4; line 495.0 129.8; line 480.9 138.4; line 484.7 122.3; line 472.2 111.6; line 488.7 110.3; close; fill #FFFFFF }
+

@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru monochrome · original editable geometry.\ncanvas 48 48\nbackground none\nrect left { at 10 24; size 4 28; corner 0; fill #FAFAFA; }\nrect center { at 24 24; size 4 40; corner 0; fill #FAFAFA; }\nrect right { at 38 24; size 4 18; corner 0; fill #FAFAFA; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <rect x=\"-2\" y=\"-14\" width=\"4\" height=\"28\" transform=\"translate(10 24)\" fill=\"#FAFAFA\"/>\n  <rect x=\"-2\" y=\"-20\" width=\"4\" height=\"40\" transform=\"translate(24 24)\" fill=\"#FAFAFA\"/>\n  <rect x=\"-2\" y=\"-9\" width=\"4\" height=\"18\" transform=\"translate(38 24)\" fill=\"#FAFAFA\"/>\n</svg>",
+  "filename": "mono-v2-pocket-mark.aru"
+}

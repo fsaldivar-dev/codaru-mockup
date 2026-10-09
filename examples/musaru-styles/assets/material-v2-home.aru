@@ -1,0 +1,4 @@
+// Musaru Material 3 tonal · original editable flat forms.
+canvas 48 48
+background none
+path roof { move 7 22; line 22 9; quad 24 7 26 9; line 41 22; line 37 22; line 37 38; quad 37 40 34 40; line 28 40; line 28 29; line 20 29; line 20 40; line 14 40; quad 11 40 11 37; line 11 22; close; fill #6750A4; }

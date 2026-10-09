@@ -1,0 +1,25 @@
+// Musaru style laboratory · original editable illustration
+canvas 600 400
+background none
+gradient sky linear 90 { stop 0 #70B6F7; stop 0.6 #DFF1FC; stop 1 #FEFAD7 }
+gradient hill linear 90 { stop 0 #ACD843; stop 1 #448B2E }
+gradient orb linear 100 { stop 0 #FFFFFF; stop 0.35 #C4E8FF; stop 0.6 #6DADD0; stop 1 #DDF6FF }
+gradient gold linear 100 { stop 0 #FFFFC1; stop 0.5 #EAD36A; stop 1 #B6A345 }
+rect landscape { at 300 200; size 600 400; corner 24; fill sky }
+circle sun { at 444 75; radius 52; fill #FFFAC3 }
+path cloudA { move 32 100; curve 20 68 65 56 82 74; curve 99 34 160 42 162 82; curve 201 63 218 95 200 110; close; fill #FFFFFF }
+path cloudB { move 365 122; curve 357 103 386 90 401 103; curve 420 74 462 92 463 113; quad 490 103 502 127; close; fill #FFFFFF }
+path farHill { move 0 280; curve 137 126 261 238 600 211; line 600 400; line 0 400; close; fill #9DCC58 }
+path nearHill { move 0 334; curve 143 179 271 379 600 248; line 600 400; line 0 400; close; fill hill }
+path sweep { move 0 353; curve 189 235 358 412 600 277; stroke #F4FFD1 9; fill none }
+group musicOrb {
+ circle outer { at 300 202; radius 123; fill orb; stroke #F1FCFF 3 }
+ ellipse highlight { at 289 138; size 179 66; fill #FFFFFFAA }
+ path note { move 269 240; line 269 151; line 354 136; line 354 218; stroke #345A72 13; cap round; fill none }
+ ellipse noteA { at 248 242; size 50 32; fill #345A72 }
+ ellipse noteB { at 333 220; size 50 32; fill #345A72 }
+}
+path gleam { move 405.0 79.0; line 410.8 93.0; line 425.9 94.2; line 414.4 104.1; line 417.9 118.8; line 405.0 110.9; line 392.1 118.8; line 395.6 104.1; line 384.1 94.2; line 399.2 93.0; close; fill #FFFFFF }
+circle pollenA { at 102 222; radius 6; fill #FFFFFF;  }
+circle pollenB { at 480 252; radius 8; fill #FFFFC1;  }
+

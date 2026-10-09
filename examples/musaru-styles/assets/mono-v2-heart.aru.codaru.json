@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru monochrome · original editable geometry.\ncanvas 48 48\nbackground none\npath heart { move 24 39; curve 7 29 4 19 11 12; curve 17 7 22 11 24 16; curve 29 8 36 9 40 15; curve 46 25 34 34 24 39; close; fill none; stroke #161616 2.4; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M24 39 C7 29 4 19 11 12 C17 7 22 11 24 16 C29 8 36 9 40 15 C46 25 34 34 24 39 Z\" fill=\"none\" stroke=\"#161616\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "mono-v2-heart.aru"
+}

@@ -1,0 +1,146 @@
+{
+  "nace-el-agua": {
+    "label": "Nace el agua",
+    "purpose": "Imagen de apertura de VENERO: un paisaje imaginado de bosque, agua y tierra; usar desde 240 px.",
+    "kind": "illustration",
+    "width": 640,
+    "height": 680,
+    "minWidth": 180
+  },
+  "dar-forma": {
+    "label": "Dar forma",
+    "purpose": "Ilustración editorial de manos modelando barro, original y no retrato de una persona real; desde 180 px.",
+    "kind": "illustration",
+    "width": 480,
+    "height": 420,
+    "minWidth": 180
+  },
+  "tiempo-del-bosque": {
+    "label": "Tiempo del bosque",
+    "purpose": "Escena original de bosque y sendero; no es un mapa ni una imagen de un lugar específico; desde 180 px.",
+    "kind": "illustration",
+    "width": 480,
+    "height": 420,
+    "minWidth": 180
+  },
+  "mesa-abierta": {
+    "label": "Mesa abierta",
+    "purpose": "Composición original de una mesa, maíz y un cuenco; homenaje editorial a cocinar y compartir, sin reproducir un platillo específico; desde 180 px.",
+    "kind": "illustration",
+    "width": 480,
+    "height": 420,
+    "minWidth": 180
+  },
+  "sello-venero": {
+    "label": "Sello VENERO",
+    "purpose": "Marca original VENERO: dos laderas y un cauce; no es un glifo tradicional.",
+    "kind": "app-icon",
+    "width": 96,
+    "height": 96,
+    "minWidth": 180
+  },
+  "mirar": {
+    "label": "Descubrir",
+    "purpose": "Explorar Amealco; icono original para 24 px con etiqueta.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "barro": {
+    "label": "Oficios",
+    "purpose": "Alfarería y talleres; icono original para 24 px con etiqueta.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "trama": {
+    "label": "Textiles",
+    "purpose": "Textiles y creación local; icono original para 24 px con etiqueta.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "mesa": {
+    "label": "Sabores",
+    "purpose": "Gastronomía de Amealco; icono original para 24 px con etiqueta.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "bosque": {
+    "label": "Paisajes",
+    "purpose": "Bosques y caminos; icono original para 24 px con etiqueta.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "camino": {
+    "label": "Mi recorrido",
+    "purpose": "Guardar ideas para un recorrido; icono original para 24 px con etiqueta.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "voces": {
+    "label": "Historias",
+    "purpose": "Relatos de habitantes y creadores; icono original para 24 px con etiqueta.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "guardar": {
+    "label": "Guardar",
+    "purpose": "Guardar una lectura o lugar; icono original para 24 px con etiqueta.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "lugar": {
+    "label": "Lugar",
+    "purpose": "Ubicación de la comunidad; icono original para 24 px con etiqueta.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "avanzar": {
+    "label": "Continuar",
+    "purpose": "Avanzar o abrir una lectura; icono original para 24 px con etiqueta.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "volver": {
+    "label": "Volver",
+    "purpose": "Volver a la pantalla anterior; icono original para 24 px con etiqueta.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "menu": {
+    "label": "Menú",
+    "purpose": "Abrir las secciones de VENERO; icono original para 24 px con etiqueta.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "trama-viva": {
+    "label": "Trama viva",
+    "purpose": "Una trama original de bandas de color y cruces abiertos, sin reproducir bordados, muñecas ni atribuir un significado tradicional; desde 180 px.",
+    "kind": "illustration",
+    "width": 480,
+    "height": 400,
+    "minWidth": 180
+  }
+}

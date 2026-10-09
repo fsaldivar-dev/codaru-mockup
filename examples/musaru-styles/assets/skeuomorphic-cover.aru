@@ -1,0 +1,22 @@
+// Musaru · Esqueumórfico · original editable cover
+canvas 600 400
+background none
+gradient casing linear 90 { stop 0 #DDD2BC; stop 0.4 #EDE3CF; stop 1 #B8AB92 }
+gradient window linear 90 { stop 0 #413C32; stop 0.5 #847865; stop 1 #39352D }
+rect case { at 300 200; size 456 272; corner 19; fill casing; stroke #7E725D 3; }
+rect label { at 300 146; size 400 120; corner 9; fill #F2E8D6; stroke #9B8B70 2; }
+rect stripe { at 300 143; size 397 27; corner 0; fill #B3714F;  }
+rect window { at 300 216; size 278 67; corner 12; fill window; stroke #6F6655 3; }
+circle wheel212 { at 212 216; radius 28; fill #C5BAA4; stroke #3B362D 4; }
+circle hub212 { at 212 216; radius 11; fill #3C392F;  }
+circle wheel386 { at 386 216; radius 28; fill #C5BAA4; stroke #3B362D 4; }
+circle hub386 { at 386 216; radius 11; fill #3C392F;  }
+path base { move 219 291; line 381 291; line 405 329; line 195 329; close; fill #BEB19B; stroke #85735D 2; }
+circle screw0 { at 91 82; radius 6; fill #6F6A5D;  }
+path slot0 { move 88 82; line 94 82; fill none; stroke #DDD2B9 1; }
+circle screw1 { at 509 82; radius 6; fill #6F6A5D;  }
+path slot1 { move 506 82; line 512 82; fill none; stroke #DDD2B9 1; }
+circle screw2 { at 91 318; radius 6; fill #6F6A5D;  }
+path slot2 { move 88 318; line 94 318; fill none; stroke #DDD2B9 1; }
+circle screw3 { at 509 318; radius 6; fill #6F6A5D;  }
+path slot3 { move 506 318; line 512 318; fill none; stroke #DDD2B9 1; }

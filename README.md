@@ -1,4 +1,4 @@
-# Codaru Mockup · 0.3
+# Codaru Mockup · 0.8
 
 Editor local de maquetas de interfaz, diseñado para integrarse dentro de una aplicación Tauri existente. TypeScript, HTML/CSS y SVG, sin dependencias de interfaz en ejecución. Incluye un paquete embebible, un plugin Rust opcional y una aplicación macOS de ejemplo. La aplicación compilada no necesita Node, un servidor, una cuenta ni conexión a Internet.
 
@@ -21,6 +21,14 @@ Desde 0.2 también puedes integrar el editor **por piezas, sin iframe**: `codaru
 
 La distribución embebible y la app de ejemplo tienen pesos distintos. `artifacts/embedded-size.json` se regenera con tamaños medidos del runtime y del paquete completo. El CLI es opcional si tu agente ya accede a la API de la aplicación anfitriona.
 
+## Arquitectura
+
+Seguimos composición de componentes, un núcleo independiente de la interfaz y contratos con el IDE. Atomic Design sirve como vocabulario opcional para organizar la biblioteca. [Decisión, fuentes y etapas de adopción](docs/ARCHITECTURE.md). Los contratos comunes, las pruebas de frontera, la composición reutilizable anidada, las propiedades públicas y los espacios de contenido están incorporados. Prueba `examples/nested-host.html`: símbolo → botón → tarjeta, con cambios compartidos y textos locales.
+
+## Textos localizables
+
+Puedes vincular `textKey` a textos, botones y campos, previsualizar los idiomas que entregue el IDE y revisar traducciones faltantes o recortadas. Los catálogos permanecen en el host; el selector se monta como fragmento `locale`. Consulta [la guía de localización](docs/LOCALIZATION.md) y `examples/localization-host.html`.
+
 ## Abrir
 
 La aplicación de ejemplo compilada está en `src-tauri/target/release/bundle/macos/Codaru Mockup.app`. Ahora abre el host con el editor integrado y botones para consultar contexto y desmontar/remontar la vista. La clave explícita de persistencia conserva el borrador anterior.
@@ -36,7 +44,7 @@ El ejemplo `examples/Forma.codaru.json` contiene dos pantallas conectadas y un b
 5. Usa **Crear componente** sobre un elemento o grupo. Inserta copias desde la pestaña Componentes. Editar el maestro actualiza sus instancias; los campos modificados en una instancia se conservan.
 6. Abre **Temas** en la barra superior para configurar colores, degradados, materiales, tipografía y radios. Los valores vinculados se actualizan juntos.
 7. Selecciona un botón y elige su pantalla de destino en **Al hacer clic**. La pestaña Flujos muestra las conexiones.
-8. Guarda el JSON editable o exporta el **prototipo HTML**, que se abre directamente desde disco sin servidor. Una pantalla seleccionada puede exportarse como SVG.
+8. Guarda el JSON editable o exporta el **prototipo HTML**, que se abre directamente desde disco sin servidor. Una pantalla seleccionada puede exportarse como SVG. Para ilustraciones y componentes, **Propiedades → Exportar asset** entrega SVG, PNG transparente o un ZIP para iOS y Android, también por API y CLI. [Guía de assets](docs/ASSETS.md).
 
 Atajos adicionales: **V** seleccionar, **F** pantalla, **O** elipse, **B** botón, **Espacio + arrastrar** mover lienzo, **⌘D** duplicar, **⌘Z / Shift + ⌘Z** deshacer/rehacer, **flechas** mover 1 px, **Shift + flechas** mover 10 px, **⌘S** guardar. **Alt** durante el arrastre evita el ajuste de posición de 4 px. El botón `?` muestra los atajos. En Windows/Linux se usa Ctrl en lugar de ⌘.
 
@@ -257,6 +265,25 @@ Las operaciones inválidas se revierten íntegramente. Los proyectos importados 
 
 Incluye formas básicas, textos, botones, campos, tarjetas, imágenes locales, grupos, componentes con instancias y sobrescrituras, cinco kits de 20 componentes, perfiles claro/oscuro por pantalla, tokens de colores/degradados/materiales/tipografía/radios, gradientes locales, radios por esquina, borde sólido, sombra exterior, fila/columna, alineación, distribución horizontal, bloqueo/visibilidad, zoom, conexiones, presentación, JSON, HTML y SVG.
 
-Pendiente para siguientes iteraciones: variantes formales de componentes, componentes anidados, más iconos y variantes, copy/paste entre proyectos, guías inteligentes entre objetos, auto layout con ajuste al contenido y reglas adaptativas, múltiples rellenos/bordes, sombra interior configurable y chat de IA dentro de la app. El CLI ya permite conectar un agente externo. Los controles del mock son visuales; en Presentar los campos aceptan texto y los destinos definidos navegan. No hay backend ni autenticación real en las pantallas de ejemplo.
+Pendiente para siguientes iteraciones: más iconos y variantes, copy/paste entre proyectos, guías inteligentes entre objetos, auto layout con ajuste al contenido y reglas adaptativas, múltiples rellenos/bordes, sombra interior configurable y chat de IA dentro de la app. El CLI ya permite conectar un agente externo. Los controles del mock son visuales; en Presentar los campos aceptan texto y los destinos definidos navegan. No hay backend ni autenticación real en las pantallas de ejemplo.
 
 La exportación HTML utiliza el mismo renderizador que la presentación y conserva el vidrio simulado. SVG conserva geometría, texto, colores y las paradas de los degradados; simplifica los materiales a tinte y borde, y los saltos de texto y el recorte de imágenes pueden variar respecto a HTML. El formato JSON es la fuente editable.
+
+## Propiedades públicas de componentes
+
+`getComponentProperties(id)` descubre controles de texto, icono, visibilidad y variante; `setComponentProperty(id, clave, valor)` permite construir controles propios del IDE. `null` restablece solo esa propiedad. También están disponibles las operaciones `component.property.define`, `.remove` y `.set` en `apply` y en el agente. Los textos conservan sus claves de localización.
+
+Consulta [el contrato y ejemplo embebido](docs/COMPONENT-PROPERTIES.md).
+
+Los controles también admiten `type: "slot"` con `allowedComponents`: un componente intercambiable por espacio, predeterminado heredado y elecciones por instancia. Se descubren con `getComponentProperties` y se editan con `setComponentProperty(id, clave, componentId)`; `null` restablece. Consulta `docs/COMPONENT-SLOTS.md` y el ejemplo `examples/slots-host.html` en el repositorio.
+
+
+### Vínculos con la implementación
+
+Los componentes pueden guardar referencias por plataforma (`symbol`, `path` relativo y/o `module`). `getImplementations`, `setImplementation` y `requestImplementation` permiten controlarlas desde el IDE. El inspector ofrece **Abrir implementación** mediante el callback `onImplementationRequest`; el host conserva la resolución de símbolos, navegación y persistencia. Las instancias comparten los vínculos de su definición, incluidos componentes anidados y slots.
+
+El CLI descubre los vínculos en el contexto acotado y los edita con `component.implementation.set`. No se añade un servidor ni lectura automática de código. Contrato: `docs/IMPLEMENTATION-LINKS.md`; ejemplo del repositorio: `examples/implementations-host.html`.
+
+### Iconos e ilustraciones con ARU
+
+El helper opcional ARU 0.7.0 permite crear recursos propios, conservar su fuente editable y animar las capas en Codaru. Las fotografías siguen en el banco de recursos. [Flujo e integración con el IDE](docs/ARU.md). `examples/aru-music/index.html` demuestra el flujo con Musaru: escritorio, móvil, identidad original y fotos reales.

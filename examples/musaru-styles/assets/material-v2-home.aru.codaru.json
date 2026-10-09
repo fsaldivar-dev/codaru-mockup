@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Material 3 tonal · original editable flat forms.\ncanvas 48 48\nbackground none\npath roof { move 7 22; line 22 9; quad 24 7 26 9; line 41 22; line 37 22; line 37 38; quad 37 40 34 40; line 28 40; line 28 29; line 20 29; line 20 40; line 14 40; quad 11 40 11 37; line 11 22; close; fill #6750A4; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M7 22 L22 9 Q24 7 26 9 L41 22 L37 22 L37 38 Q37 40 34 40 L28 40 L28 29 L20 29 L20 40 L14 40 Q11 40 11 37 L11 22 Z\" fill=\"#6750A4\"/>\n</svg>",
+  "filename": "material-v2-home.aru"
+}

@@ -1,0 +1,167 @@
+{
+  "format": "codaru-style/1",
+  "id": "riso-editorial",
+  "name": "Risografía editorial",
+  "version": "1.0.0",
+  "description": "Papel cálido, tintas superpuestas y composición editorial. Un lenguaje para interpretar cada pantalla, no una plantilla.",
+  "theme": {
+    "id": "riso-editorial",
+    "name": "Risografía editorial",
+    "modes": {
+      "light": {
+        "colors": {
+          "primary": "#d64d32",
+          "surface": "#fff9e9",
+          "background": "#f4efde",
+          "text": "#23362e",
+          "muted": "#626858",
+          "border": "#23362e",
+          "accent": "#e5c548"
+        },
+        "gradients": {
+          "brand": {
+            "name": "Sobreimpresión",
+            "type": "linear",
+            "angle": 12,
+            "stops": [
+              {
+                "color": "@primary",
+                "position": 0
+              },
+              {
+                "color": "@accent",
+                "position": 100
+              }
+            ]
+          }
+        },
+        "materials": {
+          "glass": {
+            "name": "Cristal",
+            "tint": "@surface",
+            "opacity": 64,
+            "blur": 16,
+            "saturation": 150,
+            "stroke": "@border",
+            "shadow": 16
+          }
+        },
+        "typography": {
+          "body": {
+            "name": "Cuerpo",
+            "fontFamily": "serif",
+            "fontSize": 16,
+            "fontWeight": 400,
+            "lineHeight": 1.4
+          },
+          "heading": {
+            "name": "Titular editorial",
+            "fontFamily": "serif",
+            "fontSize": 40,
+            "fontWeight": 700,
+            "lineHeight": 1.1
+          }
+        },
+        "radii": {
+          "control": 0,
+          "panel": 2
+        }
+      },
+      "dark": {
+        "colors": {
+          "primary": "#ff8664",
+          "surface": "#23362e",
+          "background": "#192b25",
+          "text": "#f4efde",
+          "muted": "#c5c4ac",
+          "border": "#c5c4ac",
+          "accent": "#e5c548"
+        },
+        "gradients": {
+          "brand": {
+            "name": "Sobreimpresión",
+            "type": "linear",
+            "angle": 12,
+            "stops": [
+              {
+                "color": "@primary",
+                "position": 0
+              },
+              {
+                "color": "@accent",
+                "position": 100
+              }
+            ]
+          }
+        },
+        "materials": {
+          "glass": {
+            "name": "Cristal",
+            "tint": "@surface",
+            "opacity": 68,
+            "blur": 16,
+            "saturation": 150,
+            "stroke": "@border",
+            "shadow": 16
+          }
+        },
+        "typography": {
+          "body": {
+            "name": "Cuerpo",
+            "fontFamily": "serif",
+            "fontSize": 16,
+            "fontWeight": 400,
+            "lineHeight": 1.4
+          },
+          "heading": {
+            "name": "Titular editorial",
+            "fontFamily": "serif",
+            "fontSize": 40,
+            "fontWeight": 700,
+            "lineHeight": 1.1
+          }
+        },
+        "radii": {
+          "control": 0,
+          "panel": 2
+        }
+      }
+    }
+  },
+  "guidance": {
+    "composition": [
+      "Contrapón una columna de índice estrecha con un bloque editorial dominante. Deja márgenes de impresión generosos.",
+      "Usa reglas horizontales, números de edición y asimetría; evita convertir cada contenido en una tarjeta."
+    ],
+    "typography": [
+      "Titulares serif de gran contraste; anotaciones mono pequeñas. Preserva una lectura cómoda en el cuerpo."
+    ],
+    "controls": [
+      "Botones planos con borde de tinta y esquinas rectas. Estados activos como subrayados o sellos.",
+      "Los controles de audio pueden tomar forma de marcadores impresos, manteniendo su función reconocible."
+    ],
+    "mobile": [
+      "Diseña una portada vertical con un titular y una imagen dominantes; sustituye el índice lateral por una lista desplegable.",
+      "El reproductor ocupa su propia franja editorial; deja controles táctiles amplios y no miniaturices el escritorio."
+    ],
+    "motion": [
+      "Transiciones cortas de opacidad y desplazamiento de página. Respeta movimiento reducido."
+    ],
+    "avoid": [
+      "Sombras de tarjetas SaaS, barras de cristal flotantes y rejillas de tarjetas idénticas.",
+      "Texturas que reduzcan el contraste o iconos de trazo indistinguible a 24 px."
+    ]
+  },
+  "aru": {
+    "palette": [
+      "#d64d32",
+      "#23362e",
+      "#e5c548",
+      "#f4efde"
+    ],
+    "instructions": [
+      "Construye siluetas con dos tintas y grupos semánticos editables.",
+      "Desalineación de impresión sutil solo en ilustraciones grandes; iconos limpios y reconocibles a 24 px."
+    ]
+  }
+}

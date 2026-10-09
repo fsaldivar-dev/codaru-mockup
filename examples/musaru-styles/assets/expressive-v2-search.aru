@@ -1,0 +1,4 @@
+// Musaru Expressive · original flat editable shapes.
+canvas 48 48
+background none
+path lens { move 31 20; curve 31 35 9 35 9 20; curve 9 5 31 5 31 20; close; move 29 29; line 40 40; fill none; stroke #62524A 3.2; cap round; }

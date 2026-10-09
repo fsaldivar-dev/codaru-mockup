@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Material 3 tonal · original editable flat forms.\ncanvas 300 24\nbackground none\nrect inactive { at 150 12; size 296 4; corner 2; fill #CAC4D0; }\nrect active { at 57 12; size 110 4; corner 2; fill #6750A4; }\nrect thumb { at 112 12; size 5 22; corner 2.5; fill #6750A4; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 24\" width=\"300\" height=\"24\">\n  <rect x=\"-148\" y=\"-2\" width=\"296\" height=\"4\" rx=\"2\" transform=\"translate(150 12)\" fill=\"#CAC4D0\"/>\n  <rect x=\"-55\" y=\"-2\" width=\"110\" height=\"4\" rx=\"2\" transform=\"translate(57 12)\" fill=\"#6750A4\"/>\n  <rect x=\"-2.5\" y=\"-11\" width=\"5\" height=\"22\" rx=\"2.5\" transform=\"translate(112 12)\" fill=\"#6750A4\"/>\n</svg>",
+  "filename": "material-v2-frequency-seek.aru"
+}

@@ -1,0 +1,4 @@
+// Musaru Material 3 tonal · original editable flat forms.
+canvas 48 48
+background none
+path arrow { move 25 11; line 12 24; line 25 37; move 12 24; line 39 24; fill none; stroke #49454F 3; cap round; }

@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru MusicArt · original rounded outline, no fills or effects.\ncanvas 48 48\nbackground none\nrect pauseLeft { at 16 24; size 6 26; corner 3; fill none; stroke #2F5148 2.4; }\nrect pauseRight { at 32 24; size 6 26; corner 3; fill none; stroke #2F5148 2.4; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <rect x=\"-3\" y=\"-13\" width=\"6\" height=\"26\" rx=\"3\" transform=\"translate(16 24)\" fill=\"none\" stroke=\"#2F5148\" stroke-width=\"2.4\"/>\n  <rect x=\"-3\" y=\"-13\" width=\"6\" height=\"26\" rx=\"3\" transform=\"translate(32 24)\" fill=\"none\" stroke=\"#2F5148\" stroke-width=\"2.4\"/>\n</svg>",
+  "filename": "outline-v2-pause.aru"
+}

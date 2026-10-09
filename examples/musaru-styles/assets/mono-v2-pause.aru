@@ -1,0 +1,5 @@
+// Musaru monochrome · original editable geometry.
+canvas 48 48
+background none
+rect left { at 17 24; size 5 28; corner 0; fill #FAFAFA; }
+rect right { at 31 24; size 5 28; corner 0; fill #FAFAFA; }

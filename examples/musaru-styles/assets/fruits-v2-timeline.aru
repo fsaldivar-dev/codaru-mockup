@@ -1,0 +1,24 @@
+// Musaru Frutiger Fruits · original editable orchard vector.
+canvas 342 42
+background none
+gradient nectar linear 90 { stop 0 #FFF0A8; stop 0.42 #FFC452; stop 0.55 #FFAB31; stop 1 #F37526 }
+gradient citrus linear 90 { stop 0 #FFE79B; stop 0.5 #FFB132; stop 1 #F98320 }
+gradient leaf linear 90 { stop 0 #E1F28A; stop 0.45 #A7CB40; stop 0.52 #7BA32B; stop 1 #477A1E }
+gradient berry linear 90 { stop 0 #FFB7C0; stop 0.48 #F7798D; stop 1 #C94562 }
+path slice0 { move 4 14; quad 13 8 20 14; line 18 30; quad 12 35 6 30; close; fill citrus; }
+path slice1 { move 24 14; quad 33 8 40 14; line 38 30; quad 32 35 26 30; close; fill citrus; }
+path slice2 { move 44 14; quad 53 8 60 14; line 58 30; quad 52 35 46 30; close; fill citrus; }
+path slice3 { move 64 14; quad 73 8 80 14; line 78 30; quad 72 35 66 30; close; fill citrus; }
+path slice4 { move 84 14; quad 93 8 100 14; line 98 30; quad 92 35 86 30; close; fill citrus; }
+path slice5 { move 104 14; quad 113 8 120 14; line 118 30; quad 112 35 106 30; close; fill citrus; }
+path slice6 { move 124 14; quad 133 8 140 14; line 138 30; quad 132 35 126 30; close; fill citrus; }
+path slice7 { move 144 14; quad 153 8 160 14; line 158 30; quad 152 35 146 30; close; fill #E9DFC4; }
+path slice8 { move 164 14; quad 173 8 180 14; line 178 30; quad 172 35 166 30; close; fill #E9DFC4; }
+path slice9 { move 184 14; quad 193 8 200 14; line 198 30; quad 192 35 186 30; close; fill #E9DFC4; }
+path slice10 { move 204 14; quad 213 8 220 14; line 218 30; quad 212 35 206 30; close; fill #E9DFC4; }
+path slice11 { move 224 14; quad 233 8 240 14; line 238 30; quad 232 35 226 30; close; fill #E9DFC4; }
+path slice12 { move 244 14; quad 253 8 260 14; line 258 30; quad 252 35 246 30; close; fill #E9DFC4; }
+path slice13 { move 264 14; quad 273 8 280 14; line 278 30; quad 272 35 266 30; close; fill #E9DFC4; }
+path slice14 { move 284 14; quad 293 8 300 14; line 298 30; quad 292 35 286 30; close; fill #E9DFC4; }
+path slice15 { move 304 14; quad 313 8 320 14; line 318 30; quad 312 35 306 30; close; fill #E9DFC4; }
+path slice16 { move 324 14; quad 333 8 340 14; line 338 30; quad 332 35 326 30; close; fill #E9DFC4; }

@@ -1,0 +1,31 @@
+// HILO · Resonancia. Original cover made from fine interlaced sound contours.
+canvas 400 400
+background none
+gradient halo radial { stop 0 #F9D6DC; stop 1 #FDF7F5 }
+circle aura { at 204 200; radius 191; fill halo }
+path hilo_0 { move 54.0 200; curve 34.0 86.0 372.0 54.0 346.0 200; curve 344.0 358.0 82.0 298.0 54.0 200; close; fill none; stroke #E91E63 1.2; cap round; join round }
+path hilo_1 { move 58.5 200; curve 38.5 90.0 367.5 58.0 341.5 200; curve 339.5 354.0 86.5 294.0 58.5 200; close; fill none; stroke #E91E63 1.2; cap round; join round }
+path hilo_2 { move 63.0 200; curve 43.0 94.0 363.0 62.0 337.0 200; curve 335.0 350.0 91.0 290.0 63.0 200; close; fill none; stroke #E91E63 1.2; cap round; join round }
+path hilo_3 { move 67.5 200; curve 47.5 98.0 358.5 66.0 332.5 200; curve 330.5 346.0 95.5 286.0 67.5 200; close; fill none; stroke #E91E63 1.2; cap round; join round }
+path hilo_4 { move 72.0 200; curve 52.0 102.0 354.0 70.0 328.0 200; curve 326.0 342.0 100.0 282.0 72.0 200; close; fill none; stroke #E91E63 1.2; cap round; join round }
+path hilo_5 { move 76.5 200; curve 56.5 106.0 349.5 74.0 323.5 200; curve 321.5 338.0 104.5 278.0 76.5 200; close; fill none; stroke #E91E63 1.2; cap round; join round }
+path hilo_6 { move 81.0 200; curve 61.0 110.0 345.0 78.0 319.0 200; curve 317.0 334.0 109.0 274.0 81.0 200; close; fill none; stroke #CC3E72 1.2; cap round; join round }
+path hilo_7 { move 85.5 200; curve 65.5 114.0 340.5 82.0 314.5 200; curve 312.5 330.0 113.5 270.0 85.5 200; close; fill none; stroke #CC3E72 1.2; cap round; join round }
+path hilo_8 { move 90.0 200; curve 70.0 118.0 336.0 86.0 310.0 200; curve 308.0 326.0 118.0 266.0 90.0 200; close; fill none; stroke #CC3E72 1.2; cap round; join round }
+path hilo_9 { move 94.5 200; curve 74.5 122.0 331.5 90.0 305.5 200; curve 303.5 322.0 122.5 262.0 94.5 200; close; fill none; stroke #CC3E72 1.2; cap round; join round }
+path hilo_10 { move 99.0 200; curve 79.0 126.0 327.0 94.0 301.0 200; curve 299.0 318.0 127.0 258.0 99.0 200; close; fill none; stroke #CC3E72 1.2; cap round; join round }
+path hilo_11 { move 103.5 200; curve 83.5 130.0 322.5 98.0 296.5 200; curve 294.5 314.0 131.5 254.0 103.5 200; close; fill none; stroke #CC3E72 1.2; cap round; join round }
+path hilo_12 { move 108.0 200; curve 88.0 134.0 318.0 102.0 292.0 200; curve 290.0 310.0 136.0 250.0 108.0 200; close; fill none; stroke #BA596E 1.2; cap round; join round }
+path hilo_13 { move 112.5 200; curve 92.5 138.0 313.5 106.0 287.5 200; curve 285.5 306.0 140.5 246.0 112.5 200; close; fill none; stroke #BA596E 1.2; cap round; join round }
+path hilo_14 { move 117.0 200; curve 97.0 142.0 309.0 110.0 283.0 200; curve 281.0 302.0 145.0 242.0 117.0 200; close; fill none; stroke #BA596E 1.2; cap round; join round }
+path hilo_15 { move 121.5 200; curve 101.5 146.0 304.5 114.0 278.5 200; curve 276.5 298.0 149.5 238.0 121.5 200; close; fill none; stroke #BA596E 1.2; cap round; join round }
+path hilo_16 { move 126.0 200; curve 106.0 150.0 300.0 118.0 274.0 200; curve 272.0 294.0 154.0 234.0 126.0 200; close; fill none; stroke #BA596E 1.2; cap round; join round }
+path hilo_17 { move 130.5 200; curve 110.5 154.0 295.5 122.0 269.5 200; curve 267.5 290.0 158.5 230.0 130.5 200; close; fill none; stroke #BA596E 1.2; cap round; join round }
+path hilo_18 { move 135.0 200; curve 115.0 158.0 291.0 126.0 265.0 200; curve 263.0 286.0 163.0 226.0 135.0 200; close; fill none; stroke #C36F57 1.2; cap round; join round }
+path hilo_19 { move 139.5 200; curve 119.5 162.0 286.5 130.0 260.5 200; curve 258.5 282.0 167.5 222.0 139.5 200; close; fill none; stroke #C36F57 1.2; cap round; join round }
+path hilo_20 { move 144.0 200; curve 124.0 166.0 282.0 134.0 256.0 200; curve 254.0 278.0 172.0 218.0 144.0 200; close; fill none; stroke #C36F57 1.2; cap round; join round }
+path hilo_21 { move 148.5 200; curve 128.5 170.0 277.5 138.0 251.5 200; curve 249.5 274.0 176.5 214.0 148.5 200; close; fill none; stroke #C36F57 1.2; cap round; join round }
+path hilo_22 { move 153.0 200; curve 133.0 174.0 273.0 142.0 247.0 200; curve 245.0 270.0 181.0 210.0 153.0 200; close; fill none; stroke #C36F57 1.2; cap round; join round }
+circle nudo_azul { at 294 104; radius 6; fill #00BCD4; stroke #00BCD4 0 }
+circle nudo_naranja { at 101 290; radius 4; fill #FF9800; stroke #FF9800 0 }
+path hebra_libre { move 68 326; curve 112 260 276 334 338 266; fill none; stroke #E91E63 1.3; cap round; join round }

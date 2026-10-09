@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Apple minimal · original editable geometry, not SF Symbols.\ncanvas 48 48\nbackground none\nrect bass { at 10 24; size 5 16; corner 2.5; fill #C82E49; }\nrect mid { at 24 24; size 5 30; corner 2.5; fill #C82E49; }\nrect high { at 38 24; size 5 23; corner 2.5; fill #C82E49; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <rect x=\"-2.5\" y=\"-8\" width=\"5\" height=\"16\" rx=\"2.5\" transform=\"translate(10 24)\" fill=\"#C82E49\"/>\n  <rect x=\"-2.5\" y=\"-15\" width=\"5\" height=\"30\" rx=\"2.5\" transform=\"translate(24 24)\" fill=\"#C82E49\"/>\n  <rect x=\"-2.5\" y=\"-11.5\" width=\"5\" height=\"23\" rx=\"2.5\" transform=\"translate(38 24)\" fill=\"#C82E49\"/>\n</svg>",
+  "filename": "apple-v2-equalizer.aru"
+}

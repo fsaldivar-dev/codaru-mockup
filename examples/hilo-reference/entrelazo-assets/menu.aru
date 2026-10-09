@@ -1,0 +1,12 @@
+// ENTRELAZO. Geometría de autor. No reproduce un símbolo tradicional.
+canvas 24 24
+background none
+group menu {
+resource "{\"key\": \"entrelazo-menu\", \"kind\": \"ui-icon\", \"brand\": \"ENTRELAZO\", \"purpose\": \"Abrir men\u00fa: tres l\u00edneas con pausas alternadas.\", \"identity\": \"Cruce, continuidad y pausa. Interpretaci\u00f3n contempor\u00e1nea de autor para Amealco.\", \"reusable\": true, \"tags\": [\"entrelazo\", \"amealco\", \"original\"]}"
+path hebra_0 { move 3 5; line 13 5; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_1 { move 16 5; line 21 5; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_2 { move 3 12; line 7 12; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_3 { move 10 12; line 21 12; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_4 { move 3 19; line 13 19; fill none; stroke #283472 1.25; cap round; join round }
+path hebra_5 { move 16 19; line 21 19; fill none; stroke #283472 1.25; cap round; join round }
+}

@@ -1,0 +1,10 @@
+// Musaru Frutiger Fruits · original editable orchard vector.
+canvas 96 96
+background none
+gradient nectar linear 90 { stop 0 #FFF0A8; stop 0.42 #FFC452; stop 0.55 #FFAB31; stop 1 #F37526 }
+gradient citrus linear 90 { stop 0 #FFE79B; stop 0.5 #FFB132; stop 1 #F98320 }
+gradient leaf linear 90 { stop 0 #E1F28A; stop 0.45 #A7CB40; stop 0.52 #7BA32B; stop 1 #477A1E }
+gradient berry linear 90 { stop 0 #FFB7C0; stop 0.48 #F7798D; stop 1 #C94562 }
+path wedge { move 15 24; curve 32 7 60 10 81 23; curve 89 44 83 68 68 82; curve 41 89 21 71 15 24; close; fill citrus; stroke #DB842D 1.5; cap round; }
+path gloss { move 22 28; quad 49 11 74 26; quad 55 39 24 38; close; fill #FFFAC899; }
+path pithInlay { move 33 33; line 54 48; line 33 63; close; move 57 33; line 62 33; line 62 63; line 57 63; close; fill #FFFCE8; }

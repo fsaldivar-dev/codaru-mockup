@@ -1,0 +1,12 @@
+// Musaru Material 3 tonal · original editable flat forms.
+canvas 220 200
+background none
+circle toneLarge { at 105 103; radius 81; fill #D0BCFF; }
+circle toneMiddle { at 105 103; radius 58; fill #EADDFF; }
+circle toneSmall { at 105 103; radius 34; fill #6750A4; }
+path soundArc { move 45 104; curve 45 56 112 31 151 62; fill none; stroke #4F378B 5; cap round; }
+path counterArc { move 61 144; curve 99 174 153 146 162 106; fill none; stroke #4F378B 5; cap round; }
+rect noteStem { at 167 45; size 6 50; corner 3; fill #4F378B; }
+circle noteFoot { at 156 70; radius 14; fill #4F378B; }
+circle smallTone { at 39 33; radius 10; fill #FFFFFF; }
+circle smallToneB { at 175 158; radius 8; fill #6750A4; }

@@ -1,0 +1,7 @@
+// Musaru Material 3 tonal · original editable flat forms.
+canvas 48 48
+background none
+path outerTone { move 9 28; curve 9 8 39 8 39 28; fill none; stroke #6750A4 5; cap round; }
+rect leftTone { at 12 31; size 7 15; corner 3.5; fill #6750A4; }
+rect rightTone { at 36 31; size 7 15; corner 3.5; fill #6750A4; }
+rect middleTone { at 24 28; size 5 28; corner 2.5; fill #6750A4; }

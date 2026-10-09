@@ -158,3 +158,24 @@ test('viewbar controls mount on their own, act exactly once and return to the ba
  await bar.getByRole('button',{name:'Cambiar entre claro y oscuro'}).click();
  expect((await state(page)).document.theme).toBe('light');
 });
+
+test('equal-length SVG replacements repaint, while unaffected screens remain connected', async ({page}) => {
+ await mount(page, 'a', ['canvas']);
+ await page.evaluate(async () => {
+  const editor = (window as any).modularTest.records.a.editor;
+  const { sanitizeSVG } = await import('/src/' + 'motion.ts');
+  const svg = sanitizeSVG(`<svg viewBox="0 0 40 40"><g id="art">${Array.from({length:12}, (_, i) => `<rect x="${i}" y="0" width="2" height="40" fill="#ff0000"/>`).join('')}</g></svg>`);
+  editor.apply([{op:'add',node:{id:'second',type:'frame',x:600,width:400,height:400}}, {op:'add',node:{type:'vector',id:'art',parentId:'second',svg,width:40,height:40}}]);
+  (window as any).stableScreen = document.querySelector('[data-instance="a"] [data-codaru-part="canvas"]')!.shadowRoot!.querySelector('[data-node="a-frame"]');
+  (window as any).removedScreens = [];
+  const artboards = document.querySelector('[data-instance="a"] [data-codaru-part="canvas"]')!.shadowRoot?.querySelector('#artboards') ?? (window as any).stableScreen.parentNode;
+  const observer = new MutationObserver(records => { for (const r of records) for (const n of r.removedNodes) if (n === (window as any).stableScreen) (window as any).removedScreens.push(true); });
+  observer.observe(artboards, {childList:true}); (window as any).screenObserver = observer;
+  editor.apply([{op:'update',id:'art',patch:{svg:svg.replaceAll('#ff0000','#00ff00')}}]);
+  editor.select(['a-rect']);
+ });
+ await expect(part(page, 'canvas').locator('[data-node="art"] rect').first()).toHaveAttribute('fill', '#00ff00');
+ const stable = await page.evaluate(() => ({same:(window as any).stableScreen === document.querySelector('[data-instance="a"] [data-codaru-part="canvas"]')!.shadowRoot!.querySelector('[data-node="a-frame"]'), removed:(window as any).removedScreens.length}));
+ expect(stable).toEqual({same:true,removed:0});
+ await page.evaluate(() => (window as any).screenObserver.disconnect());
+});

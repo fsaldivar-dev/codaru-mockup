@@ -1,0 +1,20 @@
+import { createEditor, createEditorView, type CodaruInvoke, type IllustrationRequest } from '../../src/modular';
+import design from './design.codaru.json';
+const el=(id:string)=>document.getElementById(id)!;
+let request:IllustrationRequest|undefined, revision='';
+const editor=createEditor({document:design as unknown as import('../../src/model').Project,onIllustrationRequest:async next=>{
+  request=next;revision=(await editor.agent('context',{scope:next.nodeId,depth:0})).context!.revision;
+  el('source-title').textContent=next.source.filename;el('source-code').textContent=next.source.text;el('source-pane').hidden=false;
+}});
+const native=(window as unknown as {__TAURI_INTERNALS__?:{invoke:CodaruInvoke}}).__TAURI_INTERNALS__;
+const view=createEditorView(editor,{appearance:{theme:'dark',tokens:{accent:'#dce889',selection:'#bdd977',background:'#141d18',surface:'#1b2820',fontSize:12}},invoke:native?.invoke.bind(native),nativeAgent:!!native});
+for(const part of ['canvas','layers','inspector','library','toolbar','dialogs'] as const)view.mount(part,el(`${part}-slot`));
+el('select-app').onclick=()=>{editor.select(['musaru-logo']);view.fit(true);};
+el('select-art').onclick=()=>{editor.select(['musaru-garden']);view.fit(true);};
+el('fit').onclick=()=>view.fit();el('undo').onclick=()=>editor.undo();el('present').onclick=()=>{editor.select(['music-desktop']);void editor.command('preview');};
+el('source-close').onclick=()=>{el('source-pane').hidden=true;};
+el('source-save').onclick=()=>{if(!request)return;const url=URL.createObjectURL(new Blob([request.source.text],{type:'text/plain'}));const a=document.createElement('a');a.href=url;a.download=request.source.filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+el('source-import').onclick=()=>{(el('source-file') as HTMLInputElement).click();};
+(el('source-file') as HTMLInputElement).onchange=async e=>{const input=e.target as HTMLInputElement,file=input.files?.[0];input.value='';if(!file||!request)return;try{if(file.size>1_200_000)throw new Error('Paquete demasiado grande.');const data=JSON.parse(await file.text());const result=await editor.agent('apply',{expectedRevision:revision,operations:[{op:'aru',id:request.nodeId,data}]});if(!result.ok)throw new Error(result.error?.message);el('source-pane').hidden=true;el('source-error').textContent='';}catch(error){el('source-error').textContent=String(error);}};
+editor.subscribe(state=>{(el('undo') as HTMLButtonElement).disabled=!state.canUndo;el('status').textContent=`${state.document.nodes.length} capas · ${state.document.nodes.filter(n=>n.aruSource).length} recursos ARU · El host conserva el control del documento`;});
+view.fit();Object.assign(window,{aruMusic:{editor,view}});window.addEventListener('pagehide',()=>editor.destroy(),{once:true});

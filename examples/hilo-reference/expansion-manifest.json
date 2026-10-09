@@ -1,0 +1,162 @@
+{
+  "seguir-la-hebra": {
+    "label": "Seguir la hebra",
+    "purpose": "Búsqueda sin resultados: una hebra que encuentra una semilla. Ilustración desde 180 px, sin simbolismo tradicional atribuido.",
+    "kind": "illustration",
+    "width": 400,
+    "height": 300,
+    "minWidth": 180
+  },
+  "lo-que-florece": {
+    "label": "Lo que florece",
+    "purpose": "Favoritos de HILO: dos tallos forman un corazón abierto y asimétrico. Ilustración desde 180 px.",
+    "kind": "illustration",
+    "width": 380,
+    "height": 340,
+    "minWidth": 180
+  },
+  "ramas-en-compas": {
+    "label": "Ramas en compás",
+    "purpose": "Portada de playlist de HILO: tres ramas y un entrelazado inferior. Ilustración desde 180 px.",
+    "kind": "illustration",
+    "width": 420,
+    "height": 420,
+    "minWidth": 180
+  },
+  "frecuencia-floral": {
+    "label": "Frecuencia floral",
+    "purpose": "Estaciones de HILO: roseta original y dos órbitas abiertas como frecuencia musical. Ilustración desde 180 px.",
+    "kind": "illustration",
+    "width": 400,
+    "height": 360,
+    "minWidth": 180
+  },
+  "onda-silencio": {
+    "label": "Silencio",
+    "purpose": "Silenciar audio; icono de trazo fino para 24 px.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "onda-volumen": {
+    "label": "Volumen bajo",
+    "purpose": "Volumen de audio bajo; icono de trazo fino para 24 px.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "arco-audifonos": {
+    "label": "Audífonos",
+    "purpose": "Elegir o conectar audífonos; icono de trazo fino para 24 px.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "caja-altavoz": {
+    "label": "Altavoz",
+    "purpose": "Elegir un altavoz; icono de trazo fino para 24 px.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "ramas-playlist": {
+    "label": "Playlists",
+    "purpose": "Abrir playlists personales; icono de trazo fino para 24 px.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "sumar-playlist": {
+    "label": "Añadir a playlist",
+    "purpose": "Añadir una canción a una playlist; icono de trazo fino para 24 px.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "anillo-album": {
+    "label": "Álbum",
+    "purpose": "Abrir un álbum musical; icono de trazo fino para 24 px.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "canto-artista": {
+    "label": "Artista",
+    "purpose": "Abrir la página de un artista; icono de trazo fino para 24 px.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "tallos-ecualizador": {
+    "label": "Ecualizador",
+    "purpose": "Configurar el ecualizador; icono de trazo fino para 24 px.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "luna-descanso": {
+    "label": "Descanso",
+    "purpose": "Activar escucha para descansar; icono de trazo fino para 24 px.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "reloj-temporizador": {
+    "label": "Temporizador",
+    "purpose": "Programar el fin de la reproducción; icono de trazo fino para 24 px.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "flor-ajustes": {
+    "label": "Ajustes",
+    "purpose": "Abrir ajustes de HILO; acompañado de etiqueta; icono de trazo fino para 24 px.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "ramas-compartir": {
+    "label": "Compartir",
+    "purpose": "Compartir una canción o playlist; icono de trazo fino para 24 px.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "lineas-letras": {
+    "label": "Letra",
+    "purpose": "Mostrar la letra de la canción; icono de trazo fino para 24 px.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "vuelta-historial": {
+    "label": "Historial",
+    "purpose": "Ver canciones escuchadas recientemente; icono de trazo fino para 24 px.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  },
+  "semillas-mas": {
+    "label": "Más opciones",
+    "purpose": "Abrir más opciones; icono de trazo fino para 24 px.",
+    "kind": "icon",
+    "width": 32,
+    "height": 32,
+    "minWidth": 24
+  }
+}

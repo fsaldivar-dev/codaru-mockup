@@ -1,0 +1,6 @@
+{
+  "format": "codaru-aru/1",
+  "source": "// Musaru Future minimal · original editable precision geometry.\ncanvas 48 48\nbackground none\npath heart { move 24 38; curve 8 28 7 18 13 13; curve 18 9 22 12 24 16; curve 29 9 37 10 40 17; curve 43 26 32 34 24 38; close; fill none; stroke #142C38 2.5; cap round; }\n",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" width=\"48\" height=\"48\">\n  <path d=\"M24 38 C8 28 7 18 13 13 C18 9 22 12 24 16 C29 9 37 10 40 17 C43 26 32 34 24 38 Z\" fill=\"none\" stroke=\"#142C38\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n</svg>",
+  "filename": "future-v2-heart.aru"
+}

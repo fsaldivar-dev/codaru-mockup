@@ -1,0 +1,5 @@
+// Musaru Expressive · original flat editable shapes.
+canvas 48 48
+background none
+path playPrevious { move 32 10; quad 36 8 36 13; line 36 35; quad 36 40 32 38; line 16 27; quad 12 24 16 21; close; fill #8D3D19; }
+rect stop { at 10 24; size 4 30; corner 2; fill #8D3D19; }
