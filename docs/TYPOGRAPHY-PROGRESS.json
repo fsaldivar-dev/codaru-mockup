@@ -1,5 +1,5 @@
 {
-  "status": "awaiting_npm_auth",
+  "status": "published",
   "version": "0.10.0",
   "publish": true,
   "audit": {
@@ -123,7 +123,7 @@
       "missingFontExportRejected": true
     }
   },
-  "next": "Publish the verified 0.10.0 package after npm identity confirmation, verify registry integrity and create the matching GitHub release.",
+  "next": "Update Sajaru to codaru-mockup@0.10.0 following docs/SAJARU-TYPOGRAPHY-UPGRADE.md and verify it in its actual IDE.",
   "package": {
     "path": "artifacts/typography-0.10.0/codaru-mockup-0.10.0.tgz",
     "bytes": 516694,
@@ -153,5 +153,22 @@
     ],
     "runtimeAndDeclarationsIdentical": true,
     "previousVerifiedSHA256": "11d88d2a32c88a427a3f22444cf66e5a2abef3578c16fe2a601e38b94fe70ddc"
+  },
+  "publication": {
+    "npm": "https://www.npmjs.com/package/codaru-mockup/v/0.10.0",
+    "githubRelease": "https://github.com/fsaldivar-dev/codaru-mockup/releases/tag/v0.10.0",
+    "tag": "v0.10.0",
+    "latest": "0.10.0",
+    "verifiedAt": "2026-10-10T04:41:23.512026+00:00",
+    "registryIntegrityMatches": true,
+    "registryConsumerIntegrityMatches": true,
+    "registryConsumerNode": {
+      "imports": 10,
+      "fontsAbsentExplicitly": true,
+      "textPreserved": true,
+      "isolated": true,
+      "version": "0.10.0"
+    },
+    "registryConsumerTypesNodeNext": true
   }
 }
