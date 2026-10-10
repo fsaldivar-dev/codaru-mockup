@@ -1,14 +1,16 @@
 # Actualizar Sajaru desde codaru-mockup 0.8.0 a 0.10.0
 
-El paquete está preparado localmente, **sin publicar**. No usar `npm install codaru-mockup@0.10.0` hasta publicarlo.
+La versión 0.10.0 añade fuentes del consumidor y sus capacidades compartidas entre la UI y la IA. La instalación de Sajaru no se modifica automáticamente.
 
 ## Instalación
 
 Desde la carpeta de Sajaru:
 
 ```sh
-npm install /Users/saldivar/Documents/CodaruPrototypes/artifacts/typography-0.10.0/codaru-mockup-0.10.0.tgz
+npm install codaru-mockup@0.10.0
 ```
+
+También puedes instalar el `.tgz` del release con `npm install /ruta/codaru-mockup-0.10.0.tgz`.
 
 Si usas iframe, copia los assets de esta versión en una carpeta nueva y cambia `editorUrl`:
 

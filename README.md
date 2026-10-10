@@ -1,6 +1,6 @@
 # Codaru Mockup · 0.9
 
-En **0.10.0**, el IDE registra fuentes propias y variantes; la IA descubre el catálogo y el texto conserva su edición. [Tipografía y exportación](docs/TYPOGRAPHY.md) · [Actualizar Sajaru](docs/SAJARU-TYPOGRAPHY-UPGRADE.md). Release preparado localmente, sin publicar.
+En **0.10.0**, el IDE registra fuentes propias y variantes; la IA descubre el catálogo y el texto conserva su edición. [Tipografía y exportación](docs/TYPOGRAPHY.md) · [Actualizar Sajaru](docs/SAJARU-TYPOGRAPHY-UPGRADE.md).
 
 Editor local de maquetas de interfaz, diseñado para integrarse dentro de una aplicación Tauri existente. TypeScript, HTML/CSS y SVG, sin dependencias de interfaz en ejecución. Incluye un paquete embebible, un plugin Rust opcional y una aplicación macOS de ejemplo. La aplicación compilada no necesita Node, un servidor, una cuenta ni conexión a Internet.
 

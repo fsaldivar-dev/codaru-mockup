@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.10.0 - 2026-10-09 (preparado, sin publicar)
+## 0.10.0 - 2026-10-09
 
 - Tipografía extensible por consumidor: fuentes locales o por URL, pesos/estilos declarados, catálogo aislado y estados de carga/errores. Texto siempre editable y compatibilidad system/serif/mono y documentos v1/v2.
 - API core/modular/iframe, entrada `codaru-mockup/fonts`, catálogo/esquema/contexto del agente y CLI `fonts`. Inspector y tokens muestran fuentes registradas; componentes heredan y conservan sobrescrituras de cursiva. Importaciones preservan familias desconocidas sin sustitución.
