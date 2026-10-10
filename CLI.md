@@ -231,3 +231,9 @@ IDs de pruebas web/iOS/Android y verificaciones de diseño/implementación.
 `spec:null` la elimina. `context` resume la ficha y avisa `experience.truncated`.
 El IDE conecta analítica y pruebas al código; Codaru no envía eventos.
 Véase [EXPERIENCE.md](docs/EXPERIENCE.md).
+
+## Catálogo tipográfico del IDE · 0.10.0
+
+`catalog --kind fonts [--query NOMBRE]` y `schema` exponen fuentes/variantes/estado. `fonts --load [--id ID]` carga o reintenta recursos registrados por el host. `context` devuelve tipografía efectiva e incidencias. Selecciona `fontFamily` por ID y una pareja `fontWeight`/`fontStyle` cargada; una variante inexistente falla y mantiene la revisión. No se permiten URLs de fuentes dentro de operaciones del agente: registro y persistencia pertenecen al IDE.
+
+`export --format html|svg|png|assets` espera las fuentes utilizadas e incluye archivos autorizados. Una fuente faltante o sin permiso/bytes bloquea la exportación; JSON conserva las referencias. [Contrato tipográfico](docs/TYPOGRAPHY.md). Los estilos/clones existentes son ejemplos opcionales, no restricciones de composición.

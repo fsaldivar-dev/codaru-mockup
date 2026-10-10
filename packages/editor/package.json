@@ -1,6 +1,6 @@
 {
   "name": "codaru-mockup",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "type": "module",
   "main": "./dist/codaru.js",
   "types": "./dist/types/embed.d.ts",
@@ -49,6 +49,10 @@
     "./experience": {
       "types": "./dist/types/experience-view.d.ts",
       "import": "./dist/experience.js"
+    },
+    "./fonts": {
+      "types": "./dist/types/font-api.d.ts",
+      "import": "./dist/fonts.js"
     }
   },
   "files": [
@@ -58,7 +62,7 @@
     "THIRD-PARTY-NOTICES.md",
     "scripts"
   ],
-  "description": "Editor visual embebible sin dependencias de interfaz en ejecución",
+  "description": "Editor visual embebible sin dependencias de interfaz en ejecuci\u00f3n",
   "license": "BSD-3-Clause",
   "author": "fsaldivar-dev",
   "repository": {

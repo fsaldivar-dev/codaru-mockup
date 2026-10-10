@@ -1,8 +1,9 @@
+import {validFontId,validFontStyle} from './font-validation';
 import type { DesignNode, Project, Theme } from './model';
 
 export interface GradientToken { name: string; type: 'linear' | 'radial'; angle: number; stops: Array<{ color: string; position: number }>; }
 export interface MaterialToken { name: string; tint: string; opacity: number; blur: number; saturation: number; stroke: string; shadow: number; }
-export interface TypographyToken { name: string; fontFamily: 'system' | 'serif' | 'mono'; fontSize: number; fontWeight: number; lineHeight: number; }
+export interface TypographyToken { name: string; fontFamily: string; fontStyle?: import('./contracts').FontStyle; fontSize: number; fontWeight: number; lineHeight: number; }
 export interface TokenSet { colors: Record<string, string>; gradients: Record<string, GradientToken>; materials: Record<string, MaterialToken>; typography: Record<string, TypographyToken>; radii: Record<string, number>; }
 export interface DesignTheme { id: string; name: string; modes: { light: TokenSet; dark: TokenSet }; }
 
@@ -60,8 +61,8 @@ export function resolveNodeStyle(p: Project, n: DesignNode): Partial<DesignNode>
   const result: Partial<DesignNode> = {};
   if (n.fillToken && Object.hasOwn(tokens.colors, n.fillToken)) { result.fill = resolveColor(p, '@' + n.fillToken, n); result.gradient = 'none'; }
   if (n.typographyToken) {
-    const { fontFamily, fontSize, fontWeight, lineHeight } = tokens.typography[n.typographyToken];
-    Object.assign(result, { fontFamily, fontSize, fontWeight, lineHeight });
+    const { fontFamily, fontSize, fontWeight, lineHeight, fontStyle } = tokens.typography[n.typographyToken];
+    Object.assign(result, { fontFamily, fontSize, fontWeight, lineHeight, ...((fontStyle!==undefined||n.fontStyle!==undefined)?{fontStyle:fontStyle??'normal'}:{}) });
   }
   if (n.radiusToken) result.radius = tokens.radii[n.radiusToken];
   return result;
@@ -116,7 +117,7 @@ export function validateDesignThemes(p: Project) {
         if (!record(material) || !safeName(material.name) || !range(material.opacity, 0, 100) || !range(material.blur, 0, 40) || !range(material.saturation, 0, 200) || !range(material.shadow, 0, 40)) throw new Error('Material inválido');
         colorRef(material.tint); colorRef(material.stroke);
       }
-      for (const typography of Object.values(set.typography)) if (!record(typography) || !safeName(typography.name) || !['system', 'serif', 'mono'].includes(typography.fontFamily) || !range(typography.fontSize, 1, 512) || !range(typography.fontWeight, 100, 900) || !range(typography.lineHeight, 0.5, 5)) throw new Error('Tipografía inválida');
+      for (const typography of Object.values(set.typography)) if (!record(typography) || !safeName(typography.name) || (!validFontId(typography.fontFamily)||!validFontStyle(typography.fontStyle)) || !range(typography.fontSize, 1, 512) || !range(typography.fontWeight, 100, 900) || !range(typography.lineHeight, 0.5, 5)) throw new Error('Tipografía inválida');
       for (const radius of Object.values(set.radii)) if (!range(radius, 0, 10000)) throw new Error('Radio de token inválido');
       if (Object.keys(set.colors).some(key => Object.hasOwn(set.gradients, key))) throw new Error('Nombre de relleno ambiguo');
     }

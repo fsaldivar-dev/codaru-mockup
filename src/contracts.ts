@@ -377,3 +377,27 @@ export interface IdentityPackage {
   document:import('./model').Project;
   issues:IdentityIssue[];
 }
+
+/** Host-owned font resources. Documents store IDs, never URLs or font binaries. */
+export type FontStyle = 'normal' | 'italic' | 'oblique';
+export type FontLoadStatus = 'registered' | 'loading' | 'loaded' | 'error';
+export interface FontVariant {
+  weight: number; style?: FontStyle;
+  source: { url: string } | { local: string };
+  /** Embedding requires explicit host permission and a URL containing font bytes. */
+  export?: 'reference' | 'embed';
+}
+export interface FontDefinition { id: string; name: string; variants: FontVariant[]; license?: string; }
+export interface FontSummary {
+  id: string; name: string; builtin: boolean;
+  variants: {weight:number;style:FontStyle;status:FontLoadStatus;source:'builtin'|'url'|'local';export:'reference'|'embed';error?:string}[];
+}
+export interface FontIssue { nodeId:string; family:string; weight:number; style:FontStyle; kind:'missing'|'variant-missing'|'pending'|'error'; message:string; }
+/** Optional port for non-browser consumers; dispose only the resources owned by this loader. */
+export interface FontLoader {
+  load(family:string, variant:FontVariant):Promise<void>;
+  measure?(text:string, font:{family:string;size:number;weight:number;style?:FontStyle}):number;
+  baseline?(font:{family:string;size:number;weight:number;style?:FontStyle},lineHeight:number):number;
+  css?(definitions:FontDefinition[], mode:'reference'|'embed'):Promise<string>;
+  dispose():void;
+}

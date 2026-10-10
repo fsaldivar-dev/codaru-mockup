@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.10.0 - 2026-10-09 (preparado, sin publicar)
+
+- Tipografía extensible por consumidor: fuentes locales o por URL, pesos/estilos declarados, catálogo aislado y estados de carga/errores. Texto siempre editable y compatibilidad system/serif/mono y documentos v1/v2.
+- API core/modular/iframe, entrada `codaru-mockup/fonts`, catálogo/esquema/contexto del agente y CLI `fonts`. Inspector y tokens muestran fuentes registradas; componentes heredan y conservan sobrescrituras de cursiva. Importaciones preservan familias desconocidas sin sustitución.
+- Medición real tras cargar las fuentes; HTML/SVG asíncronos incluyen archivos autorizados y texto editable. PNG/ZIP utilizan esos archivos y rechazan referencias incompletas. Diagnósticos explícitos para fuentes o variantes ausentes.
+- Documentación de permisos, licencias y restricciones; guía para actualizar Sajaru desde 0.8.0 y reemplazar su validación fija por el catálogo. No se añaden plantillas, fuentes por estilo ni servidor en ejecución.
+
 ## 0.9.0 - 2026-10-09
 
 - Contratos por capa de accesibilidad, analítica y pruebas: paneles independientes personalizables y acceso desde el inspector; eventos con propósito, disparador y esquema; roles/nombres localizados, teclado/foco/estados y criterios de aceptación. Reporte portable con revisión exacta, vínculos de implementación, orientación por plataforma y verificaciones automatizables/manuales. API core/iframe y CLI `experience`/`experience.set`. Sin colector de datos ni SDK; revisión de diseño sin certificación WCAG.

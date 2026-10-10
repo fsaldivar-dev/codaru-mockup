@@ -6,7 +6,7 @@ use std::sync::{atomic::{AtomicU64, Ordering}, mpsc, Arc, Mutex};
 use std::time::Instant;
 
 const MAX_PENDING: usize = 8;
-const COMMANDS: &[&str] = &["schema", "context", "apply", "catalog", "select", "undo", "redo", "export", "lint", "find", "versions", "locale", "comments", "experience"];
+const COMMANDS: &[&str] = &["schema", "context", "apply", "catalog", "select", "undo", "redo", "export", "lint", "find", "versions", "locale", "comments", "experience", "fonts"];
 
 #[derive(Clone, Serialize, Debug)]
 pub struct AgentRequest { pub id: String, pub command: String, pub params: Value }
@@ -30,7 +30,7 @@ struct Queue {
 struct Shared { queue: Mutex<Queue>, counter: AtomicU64 }
 impl Shared {
     fn enqueue(&self, request: WireRequest) -> Result<(String, mpsc::Receiver<Value>)> {
-        if !COMMANDS.contains(&request.command.as_str()) { return Err(AgentError::new("UNKNOWN_COMMAND", "Use schema, context, apply, catalog, select, undo, redo, export, lint, find, versions, locale, comments, or experience.")); }
+        if !COMMANDS.contains(&request.command.as_str()) { return Err(AgentError::new("UNKNOWN_COMMAND", "Use schema, context, apply, catalog, select, undo, redo, export, lint, find, versions, locale, comments, experience, or fonts.")); }
         if !request.params.is_object() { return Err(AgentError::new("INVALID_REQUEST", "Command params must be a JSON object.")); }
         let mut queue = self.queue.lock().unwrap_or_else(|e| e.into_inner());
         if queue.replies.len() >= MAX_PENDING { return Err(AgentError::new("BRIDGE_BUSY", "The local command queue is full. Wait for the current commands and retry.")); }
@@ -237,6 +237,15 @@ mod tests {
         assert_eq!(reply.recv().unwrap()["report"]["format"], "codaru-experience/1");
     }
 
+    #[test]
+    fn fonts_are_forwarded_to_the_host_and_keep_queue_validation() {
+        let shared = Shared::default();
+        assert_eq!(shared.enqueue(WireRequest { command: "fonts".into(), params: json!("invalid") }).unwrap_err().code, "INVALID_REQUEST");
+        let (id, reply) = shared.enqueue(WireRequest { command: "fonts".into(), params: json!({"load":true,"id":"editorial"}) }).unwrap();
+        let request = shared.poll().unwrap();
+        assert_eq!(request.command, "fonts"); assert_eq!(request.params["id"], "editorial");
+        shared.respond(&id, json!({"ok":true,"fonts":[]})).unwrap();assert_eq!(reply.recv().unwrap()["ok"], true);
+    }
     #[test]
     fn locale_reaches_the_editor_with_its_requested_language() {
         let shared = Shared::default();

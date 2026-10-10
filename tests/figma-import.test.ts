@@ -60,7 +60,7 @@ test('the Figma plugin export is converted into screens, components, tokens and 
   assert.equal(hero.gradient, 'linear'); assert.equal(hero.gradientAngle, 180); assert.equal(hero.shadow, true);
   assert.deepEqual(hero.gradientStops, [{ color: '#ff0000', position: 0 }, { color: '#00ff00', position: 50 }, { color: '#0000ff80', position: 100 }]);
   const title = find('Título');
-  assert.deepEqual([title.text, title.fontFamily, title.fontWeight, title.lineHeight, title.textAlign, title.typographyToken, title.x, title.y], ['Hola Figma', 'serif', 700, 1.25, 'center', 'titulos-h1', 24, 40]);
+  assert.match(title.fontFamily,/^font-playfair-display-/); assert.deepEqual([title.text, title.fontFamily, title.fontWeight, title.lineHeight, title.textAlign, title.typographyToken, title.x, title.y], ['Hola Figma', title.fontFamily, 700, 1.25, 'center', 'titulos-h1', 24, 40]);
   const button = find('Botón primario');
   assert.deepEqual([button.type, button.fill, button.fillToken, button.layout, button.padding, button.gap, button.radius], ['card', '@marca-primario', 'marca-primario', 'horizontal', 12, 8, 12]);
   assert.equal(doc.designThemes.project.modes.light.colors['marca-primario'], '#3366ff');

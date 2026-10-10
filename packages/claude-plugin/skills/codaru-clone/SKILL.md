@@ -61,3 +61,7 @@ Después diseña las pantallas del producto de la persona con `codaru-design` ap
 ## Qué entregar
 
 Qué se capturó y con qué viewport, qué quedó fuera (y por qué), la ficha de marca si fue modo inspirarse, y el resumen de `./codaru lint` final.
+
+## Fuentes reales (0.10.0)
+
+Consulta `./codaru catalog --kind fonts` y `./codaru fonts` antes de seleccionar fuentes. Usa el ID y una variante cargada; no reduzcas una fuente propia a system/serif/mono ni simules sus pesos. Los importadores conservan referencias pendientes para fuentes desconocidas y lo informan: el IDE registra sus archivos/variantes. Una revisión debe señalar fuentes ausentes, pesos no disponibles o recursos fallidos. La carga precede a medir o exportar. Comprueba edición, previsualización y exportación con texto editable; registra restricciones de inclusión/licencias del consumidor. Las dimensiones y restricciones explícitas mandan; no impongas recetas por sector ni posiciones tipográficas.

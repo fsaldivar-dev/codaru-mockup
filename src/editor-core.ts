@@ -1,3 +1,6 @@
+import {FontRegistry,attachFonts,transferFonts,requireFonts,fontIssue,validateFontChanges} from './fonts';
+import type {FontDefinition,FontSummary,FontIssue,FontLoader} from './contracts';
+export type {FontDefinition,FontSummary,FontIssue,FontLoader,FontVariant,FontStyle} from './contracts';
 import {experienceReport,setExperience} from './experience';
 import type {ExperienceSpec,ExperienceReport} from './contracts';
 export {experienceReport} from './experience';
@@ -22,6 +25,7 @@ import {
   isUnavailable, labels, node, remove, updateNode, validate,
   type DesignNode, type Kind, type Project,
 } from './model';
+import {resolveNodeStyle as requireNodeStyle} from './themes';
 import { commonScope } from './selection';
 import { normalizeLocalization, localizationState, localizationIssues, localizeProject, resolveText, type LocalizationConfig, type LocalizationState, type LocalizationIssue, type TranslationRequest } from './localization';
 export type { LocalizationConfig, LocalizationState, LocalizationIssue, TranslationRequest } from './localization';
@@ -42,6 +46,7 @@ export interface EditorState {
   tool: EditorTool;
   mode: EditorMode;
   viewport: { zoom: number; pan: { x: number; y: number } };
+  fonts: FontSummary[];
   canUndo: boolean;
   canRedo: boolean;
   localization: LocalizationState;
@@ -55,6 +60,8 @@ export interface CreateEditorOptions {
   resourceServices?: ResourceServices;
   /** Explicit persistence: catalogue changes are independent of the design document. */
   onResourceLibraryChange?: (records: ResourceRecord[]) => void;
+  fonts?: FontDefinition[];
+  fontLoader?: FontLoader;
   document?: Project;
   /** Called only for committed document changes, never for selection or camera changes. */
   onChange?: (document: Project) => void;
@@ -66,6 +73,13 @@ export interface CreateEditorOptions {
   onTranslationRequest?: (request: TranslationRequest) => void | Promise<void>;
 }
 export interface CodaruEditor {
+  getFonts():FontSummary[];
+  setFonts(fonts:FontDefinition[]):void;
+  registerFonts(fonts:FontDefinition[]):void;
+  loadFonts(ids?:string[]):Promise<FontSummary[]>;
+  getFontIssues():FontIssue[];
+  exportHTMLAsync(options?:{fonts?:'reference'|'embed'}):Promise<string>;
+  exportSVGAsync(frameId:string,options?:{fonts?:'reference'|'embed'}):Promise<string>;
   getExperienceReport(options?:{ids?:string[];frameId?:string}):ExperienceReport;
   setExperience(id:string,spec:ExperienceSpec|null):Project;
   getComments():LayoutComments;
@@ -168,6 +182,8 @@ export interface EditorExtensionHooks {
   notify?(): void;
 }
 export interface EditorSession {
+  fonts:FontRegistry;
+  bindFontLoader(loader:FontLoader):()=>void;
   /** Optional panels share lifecycle without taking ownership of the canvas view. */
   bindExtension(hooks: EditorExtensionHooks): () => void;
   identityCapabilities(): IdentityState['capabilities'];
@@ -200,12 +216,14 @@ export function getEditorSession(editor: CodaruEditor): EditorSession {
 /** Creates an isolated, DOM-free document session. Persistence belongs to the host. */
 export function createEditor(options: CreateEditorOptions = {}): CodaruEditor {
   const store = new Store(options.document ?? blank());
+  const fontRegistry=new FontRegistry(options.fonts);
+  if(options.fontLoader)fontRegistry.bind(options.fontLoader);
   let localization = normalizeLocalization(options.localization ?? null), localizationRevision = 0;
   let implementationHandler = options.onImplementationRequest;
   let illustrationHandler = options.onIllustrationRequest;
   let translationHandler = options.onTranslationRequest;
   const localeState = () => localizationState(localization, localizationRevision, !!translationHandler);
-  const previewProject = () => localizeProject(store.project, localization);
+  const previewProject = () => attachFonts(localizeProject(store.project, localization),fontRegistry);
   const state: EditorSessionState = {
     selected: [], selectionScope: null, tool: 'cursor', mode: 'design',
     zoom: .7, pan: { x: 0, y: 0 }, grid: true,
@@ -250,6 +268,7 @@ export function createEditor(options: CreateEditorOptions = {}): CodaruEditor {
     return {
       selection: [...state.selected], scope: state.selectionScope,
       tool: state.tool, mode: state.mode, viewport: { zoom: state.zoom, pan: { ...state.pan } },
+      fonts:fontRegistry.list(),
       canUndo: !!store.undoStack.length, canRedo: !!store.redoStack.length,
       localization: localeState(), canOpenImplementation: !!implementationHandler,
       identityCapabilities:{research:!!identityServices.research,explore:!!identityServices.explore,review:!!identityServices.render&&!!identityServices.review,refine:!!identityServices.refine},
@@ -300,7 +319,7 @@ export function createEditor(options: CreateEditorOptions = {}): CodaruEditor {
   }
   function commit(edit: (document: Project) => void): Project {
     assertWritable();
-    store.commit(edit);
+    const before=store.project;store.commit(draft=>{attachFonts(draft,fontRegistry);edit(draft);},draft=>validateFontChanges(before,draft,fontRegistry));
     render(true);
     return clone(store.project);
   }
@@ -323,7 +342,20 @@ export function createEditor(options: CreateEditorOptions = {}): CodaruEditor {
   function requireDOM() {
     if (typeof document === 'undefined') throw new Error('La exportación HTML/SVG necesita un DOM de navegador. Usa exportación JSON en una sesión sin interfaz.');
   }
+  let fontRenderTimer:ReturnType<typeof setTimeout>|undefined;
+  const refreshFonts=()=>{if(destroyed)return;if(isBusy()){fontRenderTimer=setTimeout(refreshFonts,50);return;}fontRenderTimer=undefined;view?.render();};
+  fontRegistry.setChangeListener(()=>{if(!destroyed){if(fontRenderTimer)clearTimeout(fontRenderTimer);refreshFonts();notify();}});
+  const attachPreview=()=>previewProject();
+  const visibleNodes=(p:Project,frameId?:string)=>p.nodes.filter(n=>{let current:DesignNode|undefined=n,inside=!frameId;while(current){if(current.hidden)return false;if(current.id===frameId)inside=true;current=current.parentId?p.nodes.find(v=>v.id===current!.parentId):undefined;}return inside;});
+  const fontCSS=async(p:Project,mode:'reference'|'embed',nodes=visibleNodes(p))=>{const uses=nodes.filter(n=>n.text).map(n=>({...n,...requireNodeStyle(p,n)}));const ids=[...new Set(uses.map(n=>n.fontFamily).filter(id=>!['system','serif','mono'].includes(id)))];return ids.length?fontRegistry.css(mode,ids,uses):'';};
   const editor: CodaruEditor = {
+    getFonts(){assertActive();return fontRegistry.list();},
+    setFonts(fonts){assertWritable();fontRegistry.set(fonts);if(view)void fontRegistry.load().catch(()=>{});},
+    registerFonts(fonts){assertWritable();fontRegistry.register(fonts);if(view)void fontRegistry.load().catch(()=>{});},
+    loadFonts(ids){assertActive();return fontRegistry.load(ids);},
+    getFontIssues(){assertActive();const p=attachPreview();return p.nodes.flatMap(n=>{const issue=fontIssue(p,n);return issue?[issue]:[];});},
+    async exportHTMLAsync(options={}){assertActive();requireDOM();const p=attachPreview(),nodes=visibleNodes(p);await fontRegistry.load([...new Set(nodes.filter(n=>n.text).map(n=>requireNodeStyle(p,n).fontFamily??n.fontFamily))]);requireFonts(p,nodes);const css=await fontCSS(p,options.fonts??'embed');return exportHTML(p,css);},
+    async exportSVGAsync(frameId,options={}){assertActive();requireDOM();const p=attachPreview(),frame=p.nodes.find(n=>n.id===frameId);if(frame?.type!=='frame')throw new Error('La exportación SVG requiere una pantalla.');const nodes=visibleNodes(p,frameId);await fontRegistry.load([...new Set(nodes.filter(n=>n.text).map(n=>requireNodeStyle(p,n).fontFamily??n.fontFamily))]);requireFonts(p,nodes);const css=await fontCSS(p,options.fonts??'embed',nodes);return exportSVG(p,frame,css);},
     getExperienceReport(options){assertActive();return experienceReport(store.project,options);},
     setExperience(id,spec){return editor.apply([{op:'experience.set',id,spec}]);},
     getCorrectionRequest(){assertActive();return getCorrectionRequest(store.project);},
@@ -397,7 +429,7 @@ export function createEditor(options: CreateEditorOptions = {}): CodaruEditor {
     },
     getState() { assertActive(); return snapshot(); },
     getDocument() { assertActive(); return clone(store.project); },
-    getPreviewDocument() { assertActive(); return clone(previewProject()); },
+    getPreviewDocument() { assertActive(); return attachFonts(clone(previewProject()),fontRegistry); },
     getLocalization() { assertActive(); return localization ? clone(localization) : null; },
     getLocalizationState() { assertActive(); return localeState(); },
     getLocalizationIssues() { assertActive(); return clone(view?.localizationIssues?.() ?? localizationIssues(store.project, localization)); },
@@ -474,6 +506,7 @@ export function createEditor(options: CreateEditorOptions = {}): CodaruEditor {
             default: throw new Error('Operación de editor desconocida.');
           }
         }
+
       });
     },
     commit,
@@ -491,7 +524,7 @@ export function createEditor(options: CreateEditorOptions = {}): CodaruEditor {
       const { handleAgentRequest } = await import('./agent');
       assertActive();
       return handleAgentRequest({
-        resourceLibrary:editor.getResourceLibrary,resource:editor.getResource,exportResource:editor.exportResource,
+        resourceLibrary:editor.getResourceLibrary,resource:editor.getResource,exportResource:editor.exportResource,fonts:editor.getFonts,fontIssues:editor.getFontIssues,loadFonts:editor.loadFonts,fontRegistry:fontRegistry,
         project: () => { assertActive(); return store.project; },
         selection: () => [...state.selected], scope: () => state.selectionScope,
         busy: () => destroyed || isBusy(), commit: edit => { assertWritable(); store.commit(edit); render(true); },
@@ -524,16 +557,17 @@ export function createEditor(options: CreateEditorOptions = {}): CodaruEditor {
       state.zoom = boundedZoom; state.pan = { ...pan }; render(false, true);
     },
     async exportAsset(options = {}) {
-      assertWritable(); const snapshot = clone(previewProject()), ids = options.ids ?? [...state.selected];
+      assertWritable(); const snapshot = attachFonts(clone(previewProject()),fontRegistry), ids = options.ids ?? [...state.selected];
       const { exportAsset } = await import('./asset-export');
+      await fontRegistry.load();
       return exportAsset(snapshot, { ...options, ids });
     },
-    exportHTML() { assertActive(); requireDOM(); return exportHTML(previewProject()); },
+    exportHTML() { assertActive(); requireDOM(); const p=previewProject();requireFonts(p,visibleNodes(p));return exportHTML(p,fontRegistry.referenceCSS()); },
     exportSVG(frameId) {
       assertActive(); requireDOM();
       const preview = previewProject(), frame = preview.nodes.find(n => n.id === frameId);
       if (frame?.type !== 'frame') throw new Error('La exportación SVG requiere una pantalla.');
-      return exportSVG(preview, frame);
+      requireFonts(preview,visibleNodes(preview,frameId));return exportSVG(preview, frame,fontRegistry.referenceCSS());
     },
     subscribe(listener) {
       assertActive(); listeners.add(listener);
@@ -549,6 +583,7 @@ export function createEditor(options: CreateEditorOptions = {}): CodaruEditor {
       await view.command(action);
     },
     destroy() {
+      if(fontRenderTimer)clearTimeout(fontRenderTimer);
       if (destroyed || destroying) return clone(finalDocument ?? store.project);
       destroying = true;
       identityRequests.forEach(r=>r.abort());
@@ -559,12 +594,13 @@ export function createEditor(options: CreateEditorOptions = {}): CodaruEditor {
         try { view?.flush(); } finally { view?.dispose(); }
       } finally {
         finalDocument = clone(store.project);
-        destroyed = true; destroying = false; view = undefined; listeners.clear();commentListeners.clear();
+        destroyed = true; destroying = false; fontRegistry.dispose(); view = undefined; listeners.clear();commentListeners.clear();
       }
       return clone(finalDocument);
     },
   };
   sessions.set(editor, {
+    fonts:fontRegistry,bindFontLoader(loader){assertActive();return fontRegistry.bind(loader);},
     identityCapabilities() { assertActive(); return {research:!!identityServices.research,explore:!!identityServices.explore,review:!!identityServices.render&&!!identityServices.review,refine:!!identityServices.refine}; },
     bindExtension(hooks) { assertActive(); extensions.add(hooks); return ()=>{extensions.delete(hooks);}; },
     store, setResourceRenderer, setResourceLibraryHandler(callback) { assertActive(); resourceChangeHandler=callback; }, state, notify, assertActive, previewProject, localization: () => localization,

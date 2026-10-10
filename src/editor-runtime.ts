@@ -1,3 +1,5 @@
+import {createBrowserFontLoader} from './fonts-browser';
+import {attachFonts,fontFamilyCSS,fontIssue,requireFonts,validateFontChanges} from './fonts';
 import { createStylePackagePanel } from './style-package-view';
 import { createResourceLibraryPanel } from './resource-library-view';
 import { resourcePreviewRenderer } from './resource-preview';
@@ -50,6 +52,8 @@ function initial() {
 }
 const editor = options.editor ?? createEditor({ document: initial() });
 const session = getEditorSession(editor), store = session.store, state = session.state;
+const unbindFonts=session.bindFontLoader(createBrowserFontLoader(ownerDocument));
+void editor.loadFonts().catch(()=>{});
 let lastNotified = store.serialize();
 
 
@@ -69,7 +73,7 @@ const isCollapsed = (n: DesignNode) => collapsedByDefault(n) ? !expanded.has(n.i
 let lastPoint = { x: 90, y: 120 }; let previewFrame: string | null = null; let previewHistory: { id: string; transition?: Transition }[] = []; let previewRatio = 1;
 /** Result of the last design review; the heat map is drawn while it is on. */
 let review: { issues: LintIssue[]; heat: boolean } | null = null;
-const p = () => store.project;
+const p = () => attachFonts(store.project,session.fonts);
 const previewProject = () => session.previewProject();
 const find = (id: string) => p().nodes.find(n => n.id === id);
 const app = options.app;
@@ -137,7 +141,7 @@ function persist() {
 }
 function change(fn: (project: Project) => void, message?: string) {
   if (disposed) return;
-  try { store.commit(fn); state.selected = state.selected.filter(id => !!find(id)); render(); persist(); if (message) toast(message); }
+  try { const before=p();store.commit(draft=>{attachFonts(draft,session.fonts);fn(draft);},draft=>validateFontChanges(before,draft,session.fonts,true)); state.selected = state.selected.filter(id => !!find(id)); render(); persist(); if (message) toast(message); }
   catch (e) { render(); toast(e instanceof Error ? e.message : 'No se pudo realizar el cambio'); }
 }
 function select(ids: string[], scope?: Scope) {
@@ -217,7 +221,7 @@ function frameLabel(n: DesignNode) {
 function renderCanvas() {
   const artboards = byId('artboards');
   const projection = previewProject();
-  const key = `${editor.getLocalizationState().revision}|${p().activeThemeId}|${p().theme}|${pageId()}|${signature(p().designThemes)}|${signature(p().components.map(c => [c.id, c.template.length]))}`;
+  const key = `${session.fonts.revision}|${editor.getLocalizationState().revision}|${p().activeThemeId}|${p().theme}|${pageId()}|${signature(p().designThemes)}|${signature(p().components.map(c => [c.id, c.template.length]))}`;
   if (key !== canvasKey) { canvasCache.clear(); canvasKey = key; }
   const ordered: Node[] = [], seen = new Set<string>(), sigs = rootSignatures();
   for (const n of rootsOnPage(p(), pageId())) {
@@ -532,10 +536,11 @@ function assetPanel() {
 let exportingAsset = false;
 async function saveAsset(format: 'svg' | 'png' | 'assets', platform: 'ios' | 'android' | 'all' = 'all') {
   if (exportingAsset) { toast('Preparando el asset…'); return; }
-  const snapshot = clone(previewProject()), ids = [...state.selected]; exportingAsset = true;
+  const snapshot = attachFonts(clone(previewProject()),session.fonts), ids = [...state.selected]; exportingAsset = true;
   try {
     toast('Preparando el asset…');
     const { exportAsset } = await import('./asset-export'); if (disposed) return;
+    await editor.loadFonts();
     const result = await exportAsset(snapshot, { ids, format, platform }); if (disposed) return;
     await saveFile(result.content, result.filename, format === 'assets' ? 'zip' : format, result.encoding);
   } finally { exportingAsset = false; }
@@ -605,13 +610,18 @@ function renderInspector() {
   // Linked tokens win over the raw fields, so the inspector shows what is actually drawn.
   const r = { ...n, ...resolveNodeStyle(p(), n) };
   const isText = ['text','button','input'].includes(n.type); const isContainer = containerKinds.includes(n.type);
+  const available=editor.getFonts(),face=available.find(f=>f.id===r.fontFamily),custom=face&&!face.builtin;
+  const preserve=(choices:[string,string][],value:string)=>choices.some(([id])=>id===value)?choices:[[value,`${value} · no disponible`],...choices] as [string,string][];
+  const familyChoices=preserve(available.map(f=>[f.id,f.name+(f.variants.some(v=>v.status==='loaded')?'':' · pendiente')]),r.fontFamily);
+  const styles=custom?preserve([...new Set(face.variants.filter(v=>v.status==='loaded').map(v=>v.style))].map(id=>[id,{normal:'Normal',italic:'Cursiva',oblique:'Oblicua'}[id]]),r.fontStyle??'normal'):[['normal','Normal'],['italic','Cursiva'],['oblique','Oblicua']] as [string,string][];
+  const weights=custom?preserve(face.variants.filter(v=>v.status==='loaded'&&v.style===(r.fontStyle??'normal')).map(v=>[String(v.weight),String(v.weight)]),String(r.fontWeight)):[];
   inspector.innerHTML = `
     <section class="inspector-section node-heading"><span class="node-type ${n.componentId||n.instanceOf?'purple':''}">${icon(n.componentId||n.instanceOf?'component':n.type,16)} ${n.componentId?'Componente maestro':n.instanceOf?'Instancia':labels[n.type]}</span><input class="node-name" aria-label="Nombre del elemento" data-field="name" value="${esc(n.name)}"/>${isUnavailable(p(),n)?'<p class="locked-note">Este elemento está bloqueado u oculto.</p>':''}${canEnter(n)?'<button class="wide-button enter-scope" data-action="enter-scope" title="Doble clic o Enter">Entrar y seleccionar hijos ↵</button>':''}</section>
     <fieldset ${isUnavailable(p(),n)?'disabled':''}>
     <section class="inspector-section"><div class="section-heading"><span>POSICIÓN Y TAMAÑO</span><button class="icon-button tiny" data-action="duplicate" aria-label="Duplicar selección">${icon('plus',14)}</button></div><div class="field-grid">${numField('X','x',n.x,-100000,100000)}${numField('Y','y',n.y,-100000,100000)}${numField('W','width',n.width,1)}${numField('H','height',n.height,1)}</div><div class="button-row compact"><button data-action="align-left" title="Alinear a la izquierda">${icon('align',16)}</button><button data-action="align-center" title="Centrar horizontalmente">${icon('center',16)}</button><button data-action="front">Al frente</button><button data-action="back">Al fondo</button></div></section>
     </fieldset>${componentPropertyPanel(p(),n)}<fieldset ${isUnavailable(p(),n)?'disabled':''}>
     ${n.type==='icon'?`<section class="inspector-section"><div class="section-heading"><span>ICONO VECTORIAL</span></div><p class="field-note">${esc(n.iconPack)} / ${esc(n.iconName)}</p>${colorField('Color del icono','color',n.color)}<p class="field-note">Escala sin perder nitidez. El color admite tokens como @primary.</p></section>`:''}
-    ${isText?`<section class="inspector-section"><div class="section-heading"><span>TEXTO DE ORIGEN</span></div><textarea aria-label="Contenido del texto" data-field="text" rows="2">${esc(n.text)}</textarea>${selectField('Fuente','fontFamily',r.fontFamily,[['system','Sistema / Sans'],['serif','Georgia / Serif'],['mono','Monoespaciada']])}<div class="field-grid">${numField('Tamaño','fontSize',r.fontSize,1,200)}${numField('Peso','fontWeight',r.fontWeight,100,900,50)}${numField('Línea','lineHeight',r.lineHeight,.5,4,.1)}${selectField('Alinear','textAlign',n.textAlign,[['left','Izquierda'],['center','Centro'],['right','Derecha']])}</div>${n.typographyToken?`<p class="field-note" data-linked="typography">Tipografía vinculada al token «${esc(n.typographyToken)}». Si cambias un valor aquí, el texto se desvincula.</p>`:''}${colorField('Texto','color',n.color)}</section>`:''}
+    ${isText?`<section class="inspector-section"><div class="section-heading"><span>TEXTO DE ORIGEN</span></div><textarea aria-label="Contenido del texto" data-field="text" rows="2">${esc(n.text)}</textarea>${selectField('Fuente','fontFamily',r.fontFamily,familyChoices)}<div class="field-grid">${numField('Tamaño','fontSize',r.fontSize,1,200)}${selectField('Estilo','fontStyle',r.fontStyle??'normal',styles)}${custom?selectField('Peso','fontWeight',String(r.fontWeight),weights):numField('Peso','fontWeight',r.fontWeight,100,900,1)}${numField('Línea','lineHeight',r.lineHeight,.5,4,.1)}${selectField('Alinear','textAlign',n.textAlign,[['left','Izquierda'],['center','Centro'],['right','Derecha']])}</div>${fontIssue(p(),n)?`<p class="field-note" role="alert">${esc(fontIssue(p(),n)!.message)}</p>`:''}${n.typographyToken?`<p class="field-note" data-linked="typography">Tipografía vinculada al token «${esc(n.typographyToken)}». Si cambias un valor aquí, el texto se desvincula.</p>`:''}${colorField('Texto','color',n.color)}</section>`:''}
     ${isContainer?`<section class="inspector-section"><div class="section-heading"><span>DISTRIBUCIÓN</span></div>${selectField('Organización','layout',n.layout,[['free','Libre'],['vertical','Columna ↕'],['horizontal','Fila ↔']])}${n.layout!=='free'?`<div class="field-grid">${n.paddingSides?'':numField('Padding','padding',n.padding,0,300)}${numField('Espacio','gap',n.gap,0,300)}</div>
       ${n.paddingSides?`<div class="stops-heading">Padding por lado <span>sup. · der. · inf. · izq.</span></div><div class="field-grid safe-fields">${(['top','right','bottom','left'] as const).map(edge=>`<label class="number-field"><span>${{top:'↑',right:'→',bottom:'↓',left:'←'}[edge]}</span><input type="number" aria-label="Padding ${{top:'superior',right:'derecho',bottom:'inferior',left:'izquierdo'}[edge]}" data-pad="${edge}" value="${n.paddingSides![edge]}" min="0" max="2000" step="1"/></label>`).join('')}</div>`:''}
       <button class="text-button" data-action="padding-sides">${n.paddingSides?'Usar un solo padding':'Padding por lado'}</button>
@@ -637,7 +647,7 @@ function setMode(next: typeof state.mode) { state.mode=next; document.querySelec
 /** A component template drawn small enough to fit a tile, on the theme background it would sit on. */
 const previewCache = new Map<string, { key: string; el: HTMLElement }>();
 function componentPreview(c: Component, maxWidth: number, maxHeight: number) {
-  const key = `${templateSignature(c)}|${maxWidth}x${maxHeight}|${p().theme}|${p().activeThemeId}`, cached = previewCache.get(c.id);
+  const key = `${session.fonts.revision}|${templateSignature(c)}|${maxWidth}x${maxHeight}|${p().theme}|${p().activeThemeId}`, cached = previewCache.get(c.id);
   if (cached && cached.key === key) return cached.el.cloneNode(true) as HTMLElement;
   const el = buildComponentPreview(c, maxWidth, maxHeight); previewCache.set(c.id, { key, el }); return el.cloneNode(true) as HTMLElement;
 }
@@ -645,7 +655,7 @@ function buildComponentPreview(c: Component, maxWidth: number, maxHeight: number
   const root = c.template[0], scale = Math.min(1, maxWidth / Math.max(1, root.width), maxHeight / Math.max(1, root.height));
   const wrap = document.createElement('div'); wrap.className = 'sys-preview'; wrap.style.width = `${Math.round(root.width * scale)}px`; wrap.style.height = `${Math.round(root.height * scale)}px`;
   const inner = document.createElement('div'); inner.style.cssText = `position:absolute;left:0;top:0;width:${root.width}px;height:${root.height}px;transform:scale(${scale});transform-origin:0 0;pointer-events:none`;
-  try { const proj = localizeProject({ ...p(), nodes: c.template }, session.localization()); inner.append(element(proj, proj.nodes[0], true)); wrap.style.background = color(proj, '@background', root); } catch { inner.textContent = '·'; }
+  try { const proj = attachFonts(localizeProject({ ...p(), nodes: c.template }, session.localization()),session.fonts); inner.append(element(proj, proj.nodes[0], true)); wrap.style.background = color(proj, '@background', root); } catch { inner.textContent = '·'; }
   wrap.append(inner); return wrap;
 }
 const lines = (text: string | undefined) => (text ?? '').split('\n').map(l => l.trim()).filter(Boolean);
@@ -704,7 +714,7 @@ function renderSystem() {
       const row = (mode: 'light' | 'dark') => pairs.map(([a, b, what]) => { const ca = theme.modes[mode].colors[a.slice(1)], cb = theme.modes[mode].colors[b.slice(1)]; if (!ca || !cb) return ''; const r = contrastRatio(ca, cb); return `<tr><td>${esc(what)}</td><td><code>${a}</code> / <code>${b}</code></td><td class="${r >= 4.5 ? 'ok' : r >= 3 ? 'mid' : 'bad'}">${r.toFixed(1)}:1</td></tr>`; }).join('');
       extra = `<h3>Claro</h3><div class="sys-swatches">${swatches('light')}</div><h3>Oscuro</h3><div class="sys-swatches">${swatches('dark')}</div><h3>Contrastes medidos</h3><table class="sys-table"><thead><tr><th>Uso</th><th>Par</th><th>Claro</th></tr></thead><tbody>${row('light')}</tbody></table><table class="sys-table"><thead><tr><th>Uso</th><th>Par</th><th>Oscuro</th></tr></thead><tbody>${row('dark')}</tbody></table><p class="field-note">4,5:1 para texto, 3:1 para controles e indicadores.</p>`;
     } else if (systemPage === 'tipografia') {
-      extra = `<div class="sys-types">${Object.entries(theme.modes.light.typography).map(([k, t]) => `<div class="sys-type"><div style="font-family:${t.fontFamily === 'serif' ? 'Georgia,serif' : t.fontFamily === 'mono' ? 'ui-monospace,monospace' : 'inherit'};font-size:${Math.min(34, t.fontSize)}px;font-weight:${t.fontWeight};line-height:${t.lineHeight}">${esc(project.name)}</div><small><code>${esc(k)}</code> ${esc(t.name)} · ${t.fontFamily} ${t.fontSize}/${t.fontWeight} · ${t.lineHeight}</small></div>`).join('') || '<p class="empty-note">El tema no define estilos de texto.</p>'}</div>`;
+      extra = `<div class="sys-types">${Object.entries(theme.modes.light.typography).map(([k,t])=>{const issue=session.fonts.issue({id:`token:${k}`,fontFamily:t.fontFamily,fontWeight:t.fontWeight,fontStyle:t.fontStyle});return `<div class="sys-type">${issue?`<p role="alert" class="field-note">${esc(issue.message)}</p>`:`<div style="font-family:${fontFamilyCSS(p(),t.fontFamily)};font-size:${Math.min(34,t.fontSize)}px;font-weight:${t.fontWeight};font-style:${t.fontStyle??'normal'};font-synthesis:none;font-optical-sizing:none;line-height:${t.lineHeight}">${esc(project.name)}</div>`}<small><code>${esc(k)}</code> ${esc(t.name)} · ${esc(t.fontFamily)} ${t.fontSize}/${t.fontWeight} · ${t.fontStyle??'normal'} · ${t.lineHeight}</small></div>`;}).join('') || '<p class="empty-note">El tema no define estilos de texto.</p>'}</div>`;
     } else if (systemPage === 'espaciado') {
       extra = `<h3>Escala</h3><div class="sys-scale">${[4, 8, 12, 16, 24, 32, 48].map(v => `<div><i style="width:${v}px;height:${v}px"></i><small>${v}</small></div>`).join('')}</div>${Object.keys(theme.modes.light.radii).length ? `<h3>Radios</h3><div class="sys-scale">${Object.entries(theme.modes.light.radii).map(([k, v]) => `<div><i style="width:40px;height:40px;border-radius:${Math.min(20, v)}px"></i><small>${esc(k)} · ${v}</small></div>`).join('')}</div>` : ''}`;
     } else if (systemPage === 'movimiento') {
@@ -865,7 +875,7 @@ async function action(act: string) {
     case 'zoom-out':zoomAt(state.zoom/1.2);break;
     case 'agent-help':agentHelp();break;
     case 'experience':{closePreview();const {openExperienceEditor}=await import('./experience-inspector');if(disposed)break;experienceCleanup=openExperienceEditor(byId('modal-root'),editor,byId('inspector'),fn=>{store.commit(fn);render();persist();},closePreview);break;}
-    case 'themes':openThemeEditor({root:byId('modal-root'),get:p,commit:fn=>{store.commit(fn);render();persist();},undo:()=>{store.undo();render();persist();},close:closePreview});break;
+    case 'themes':openThemeEditor({root:byId('modal-root'),get:p,fonts:editor.getFonts,commit:fn=>{const before=p();store.commit(fn,draft=>validateFontChanges(before,draft,session.fonts));render();persist();},undo:()=>{store.undo();render();persist();},close:closePreview});break;
     case 'animator':{const id=state.selected[0];if(state.selected.length!==1||!find(id)){toast('Selecciona un solo elemento para animarlo.');break;}const {openAnimator}=await import('./animator');if(disposed)break;openAnimator({root:byId('modal-root'),get:p,nodeId:id,commit:fn=>{store.commit(fn);render();persist();},undo:()=>{store.undo();render();persist();},close:closePreview});break;}
     case 'lint':review={issues:lintProject(p()),heat:review?.heat??true};select([]);render();toast(review.issues.length?`Revisión: ${review.issues.length} hallazgos. Pulsa uno para ir a él.`:'Revisión: sin problemas detectados.');break;
     case 'lint-close':review=null;render();break;
@@ -904,8 +914,8 @@ async function action(act: string) {
     case 'asset-ios':await saveAsset('assets','ios');break;
     case 'asset-android':await saveAsset('assets','android');break;
     case 'asset-all':await saveAsset('assets');break;
-    case 'export-html':await saveFile(editor.exportHTML(),`${fileName()}.html`,'html');break;
-    case 'export-svg':{const frame=frameOf(p(),state.selected[0]);if(frame)await saveFile(editor.exportSVG(frame.id),`${frame.name}.svg`,'svg');break;}
+    case 'export-html':await saveFile(await editor.exportHTMLAsync(),`${fileName()}.html`,'html');break;
+    case 'export-svg':{const frame=frameOf(p(),state.selected[0]);if(frame)await saveFile(await editor.exportSVGAsync(frame.id),`${frame.name}.svg`,'svg');break;}
     case 'help':help();break;
   }
 }
@@ -1044,8 +1054,9 @@ events.addEventListener('change',e=>{
     // Editing a value that a token controls detaches the token and keeps the other resolved values, so nothing else jumps.
     if(field==='page'){change(pr=>updateNode(pr,n.id,{page:String(value)}),'Pantalla movida de página');select([]);return;}
     if(field==='role'){change(pr=>updateNode(pr,n.id,{role:value?String(value) as DesignNode['role']:undefined}));return;}
-    const resolved=resolveNodeStyle(p(),n);let patch:Partial<DesignNode>={[field]:value};
-    if(n.typographyToken&&['fontFamily','fontSize','fontWeight','lineHeight'].includes(field))patch={fontFamily:resolved.fontFamily,fontSize:resolved.fontSize,fontWeight:resolved.fontWeight,lineHeight:resolved.lineHeight,...patch,typographyToken:undefined};
+    const resolved=resolveNodeStyle(p(),n);if(field==='fontWeight')value=Number(value);let patch:Partial<DesignNode>={[field]:value};
+    if(field==='fontFamily'||field==='fontStyle'){const family=field==='fontFamily'?String(value):resolved.fontFamily??n.fontFamily,style=field==='fontStyle'?String(value):resolved.fontStyle??n.fontStyle??'normal',weight=resolved.fontWeight??n.fontWeight;const face=editor.getFonts().find(f=>f.id===family);if(face&&!face.builtin){const candidates=face.variants.filter(v=>v.status==='loaded'&&(field==='fontFamily'||v.style===style));const variant=candidates.find(v=>v.style===style&&v.weight===weight)??candidates.find(v=>v.style===style)??candidates[0];if(variant){patch={...patch,fontWeight:variant.weight,fontStyle:variant.style};if(variant.weight!==weight||variant.style!==style)toast(`${face.name}: ${variant.weight} ${variant.style} disponible aplicado.`);}}}
+    if(n.typographyToken&&['fontFamily','fontSize','fontWeight','fontStyle','lineHeight'].includes(field))patch={fontFamily:resolved.fontFamily,fontSize:resolved.fontSize,fontWeight:resolved.fontWeight,fontStyle:resolved.fontStyle??'normal',lineHeight:resolved.lineHeight,...patch,typographyToken:undefined};
     if(n.radiusToken&&field==='radius')patch={...patch,radiusToken:undefined};
     change(pr=>updateNode(pr,n.id,patch));}
 });
@@ -1226,6 +1237,7 @@ function initializeEmbedded(options: EmbeddedOptions) {
   const next=options.document===undefined?undefined:validate(options.document);
   embeddedInitialized=true;
   if(next){store.project=next;store.undoStack=[];store.redoStack=[];state.selected=[];state.selectionScope=null;}
+  if(options.fonts!==undefined)editor.setFonts(options.fonts);
   if(options.localization!==undefined)editor.setLocalization(options.localization);
   session.setTranslationHandler(options.onTranslationRequest);
   session.setImplementationHandler(options.onImplementationRequest);
@@ -1248,7 +1260,7 @@ function disposeEmbedded() {
     clearTimeout(saveTimer);clearTimeout(toastTimer);flushDraft();
     disposed=true;onHostChange=undefined;nativeInvoke=undefined;
     if(agentTimer!==undefined)clearInterval(agentTimer);
-    stageObserver.disconnect();building.dispose();drawingPanel.dispose();stylePanel.dispose();session.setResourceRenderer(undefined);dom.dispose();unbindView();if(!options.editor){session.setResourceLibraryHandler(undefined);editor.destroy();}options.onDispose?.();
+    stageObserver.disconnect();building.dispose();drawingPanel.dispose();stylePanel.dispose();unbindFonts();unbindFontExtension();session.setResourceRenderer(undefined);dom.dispose();unbindView();if(!options.editor){session.setResourceLibraryHandler(undefined);editor.destroy();}options.onDispose?.();
   }
   return clone(p());
 }
@@ -1273,6 +1285,7 @@ const api = {
   agent:(command:string,params:Record<string,unknown>={})=>runAgent({command,params}),
   importDocument:(input:unknown)=>{assertActive();editor.importDocument(input);fit();persist();},
   undo:()=>{assertActive();return action('undo');},redo:()=>{assertActive();return action('redo');}, exportHTML:editor.exportHTML, exportAsset: editor.exportAsset,
+  getFonts:editor.getFonts,setFonts:editor.setFonts,registerFonts:editor.registerFonts,loadFonts:editor.loadFonts,getFontIssues:editor.getFontIssues,exportHTMLAsync:editor.exportHTMLAsync,exportSVGAsync:editor.exportSVGAsync,
   getPreviewDocument:editor.getPreviewDocument,getLocalization:editor.getLocalization,getLocalizationState:editor.getLocalizationState,getLocalizationIssues:editor.getLocalizationIssues,setLocalization:editor.setLocalization,setLocale:editor.setLocale,requestTranslation:editor.requestTranslation,
   initializeEmbedded,disposeEmbedded,
 };
@@ -1284,7 +1297,7 @@ let agentRunning=false;
 async function runAgent(request:import('./agent').AgentRequest){
   if(disposed)return {ok:false,error:{code:'editor_disposed',message:'El editor ya fue desmontado.'}};
   const module=await import('./agent');
-  return module.handleAgentRequest({resourceLibrary:editor.getResourceLibrary,resource:editor.getResource,exportResource:editor.exportResource,project:p,selection:()=>[...state.selected],localization:session.localization,localizationState:editor.getLocalizationState,previewProject,setLocale:editor.setLocale,localizationIssues:editor.getLocalizationIssues,scope:()=>state.selectionScope,
+  return module.handleAgentRequest({resourceLibrary:editor.getResourceLibrary,resource:editor.getResource,exportResource:editor.exportResource,fonts:editor.getFonts,fontIssues:editor.getFontIssues,loadFonts:editor.loadFonts,fontRegistry:session.fonts,project:p,selection:()=>[...state.selected],localization:session.localization,localizationState:editor.getLocalizationState,previewProject,setLocale:editor.setLocale,localizationIssues:editor.getLocalizationIssues,scope:()=>state.selectionScope,
     busy:()=>disposed||(embedded&&!options.modular&&!embeddedInitialized)||!!gesture||!!byId('modal-root').children.length||!!document.activeElement?.matches('input,textarea,select,[contenteditable="true"]'),
     commit:edit=>{assertActive();const before=building.snapshot(p());store.commit(edit);touchedByAgent=building.track(before,p());state.selected=state.selected.filter(id=>!!find(id));render();persist();},
     commitPrepared:prepared=>{assertActive();const before=building.snapshot(p());store.commitPrepared(prepared);touchedByAgent=building.track(before,p());state.selected=state.selected.filter(id=>!!find(id));render();persist();},select:ids=>select(ids),
@@ -1321,6 +1334,7 @@ function agentHelp(){
   byId('modal-root').innerHTML=`<div class="modal-backdrop"><section class="dialog agent-dialog" role="dialog" aria-modal="true" aria-label="Flujo de IA y CLI"><button class="dialog-close icon-button" data-action="close-preview" aria-label="Cerrar guía de IA">×</button><span class="eyebrow">DISEÑAR JUNTOS</span><h2>Tú dibujas. La IA continúa.</h2><p class="agent-status">${nativeInvoke?(agentConnected?'● CLI local disponible con la app abierta':'Puente nativo disponible'):(embedded?'Editor integrado · API disponible para la aplicación':'Vista de navegador · el CLI se conecta a la app nativa')}</p><ol><li><strong>Leer contexto</strong><code>codaru context</code><span>Selección, pantallas, temas, conexiones y revisión actual.</span></li><li><strong>Descubrir piezas</strong><code>codaru catalog --kind icons</code><span>También: --kind kits. Usa schema para conocer las operaciones.</span></li><li><strong>Probar y aplicar</strong><code>codaru apply --file cambios.json --dry-run<br/>codaru apply --file cambios.json</code><span>Un lote atómico; devuelve IDs, cambios y contexto actualizado.</span></li><li><strong>Revisar el resultado</strong><code>codaru export --format svg --frame ID --output vista.svg</code><span>El diseño aparece en este lienzo. Deshacer restaura el lote.</span></li></ol><p>El JSON incluye <code>expectedRevision</code> y <code>operations</code>. Una revisión antigua se rechaza para proteger tus cambios. Cierra esta guía antes de pedir modificaciones.</p><p class="field-note">La app no llama a ningún modelo: tu agente ejecuta el CLI. Ejecutable en src-tauri/target/release/codaru; guía completa en CLI.md. Sin servidor Node.</p></section></div>`;
 }
 
+const unbindFontExtension=session.bindExtension({flush:()=>{},dispose:()=>{unbindFonts();unbindFontExtension();}});
 const unbindView = session.bindView({
   render, resources: () => { drawingPanel.invalidate(); if (libraryTab === 'resources') renderComponents(); }, camera: renderCamera, localizationIssues: readLocalizationIssues,
   flush: () => { (document.activeElement as HTMLElement | null)?.blur(); if (gesture) finishGesture({pointerId:gesture.pointerId,clientX:gesture.screen.x,clientY:gesture.screen.y},true); persist(); flushDraft(); },

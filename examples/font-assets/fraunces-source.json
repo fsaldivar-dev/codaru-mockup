@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Fraunces-Italic[SOFT,WONK,opsz,wght].ttf",
+    "sha": "2ddf59a11b89a3d6b2816ea6ae7965026c08143a",
+    "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/fraunces/Fraunces-Italic%5BSOFT%2CWONK%2Copsz%2Cwght%5D.ttf"
+  },
+  {
+    "name": "Fraunces[SOFT,WONK,opsz,wght].ttf",
+    "sha": "8210f9488d3c732359a9292dd09aca3f2bae830e",
+    "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/fraunces/Fraunces%5BSOFT%2CWONK%2Copsz%2Cwght%5D.ttf"
+  },
+  {
+    "name": "OFL.txt",
+    "sha": "22fa7ce5733434d0c634f6e55116f410858e938c",
+    "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/fraunces/OFL.txt"
+  }
+]

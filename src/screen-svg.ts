@@ -1,3 +1,5 @@
+import {builtinFonts,fontFamilyCSS,fontIssue,fontsFor,transferFonts} from './fonts';
+import type {FontStyle} from './contracts';
 // Headless rendering of one screen to a self-contained SVG string. Pure: no window, no document,
 // no canvas. Text is wrapped with built-in font metrics, so the same call works in a browser, a
 // worker, Node or a headless bridge. The editor's own SVG export goes through the same code with a
@@ -9,7 +11,7 @@ import { iconLicenseNotice, iconSVG } from './icon-data';
 import { scopeSVG } from './motion';
 import { deviceSkins } from './devices';
 
-export const fonts: Record<string, string> = { system: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', serif: 'Georgia, "Times New Roman", serif', mono: 'ui-monospace, SFMono-Regular, Menlo, monospace' };
+export const fonts = builtinFonts;
 export function escape(s: unknown): string { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!); }
 
 /** Token overrides for a render: `light` / `dark`, or a map of Codaru color tokens. Keys may be written
@@ -27,11 +29,11 @@ export interface RenderScreenOptions {
   licenses?: boolean;
 }
 /** Width in pixels of `text` set in `font` (a CSS font shorthand: weight, size, family). */
-export type TextMeasure = (text: string, font: { family: string; size: number; weight: number }) => number;
+export type TextMeasure = (text: string, font: { family: string; size: number; weight: number; style?:FontStyle }) => number;
 
 /** Draw one screen of a design document as SVG. The document may be JSON text or an object; it is validated first. */
 export function renderScreenToSVG(document: unknown, options: RenderScreenOptions = {}): string {
-  const p = parseDocument(document);
+  const p = parseDocument(document);if(document&&typeof document==='object')transferFonts(document as Project,p);
   if (options.mode !== undefined && options.mode !== 'static') throw new Error('mode solo admite «static».');
   if (options.maxWidth !== undefined && !(Number.isFinite(options.maxWidth) && options.maxWidth > 0)) throw new Error('maxWidth debe ser un número positivo.');
   const frame = pickScreen(p, options.screen);
@@ -104,7 +106,7 @@ export const metricMeasure: TextMeasure = (text, { family, size, weight }) => {
   return sum / 1000 * size * (/Georgia|serif/i.test(family) && !/sans-serif/i.test(family) ? .94 : 1);
 };
 /** Lines as CSS `white-space: pre-wrap; overflow-wrap: anywhere` would break them in `width`. */
-export function wrapText(text: string, width: number, font: { family: string; size: number; weight: number }, measure: TextMeasure = metricMeasure): string[] {
+export function wrapText(text: string, width: number, font: { family: string; size: number; weight: number; style?:FontStyle }, measure: TextMeasure = metricMeasure): string[] {
   const lines: string[] = [], fits = (s: string) => measure(s, font) <= width + .5;
   for (const paragraph of text.split('\n')) {
     const indent = /^ */.exec(paragraph)![0];
@@ -128,7 +130,7 @@ export function wrapText(text: string, width: number, font: { family: string; si
 const num = (v: number) => String(Math.round(v * 100) / 100);
 /** Font attributes for SVG text. Between 400 and 700 the system face is variable: without an explicit
  * axis, SVG and canvas fall back to a wider static face while HTML uses the variable one. */
-const fontAttrs = (family: string, size: number, weight: number) => `font-family="${escape(family)}" font-size="${num(size)}" font-weight="${weight}"${weight % 100 || (weight !== 400 && weight !== 700) ? ` style="font-variation-settings:'wght' ${weight}"` : ''}`;
+const fontAttrs = (family: string, size: number, weight: number, style:FontStyle='normal') => `font-family="${escape(family)}" font-size="${num(size)}" font-weight="${weight}" font-style="${style}" font-synthesis="none" font-optical-sizing="none"${weight % 100 || (weight !== 400 && weight !== 700) ? ` style="font-variation-settings:'wght' ${weight}"` : ''}`;
 /** Split a color into an SVG paint and its opacity, so 8-digit hex and material alpha survive every renderer. */
 function paint(value: string, opacity = 1): { color: string; opacity: number } {
   if (!value || value.toLowerCase() === 'transparent') return { color: 'none', opacity: 0 };
@@ -157,10 +159,10 @@ const BASELINE = .35;
 const SIGNAL = '<rect x="0" y="8" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="7" rx="1"/><rect x="10" y="3" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="13" rx="1"/><path d="M30 3.2a8.6 8.6 0 0 1 11 0l-1.4 1.7a6.4 6.4 0 0 0-8.2 0zm2.3 3a5 5 0 0 1 6.4 0L37.3 8a2.8 2.8 0 0 0-3.6 0zm3.2 6.3 1.8-2.3a2.3 2.3 0 0 0-3.6 0z"/><rect x="46" y="1" width="17" height="11" rx="3.2" fill="none" stroke="currentColor" opacity=".5"/><rect x="47.7" y="2.7" width="11" height="7.6" rx="1.7"/><rect x="64" y="4.5" width="1.5" height="4" rx=".7" opacity=".5"/>';
 
 /** Draw a validated frame at the origin. `measure` defaults to the built-in metrics. */
-export function frameToSVG(p: Project, frame: DesignNode, options: { measure?: TextMeasure; maxWidth?: number; licenses?: boolean } = {}): string {
-  const measure = options.measure ?? metricMeasure;
+export function frameToSVG(p: Project, frame: DesignNode, options: { measure?: TextMeasure; maxWidth?: number; licenses?: boolean; fontCSS?:string } = {}): string {
+  const measure = options.measure ?? (fontsFor(p)?.hasMeasure()?((text,font)=>fontsFor(p)!.measure(text,font)):metricMeasure);
   const scope = 'c' + frame.id.replace(/[^A-Za-z0-9_-]/g, '');
-  const defs: string[] = [], body: string[] = [], filters = new Map<string, string>();
+  const defs: string[] = options.fontCSS?[`<style>${escape(options.fontCSS)}</style>`]:[], body: string[] = [], filters = new Map<string, string>();
   let next = 0;
   const id = (kind: string) => `${scope}-${kind}${next++}`;
   const clip = (d: string) => { const ref = id('k'); defs.push(`<clipPath id="${ref}"><path d="${d}"/></clipPath>`); return ref; };
@@ -223,14 +225,17 @@ export function frameToSVG(p: Project, frame: DesignNode, options: { measure?: T
       body.push(scopeSVG(n.svg!, `${scope}-${n.id}`).replace(/^<svg /, `<svg x="${num(cx)}" y="${num(cy)}" width="${num(Math.max(0, cw))}" height="${num(Math.max(0, ch))}" overflow="visible" color="${paint(color(p, n.color, n)).color}" `));
     }
     if (n.text && n.type !== 'image') {
-      const boxed = n.type === 'button' || n.type === 'input', pad = boxed ? 14 : 0, family = fonts[n.fontFamily] ?? fonts.system;
-      const font = { family, size: n.fontSize, weight: n.fontWeight }, lines = wrapText(n.text, Math.max(1, cw - pad * 2), font, measure), lh = n.fontSize * n.lineHeight;
+      const problem=fontIssue(p,n);if(problem)throw new Error(problem.message);
+      if(!Object.hasOwn(fonts,n.fontFamily)&&!options.measure&&!fontsFor(p)?.hasMeasure())throw new Error('La fuente personalizada necesita medición real.');
+      const boxed = n.type === 'button' || n.type === 'input', pad = boxed ? 14 : 0, family = fontFamilyCSS(p,n.fontFamily);
+      const font = { family, size: n.fontSize, weight: n.fontWeight, style:n.fontStyle??'normal' }, lines = wrapText(n.text, Math.max(1, cw - pad * 2), font, measure), lh = n.fontSize * n.lineHeight;
       const top = boxed ? cy + (ch - lines.length * lh) / 2 : cy;
+      const baseline=Object.hasOwn(fonts,n.fontFamily)?lh/2+BASELINE*n.fontSize:fontsFor(p)!.baseline(font,n.lineHeight);
       const anchor = n.textAlign === 'center' ? 'middle' : n.textAlign === 'right' ? 'end' : 'start';
       const tx = n.textAlign === 'center' ? cx + cw / 2 : n.textAlign === 'right' ? cx + cw - pad : cx + pad;
       const overflows = lines.length * lh > ch + .5 || top < cy - .5 || lines.some(line => measure(line, font) > cw - pad * 2 + .5);
       const ink = paint(color(p, n.color, n));
-      body.push(`<text ${attr('fill', ink)} ${fontAttrs(family, n.fontSize, n.fontWeight)} text-anchor="${anchor}" xml:space="preserve"${overflows ? ` clip-path="url(#${clip(roundedRect(cx, cy, cw, ch, [0, 0, 0, 0]))})"` : ''}>${lines.map((line, i) => `<tspan x="${num(tx)}" y="${num(top + i * lh + lh / 2 + BASELINE * n.fontSize)}">${escape(line)}</tspan>`).join('')}</text>`);
+      body.push(`<text ${attr('fill', ink)} ${fontAttrs(family, n.fontSize, n.fontWeight,n.fontStyle??'normal')} text-anchor="${anchor}" xml:space="preserve"${overflows ? ` clip-path="url(#${clip(roundedRect(cx, cy, cw, ch, [0, 0, 0, 0]))})"` : ''}>${lines.map((line, i) => `<tspan x="${num(tx)}" y="${num(top + i * lh + baseline)}">${escape(line)}</tspan>`).join('')}</text>`);
     }
 
     const kids = children(p, raw.id).filter(k => !k.hidden);

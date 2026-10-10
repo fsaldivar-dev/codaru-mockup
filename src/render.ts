@@ -1,3 +1,4 @@
+import {fontFamilyCSS,fontIssue,requireFonts,fontsFor} from './fonts';
 import {suggestedExperience} from './experience';
 import { children, color, panelsOf, postureGroup, type DesignNode, type Project } from './model';
 import { effectiveTheme, resolveNodeStyle, type GradientToken, type MaterialToken } from './themes';
@@ -40,6 +41,7 @@ export function element(p: Project, n: DesignNode, preview = false, clean = prev
 }
 function renderElement(p: Project, n: DesignNode, preview: boolean, clean: boolean, byParent: Map<string | null, DesignNode[]>): HTMLElement {
   n = { ...n, ...resolveNodeStyle(p, n) };
+  const problem=fontIssue(p,n);
   const el = document.createElement('div'); el.className = 'design-node'; el.dataset.node = n.id; el.dataset.kind = n.type; el.setAttribute('aria-label', n.name);
   const context = effectiveTheme(p, n), material = n.materialToken ? context.tokens.materials[n.materialToken] : undefined;
   el.dataset.theme = context.id; el.dataset.themeMode = context.mode;
@@ -48,7 +50,7 @@ function renderElement(p: Project, n: DesignNode, preview: boolean, clean: boole
     background: backgroundFor(p, n, material), color: color(p, n.color, n), border: `${material ? Math.max(1, n.strokeWidth) : n.strokeWidth}px solid ${color(p, material?.stroke ?? n.stroke, n)}`,
     borderRadius: n.type === 'ellipse' ? '50%' : `${n.radius}px ${n.radiusTR ?? n.radius}px ${n.radiusBR ?? n.radius}px ${n.radiusBL ?? n.radius}px`,
     opacity: `${n.opacity / 100}`, boxShadow: material?.shadow ? `0 ${material.shadow / 2}px ${material.shadow * 2}px rgba(10, 12, 28, 0.18)` : n.shadow ? '0 8px 22px #19102e22' : 'none',
-    fontFamily: fonts[n.fontFamily], fontSize: `${n.fontSize}px`, fontWeight: `${n.fontWeight}`, lineHeight: `${n.lineHeight}`,
+    fontFamily:problem||!n.text||n.hidden?fonts.system:fontFamilyCSS(p,n.fontFamily), fontStyle:n.fontStyle??'normal',fontSynthesis:'none',fontOpticalSizing:'none', fontSize: `${n.fontSize}px`, fontWeight: `${n.fontWeight}`, lineHeight: `${n.lineHeight}`,
     textAlign: n.textAlign, display: n.hidden ? 'none' : 'block', overflow: n.type === 'frame' ? 'hidden' : 'visible',
   });
   if (material) {
@@ -76,11 +78,12 @@ function renderElement(p: Project, n: DesignNode, preview: boolean, clean: boole
     const paint = (value: string | undefined) => value === undefined ? undefined : color(p, value, n);
     el.dataset.motion = JSON.stringify(n.animations.map(a => ({ ...a, keyframes: a.keyframes.map(k => ({ ...k, fill: paint(k.fill), stroke: paint(k.stroke) })) })));
   }
-  if (n.type === 'input' && preview) {
+  if(problem){el.dataset.fontIssue=problem.kind;el.dataset.fontFamily=n.fontFamily;el.setAttribute('aria-label',problem.message);el.title=problem.message;const diagnostic=document.createElement('span');diagnostic.textContent=problem.message;diagnostic.setAttribute('role','status');Object.assign(diagnostic.style,{font:`12px ${fonts.system}`,color:'#b45309',background:'#fff4dc',padding:'3px',display:'block'});el.append(diagnostic);}
+  if (!problem && n.type === 'input' && preview) {
     const input = document.createElement('input'); input.placeholder = n.text; input.setAttribute('aria-label', n.name); input.type = /contraseña/i.test(n.name) ? 'password' : 'text';
     Object.assign(input.style, { boxSizing: 'border-box', width: '100%', height: '100%', border: 'none', background: 'transparent', color: 'inherit', font: 'inherit', padding: '0 14px', borderRadius: 'inherit' }); el.append(input);
     el.style.setProperty('--field-focus', color(p, '@primary', n));
-  } else if (n.text) {
+  } else if (!problem && n.text) {
     const text = document.createElement('div'); text.className = 'node-text'; text.textContent = n.text;
     Object.assign(text.style, { whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', boxSizing: 'border-box', width: '100%', height: '100%', overflow: 'hidden', pointerEvents: 'none' });
     if (n.type === 'button' || n.type === 'input') Object.assign(text.style, { display: 'flex', alignItems: 'center', justifyContent: n.textAlign === 'center' ? 'center' : n.textAlign === 'right' ? 'flex-end' : 'flex-start', padding: '0 14px' });
@@ -145,29 +148,31 @@ function renderElement(p: Project, n: DesignNode, preview: boolean, clean: boole
   }
   return el;
 }
-export function exportHTML(p: Project): string {
+export function exportHTML(p: Project,fontCSS=''): string {
+  requireFonts(p,p.nodes.filter(n=>{let current:DesignNode|undefined=n;while(current){if(current.hidden)return false;current=current.parentId?p.nodes.find(v=>v.id===current!.parentId):undefined;}return true;}));
   const iconNotices = iconLicenseNotice(p.nodes.filter(n => n.type === 'icon').map(n => n.iconPack!));
   const screens = children(p, null).filter(n => n.type === 'frame' && !n.hidden);
   const content = screens.map((n, i) => {
     const el = element(p, n, true); el.id = n.id; el.classList.add('screen'); el.style.position = 'relative'; el.style.left = '0'; el.style.top = '0'; el.style.margin = '32px auto'; el.hidden = i !== 0;
     return el.outerHTML;
   }).join('\n');
-  return `<!doctype html><html lang="es"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escape(p.name)}</title>${iconNotices ? `<script type="application/json" id="codaru-icon-licenses">${JSON.stringify(iconNotices).replaceAll('<', '\\u003c')}</script>` : ''}<style>body{margin:0;background:#ececf0;font-family:system-ui}nav{padding:14px;text-align:center;background:#fff;border-bottom:1px solid #ddd}nav button{padding:8px 14px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer}[hidden]{display:none!important}.screen{box-shadow:0 10px 60px #0001;max-width:none}#viewport{overflow:auto;overflow-x:clip;position:relative;min-height:calc(100vh - 62px)}[data-target]:focus-visible{outline:3px solid #7c5ce7;outline-offset:3px}</style><nav><button id="back">← Atrás</button> <button id="posture" hidden>Cambiar postura ⇄</button> <span id="screen-name">${escape(screens[0]?.name || '')}</span></nav><main id="viewport">${content}</main><script>const startMotion=${startMotion.toString()};const transitionScreens=${transitionScreens.toString()};const history=[];function go(id,transition,reverse){const next=document.getElementById(id);if(!next||!next.classList.contains('screen'))return;const current=document.querySelector('.screen:not([hidden])');if(current===next)return;let ghost;if(current){history.push({id:current.id,transition});if(transition){ghost=current.cloneNode(true);ghost.removeAttribute('id');ghost.classList.remove('screen');Object.assign(ghost.style,{position:'absolute',margin:'0',left:current.offsetLeft+'px',top:current.offsetTop+'px'})}}document.querySelectorAll('.screen').forEach(s=>s.hidden=s!==next);document.getElementById('screen-name').textContent=next.getAttribute('aria-label');const viewport=document.getElementById('viewport');viewport.scrollTo(0,0);if(ghost){viewport.append(ghost);transitionScreens(ghost,next,transition,reverse)}startMotion(next)}const linked=el=>{const target=el.closest('[data-target]');if(target)go(target.dataset.target,target.dataset.transition?JSON.parse(target.dataset.transition):undefined);return target};document.addEventListener('click',e=>{linked(e.target)});document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.tagName!=='INPUT'&&linked(e.target))e.preventDefault()});document.getElementById('back').onclick=()=>{const last=history.pop();if(last){go(last.id,last.transition,true);history.pop()}};const posture=document.getElementById('posture');const nextPosture=()=>{const current=document.querySelector('.screen:not([hidden])'),ids=((current&&current.dataset.postures)||'').split(' ').filter(Boolean);return ids.length>1?document.getElementById(ids[(ids.indexOf(current.id)+1)%ids.length]):null};const syncPosture=()=>{posture.hidden=!nextPosture()};posture.onclick=()=>{const current=document.querySelector('.screen:not([hidden])'),other=nextPosture();if(other)go(other.id,{type:+other.dataset.panels>+current.dataset.panels?'unfold':'fold',duration:700,easing:'ease-in-out'})};new MutationObserver(syncPosture).observe(document.getElementById('viewport'),{attributes:true,subtree:true,attributeFilter:['hidden']});syncPosture();startMotion(document.querySelector('.screen:not([hidden])')||document.body);</script></html>`;
+  return `<!doctype html><html lang="es"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escape(p.name)}</title>${iconNotices ? `<script type="application/json" id="codaru-icon-licenses">${JSON.stringify(iconNotices).replaceAll('<', '\\u003c')}</script>` : ''}<style>${fontCSS.replaceAll('<','\\3c ')}body{margin:0;background:#ececf0;font-family:system-ui}nav{padding:14px;text-align:center;background:#fff;border-bottom:1px solid #ddd}nav button{padding:8px 14px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer}[hidden]{display:none!important}.screen{box-shadow:0 10px 60px #0001;max-width:none}#viewport{overflow:auto;overflow-x:clip;position:relative;min-height:calc(100vh - 62px)}[data-target]:focus-visible{outline:3px solid #7c5ce7;outline-offset:3px}</style><nav><button id="back">← Atrás</button> <button id="posture" hidden>Cambiar postura ⇄</button> <span id="screen-name">${escape(screens[0]?.name || '')}</span></nav><main id="viewport">${content}</main><script>const startMotion=${startMotion.toString()};const transitionScreens=${transitionScreens.toString()};const history=[];function go(id,transition,reverse){const next=document.getElementById(id);if(!next||!next.classList.contains('screen'))return;const current=document.querySelector('.screen:not([hidden])');if(current===next)return;let ghost;if(current){history.push({id:current.id,transition});if(transition){ghost=current.cloneNode(true);ghost.removeAttribute('id');ghost.classList.remove('screen');Object.assign(ghost.style,{position:'absolute',margin:'0',left:current.offsetLeft+'px',top:current.offsetTop+'px'})}}document.querySelectorAll('.screen').forEach(s=>s.hidden=s!==next);document.getElementById('screen-name').textContent=next.getAttribute('aria-label');const viewport=document.getElementById('viewport');viewport.scrollTo(0,0);if(ghost){viewport.append(ghost);transitionScreens(ghost,next,transition,reverse)}startMotion(next)}const linked=el=>{const target=el.closest('[data-target]');if(target)go(target.dataset.target,target.dataset.transition?JSON.parse(target.dataset.transition):undefined);return target};document.addEventListener('click',e=>{linked(e.target)});document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.tagName!=='INPUT'&&linked(e.target))e.preventDefault()});document.getElementById('back').onclick=()=>{const last=history.pop();if(last){go(last.id,last.transition,true);history.pop()}};const posture=document.getElementById('posture');const nextPosture=()=>{const current=document.querySelector('.screen:not([hidden])'),ids=((current&&current.dataset.postures)||'').split(' ').filter(Boolean);return ids.length>1?document.getElementById(ids[(ids.indexOf(current.id)+1)%ids.length]):null};const syncPosture=()=>{posture.hidden=!nextPosture()};posture.onclick=()=>{const current=document.querySelector('.screen:not([hidden])'),other=nextPosture();if(other)go(other.id,{type:+other.dataset.panels>+current.dataset.panels?'unfold':'fold',duration:700,easing:'ease-in-out'})};new MutationObserver(syncPosture).observe(document.getElementById('viewport'),{attributes:true,subtree:true,attributeFilter:['hidden']});syncPosture();document.fonts.ready.then(()=>startMotion(document.querySelector('.screen:not([hidden])')||document.body));</script></html>`;
 }
 let domMeasure: TextMeasure | undefined;
 let measureProbe: HTMLSpanElement | undefined;
 /** SVG of one frame, as the headless renderer draws it, with text measured by the browser's own layout for exact wrapping. */
-export function exportSVG(p: Project, frame: DesignNode): string {
+export function exportSVG(p: Project, frame: DesignNode,fontCSS=''): string {
+  if(fontsFor(p)?.hasMeasure())return frameToSVG(p,frame,{measure:(text,font)=>fontsFor(p)!.measure(text,font),fontCSS});
   if (!domMeasure && typeof document !== 'undefined' && document.body) {
     // A hidden span measures like the preview does; canvas picks a different face for intermediate system weights.
     const probe = measureProbe = document.createElement('span'), cache = new Map<string, number>();
     probe.setAttribute('aria-hidden', 'true'); Object.assign(probe.style, { position: 'absolute', left: '-99999px', top: '0', whiteSpace: 'pre', visibility: 'hidden', pointerEvents: 'none' });
     domMeasure = (text, font) => {
-      const key = `${font.weight}|${font.size}|${font.family}|${text}`, known = cache.get(key); if (known !== undefined) return known;
+      const key = `${document.fonts.size}|${font.style}|${font.weight}|${font.size}|${font.family}|${text}`, known = cache.get(key); if (known !== undefined) return known;
       if (!probe.isConnected) document.body.append(probe);
-      probe.style.font = `${font.weight} ${font.size}px ${font.family}`; probe.textContent = text;
+      probe.style.font = `${font.style??'normal'} ${font.weight} ${font.size}px ${font.family}`; probe.textContent = text;
       const width = probe.getBoundingClientRect().width; if (cache.size > 5000) cache.clear(); cache.set(key, width); return width;
     };
   }
-  try { return frameToSVG(p, frame, { measure: domMeasure }); } finally { measureProbe?.remove(); }
+  try { return frameToSVG(p, frame, { measure: domMeasure,fontCSS }); } finally { measureProbe?.remove(); }
 }

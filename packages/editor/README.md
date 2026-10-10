@@ -217,3 +217,11 @@ criterios de aceptación y hallazgos. Disponible en core e iframe. La entrada op
 `analytics` y `tests`, apariencia compartida y `onHandoff`/`onExport` para el IDE.
 No emite analítica, no contiene un proveedor y no certifica accesibilidad del producto.
 [Contrato e integración](https://github.com/fsaldivar-dev/codaru-mockup/blob/main/docs/EXPERIENCE.md).
+
+## Fuentes del consumidor · 0.10.0
+
+Pasa `fonts: FontDefinition[]` a `mountCodaru` o `createEditor`; admite `source.url` o `source.local` y pares peso/estilo explícitos. El host conserva archivos/licencias y vuelve a registrar el catálogo al reabrir. Usa `getFonts`, `loadFonts`, `getFontIssues`, `setFonts` y `registerFonts`. El inspector, los tokens y `agent('catalog',{kind:'fonts'})` comparten capacidades. Documentos con recursos faltantes mantienen el texto y presentan aviso.
+
+Prefiere `exportSVGAsync`/`exportHTMLAsync` para esperar cargas e incluir variantes autorizadas con `export:'embed'`; las APIs síncronas conservan referencias externas. Una fuente `local()` no entrega bytes para PNG/ZIP o HTML/SVG portable. No se convierten textos en curvas automáticamente. Para un cargador DOM sin vista importa `createBrowserFontLoader` desde `codaru-mockup/fonts`.
+
+[Contrato completo y restricciones](https://github.com/fsaldivar-dev/codaru-mockup/blob/main/docs/TYPOGRAPHY.md) · [Migrar Sajaru](https://github.com/fsaldivar-dev/codaru-mockup/blob/main/docs/SAJARU-TYPOGRAPHY-UPGRADE.md). Estas páginas describen la integración y migración de la versión 0.10.0.

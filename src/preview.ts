@@ -1,3 +1,4 @@
+import {transferFonts,attachFonts,FontRegistry} from './fonts';
 import { panelsOf, postureGroup, screenFrames, type DesignNode, type Project } from './model';
 import { parseDocument, pickScreen, withTheme, type ScreenTheme } from './screen-svg';
 import { deviceSkins } from './devices';
@@ -36,6 +37,7 @@ export interface EnhanceOptions {
   /** Called from the preview's «Abrir en el editor» button; omit to hide the button. */
   onOpen?(block: MockupBlock, screen: string): void;
   /** Theme for every block: `light`, `dark` or Codaru color tokens (`--codaru-primary`, `primary`…). A block's `tema:` still picks the mode. */
+  fonts?:FontRegistry;
   theme?: ScreenTheme;
 }
 
@@ -83,8 +85,8 @@ button:disabled{opacity:.35;cursor:default}button:focus-visible,select:focus-vis
 .error{padding:12px 14px;border:1px solid #d9534f66;border-radius:10px;background:#d9534f14;white-space:pre-wrap}.error strong{display:block;margin-bottom:4px}`;
 
 /** Draw one design document as a preview inside `container`. The document is validated first. */
-export function renderMockup(container: HTMLElement, document: unknown, options: Omit<Partial<MockupBlock>, 'theme'> & { theme?: ScreenTheme; onOpen?: EnhanceOptions['onOpen'] } = {}): MockupPreview {
-  const p: Project = parseDocument(document);
+export function renderMockup(container: HTMLElement, document: unknown, options: Omit<Partial<MockupBlock>, 'theme'> & { fonts?:FontRegistry; theme?: ScreenTheme; onOpen?: EnhanceOptions['onOpen'] } = {}): MockupPreview {
+  const p: Project = parseDocument(document);if(document&&typeof document==='object')transferFonts(document as Project,p);if(options.fonts)attachFonts(p,options.fonts);
   const mode = typeof options.theme === 'string' ? options.theme : options.theme?.mode;
   const block: MockupBlock = { file: options.file ?? '', screen: options.screen, mode: options.mode ?? 'prototype', theme: mode, maxHeight: options.maxHeight };
   const frames = p.nodes.filter(n => n.type === 'frame' && !n.hidden);
@@ -163,7 +165,7 @@ export async function enhanceMarkdown(root: ParentNode, options: EnhanceOptions)
     try { block = parseMockupBlock(code.textContent ?? ''); } catch (error) { failure(slot, 'Bloque codaru-mockup inválido', error instanceof Error ? error.message : String(error)); continue; }
     try {
       const theme: ScreenTheme | undefined = options.theme && typeof options.theme === 'object' ? { ...options.theme, ...(block.theme ? { mode: block.theme } : {}) } : block.theme ?? options.theme;
-      previews.push(renderMockup(slot, await options.load(block.file, block), { ...block, theme, onOpen: options.onOpen }));
+      previews.push(renderMockup(slot, await options.load(block.file, block), { ...block, theme, fonts:options.fonts, onOpen: options.onOpen }));
       pre.hidden = true;
     } catch (error) { failure(slot, `No se pudo mostrar ${block.file}`, error instanceof Error ? error.message : String(error)); }
   }

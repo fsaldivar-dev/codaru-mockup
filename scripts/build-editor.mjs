@@ -8,7 +8,7 @@ import { readFile } from 'node:fs/promises';
 const output = resolve('packages/editor/dist');
 await build({ configFile: false, base: './', build: {
   target: 'safari16', sourcemap: false, minify: true, outDir: output, emptyOutDir: true,
-  lib: { entry: { codaru: resolve('src/embed.ts'), core: resolve('src/editor-core.ts'), modular: resolve('src/modular.ts'), preview: resolve('src/preview.ts'), svg: resolve('src/screen-svg.ts'), assets: resolve('src/asset-export.ts'), aru: resolve('src/aru.ts'), styles: resolve('src/style-package.ts'), identity: resolve('src/identity-view.ts'), comments: resolve('src/comments-view.ts'), experience: resolve('src/experience-view.ts') }, formats: ['es'], fileName: (_format, name) => `${name}.js` },
+  lib: { entry: { codaru: resolve('src/embed.ts'), core: resolve('src/editor-core.ts'), modular: resolve('src/modular.ts'), preview: resolve('src/preview.ts'), svg: resolve('src/screen-svg.ts'), assets: resolve('src/asset-export.ts'), aru: resolve('src/aru.ts'), styles: resolve('src/style-package.ts'), identity: resolve('src/identity-view.ts'), comments: resolve('src/comments-view.ts'), experience: resolve('src/experience-view.ts'), fonts:resolve('src/font-api.ts') }, formats: ['es'], fileName: (_format, name) => `${name}.js` },
 } });
 await build({ configFile: false, base: './', build: {
   target: 'safari16', sourcemap: false, outDir: join(output, 'editor'), emptyOutDir: true,

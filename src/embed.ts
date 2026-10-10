@@ -11,12 +11,14 @@ import type { AruSource, AruAsset, IllustrationRequest, ComponentImplementations
 export type { AruSource, AruAsset, IllustrationRequest, ComponentImplementations, ImplementationReference, ImplementationRequest, AgentRequest, AgentResponse, EditorOperation, CodaruInvoke } from './contracts';
 import type { LocalizationConfig, LocalizationState, LocalizationIssue, TranslationRequest } from './localization';
 import { applyAppearance, readAppearanceTokens, type EditorAppearance } from './ui-theme';
+import { validateFontDefinitions } from './fonts';
 export type { EditorAppearance, EditorAppearanceTokens } from './ui-theme';
 export type { LocalizationConfig, LocalizationState, LocalizationIssue, TranslationRequest } from './localization';
 // Pure helpers a host can use on a document; the headless SVG renderer lives in `codaru-mockup/svg`.
 export { screens, roleOf, pagesOf, pageView, type FrameRole, type Page, type ScreenInfo } from './model';
 
 export interface EmbeddedOptions {
+  fonts?: import('./contracts').FontDefinition[];
   onCorrectionRequest?:(request:import('./contracts').CorrectionRequest)=>Promise<void>;
   resourceServices?: ResourceServices;
   onResourceLibraryChange?: (records: ResourceRecord[]) => void;
@@ -29,7 +31,7 @@ export interface EmbeddedOptions {
   onIllustrationRequest?: (request: IllustrationRequest) => void | Promise<void>;
   onTranslationRequest?: (request: TranslationRequest) => void | Promise<void>;
 }
-export interface EditorAPI extends Pick<CodaruEditor,'getExperienceReport'|'setExperience'|'getCorrectionRequest'|'getComments'|'captureCommentAnchor'|'getCommentContext'|'subscribeComments'|'getStyles'|'getStyle'|'importStyle'|'applyStyle'|'getResourceLibrary'|'getResource'|'stageResource'|'reviewResource'|'requestResourceEdit'|'setResourceServices'|'insertResource'|'exportResource'> {
+export interface EditorAPI extends Pick<CodaruEditor,'getFonts'|'setFonts'|'registerFonts'|'loadFonts'|'getFontIssues'|'exportHTMLAsync'|'exportSVGAsync'|'getExperienceReport'|'setExperience'|'getCorrectionRequest'|'getComments'|'captureCommentAnchor'|'getCommentContext'|'subscribeComments'|'getStyles'|'getStyle'|'importStyle'|'applyStyle'|'getResourceLibrary'|'getResource'|'stageResource'|'reviewResource'|'requestResourceEdit'|'setResourceServices'|'insertResource'|'exportResource'> {
   getDocument(): Project;
   getPreviewDocument(): Project;
   getLocalization(): LocalizationConfig | null;
@@ -89,6 +91,12 @@ export function mountCodaru(container: HTMLElement, options: MountCodaruOptions 
   if (options.storageKey !== undefined && options.storageKey !== null && (typeof options.storageKey !== 'string' || !options.storageKey.length)) throw new Error('storageKey debe ser una clave no vacía o null.');
   url.searchParams.set('codaruEmbed', '1');
   if (options.storageKey == null) url.searchParams.delete('storageKey'); else url.searchParams.set('storageKey', options.storageKey);
+  // Resource paths belong to the host, even when the editor page lives elsewhere.
+  const hostFonts = (definitions: import('./contracts').FontDefinition[]) => validateFontDefinitions(definitions).map(font => ({
+    ...font, variants: font.variants.map(variant => ({ ...variant, source: 'url' in variant.source
+      ? { url: new URL(variant.source.url, hostDocument.baseURI).href } : variant.source })),
+  }));
+  const initialFonts=options.fonts===undefined?undefined:hostFonts(options.fonts);
   const initialDocument = options.document === undefined ? undefined : structuredClone(options.document);
   const initialLocalization = options.localization === undefined ? undefined : structuredClone(options.localization);
   let appearance = structuredClone(options.appearance ?? {});
@@ -158,6 +166,7 @@ export function mountCodaru(container: HTMLElement, options: MountCodaruOptions 
         ...(initialDocument === undefined ? {} : { document: initialDocument }),
         ...(options.invoke === undefined ? {} : { invoke: options.invoke }),
         ...(options.nativeAgent === undefined ? {} : { nativeAgent: options.nativeAgent }),
+        ...(initialFonts===undefined?{}:{fonts:initialFonts}),
         ...(initialLocalization === undefined ? {} : { localization: initialLocalization }),
         resourceServices: options.resourceServices,
         onResourceLibraryChange: records => { if (!destroyed) options.onResourceLibraryChange?.(structuredClone(records)); },
@@ -169,7 +178,13 @@ export function mountCodaru(container: HTMLElement, options: MountCodaruOptions 
       }));
       await initialization;
       if (destroyed) return;
-      iframe.dataset.codaruStatus = 'ready'; settled = true; resolveReady(candidate);
+      const publicAPI = new Proxy(candidate, { get(target, key) {
+        const value = Reflect.get(target, key);
+        if (typeof value !== 'function') return value;
+        if (key === 'setFonts' || key === 'registerFonts') return (definitions: import('./contracts').FontDefinition[]) => value.call(target, hostFonts(definitions));
+        return value.bind(target);
+      } });
+      iframe.dataset.codaruStatus = 'ready'; settled = true; resolveReady(publicAPI);
     } catch (error) { fail(asError(error)); }
   }
   function onLoadError() { fail(new Error('No se pudo cargar el editor embebido de Codaru.')); }

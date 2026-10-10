@@ -1,3 +1,5 @@
+import {fontFamilyCSS,fontsFor} from './fonts';
+import type {FontSummary} from './contracts';
 import { clone, tokens as baseColors, uid, type Project, type Theme } from './model';
 import { effectiveTheme, resolveColor, type TokenSet } from './themes';
 import { escape as esc } from './render';
@@ -5,7 +7,7 @@ import { closeColorPicker, pickColorFor } from './color-picker';
 
 type Category = keyof TokenSet;
 const categories: [Category, string][] = [['colors','Colores'],['gradients','Degradados'],['materials','Materiales'],['typography','Tipografía'],['radii','Radios']];
-interface ThemeEditorOptions { root: HTMLElement; get: () => Project; commit: (fn: (p: Project) => void) => void; undo: () => void; close: () => void; }
+interface ThemeEditorOptions { root: HTMLElement; get: () => Project; fonts?:()=>FontSummary[]; commit: (fn: (p: Project) => void) => void; undo: () => void; close: () => void; }
 
 /** A local token editor: one committed change is one undo entry. */
 export function openThemeEditor(options: ThemeEditorOptions) {
@@ -16,7 +18,7 @@ export function openThemeEditor(options: ThemeEditorOptions) {
   const color = (value: string) => resolveColor(context(), value);
   const entryName = (value: unknown, id: string) => typeof value === 'object' && value ? (value as { name: string }).name : id;
   const input = (label: string, field: string, value: string | number, min?: number, max?: number, step = 1) => `<label class="full-field"><span>${label}</span><input aria-label="${label}" data-te-field="${field}" value="${esc(value)}" ${typeof value === 'number' ? `type="number" min="${min}" max="${max}" step="${step}"` : 'maxlength="200"'}/></label>`;
-  const select = (label: string, field: string, value: string, choices: [string,string][]) => `<label class="full-field"><span>${label}</span><select aria-label="${label}" data-te-field="${field}">${choices.map(([id,name])=>`<option value="${id}" ${id===value?'selected':''}>${name}</option>`).join('')}</select></label>`;
+  const select = (label: string, field: string, value: string, choices: [string,string][]) => `<label class="full-field"><span>${label}</span><select aria-label="${label}" data-te-field="${field}">${(choices.some(([id])=>id===value)?choices:[[value,`${value} · ausente`],...choices]).map(([id,name])=>`<option value="${esc(id)}" ${id===value?'selected':''}>${esc(name)}</option>`).join('')}</select></label>`;
   const safe = (value: string) => { try { return color(value); } catch { return '#ffffff'; } };
   /** A text field for HEX or @token with a chip that opens the shared picker. */
   const colorInput = (label: string, field: string, value: string) => `<div class="picker-field"><button type="button" class="color-chip" data-pick="${label}" aria-label="${label}: selector" title="Elegir color" style="--chip:${esc(safe(value))}"></button>${input(label, field, value)}</div>`;
@@ -29,9 +31,11 @@ export function openThemeEditor(options: ThemeEditorOptions) {
     const paint = gradient ? `${gradient.type==='radial'?'radial-gradient(circle':`linear-gradient(${gradient.angle}deg`},${gradient.stops.map(stop=>`${color(stop.color)} ${stop.position}%`).join(',')})` : color('@primary');
     const material = category === 'materials' ? s.materials[key] : undefined;
     const type = category === 'typography' ? s.typography[key] : s.typography.body;
+    const issue=type&&fontsFor(get())?.issue({id:'preview-token',fontFamily:type.fontFamily,fontWeight:type.fontWeight,fontStyle:type.fontStyle});
+    if(issue)return `<p class="theme-error" role="alert">${esc(issue.message)}</p>`;
     const radius = category === 'radii' ? s.radii[key] : s.radii.panel ?? 20;
     const glass = material ? `background:color-mix(in srgb,${color(material.tint)} ${material.opacity}%,transparent);backdrop-filter:blur(${material.blur}px) saturate(${material.saturation}%);-webkit-backdrop-filter:blur(${material.blur}px) saturate(${material.saturation}%);border:1px solid ${color(material.stroke)};box-shadow:0 8px ${material.shadow}px #0003;` : `background:${color('@surface')};border:1px solid ${color('@border')};`;
-    return `<div class="theme-sample" style="background:${esc(paint)}"><span class="sample-orb"></span><div class="theme-sample-card" style="${esc(glass)}border-radius:${radius}px;color:${color('@text')};font-family:${type?.fontFamily==='serif'?'Georgia,serif':type?.fontFamily==='mono'?'monospace':'system-ui'};font-size:${Math.min(type?.fontSize??16,36)}px;font-weight:${type?.fontWeight??400};line-height:${type?.lineHeight??1.4}"><small>VISTA PREVIA · ${mode==='light'?'CLARO':'OSCURO'}</small><span>Tu próxima idea</span><p style="color:${color('@muted')}">Un sistema visual que crece contigo.</p><span class="sample-button" style="background:${color('@primary')};border-radius:${s.radii.control??10}px">Continuar →</span></div></div>`;
+    return `<div class="theme-sample" style="background:${esc(paint)}"><span class="sample-orb"></span><div class="theme-sample-card" style="${esc(glass)}border-radius:${radius}px;color:${color('@text')};font-family:${fontFamilyCSS(get(),type?.fontFamily??'system')};font-size:${Math.min(type?.fontSize??16,36)}px;font-weight:${type?.fontWeight??400};font-style:${type?.fontStyle??'normal'};font-synthesis:none;font-optical-sizing:none;line-height:${type?.lineHeight??1.4}"><small>VISTA PREVIA · ${mode==='light'?'CLARO':'OSCURO'}</small><span>Tu próxima idea</span><p style="color:${color('@muted')}">Un sistema visual que crece contigo.</p><span class="sample-button" style="background:${color('@primary')};border-radius:${s.radii.control??10}px">Continuar →</span></div></div>`;
   }
   function fields(): string {
     const s = set();
@@ -45,8 +49,10 @@ export function openThemeEditor(options: ThemeEditorOptions) {
       const m=s.materials[key];
       return `${input('Nombre del token','name',m.name)}${colorInput('Tinte','tint',m.tint)}<div class="field-grid">${input('Transparencia: tinte %','opacity',m.opacity,0,100)}${input('Desenfoque px','blur',m.blur,0,40)}${input('Saturación %','saturation',m.saturation,0,200)}${input('Sombra px','shadow',m.shadow,0,40)}</div>${colorInput('Borde del material','stroke',m.stroke)}<p class="field-note">Simulación de vidrio. El desenfoque necesita contenido detrás; el SVG conserva tinte y borde.</p>`;
     }
-    const t=s.typography[key];
-    return `${input('Nombre del token','name',t.name)}${select('Familia del token','fontFamily',t.fontFamily,[['system','Sistema'],['serif','Serif'],['mono','Monoespaciada']])}<div class="field-grid">${input('Tamaño del token','fontSize',t.fontSize,1,512)}${input('Peso del token','fontWeight',t.fontWeight,100,900)}${input('Interlineado del token','lineHeight',t.lineHeight,.5,5,.1)}</div>`;
+    const t=s.typography[key],face=options.fonts?.().find(f=>f.id===t.fontFamily),custom=face&&!face.builtin;
+    const styles:[string,string][]=custom?[...new Set(face.variants.filter(v=>v.status==='loaded').map(v=>v.style))].map(id=>[id,id]):[['normal','Normal'],['italic','Cursiva'],['oblique','Oblicua']];
+    const weights:[string,string][]=custom?face.variants.filter(v=>v.status==='loaded'&&v.style===(t.fontStyle??'normal')).map(v=>[String(v.weight),String(v.weight)]):[];
+    return `${input('Nombre del token','name',t.name)}${select('Familia del token','fontFamily',t.fontFamily,(options.fonts?.()??[{id:'system',name:'Sistema'},{id:'serif',name:'Serif'},{id:'mono',name:'Monoespaciada'}]).map(f=>[f.id,f.name]) as [string,string][])}<div class="field-grid">${input('Tamaño del token','fontSize',t.fontSize,1,512)}${select('Estilo del token','fontStyle',t.fontStyle??'normal',styles)}${custom?select('Peso del token','fontWeight',String(t.fontWeight),weights):input('Peso del token','fontWeight',t.fontWeight,100,900)}${input('Interlineado del token','lineHeight',t.lineHeight,.5,5,.1)}</div>`;
   }
   function draw() {
     const active = (root.getRootNode() as Document | ShadowRoot).activeElement;
@@ -95,7 +101,7 @@ export function openThemeEditor(options: ThemeEditorOptions) {
       if(category==='colors'){s.colors[key]=String(value);if(profile==='project'&&(baseColors as readonly string[]).includes(key))p.themes[mode][key]=String(value);}
       else if(category==='radii')s.radii[key]=Number(value);
       else if(category==='gradients'&&field.startsWith('stop-')){const [,prop,index]=field.split('-');const stop=s.gradients[key].stops[Number(index)];if(prop==='color')stop.color=String(value);else stop.position=Number(value);s.gradients[key].stops.sort((a,b)=>a.position-b.position);}
-      else Object.assign(s[category][key],{[field]:value});
+      else {const target=s[category][key];Object.assign(target,{[field]:field==='fontWeight'?Number(value):value});if(category==='typography'&&(field==='fontFamily'||field==='fontStyle')){const t=s.typography[key],face=options.fonts?.().find(f=>f.id===t.fontFamily);if(face&&!face.builtin){const candidates=face.variants.filter(v=>v.status==='loaded'&&(field==='fontFamily'||v.style===(t.fontStyle??'normal'))),variant=candidates.find(v=>v.weight===t.fontWeight&&v.style===(t.fontStyle??'normal'))??candidates[0];if(variant)Object.assign(t,{fontWeight:variant.weight,fontStyle:variant.style});}}}
     });
   };
   root.onkeydown=e=>{if(e.key==='Tab'){const elements=[...root.querySelectorAll<HTMLElement>('button:not(:disabled),input,select')];if(e.shiftKey&&(root.getRootNode() as Document | ShadowRoot).activeElement===elements[0]){e.preventDefault();elements.at(-1)?.focus();}else if(!e.shiftKey&&(root.getRootNode() as Document | ShadowRoot).activeElement===elements.at(-1)){e.preventDefault();elements[0]?.focus();}}};

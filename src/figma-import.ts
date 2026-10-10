@@ -1,3 +1,4 @@
+import {importedFontFamily} from './fonts';
 import { children, containerKinds, createComponent, labels, layoutNode, node, validate, type DesignNode, type Kind, type Project } from './model';
 import { sanitizeSVG } from './motion';
 
@@ -28,6 +29,7 @@ export function importFigma(p: Project, input: unknown): FigmaReport {
   if (!isFigmaExport(input) || input.version !== 1 || !Array.isArray(input.nodes)) throw new Error('No es un archivo del plugin de Codaru para Figma (versión 1).');
   const report: FigmaReport = { screens: 0, layers: 0, components: 0, tokens: 0, illustrations: 0, notes: [] };
   const counts = new Map<string, number>(), note = (message: string) => counts.set(message, (counts.get(message) ?? 0) + 1);
+  const family=(value:unknown)=>importedFontFamily(p,text(value,200),note);
   const used = new Set(p.nodes.map(n => n.id)), added: DesignNode[] = [];
   const idFor = (raw: unknown) => { const base = `fg-${text(raw, 80).replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'capa'}`.slice(0, 100); let id = base; for (let i = 2; used.has(id); i++) id = `${base}-${i}`; used.add(id); return id; };
   const theme = p.designThemes[p.activeThemeId];
@@ -52,13 +54,12 @@ export function importFigma(p: Project, input: unknown): FigmaReport {
     }
   }
   const families = new Set<string>();
-  const family = (name: unknown) => { const value = text(name, 80); if (value && !/^(inter|sf pro|sf compact|system|helvetica|arial|roboto|segoe)/i.test(value)) families.add(value); return serif.test(value) ? 'serif' : mono.test(value) ? 'mono' : 'system'; };
-  const weight = (raw: Raw) => { const direct = num(raw.fontWeight, 0, 0, 1000); if (direct) return Math.max(100, Math.min(900, direct)); const style = text(raw.fontStyle, 40).toLowerCase(); return /black|heavy/.test(style) ? 900 : /extra ?bold/.test(style) ? 800 : /semi ?bold|demi/.test(style) ? 600 : /bold/.test(style) ? 700 : /medium/.test(style) ? 500 : /light/.test(style) ? 300 : /thin/.test(style) ? 100 : 400; };
+    const weight = (raw: Raw) => { const direct = num(raw.fontWeight, 0, 0, 1000); if (direct) return Math.max(100, Math.min(900, direct)); const style = text(raw.fontStyle, 40).toLowerCase(); return /black|heavy/.test(style) ? 900 : /extra ?bold/.test(style) ? 800 : /semi ?bold|demi/.test(style) ? 600 : /bold/.test(style) ? 700 : /medium/.test(style) ? 500 : /light/.test(style) ? 300 : /thin/.test(style) ? 100 : 400; };
   const lineHeight = (raw: Raw, size: number) => { const lh = record(raw.lineHeight) ? raw.lineHeight : {}; return round(Math.max(.5, Math.min(4, lh.unit === 'PIXELS' ? num(lh.value, size * 1.2) / size : lh.unit === 'PERCENT' ? num(lh.value, 120) / 100 : 1.2))); };
   for (const style of Array.isArray(styles.texts) ? styles.texts.slice(0, 100) : []) {
     if (!record(style)) continue;
     const id = tokenId(text(style.name, 120), candidate => ['light', 'dark'].some(mode => Object.hasOwn(theme.modes[mode as 'light'].typography, candidate))), size = num(style.fontSize, 16, 1, 400);
-    for (const mode of ['light', 'dark'] as const) theme.modes[mode].typography[id] = { name: text(style.name, 80) || id, fontFamily: family(style.fontFamily), fontSize: size, fontWeight: weight(style), lineHeight: lineHeight(style, size) };
+    for (const mode of ['light', 'dark'] as const) theme.modes[mode].typography[id] = { name: text(style.name, 80) || id, fontFamily: family(style.fontFamily),fontStyle:/oblique/i.test(text(style.fontStyle,80))?'oblique':/italic/i.test(text(style.fontStyle,80))?'italic':'normal', fontSize: size, fontWeight: weight(style), lineHeight: lineHeight(style, size) };
     textTokens.set(text(style.id, 200), id); report.tokens++;
   }
 
@@ -103,7 +104,7 @@ export function importFigma(p: Project, input: unknown): FigmaReport {
       try { patch.svg = sanitizeSVG(svg); report.illustrations++; } catch { note('Vectores que no se pudieron convertir a SVG: se omitieron.'); return; }
     } else if (type === 'text') {
       const t = record(raw.text) ? raw.text : {}, size = num(t.fontSize, 16, 1, 400), token = textTokens.get(text(raw.textStyle, 200));
-      Object.assign(patch, { text: text(t.characters, 20000), fontSize: size, fontWeight: weight(t), fontFamily: family(t.fontFamily), lineHeight: lineHeight(t, size), textAlign: t.align === 'CENTER' ? 'center' : t.align === 'RIGHT' ? 'right' : 'left', color: style?.color ? `@${style.color}` : paint?.type === 'SOLID' ? hex(paint.color, num(paint.opacity, 1, 0, 1)) : '@text', ...(token ? { typographyToken: token } : {}) });
+      Object.assign(patch, { text: text(t.characters, 20000), fontSize: size, fontWeight: weight(t), fontFamily: family(t.fontFamily),fontStyle:/oblique/i.test(text(t.fontStyle,80))?'oblique':/italic/i.test(text(t.fontStyle,80))?'italic':'normal', lineHeight: lineHeight(t, size), textAlign: t.align === 'CENTER' ? 'center' : t.align === 'RIGHT' ? 'right' : 'left', color: style?.color ? `@${style.color}` : paint?.type === 'SOLID' ? hex(paint.color, num(paint.opacity, 1, 0, 1)) : '@text', ...(token ? { typographyToken: token } : {}) });
       if (t.mixed === true) note('Textos con varios estilos: se usó el del primer carácter.');
     } else if (type === 'image') {
       patch.image = image;

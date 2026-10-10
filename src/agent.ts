@@ -1,3 +1,6 @@
+import {attachFonts,fontsFor,FontRegistry,fontIssue,validateFontChanges} from './fonts';
+import {validFontId} from './font-validation';
+import type {FontSummary,FontIssue} from './contracts';
 import {experienceReport,setExperience} from './experience';
 import {applyCommentOperation,captureCommentAnchor,getCommentContext} from './comments';
 import { applyIdentityOperation, identityIssues, identityTargetRevision } from './identity';
@@ -9,7 +12,7 @@ import { getComponentImplementations, setComponentImplementation } from './imple
 import type { ImplementationReference } from './contracts';
 import { defineComponentProperty, removeComponentProperty, getComponentProperties, setComponentProperty, type ComponentProperty, type ComponentPropertyValue } from './component-properties';
 import { Store, clone, type PreparedTransaction, node, updateNode, remove, createComponent, instantiate, group, ungroup, detach, children, tokens, defineVariant, createVariant, switchVariant, setDesignSystemNotes, setComponentDoc, removeComponent, docStale, designSystemStale, type Project, type DesignNode, type Kind, pagesOf, activePage, addPage, renamePage, removePage, movePage, buildVersion, addVersion, removeVersion, applyVersion, unpackVersion, compareVersion, type Version, pageView, roleOf, frameRoles, type FrameRole, rootIds, frameOf, rootsOnPage } from './model';
-import { effectiveTheme, type DesignTheme } from './themes';
+import { effectiveTheme, resolveNodeStyle, type DesignTheme } from './themes';
 import { kits, getKitItems, insertKitItem, ensureKitVariant, type KitId, type KitVariant } from './kits';
 import { iconPacks, getIconItems, insertIcon } from './icon-library';
 import { exportHTML, exportSVG } from './render';
@@ -23,6 +26,10 @@ import type { AgentRequest } from './contracts';
 export type { AgentRequest } from './contracts';
 
 export interface AgentHost {
+  fonts?:()=>FontSummary[];
+  fontIssues?:()=>FontIssue[];
+  loadFonts?:(ids?:string[])=>Promise<FontSummary[]>;
+  fontRegistry?:FontRegistry;
   resourceLibrary?: CodaruEditor['getResourceLibrary'];
   resource?: CodaruEditor['getResource'];
   exportResource?: CodaruEditor['exportResource'];
@@ -62,7 +69,7 @@ function layerSummary(svg: string) {
 }
 function variantOf(p: Project,componentId: string) { const c=p.components.find(c=>c.id===componentId); return c?.set?{set:c.set,setName:c.setName,variant:c.variant}:{}; }
 function describe(p: Project,n: DesignNode,localization: LocalizationConfig | null = null) {
-  const theme=effectiveTheme(p,n),implementation=getComponentImplementations(p,n.id);
+  const typography={...n,...resolveNodeStyle(p,n)};const theme=effectiveTheme(p,n),implementation=getComponentImplementations(p,n.id);
   return {id:n.id,type:n.type,name:n.name,parentId:n.parentId,bounds:{x:n.x,y:n.y,width:n.width,height:n.height},
     ...(n.text?{text:n.text.slice(0,240),...(n.text.length>240?{textTruncated:true}:{})}:{}),
     ...(n.textKey?{textKey:n.textKey,translation:(()=>{const value=resolveText(n,localization);return {...value,text:value.text.slice(0,240),...(value.text.length>240?{textTruncated:true}:{})};})()}:{}),
@@ -70,12 +77,13 @@ function describe(p: Project,n: DesignNode,localization: LocalizationConfig | nu
     ...((n.componentId||n.instanceOf)?{properties:getComponentProperties(p,n.id).map(prop=>({...prop,...(typeof prop.value==='string'&&prop.value.length>240?{value:prop.value.slice(0,240),textTruncated:true}:{})}))}:{}),
     ...(implementation ? {implementation} : {}),
     ...(n.experience?{experience:{testId:n.experience.testId,accessibility:n.experience.accessibility?{role:n.experience.accessibility.role,name:n.experience.accessibility.name?.slice(0,240),nameKey:n.experience.accessibility.nameKey?.slice(0,240),focus:n.experience.accessibility.focus,decorative:n.experience.accessibility.decorative}:undefined,analytics:n.experience.analytics?.slice(0,5).map(e=>({name:e.name,trigger:e.trigger,purpose:e.purpose.slice(0,240)})),truncated:!!(n.experience.analytics?.length&&n.experience.analytics.length>5)||[n.experience.accessibility?.name,n.experience.accessibility?.nameKey,...(n.experience.analytics??[]).slice(0,5).map(e=>e.purpose)].some(s=>!!s&&s.length>240),next:'experience --ids '+n.id+' devuelve el contrato completo'}}:{}),
+    ...(n.text?{typography:{fontFamily:typography.fontFamily,fontWeight:typography.fontWeight,fontStyle:typography.fontStyle??'normal',fontSize:typography.fontSize,lineHeight:typography.lineHeight}}:{}),
     appearance:{fill:n.fill,color:n.color,radius:n.radius,...(n.strokeWidth?{stroke:n.stroke,strokeWidth:n.strokeWidth}:{}),...(n.opacity!==100?{opacity:n.opacity}:{}),...(n.fillToken?{fillToken:n.fillToken}:{}),...(n.materialToken?{materialToken:n.materialToken}:{}),...(n.typographyToken?{typographyToken:n.typographyToken}:{}),...(n.radiusToken?{radiusToken:n.radiusToken}:{})},
     theme:{id:theme.id,mode:theme.mode},...(n.instanceOf?{instanceOf:n.instanceOf,...variantOf(p,n.instanceOf)}:{}),...(n.componentId?{componentId:n.componentId,...variantOf(p,n.componentId)}:{}),
     ...(n.targetId?{targetId:n.targetId,...(n.transition?{transition:n.transition}:{})}:{}),...(n.svg?layerSummary(n.svg):{}),...(n.aruSource?{illustration:{format:"aru",filename:n.aruSource.filename,sourceLength:n.aruSource.text.length,editable:true}}:{}),...(n.device?{device:n.device}:{}),...(n.fold?{fold:n.fold}:{}),...(n.foldPair?{foldPair:n.foldPair}:{}),...(n.safeArea?{safeArea:n.safeArea}:{}),...(n.skin?{skin:n.skin}:{}),...(n.animations?.length?{animations:n.animations}:{}),...(n.iconPack?{icon:{pack:n.iconPack,name:n.iconName}}:{}),...(n.hidden?{hidden:true}:{}),...(n.locked?{locked:true}:{})};
 }
 export async function context(host: AgentHost,params: Record<string,unknown> = {},document=host.project(), knownRevision?: string) {
-  const p=document, revisionPromise=knownRevision === undefined ? revision(document) : Promise.resolve(knownRevision), selection=host.selection().filter(id=>p.nodes.some(n=>n.id===id)), localization=host.localization?.()??null;
+  const p=host.fontRegistry?attachFonts(document,host.fontRegistry):document, revisionPromise=knownRevision === undefined ? revision(document) : Promise.resolve(knownRevision), selection=host.selection().filter(id=>p.nodes.some(n=>n.id===id)), localization=host.localization?.()??null;
   const scope=typeof params.scope==='string'?params.scope:selection.length&&typeof params.page!=='string'?'selection':host.scope()&&typeof params.page!=='string'?host.scope()!:'workspace';
   const depth=Math.max(0,Math.min(4,number(params.depth,1)));
   let roots: DesignNode[];
@@ -93,6 +101,7 @@ export async function context(host: AgentHost,params: Record<string,unknown> = {
   const styleGuidance=fullGuidance?Object.fromEntries(Object.entries(fullGuidance).map(([key,lines])=>[key,lines.slice(0,4).map(line=>line.slice(0,240))])):null;
   const styleGuidanceTruncated=!!fullGuidance && Object.values(fullGuidance).some(lines=>lines.length>4 || lines.some(line=>line.length>240));
   const result = clone({revision:knownRevision ?? '',name:p.name,formatVersion:p.version,selection,selectionScope:host.scope(),scope,depth,
+    fonts:host.fonts?.()??new FontRegistry().list(),fontIssues:host.fontIssues?.()??[],
     coordinates:'Píxeles relativos al padre. Los frames raíz usan coordenadas del workspace.',busy:host.busy(),
     ...(localization?{localization:host.localizationState?.()??localizationState(localization),localizationIssues:textIssues.slice(0,100),localizationIssuesTruncated:textIssues.length>100}:{}),
     counts:{nodes:p.nodes.length,frames:p.nodes.filter(n=>n.type==='frame').length,components:p.components.length},
@@ -172,10 +181,10 @@ export const agentSchema = {
     animate:{id:'ID del elemento',animations:'lista completa que reemplaza la anterior; [] o null las quita'},group:{ids:['ID1','ID2']},ungroup:{id:'ID de grupo'},detach:{id:'ID de instancia'},
     theme:{theme:'Perfil completo {id,name,modes:{light:TokenSet,dark:TokenSet}}'},'theme.activate':{id:'ID de tema',mode:'light|dark (opcional)'},
   },
-  node:{types:['frame','group','rect','ellipse','text','button','input','card','image','icon','vector (usa la operación vector)'],geometry:['parentId','x','y','width','height'],text:['text','textKey: clave del catálogo del IDE; null desvincula y conserva text','fontSize','fontWeight','fontFamily','lineHeight','textAlign'],style:['fill','color','stroke','strokeWidth','radius','opacity','shadow','gradient','gradientEnd','gradientAngle','gradientStops: [{color,position:0..100}] de 2 a 16 paradas; null vuelve a fill + gradientEnd'],tokens:['fillToken','materialToken','typographyToken','radiusToken','themeId','themeMode'],pages:['page: id de página, solo en nodos raíz','role: screen|annotation|library, solo en marcos raíz; por omisión screen si tiene device'],layout:['layout: free|vertical|horizontal','padding','paddingSides: {top,right,bottom,left} o null','gap','justify: start|center|end|between','align: stretch|start|center|end','wrap','hugWidth','hugHeight','sizing: fixed|fill (del hijo)','minWidth','maxWidth','minHeight','maxHeight'],visibility:['hidden','locked'],icons:['iconPack','iconName'],navigation:['targetId','transition'],screen:['device: id de devices','fold: {axis:vertical|horizontal,gap:0..200,panels:2|3} o null; solo pantallas (3 = tríptico con dos bisagras)','safeArea: {top,right,bottom,left} o null','skin: '+Object.keys(deviceSkins).join('|')+' o null','foldPair: id de la pantalla en la otra postura o null']},
+  node:{types:['frame','group','rect','ellipse','text','button','input','card','image','icon','vector (usa la operación vector)'],geometry:['parentId','x','y','width','height'],text:['text','textKey: clave del catálogo del IDE; null desvincula y conserva text','fontSize','fontWeight','fontFamily: ID de catalog --kind fonts','fontStyle: normal|italic|oblique','lineHeight','textAlign'],style:['fill','color','stroke','strokeWidth','radius','opacity','shadow','gradient','gradientEnd','gradientAngle','gradientStops: [{color,position:0..100}] de 2 a 16 paradas; null vuelve a fill + gradientEnd'],tokens:['fillToken','materialToken','typographyToken','radiusToken','themeId','themeMode'],pages:['page: id de página, solo en nodos raíz','role: screen|annotation|library, solo en marcos raíz; por omisión screen si tiene device'],layout:['layout: free|vertical|horizontal','padding','paddingSides: {top,right,bottom,left} o null','gap','justify: start|center|end|between','align: stretch|start|center|end','wrap','hugWidth','hugHeight','sizing: fixed|fill (del hijo)','minWidth','maxWidth','minHeight','maxHeight'],visibility:['hidden','locked'],icons:['iconPack','iconName'],navigation:['targetId','transition'],screen:['device: id de devices','fold: {axis:vertical|horizontal,gap:0..200,panels:2|3} o null; solo pantallas (3 = tríptico con dos bisagras)','safeArea: {top,right,bottom,left} o null','skin: '+Object.keys(deviceSkins).join('|')+' o null','foldPair: id de la pantalla en la otra postura o null']},
   devices:devicePresets.map(d=>`${d.id} ${d.width}x${d.height}${d.fold?` pliegue ${d.fold.axis}${d.fold.panels===3?' x3':''}`:''}${d.approximate?' (aprox.)':''}`),
   motion:{note:'Las animaciones solo se reproducen en Presentar y en el HTML exportado; el lienzo y SVG son estáticos.',animation:{id:'único en el elemento',name:'texto',target:'id de capa de una ilustración (context lo lista en layers) o "" para el elemento entero',trigger:'load|click',duration:'1..20000 ms',delay:'0..20000 ms',easing:'linear|ease|ease-in|ease-out|ease-in-out|spring',iterations:'0 = infinito, hasta 100',alternate:'boolean',keyframes:'2..32 en orden creciente'},keyframe:{at:'0..100',x:'px',y:'px',scale:'0..20',rotate:'grados',opacity:'0..100',fill:'color',stroke:'color',draw:'0..100, parte visible del trazo',shine:'0..100, posición de un brillo de carga que cruza el elemento (no capas SVG)'}},
-  tokens:{colors:'HEX, transparent o @alias',gradients:'{name,type:linear|radial,angle,stops:[{color,position:0..100}]}',materials:'{name,tint,opacity:0..100,blur:0..40,saturation:0..200,stroke,shadow:0..40}',typography:'{name,fontFamily:system|serif|mono,fontSize,fontWeight,lineHeight}',radii:'{id:number}'},
+  tokens:{colors:'HEX, transparent o @alias',gradients:'{name,type:linear|radial,angle,stops:[{color,position:0..100}]}',materials:'{name,tint,opacity:0..100,blur:0..40,saturation:0..200,stroke,shadow:0..40}',typography:'{name,fontFamily:ID registrado,fontStyle?:normal|italic|oblique,fontSize,fontWeight,lineHeight}',radii:'{id:number}'},
   slots:{binding:'Instancia directamente propiedad del maestro; un componente por espacio',default:'Contenido actual en el maestro',choices:'context.properties: type=slot, options y components {id,name}',constraints:'Solo IDs permitidos; se rechazan ciclos, pérdida de referencias y cambios de contrato con reemplazos incompatibles. Reutiliza component.property.define/set/remove.'},
   limits:{operationsPerBatch:250,contextNodes:100,contextDepth:4},
   guarantees:['No se ejecuta JavaScript recibido','Cada lote es una sola entrada de Deshacer','Una revision antigua se rechaza sin modificar el documento','El documento permanece en el borrador local; exporta JSON para conservar un archivo independiente'],
@@ -190,7 +199,7 @@ export function applyOperations(p: Project,operations: unknown) {
   });
 }
 const COLOR=/^(?:#[\da-f]{3}|#[\da-f]{4}|#[\da-f]{6}|#[\da-f]{8}|transparent|@[A-Za-z0-9][A-Za-z0-9_-]{0,127})$/i;
-const ENUMS:Record<string,string[]>={layout:['free','vertical','horizontal'],sizing:['fixed','fill'],textAlign:['left','center','right'],fontFamily:['system','serif','mono'],gradient:['none','linear','radial'],justify:['start','center','end','between'],align:['stretch','start','center','end'],themeMode:['inherit','light','dark'],role:['screen','annotation','library']};
+const ENUMS:Record<string,string[]>={layout:['free','vertical','horizontal'],sizing:['fixed','fill'],textAlign:['left','center','right'],fontStyle:['normal','italic','oblique'],gradient:['none','linear','radial'],justify:['start','center','end','between'],align:['stretch','start','center','end'],themeMode:['inherit','light','dark'],role:['screen','annotation','library']};
 const NUMBERS=['x','y','width','height','strokeWidth','radius','radiusTR','radiusBR','radiusBL','opacity','gradientAngle','fontSize','fontWeight','lineHeight','padding','gap','minWidth','maxWidth','minHeight','maxHeight'];
 /** Field-level checks so a rejected batch names the field and what it expected. */
 function checkFields(fields:Record<string,unknown>,prefix:string){
@@ -198,6 +207,7 @@ function checkFields(fields:Record<string,unknown>,prefix:string){
     if(value===undefined||value===null)continue;
     if(['fill','color','stroke','gradientEnd'].includes(key)&&(typeof value!=='string'||!COLOR.test(value)))fail(`${prefix}.${key} debe ser HEX, "transparent" o "@alias"; llegó ${JSON.stringify(value)}`);
     if(NUMBERS.includes(key)&&(typeof value!=='number'||!Number.isFinite(value)))fail(`${prefix}.${key} debe ser un número; llegó ${JSON.stringify(value)}`);
+    if(key==='fontFamily'&&!validFontId(value))fail(`${prefix}.fontFamily debe ser un ID del catálogo, no CSS libre.`);
     if(ENUMS[key]&&(typeof value!=='string'||!ENUMS[key].includes(value)))fail(`${prefix}.${key} debe ser ${ENUMS[key].join('|')}; llegó ${JSON.stringify(value)}`);
     if(['text','textKey','name','image','svg','page','themeId','kitId','device','skin','iconPack','iconName'].includes(key)&&typeof value!=='string')fail(`${prefix}.${key} debe ser texto; llegó ${JSON.stringify(value)}`);
     if(['hidden','locked','shadow','wrap','hugWidth','hugHeight'].includes(key)&&typeof value!=='boolean')fail(`${prefix}.${key} debe ser true o false; llegó ${JSON.stringify(value)}`);
@@ -255,7 +265,8 @@ function applyOne(p: Project,op: Record<string,unknown>,name: string) {
 export async function handleAgentRequest(host: AgentHost,request: AgentRequest):Promise<Record<string,unknown>> {
   try {
     const params=object(request.params??{});
-    if(request.command==='schema')return {ok:true,...agentSchema};
+    if(request.command==='schema')return {ok:true,...agentSchema,fonts:{catalog:host.fonts?.()??new FontRegistry().list(),discovery:'catalog --kind fonts [--query NAME]. fontFamily is a registered ID; fontWeight/fontStyle must match a loaded variant. loadFonts is host-owned; fonts --load retries registered resources. No presets or positioning rules.',issues:host.fontIssues?.()??[]}};
+    if(request.command==='fonts'){if(params.load!==undefined){if(!host.loadFonts)fail('El host no conectó carga de fuentes.');await host.loadFonts!(params.id?[string(params.id,'id')]:undefined);}return {ok:true,fonts:host.fonts?.()??new FontRegistry().list(),issues:host.fontIssues?.()??[]};}
     if(request.command==='context')return {ok:true,context:await context(host,params)};
     if(request.command==='experience'){const p=host.project();return {ok:true,revision:await revision(p),report:experienceReport(p,{...(params.ids!==undefined?{ids:ids(params.ids)}:{}),...(params.frame!==undefined?{frameId:string(params.frame,'frame')}:{})}),next:'experience.set con expectedRevision. El IDE conecta estos contratos a implementación y pruebas; no es una certificación ni analítica en ejecución.'};}
     if(request.command==='comments'){const p=host.project();return {ok:true,revision:await revision(p),...(params.id?{context:getCommentContext(p,string(params.id,'id'))}:{threads:clone(p.comments?.threads??[]),drafts:clone(p.comments?.drafts??[]),queue:clone(p.comments?.queue??[]),anchor:host.selection().length?(()=>{try{return captureCommentAnchor(p,host.selection());}catch{return null;}})():null}),next:'comment.create/reply/status mediante apply con expectedRevision. El IDE recibe hooks con subscribeComments; no hay modelo integrado.'};}
@@ -269,6 +280,7 @@ export async function handleAgentRequest(host: AgentHost,request: AgentRequest):
     }
     if(request.command==='catalog'){
       const kind=params.kind??'all',query=String(params.query??'').toLocaleLowerCase(),kit=params.kit;
+      if(kind==='fonts'){const rows=(host.fonts?.()??new FontRegistry().list()).filter(f=>`${f.id} ${f.name}`.toLocaleLowerCase().includes(query));return {ok:true,fonts:rows,next:'Selecciona fontFamily por ID y una variante loaded. El IDE registra y conserva los archivos. fonts --load vuelve a cargar; no inventes familias ni pesos.'};}
       if(kind==='styles'){
         const p=host.project(), rows=styleSummaries(p).filter(s=>`${s.id} ${s.name} ${s.description}`.toLocaleLowerCase().includes(query));
         if (typeof kit==='string') { const style=p.stylePackages?.[kit]; if (!style) fail('Estilo no encontrado.'); return {ok:true,style:clone(style),next:'style.apply importa tokens a una pantalla. La composición se diseña siguiendo guidance; no hay layouts fijos. aru contiene solo paleta y guías, no una instalación en ARU.'}; }
@@ -283,7 +295,7 @@ export async function handleAgentRequest(host: AgentHost,request: AgentRequest):
         const config=host.localization?.()??null, keys=[...new Set(Object.values(config?.messages??{}).flatMap(entries=>Object.keys(entries)))].filter(key=>key.toLocaleLowerCase().includes(query)).sort();
         return {ok:true,localization:host.localizationState?.()??localizationState(config),keys:keys.slice(0,100).map(key=>{const value=resolveText({text:'',textKey:key},config);return {key,text:value.text.slice(0,160),source:value.source,missing:value.missing,...(value.text.length>160?{textTruncated:true}:{})};}),truncated:keys.length>100,next:keys.length>100?'Acota con --query prefijo.':'Vincula una clave con update {id,patch:{textKey:CLAVE}}. Los archivos de traducción pertenecen al IDE.'};
       }
-      if(!['all','kits','icons'].includes(String(kind)))fail('kind debe ser kits, icons, texts, resources, styles o all.');
+      if(!['all','kits','icons'].includes(String(kind)))fail('kind debe ser fonts, kits, icons, texts, resources, styles o all.');
       if(kit!==undefined&&!kits.some(k=>k.id===kit)&&!iconPacks.some(k=>k.id===kit))fail('Kit desconocido. Consulta codaru catalog.');
       if(!kit&&!query)return {ok:true,kits:kind==='icons'?undefined:kits.map(k=>({...k,count:getKitItems(k.id).length})),icons:kind==='kits'?undefined:iconPacks.map(k=>({...k,count:getIconItems(k.id).length})),next:'Añade --kit ID para ver los elementos; --query TEXTO filtra por nombre.'};
       return {ok:true,...(kind!=='icons'?{kits:kits.filter(k=>!kit||k.id===kit).map(k=>({...k,items:getKitItems(k.id).filter(i=>`${i.id} ${i.name} ${i.category}`.toLocaleLowerCase().includes(query))}))}:{}),...(kind!=='kits'?{icons:iconPacks.filter(k=>!kit||k.id===kit).map(k=>({...k,items:getIconItems(k.id).filter(i=>`${i.id} ${i.name} ${i.tags.join(' ')}`.toLocaleLowerCase().includes(query))}))}:{})};
@@ -323,12 +335,18 @@ export async function handleAgentRequest(host: AgentHost,request: AgentRequest):
         if (host.busy()) throw new AgentError('editor_busy', 'Termina la interacción antes de exportar assets.');
         const targets = params.ids === undefined ? params.frame === undefined ? host.selection() : [string(params.frame, 'frame')] : params.ids;
         const { exportAsset } = await import('./asset-export');
+        if(host.fontRegistry)attachFonts(p,host.fontRegistry);await host.loadFonts?.();
         const result = await exportAsset(p, { ids: targets as string[], format: params.format as 'svg' | 'png' | 'assets', platform: params.platform as never, name: params.name as string | undefined, width: params.width as number | undefined, padding: params.padding as number | undefined, scale: params.scale as number | undefined, theme: params.theme as never });
         return { ok: true, ...result, revision: sourceRevision, locale: host.localization?.()?.locale??null, next: result.format === 'assets' ? 'Descomprime el ZIP: importa el .imageset en Xcode o las carpetas drawable-* en Android. Conserva source/*.svg y revisa warnings.' : 'Asset estático exportado. Para obtener las densidades de iOS y Android, usa export --format assets con los mismos IDs. Revisa warnings.' };
       }
+      if(host.fontRegistry)attachFonts(p,host.fontRegistry);
       if(params.format==='json')content=JSON.stringify(p,null,2);
-      else if(params.format==='html')content=exportHTML(p);
-      else if(params.format==='svg'){const frame=existing(p,string(params.frame,'frame'));if(frame.type!=='frame')fail('La exportación SVG requiere una pantalla.');content=exportSVG(p,frame);}
+      else if(params.format==='html'||params.format==='svg'){
+        const frame=params.format==='svg'?existing(p,string(params.frame,'frame')):undefined;if(frame&&frame.type!=='frame')fail('La exportación SVG requiere una pantalla.');
+        const nodes=p.nodes.filter(n=>{let current:DesignNode|undefined=n,inside=!frame;while(current){if(current.hidden)return false;if(current.id===frame?.id)inside=true;current=current.parentId?p.nodes.find(v=>v.id===current!.parentId):undefined;}return inside;});
+        const uses=nodes.filter(n=>n.text).map(n=>({...n,...resolveNodeStyle(p,n)})),ids=[...new Set(uses.map(n=>n.fontFamily))];await host.loadFonts?.(ids);
+        const css=await host.fontRegistry?.css('embed',ids,uses)??'';content=frame?exportSVG(p,frame,css):exportHTML(p,css);
+      }
       else return fail('format debe ser json, html, svg, png, assets o aru.');
       return {ok:true,format:params.format,content,revision:sourceRevision,...(params.format!=='json'?{locale:host.localization?.()?.locale??null}:{})};
     }
@@ -341,7 +359,8 @@ export async function handleAgentRequest(host: AgentHost,request: AgentRequest):
     if(params.expectedRevision!==currentRevision)throw new AgentError('revision_conflict','Falta expectedRevision o el documento cambió. Lee codaru context y prepara el lote con la nueva revision.');
     // Version operations need async (de)compression, so the batch runs in chunks on a draft: a version saved
     // mid-batch captures the operations before it, and the host still receives one atomic commit at the end.
-    const draft=new Store(before);let pending:unknown[]=[];const flush=()=>{if(pending.length){const chunk=pending;pending=[];draft.commit(p=>applyOperations(p,chunk));}};
+    if(host.fontRegistry)attachFonts(before,host.fontRegistry);
+    const draft=new Store(before);let pending:unknown[]=[];const flush=()=>{if(pending.length){if(host.fontRegistry)attachFonts(draft.project,host.fontRegistry);const chunk=pending;pending=[];draft.commit(p=>{if(host.fontRegistry)attachFonts(p,host.fontRegistry);applyOperations(p,chunk);});}};
     if(!Array.isArray(params.operations)||!params.operations.length||params.operations.length>250)fail('operations debe contener entre 1 y 250 operaciones.');
     for(const raw of params.operations as unknown[]){
       const op=raw&&typeof raw==='object'?raw as Record<string,unknown>:{};
@@ -349,12 +368,13 @@ export async function handleAgentRequest(host: AgentHost,request: AgentRequest):
       if(op.op==='version.restore'){flush();const id=string(op.id,'id'),version=(draft.project.versions??[]).find(v=>v.id===id);if(!version)return fail('Versión no encontrada.');pending.push({op:'version.apply',payload:await unpackVersion(version.data)});continue;}
       pending.push(raw);
     }
-    const prepared=draft.prepare(p=>applyOperations(p,pending));
+    const prepared=draft.prepare(p=>{if(host.fontRegistry)attachFonts(p,host.fontRegistry);applyOperations(p,pending);});
     // The user may edit while the asynchronous hash is calculated.
     // Every commit produces a new document object, so identity tells whether the user edited meanwhile.
     if(host.project()!==live)throw new AgentError('revision_conflict','El documento cambió durante la validación. Lee codaru context y vuelve a intentarlo.');
     if(host.busy())throw new AgentError('editor_busy','El editor inició otra interacción. Termínala antes de aplicar el lote.');
     const after=prepared.getDocument(),beforeIds=new Set(before.nodes.map(n=>n.id)),afterIds=new Set(after.nodes.map(n=>n.id));
+    validateFontChanges(before,after,host.fontRegistry??new FontRegistry(),(params.operations as Record<string,unknown>[]).some(o=>['dom','figma'].includes(String(o.op))));
     const added=after.nodes.filter(n=>!beforeIds.has(n.id)),removed=before.nodes.filter(n=>!afterIds.has(n.id)).map(n=>n.id);
     const beforeById=new Map(before.nodes.map(n=>[n.id,n]));
     const updated=after.nodes.filter(n=>beforeIds.has(n.id)&&!sameData(n,beforeById.get(n.id))).map(n=>n.id);

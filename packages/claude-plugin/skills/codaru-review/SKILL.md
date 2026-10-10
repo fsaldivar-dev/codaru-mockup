@@ -46,3 +46,7 @@ Además de las reglas, revisa lo que el lint no mide y corrígelo en el mismo lo
 ## Qué entregar
 
 El resumen antes y después (`errors`, `warnings`, `notes`), qué cambiaste agrupado por causa, y lo que queda sin corregir con su motivo.
+
+## Fuentes reales (0.10.0)
+
+Consulta `./codaru catalog --kind fonts` y `./codaru fonts` antes de seleccionar fuentes. Usa el ID y una variante cargada; no reduzcas una fuente propia a system/serif/mono ni simules sus pesos. Los importadores conservan referencias pendientes para fuentes desconocidas y lo informan: el IDE registra sus archivos/variantes. Una revisión debe señalar fuentes ausentes, pesos no disponibles o recursos fallidos. La carga precede a medir o exportar. Comprueba edición, previsualización y exportación con texto editable; registra restricciones de inclusión/licencias del consumidor. Las dimensiones y restricciones explícitas mandan; no impongas recetas por sector ni posiciones tipográficas.

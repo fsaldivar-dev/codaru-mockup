@@ -1,9 +1,10 @@
+import {validFontId,validFontStyle} from './font-validation';
 import {validateExperienceSpec} from './experience-spec';
 import { validateIdentityLab } from './identity';
 import {validateComments} from './comments';
 import { validateStylePackages } from './style-package';
 import { ContentCache, sameData } from './content-cache';
-import { defaultDesignTheme, effectiveTheme, resolveColor, safeColor, validateDesignThemes, validateNodeThemeRefs, type DesignTheme } from './themes';
+import { defaultDesignTheme, effectiveTheme, resolveNodeStyle, resolveColor, safeColor, validateDesignThemes, validateNodeThemeRefs, type DesignTheme } from './themes';
 import { isIconReference } from './icon-data';
 import { deviceSkins } from './devices';
 import { validateImplementations } from './implementations';
@@ -24,7 +25,7 @@ export interface DesignNode {
   gradient: 'none' | 'linear' | 'radial'; gradientEnd: string; gradientAngle: number;
   /** Custom gradient with any number of stops. Without it, fill and gradientEnd are the two stops. */
   gradientStops?: Array<{ color: string; position: number }>;
-  text: string; fontSize: number; fontWeight: number; fontFamily: string; lineHeight: number;
+  text: string; fontSize: number; fontWeight: number; fontFamily: string; fontStyle?: import('./contracts').FontStyle; lineHeight: number;
   /** Translation key supplied by the IDE; text remains the editable source/fallback. */
   textKey?: string;
   textAlign: 'left' | 'center' | 'right';
@@ -274,6 +275,7 @@ export function absolute(p: Project, n: DesignNode) { return ancestors(p, n.id).
 export function isUnavailable(p: Project, n: DesignNode) { return n.hidden || n.locked || ancestors(p, n.id).some(a => a.hidden || a.locked); }
 export function updateNode(p: Project, id: string, patch: Partial<DesignNode>) {
   const n = p.nodes.find(n => n.id === id); if (!n) throw new Error('Elemento no encontrado');
+  if(n.typographyToken&&!('typographyToken' in patch)&&['fontFamily','fontWeight','fontSize','fontStyle','lineHeight'].some(k=>k in patch)){const resolved=resolveNodeStyle(p,n);patch={fontFamily:resolved.fontFamily,fontSize:resolved.fontSize,fontWeight:resolved.fontWeight,fontStyle:resolved.fontStyle??'normal',lineHeight:resolved.lineHeight,...patch,typographyToken:undefined};}
   // A plain SVG replacement no longer represents the stored ARU authoring source.
   if ('svg' in patch && !('aruSource' in patch) && n.aruSource) patch = { ...patch, aruSource: undefined };
   if (n.instanceOf || n.componentKey) n.overrides = [...new Set([...(n.overrides || []), ...Object.keys(patch).filter(k => !['id', 'overrides'].includes(k))])];
@@ -533,7 +535,7 @@ export function mergeNotes<T extends object>(current: T | undefined, patch: unkn
 }
 /** Small stable hash (FNV-1a) so documents can tell whether a component or theme changed after being documented. */
 export function signature(value: unknown): string { const text = JSON.stringify(value); let h = 0x811c9dc5; for (let i = 0; i < text.length; i++) { h ^= text.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, '0'); }
-const visualTemplateSignature = (c: Component) => signature(c.template.map(n => [n.type, n.name, n.text, n.textKey, n.fill, n.color, n.stroke, n.strokeWidth, Math.round(n.width), Math.round(n.height), n.radius, n.fontSize, n.fontWeight, n.fontFamily, n.layout, n.gap, n.padding, n.opacity, n.shadow, n.gradient, n.svg?.length ?? 0, n.animations?.length ?? 0, n.iconName]));
+const visualTemplateSignature = (c: Component) => signature(c.template.map(n => [n.type, n.name, n.text, n.textKey, n.fill, n.color, n.stroke, n.strokeWidth, Math.round(n.width), Math.round(n.height), n.radius, n.fontSize, n.fontWeight, n.fontFamily, n.fontStyle, n.layout, n.gap, n.padding, n.opacity, n.shadow, n.gradient, n.svg?.length ?? 0, n.animations?.length ?? 0, n.iconName]));
 export const templateSignature = (c: Component) => c.properties ? signature([visualTemplateSignature(c), c.properties]) : visualTemplateSignature(c);
 export const themeSignature = (p: Project) => { const t = p.designThemes[p.activeThemeId]; return signature(t ? [t.id, t.modes.light.colors, t.modes.dark.colors, t.modes.light.typography, t.modes.light.radii, Object.keys(t.modes.light.gradients)] : null); };
 /** True when the component changed after its notes were written. */
@@ -780,7 +782,7 @@ export function validate(input: unknown, trusted = false): Project {
   if(p.stylePackages!==undefined)validateStylePackages(p.stylePackages);
   if(p.identityLab!==undefined)validateIdentityLab(p.identityLab);
   if(p.comments!==undefined)validateComments(p.comments);
-  const overrideKeys = new Set([...Object.keys(node('rect')), 'radiusTR', 'radiusBR', 'radiusBL', 'componentId', 'instanceOf', 'componentKey', 'overrides', 'textKey', 'fillToken', 'materialToken', 'typographyToken', 'radiusToken', 'themeId', 'themeMode', 'kitId', 'iconPack', 'iconName', 'svg', 'aruSource', 'animations', 'transition', 'experience', 'gradientStops', 'device', 'fold', 'foldPair', 'safeArea', 'skin', 'paddingSides', 'justify', 'align', 'wrap', 'hugWidth', 'hugHeight', 'minWidth', 'maxWidth', 'minHeight', 'maxHeight']);
+  const overrideKeys = new Set([...Object.keys(node('rect')), 'radiusTR', 'radiusBR', 'radiusBL', 'componentId', 'instanceOf', 'componentKey', 'overrides', 'textKey', 'fontStyle', 'fillToken', 'materialToken', 'typographyToken', 'radiusToken', 'themeId', 'themeMode', 'kitId', 'iconPack', 'iconName', 'svg', 'aruSource', 'animations', 'transition', 'experience', 'gradientStops', 'device', 'fold', 'foldPair', 'safeArea', 'skin', 'paddingSides', 'justify', 'align', 'wrap', 'hugWidth', 'hugHeight', 'minWidth', 'maxWidth', 'minHeight', 'maxHeight']);
   function validateNodes(ns: DesignNode[]) {
     const ids = new Set<string>();
     for (const n of ns) {
@@ -796,7 +798,7 @@ export function validate(input: unknown, trusted = false): Project {
       if (n.textKey !== undefined && (typeof n.textKey !== 'string' || !n.textKey.trim() || n.textKey.length > 200 || /[\u0000-\u001f\u007f]/.test(n.textKey) || !['text','button','input'].includes(n.type))) throw new Error('textKey requiere una clave de 1–200 caracteres en un texto, botón o campo.');
       if ((n.type === 'icon' || n.iconPack !== undefined || n.iconName !== undefined) && !isIconReference(n.iconPack, n.iconName)) throw new Error('Referencia de icono inválida');
       for (const key of ['fill', 'color', 'stroke', 'gradientEnd'] as const) if (!safeColor(n[key])) throw new Error('Color inválido');
-      if (!['none', 'linear', 'radial'].includes(n.gradient) || !['free', 'vertical', 'horizontal'].includes(n.layout) || !['fixed', 'fill'].includes(n.sizing) || !['left', 'center', 'right'].includes(n.textAlign) || !['system', 'serif', 'mono'].includes(n.fontFamily)) throw new Error('Estilo inválido');
+      if (!['none', 'linear', 'radial'].includes(n.gradient) || !['free', 'vertical', 'horizontal'].includes(n.layout) || !['fixed', 'fill'].includes(n.sizing) || !['left', 'center', 'right'].includes(n.textAlign) || (!validFontId(n.fontFamily)||!validFontStyle(n.fontStyle))) throw new Error('Estilo inválido');
       if (n.image && !isLocalImage(n.image)) throw new Error('Solo se admiten imágenes locales PNG, JPEG, WebP o GIF');
       if (n.device !== undefined && (typeof n.device !== 'string' || !/^[a-z0-9][a-z0-9-]{0,63}$/.test(n.device))) throw new Error('Dispositivo inválido');
       if (n.fold !== undefined && (n.type !== 'frame' || !n.fold || typeof n.fold !== 'object' || Object.keys(n.fold).some(key => key !== 'axis' && key !== 'gap' && key !== 'panels') || (n.fold.panels !== undefined && n.fold.panels !== 2 && n.fold.panels !== 3) || !['vertical', 'horizontal'].includes(n.fold.axis) || !Number.isFinite(n.fold.gap) || n.fold.gap < 0 || n.fold.gap > 200)) throw new Error('Pliegue inválido: solo pantallas, axis vertical u horizontal y gap de 0 a 200.');
@@ -872,9 +874,9 @@ export class Store {
   /** Forget the cached serialization after an in-place change that is not a commit (view state kept in the document). */
   touch() { this.cacheFor = undefined; }
   serialize() { if (this.cacheFor !== this.project) { this.cache = JSON.stringify(this.project); this.cacheFor = this.project; } return this.cache; }
-  prepare(edit: (p: Project) => void): PreparedTransaction {
+  prepare(edit: (p: Project) => void, check?: (p:Project)=>void): PreparedTransaction {
     const draft = clone(this.project);
-    edit(draft); syncComponents(draft); layoutProject(draft);
+    edit(draft); syncComponents(draft); layoutProject(draft);check?.(draft);
     // validate clones again: a caller may have kept a reference to its mutable edit draft.
     const next = validate(draft); normalizedProjects.add(next);
     const prepared = Object.freeze({ getDocument: () => clone(next) });
@@ -888,7 +890,7 @@ export class Store {
     if (!sameData(before, next)) { this.undoStack.push(before); if (this.undoStack.length > 60) this.undoStack.shift(); this.redoStack = []; }
     this.project = next;
   }
-  commit(edit: (p: Project) => void) { this.commitPrepared(this.prepare(edit)); }
+  commit(edit: (p: Project) => void, check?: (p:Project)=>void) { this.commitPrepared(this.prepare(edit,check)); }
   undo() { const p = this.undoStack.pop(); if (p) { this.redoStack.push(this.project); this.project = p; } }
   redo() { const p = this.redoStack.pop(); if (p) { this.undoStack.push(this.project); this.project = p; } }
 }

@@ -59,7 +59,7 @@ test('a page snapshot becomes one screen with a derived theme, linked tokens and
   assert.equal(p.nodes.find(n => n.type === 'input')!.text, 'Tu correo');
   assert.equal(report.images, 1); assert.equal(report.illustrations, 1);
   assert.equal(p.nodes.find(n => n.name === 'Remota (no capturada)')!.type, 'rect');
-  assert.ok(report.notes.some(n => /Cursivas/.test(n))); assert.ok(report.notes.some(n => /Imágenes no capturadas/.test(n))); assert.ok(report.notes.some(n => /Georgia|Helvetica/.test(n)));
+  assert.equal(p.nodes.find(n=>n.text==='cursiva')?.fontStyle,'italic'); assert.ok(report.notes.some(n => /Imágenes no capturadas/.test(n))); assert.ok(report.notes.some(n => /Georgia|Helvetica/.test(n)));
   assert.equal(componentizeRepeats(p, frame.id), 1);
   assert.equal(p.components.length, 1);
   new Store(p);

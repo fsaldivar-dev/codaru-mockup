@@ -1,3 +1,5 @@
+import {transferFonts,fontsFor} from './fonts';
+import {resolveNodeStyle} from './themes';
 import { ancestors, node, parseDocument, topSelected, type DesignNode, type Project } from './model';
 import { effectiveTheme } from './themes';
 import { frameToSVG, svgDataURL, withTheme, type ScreenTheme } from './screen-svg';
@@ -17,6 +19,8 @@ export interface AssetOptions {
   /** PNG only, 0.25–4. Platform packages use their standard density scales. */
   scale?: number;
   theme?: ScreenTheme;
+  /** Custom fonts default to embedded files; reference is only valid for SVG. */
+  fontExport?:'embed'|'reference';
 }
 export interface AssetFileInfo { path: string; bytes: number; width?: number; height?: number; scale?: number; }
 export interface AssetExport {
@@ -58,7 +62,7 @@ function footprint(p: Project, n: DesignNode, x: number, y: number): Bounds {
 
 /** SVG extraction is pure and also works in Node or a worker; PNG needs a browser WebView. */
 export function prepareAsset(document: unknown, options: AssetOptions) {
-  const p = parseDocument(document);
+  const p = parseDocument(document);if(document&&typeof document==='object')transferFonts(document as Project,p);
   if (!Array.isArray(options.ids) || !options.ids.length || options.ids.length > 100 || options.ids.some(id => typeof id !== 'string')) throw new Error('Selecciona de 1 a 100 elementos para exportar.');
   const byId = new Map(p.nodes.map(n => [n.id, n]));
   for (const id of options.ids) { const n = byId.get(id); if (!n) throw new Error(`Elemento no encontrado: ${id}`); if (!visible(p, n)) throw new Error(`El elemento ${id} está oculto o pertenece a un contenedor oculto.`); }
@@ -82,7 +86,7 @@ export function prepareAsset(document: unknown, options: AssetOptions) {
     const opacity = ancestors(p, n.id).reduce((v, parent) => v * parent.opacity / 100, n.opacity);
     return [n.id, { ...n, parentId: id, x: at.x - bounds!.x, y: at.y - bounds!.y, themeId: theme.id, themeMode: theme.mode, opacity }];
   }));
-  const working = { ...p, nodes: [...p.nodes.map(n => moved.get(n.id) ?? n), wrapper] };
+  const working = transferFonts(p,{ ...p, nodes: [...p.nodes.map(n => moved.get(n.id) ?? n), wrapper] });
   const width = options.width ?? bounds.width, height = width * bounds.height / bounds.width;
   let svg = frameToSVG(working, wrapper);
   svg = svg.replace(/^(<svg[^>]*?)width="[^"]*" height="[^"]*"/, `$1width="${width}" height="${height}"`);
@@ -90,9 +94,9 @@ export function prepareAsset(document: unknown, options: AssetOptions) {
   const warnings: string[] = [];
   if (included.some(n => n.materialToken)) warnings.push('El cristal conserva tinte, borde y sombra; no incluye desenfoque del contenido que quedaba detrás.');
   if (included.some(n => n.animations?.length)) warnings.push('Asset estático: las animaciones no se incluyen.');
-  if (included.some(n => n.text)) warnings.push('El SVG conserva texto editable y usa fuentes del sistema; puede variar entre plataformas. El PNG fija el resultado.');
+  if (included.some(n => n.text)) warnings.push('El SVG conserva texto editable. Las fuentes genéricas dependen del sistema; las personalizadas necesitan sus archivos y un visor compatible.');
   const aruSources = included.filter(n => n.aruSource).map(n => ({id:n.id,source:n.aruSource!}));
-  return { svg, name, width, height, bounds, ids: roots.map(n => n.id), warnings, aruSources };
+  return { svg, name, width, height, bounds, ids: roots.map(n => n.id), warnings, aruSources, working, wrapper };
 }
 export function renderAssetToSVG(document: unknown, options: AssetOptions): string { return prepareAsset(document, options).svg; }
 function encoded(bytes: Uint8Array): string {
@@ -135,7 +139,13 @@ export async function exportAsset(document: unknown, options: AssetOptions): Pro
   if (!['ios', 'android', 'all'].includes(platform)) throw new Error('platform debe ser ios, android o all.');
   const scale = options.scale ?? 1;
   if (!Number.isFinite(scale) || scale < .25 || scale > 4) throw new Error('scale debe estar entre 0.25 y 4.');
-  const asset = prepareAsset(document, options), { svg, name, width, height, ids, warnings } = asset;
+  const asset = prepareAsset(document, options), { name, width, height, ids, warnings } = asset;
+  const registry=fontsFor(asset.working),families=[...new Set(asset.working.nodes.filter(n=>n.text&&!n.hidden&&(n.id===asset.wrapper.id||options.ids.some(id=>n.id===id||ancestors(asset.working,n.id).some(a=>a.id===id)))).map(n=>({...n,...resolveNodeStyle(asset.working,n)}).fontFamily).filter(id=>!['system','serif','mono'].includes(id)))];
+  const mode=options.fontExport??'embed';if(!['embed','reference'].includes(mode))throw new Error('fontExport debe ser embed o reference.');
+  if(families.length&&format!=='svg'&&mode==='reference')throw new Error('PNG/ZIP con fuentes personalizadas requieren archivos incluidos; no aceptan referencias externas.');
+  const css=families.length?await registry!.css(mode,families,asset.working.nodes.map(n=>({...n,...resolveNodeStyle(asset.working,n)}))):'';
+  let svg=css?frameToSVG(asset.working,asset.wrapper,{fontCSS:css}):asset.svg;
+  svg=svg.replace(/^(<svg[^>]*?)width="[^"]*" height="[^"]*"/,`$1width="${asset.width}" height="${asset.height}"`);
   const base = { format, name, width, height, ids, warnings };
   if (format === 'svg') return { ...base, filename: `${name}.svg`, mime: 'image/svg+xml', encoding: 'utf8', content: svg, files: [{ path: `${name}.svg`, bytes: encoder.encode(svg).length }] };
   const scales = format === 'png' ? [scale] : [...new Set([...(platform !== 'android' ? IOS : []), ...(platform !== 'ios' ? ANDROID.map(([,s]) => s) : [])])];

@@ -1,3 +1,4 @@
+import {importedFontFamily} from './fonts';
 import { createComponent, labels, node, validate, type DesignNode, type Kind, type Project } from './model';
 import { sanitizeSVG } from './motion';
 import type { DesignTheme, TokenSet } from './themes';
@@ -67,16 +68,19 @@ export function importDOM(p: Project, input: unknown): DOMReport {
   const dark: TokenSet['colors'] = { primary: darkPrimary, surface: '#1c1c21', background: '#111114', text: '#f3f3f6', muted: '#a3a3b0', border: '#2c2c34', accent: mix(darkPrimary, '#1c1c21', .7) };
   const themeId = (() => { const base = `dom-${host.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`.slice(0, 60); let id = base; for (let i = 2; p.designThemes[id]; i++) id = `${base}-${i}`; return id; })();
   const typography: TokenSet['typography'] = {};
-  const family = (name: unknown): 'system' | 'serif' | 'mono' => { const value = text(name, 80); return serif.test(value) ? 'serif' : mono.test(value) ? 'mono' : 'system'; };
+  const family = (name:unknown)=>importedFontFamily(p,text(name,200),note);
   const families = new Set<string>();
   const styles = new Map<string, number>();
+  const typeKeys = new Map<string,string>();
+  const fontStyle=(f:Record<string,unknown>)=>f.style==='oblique'?'oblique':f.style==='italic'||f.italic===true?'italic':'normal';
+  const fontKey=(f:Record<string,unknown>)=>`${family(f.family)}|${Math.round(num(f.size,16,1,400))}|${Math.round(num(f.weight,400,100,900))}|${fontStyle(f)}`;
   for (const e of elements) if ((e.kind === 'text' || e.kind === 'button') && record(e.font)) {
     const name = text(e.font.family, 80); if (name && !/^(-apple-system|system-ui|blinkmacsystemfont|segoe ui|roboto|helvetica|arial|inter|sf pro|ui-sans-serif|sans-serif)$/i.test(name)) families.add(name);
-    const key = `${family(e.font.family)}|${Math.round(num(e.font.size, 16, 1, 400))}|${Math.round(num(e.font.weight, 400, 100, 900) / 100) * 100}`; styles.set(key, (styles.get(key) ?? 0) + 1);
+    const key = fontKey(e.font); styles.set(key, (styles.get(key) ?? 0) + 1);
   }
   for (const [key] of [...styles].sort((a, b) => b[1] - a[1]).slice(0, 8)) {
-    const [rawFamily, size, weight] = key.split('|'), fam = (rawFamily === 'serif' || rawFamily === 'mono' ? rawFamily : 'system') as 'system' | 'serif' | 'mono', id = `texto-${size}-${weight}`;
-    typography[id] = { name: `${fam === 'serif' ? 'Serif' : fam === 'mono' ? 'Mono' : 'Sans'} ${size} · ${weight}`, fontFamily: fam, fontSize: Number(size), fontWeight: Number(weight), lineHeight: 1.3 };
+    const [fam,size,weight,style]=key.split('|');let id=`texto-${size}-${weight}`;for(let suffix=2;typography[id];suffix++)id=`texto-${size}-${weight}-${suffix}`;typeKeys.set(key,id);
+    typography[id]={name:`${fam} ${size} · ${weight} · ${style}`,fontFamily:fam,fontStyle:style as 'normal'|'italic'|'oblique',fontSize:Number(size),fontWeight:Number(weight),lineHeight:1.3};
   }
   const tokens = (colors: TokenSet['colors']): TokenSet => ({ colors, gradients: {}, materials: {}, typography: structuredClone(typography), radii: {} });
   const theme: DesignTheme = { id: themeId, name: `Importado · ${host}`, modes: { light: tokens(light), dark: tokens(dark) } };
@@ -114,12 +118,12 @@ export function importDOM(p: Project, input: unknown): DOMReport {
     } else if (kind === 'text' || kind === 'button' || kind === 'input') {
       type = kind as Kind; paint();
       const font = record(e.font) ? e.font : {}, size = round(num(font.size, 16, 1, 400)), weight = Math.round(num(font.weight, 400, 100, 900) / 100) * 100;
-      const key = `${family(font.family)}|${Math.round(size)}|${weight}`, token = Object.entries(typography).find(([id]) => id === `texto-${Math.round(size)}-${weight}` && `${typography[id].fontFamily}|${Math.round(size)}|${weight}` === key)?.[0];
+      const token=typeKeys.get(fontKey(font));
       const label = text(e.text, 20000);
       created = node(type, { ...patch, id: idFor(type === 'text' ? label.slice(0, 24) || 'texto' : type), name: type === 'text' ? (label.slice(0, 40) || labels.text) : type === 'button' ? `Botón · ${label.slice(0, 30)}` : `Campo · ${label.slice(0, 30)}`, text: label,
-        fontSize: size, fontWeight: weight, fontFamily: family(font.family), lineHeight: round(Math.max(.5, Math.min(4, num(font.lineHeight, size * 1.2, 1, 2000) / size))), textAlign: font.align === 'center' ? 'center' : font.align === 'right' ? 'right' : 'left',
+        fontSize: size, fontWeight: weight, fontFamily: family(font.family),fontStyle:fontStyle(font), lineHeight: round(Math.max(.5, Math.min(4, num(font.lineHeight, size * 1.2, 1, 2000) / size))), textAlign: font.align === 'center' ? 'center' : font.align === 'right' ? 'right' : 'left',
         color: colorToken(color(e.color), '@text', 'text'), ...(token ? { typographyToken: token } : {}), ...(type === 'input' && patch.strokeWidth === 0 ? { stroke: '@border', strokeWidth: 1 } : {}) });
-      if (font.italic === true) note('Cursivas: Codaru no las tiene; se importaron en redonda.');
+
       if (kind === 'text' && e.href) note('Enlaces: se importaron como texto; añade flujos si quieres navegación.');
     } else {
       paint(); const hasKids = elements.some(k => k.p === e.i);

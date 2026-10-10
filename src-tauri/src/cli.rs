@@ -20,6 +20,7 @@ Usage: codaru [--socket PATH] COMMAND [OPTIONS]
   context [--scope SCOPE] [--depth N] [--page ID]  Read selection, frame, page, or workspace
   schema                                  Discover commands and operation schema
   experience [--ids ID,ID] [--frame ID]     Read analytics, accessibility and test contracts
+  fonts [--load] [--id ID]                Inspect or load the host font catalog
   comments [--id ID]                       Read threads or exact context of one anchor
   catalog [--kind KIND] [--kit KIT] [--query TEXT]
   locale [CODE|source]                    Inspect or change the preview language (no document edit)
@@ -66,7 +67,7 @@ fn parse(args: &[String]) -> Result<Options> {
         socket = Some(PathBuf::from(take_value(args, &mut index, "--socket")?)); index += 1;
     }
     let command = args.get(index).ok_or_else(|| invalid("Choose a command. Run codaru --help."))?.clone(); index += 1;
-    if !["schema", "context", "comments", "experience", "apply", "catalog", "select", "undo", "redo", "export", "lint", "find", "versions", "locale"].contains(&command.as_str()) { return Err(invalid(format!("Unknown command '{}'. Run codaru --help.", command))); }
+    if !["schema", "context", "comments", "experience", "fonts", "apply", "catalog", "select", "undo", "redo", "export", "lint", "find", "versions", "locale"].contains(&command.as_str()) { return Err(invalid(format!("Unknown command '{}'. Run codaru --help.", command))); }
     let mut options = Options { command, params: Map::new(), file: None, output: None, socket };
     let mut ids = Vec::new(); let mut seen = std::collections::HashSet::new();
     while index < args.len() {
@@ -74,12 +75,13 @@ fn parse(args: &[String]) -> Result<Options> {
         if arg.starts_with("--") && !seen.insert(arg.clone()) { return Err(invalid(format!("{} was specified more than once.", arg))); }
         match (options.command.as_str(), arg.as_str()) {
             ("context", "--scope") => { options.params.insert("scope".into(), json!(take_value(args, &mut index, arg)?)); },
-            ("comments", "--id") => { options.params.insert("id".into(), json!(take_value(args, &mut index, arg)?)); },
+            ("comments" | "fonts", "--id") => { options.params.insert("id".into(), json!(take_value(args, &mut index, arg)?)); },
             ("context", "--depth") => {
                 let depth = take_value(args, &mut index, arg)?.parse::<u32>().map_err(|_| invalid("--depth must be an integer from 0 to 4."))?;
                 if depth > 4 { return Err(invalid("--depth must be an integer from 0 to 4.")); }
                 options.params.insert("depth".into(), json!(depth));
             },
+            ("fonts", "--load") => { options.params.insert("load".into(), json!(true)); },
             ("catalog", "--kind" | "--kit" | "--query") => { options.params.insert(arg.trim_start_matches("--").into(), json!(take_value(args, &mut index, arg)?)); },
             ("locale", _) if !arg.starts_with('-') && !options.params.contains_key("locale") => {
                 options.params.insert("locale".into(), if arg == "source" { Value::Null } else { json!(arg) });
@@ -241,6 +243,13 @@ mod tests {
         assert_eq!(export.params["resource"], "aru-id");
         for values in [&["export", "--resource", "id", "--ids", "node"][..], &["export", "--resource", "id", "--frame", "f"], &["export", "--resource", "id", "--page", "p"]] { assert!(parse(&args(values)).is_err()); }
         assert_eq!(parse(&args(&["catalog", "--kind", "styles"])).unwrap().params["kind"], "styles");
+    }
+    #[test]
+    fn fonts_can_be_discovered_and_loaded_without_resource_registration() {
+        assert_eq!(parse(&args(&["catalog", "--kind", "fonts"])).unwrap().params["kind"], "fonts");
+        assert_eq!(parse(&args(&["fonts", "--load", "--id", "editorial"])).unwrap().params, json!({"load":true,"id":"editorial"}).as_object().unwrap().clone());
+        assert!(parse(&args(&["fonts", "--id"])).is_err());
+        assert!(parse(&args(&["fonts", "--url", "x.ttf"])).is_err());
     }
     #[test]
     fn binary_export_decodes_before_replacing_the_destination() {

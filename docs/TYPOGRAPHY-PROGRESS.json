@@ -1,0 +1,157 @@
+{
+  "status": "awaiting_npm_auth",
+  "version": "0.10.0",
+  "publish": true,
+  "audit": {
+    "baseline": "0.9.0",
+    "fixedFamilies": [
+      "model",
+      "themes",
+      "agent",
+      "inspector",
+      "theme-editor"
+    ],
+    "silentSubstitution": [
+      "render",
+      "screen-svg",
+      "localization",
+      "dom-import",
+      "figma-import"
+    ],
+    "exportMetrics": "Browser SVG uses DOM; pure assets/SVG use approximations; fonts not awaited.",
+    "fontStyle": "Absent, including component override allowlist"
+  },
+  "plan": [
+    "Host-owned isolated catalog, exact variants and editable text",
+    "Public API/iframe/CLI/schema and inspector/tokens/components",
+    "Load barrier, actual measurements, explicit export inclusion",
+    "Unit/UI/native and packed clean-consumer validation",
+    "Version/changelog/documentation and Sajaru migration, no publishing"
+  ],
+  "verification": {
+    "typescript": {
+      "passed": true,
+      "log": "typecheck.log"
+    },
+    "model": {
+      "passed": 203,
+      "log": "model-tests.log"
+    },
+    "interfaceChromium": {
+      "passed": 167,
+      "skipped": 1,
+      "log": "ui-all-final.log"
+    },
+    "fontsWebKit": {
+      "passed": 14,
+      "log": "ui-webkit-final.log"
+    },
+    "rustCLI": {
+      "passed": 23,
+      "log": "rust-cli-final.log"
+    },
+    "rustPlugin": {
+      "passed": 18,
+      "log": "rust-plugin-final.log"
+    },
+    "cleanConsumer": {
+      "path": "/var/folders/7f/8c_2qmb54bs7_xpcjp13qns80000gn/T/codaru-typography-final-consumer-gv8xcfc4",
+      "node": {
+        "imports": 10,
+        "fontsAbsentExplicitly": true,
+        "textPreserved": true,
+        "isolated": true,
+        "version": "0.10.0"
+      },
+      "typesNodeNext": true,
+      "browser": [
+        {
+          "engine": "chromium",
+          "loaded": true,
+          "iframeLoaded": true,
+          "schema": true,
+          "independent": true,
+          "missing": [
+            "font-not-installed"
+          ],
+          "editable": true,
+          "embedded": true,
+          "family": "CodaruFont1-fraunces",
+          "style": "italic",
+          "weight": "400",
+          "ink": true,
+          "preserved": true
+        },
+        {
+          "engine": "webkit",
+          "loaded": true,
+          "iframeLoaded": true,
+          "schema": true,
+          "independent": true,
+          "missing": [
+            "font-not-installed"
+          ],
+          "editable": true,
+          "embedded": true,
+          "family": "CodaruFont1-fraunces",
+          "style": "italic",
+          "weight": "400",
+          "ink": true,
+          "preserved": true
+        }
+      ]
+    },
+    "native": {
+      "buildPassed": true,
+      "log": "native-build-final.log",
+      "identifier": "dev.codaru.typography-qa",
+      "socket": "/tmp/codaru-typography-qa/agent.sock",
+      "humanSocketUsed": false,
+      "actualFonts": [
+        "Fraunces 400/700 normal/italic",
+        "Space Grotesk 400/700",
+        "Georgia local 400"
+      ],
+      "screenshots": [
+        "native-final.png",
+        "native-italic.png",
+        "native-missing.png"
+      ],
+      "exactRevisionDryRunApply": true,
+      "undoRedo": true,
+      "editableSVGAndPNGOpened": true,
+      "missingFontExportRejected": true
+    }
+  },
+  "next": "Publish the verified 0.10.0 package after npm identity confirmation, verify registry integrity and create the matching GitHub release.",
+  "package": {
+    "path": "artifacts/typography-0.10.0/codaru-mockup-0.10.0.tgz",
+    "bytes": 516694,
+    "sha256": "f770dee9ce9131e19cc9a445d2c95b808d54716d7ed63abd0ab42f24d3fd35fc",
+    "sha512Integrity": "sha512-s0dJtkkgl03xO18O8qw+im1uuxJrWDdxQOVW9BMm4NFVCeoE456ugz89fR35XxCJhq+pTmrVOTO5YBfHdHEL/A==",
+    "files": 115,
+    "runtimeDependencies": 0,
+    "consumerInstallIntegrityMatches": true,
+    "size": {
+      "runtimeBytes": 1530430,
+      "runtimeGzipBytes": 491283,
+      "distributionBytes": 1730324,
+      "notes": "Runtime: JS + CSS + HTML. Distribución: runtime, tipos y licencias; sin host Tauri ni CLI. Gzip por archivo, no RAM."
+    }
+  },
+  "evidence": "artifacts/typography-0.10.0/validation.json",
+  "limitations": [
+    "Custom fonts and licenses remain consumer-owned; register the same IDs when reopening.",
+    "local() has no portable bytes; provide URL and export:embed for portable HTML/SVG/PNG/ZIP.",
+    "8 MB font-byte export cap; CORS/CSP and destination SVG font support apply.",
+    "Generic font stacks vary by platform; custom glyph coverage is not preflighted.",
+    "No PDF exporter or arbitrary OpenType axis editor; no automatic conversion of text to outlines."
+  ],
+  "publicationPreparation": {
+    "changesSinceVerifiedTarball": [
+      "README.md"
+    ],
+    "runtimeAndDeclarationsIdentical": true,
+    "previousVerifiedSHA256": "11d88d2a32c88a427a3f22444cf66e5a2abef3578c16fe2a601e38b94fe70ddc"
+  }
+}

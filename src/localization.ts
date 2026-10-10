@@ -1,3 +1,4 @@
+import {fontIssue,fontFamilyCSS,fontsFor,transferFonts} from './fonts';
 import type { DesignNode, Project } from './model';
 import { effectiveTheme, resolveNodeStyle } from './themes';
 import { fonts, metricMeasure, wrapText, type TextMeasure } from './screen-svg';
@@ -83,8 +84,8 @@ export function localizationIssues(p: Project, config: LocalizationConfig | null
     if (value.missing) out.push({ ...base, kind: 'missing', message: `Falta «${raw.textKey}» en ${config.locale}; se muestra ${value.source === 'fallback' ? 'el idioma de respaldo' : 'el texto de origen'}.` });
     const n = { ...raw, ...resolveNodeStyle(p, raw) }, border = n.materialToken && effectiveTheme(p, n).tokens.materials[n.materialToken] ? Math.max(1, n.strokeWidth) : n.strokeWidth;
     const width = Math.max(1, n.width - border * 2 - (n.type === 'button' || n.type === 'input' ? 28 : 0));
-    const height = Math.max(0, n.height - border * 2), font = { family: fonts[n.fontFamily] ?? fonts.system, size: n.fontSize, weight: n.fontWeight };
-    if (value.text && wrapText(value.text, width, font, measure).length * n.fontSize * n.lineHeight > height + .5) out.push({ ...base, kind: 'overflow', measurement: 'metrics', message: 'El texto puede exceder el alto disponible; amplía la capa o ajusta su tipografía.' });
+    const height = Math.max(0, n.height - border * 2), font = { family: fontIssue(p,n)?fonts.system:fontFamilyCSS(p,n.fontFamily), size: n.fontSize, weight: n.fontWeight, style:n.fontStyle??'normal' };
+    if (!fontIssue(p,n)&&(Object.hasOwn(fonts,n.fontFamily)||fontsFor(p)?.hasMeasure()||measure!==metricMeasure)&&value.text && wrapText(value.text, width, font, fontsFor(p)?.hasMeasure()?(t,f)=>fontsFor(p)!.measure(t,f):measure).length * n.fontSize * n.lineHeight > height + .5) out.push({ ...base, kind: 'overflow', measurement: 'metrics', message: 'El texto puede exceder el alto disponible; amplía la capa o ajusta su tipografía.' });
   }
   return out;
 }

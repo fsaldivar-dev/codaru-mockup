@@ -232,3 +232,9 @@ Configura `onImplementationRequest` en `createEditor` o `mountCodaru` para que t
 Los nuevos puertos `resourceServices` y `onResourceLibraryChange` son opcionales y funcionan en el núcleo, fragmentos e iframe. La biblioteca descubre dibujos del proyecto como candidatos; el IDE proporciona compilación ARU, evaluación real por IA, edición y persistencia. Sin evaluador quedan pendientes, con reutilización/exportación desde biblioteca deshabilitadas. [Contrato de recursos](RESOURCE-LIBRARY.md).
 
 `importStyle`, `getStyles`, `getStyle` y `applyStyle` admiten paquetes `codaru-style/1`, con tokens y guías distintas para móvil. No cambian el layout del host ni generan composiciones repetidas. [Contrato portátil](STYLE-PACKAGES.md). La API y CSS de personalización existentes se mantienen.
+
+## Recursos tipográficos del host
+
+Desde 0.10.0 `createEditor` y `mountCodaru` reciben un catálogo `fonts` con variantes explícitas. El host registra recursos, licencias y URLs de assets de su WebView; los documentos guardan sólo IDs y propiedades. Core expone carga/estados/errores; los fragmentos se personalizan como antes y usan nombres CSS privados. No necesita un servidor Node ni un modelo propio.
+
+[Tipografía: APIs, medición y exportaciones](TYPOGRAPHY.md) · [Migración del consumidor Sajaru 0.8.0](SAJARU-TYPOGRAPHY-UPGRADE.md). El ejemplo `examples/fonts-host.html` permite revisar familias, pesos, cursiva, texto largo y recurso ausente en un host aislado.

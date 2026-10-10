@@ -1,7 +1,7 @@
 {
   "name": "codaru-design",
   "description": "Diseñar, revisar y clonar interfaces en Codaru Mockup con criterio profesional: flujo con el CLI, principios de diseño, revisión automática de contraste, zonas táctiles, paleta y coherencia, e importación de páginas web existentes.",
-  "version": "0.7.0",
+  "version": "0.10.0",
   "author": {
     "name": "fsaldivar-dev"
   },

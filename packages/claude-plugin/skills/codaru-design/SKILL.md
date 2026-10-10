@@ -7,10 +7,18 @@ description: Diseñar o modificar pantallas en Codaru Mockup con criterio profes
 
 Trabajas sobre el diseño abierto en la app, con el CLI local `./codaru`. No reconstruyas el documento entero ni uses clics: lee, propone un lote, valida y aplica.
 
+## Libertad de composición y tipografía
+
+El catálogo del IDE y las dimensiones/restricciones explícitas del documento son el contrato. Las recomendaciones de las secciones siguientes son opcionales: no imponen plantillas, sectores, posiciones, familias, número de niveles, degradados ni kits. La persona y el diseñador deciden composición, jerarquía, proporciones y tipografía. Una plataforma no fija la identidad visual de la marca.
+
+Antes de elegir una fuente ejecuta `./codaru catalog --kind fonts` y `./codaru fonts`. Usa IDs reales y una variante `loaded` con peso/estilo declarados. `fontStyle` admite normal, italic u oblique. Si está pendiente, usa `./codaru fonts --load --id ID`; si falta, informa al IDE para registrar el recurso. No inventes IDs ni sustituyas por system/serif/mono sin una decisión explícita. Los tokens tipográficos admiten los mismos IDs y estilos y se heredan en componentes con sobrescrituras locales. Conserva el texto editable, no lo rasterices ni conviertas a trazados.
+
+Exporta después de cargar las fuentes. SVG/HTML portable requieren archivos y autorización `export:embed` del host; una fuente local no entrega bytes. Revisa un render real, textos largos y la exportación; las métricas aproximadas de las familias genéricas no prueban fidelidad entre sistemas. Véase `docs/TYPOGRAPHY.md` del proyecto.
+
 ## Flujo
 
 1. `./codaru context` para ver selección, pantallas, páginas y la `revision`. Acota con `--scope ID --depth 1` o `--page ID`. Para localizar un elemento por nombre o texto usa `./codaru find --query TEXTO [--page ID] [--type TIPO]` en vez de leer todo el contexto.
-2. `./codaru schema` lista operaciones, tamaños de dispositivo (`devices`) y campos. `./codaru catalog --kind kits|icons` lista recursos. No inventes ids.
+2. `./codaru schema` lista operaciones, tamaños de dispositivo (`devices`) y campos. `./codaru catalog --kind kits|icons|fonts` lista recursos. No inventes ids.
 3. Escribe un lote `{"expectedRevision": "...", "operations": [...]}`. Valida con `./codaru apply --file lote.json --dry-run`: `errors` lista cada operación que falla con su índice, el campo y el valor esperado; corrígelas todas y aplica con el mismo archivo.
 4. `./codaru lint` y corrige lo que señale (ver el skill `codaru-review`).
 5. Revisa el resultado: `./codaru export --format svg --frame ID --output vista.svg`.
@@ -37,7 +45,7 @@ Nombra el tema con la marca y entrega una tabla rasgo → dónde está en el dis
 
 **Espaciado.** Usa una escala de 4: 4, 8, 12, 16, 24, 32, 48. Más espacio entre grupos que dentro de ellos. Márgenes laterales de 16 a 24 en teléfono. No coloques nada «a ojo»: si dos elementos están casi alineados, alinéalos.
 
-**Tipografía.** De 4 a 6 tamaños por diseño, vinculados a tokens de tipografía. Cuerpo de 14 a 16; nada por debajo de 11. Líneas de 45 a 75 caracteres. Peso para jerarquía antes que tamaño.
+**Tipografía.** Elige familias y variantes desde el catálogo real del consumidor. Define tamaños, pesos, cursivas e interlineado según contenido y jerarquía; usa tokens cuando ayuden a mantener coherencia. No impongas una escala ni una familia por estilo o sector.
 
 **Color.** Todo color sale de un token del tema (`@primary`, `@text`, `@muted`, `@surface`, `@background`, `@border`, `@accent`). Un color fijo no cambia en modo oscuro: es la causa más frecuente de texto ilegible. Texto sobre un color de marca debe usar un token que también cambie con el modo.
 
@@ -123,7 +131,7 @@ Cada pasada deja el documento como lo dejaría una persona ordenada, se lo pidan
 Antes de dar por terminado un flujo, comprueba que tiene:
 
 - Un **elemento protagonista por pantalla** (el número, el aro, el botón, la ilustración), no solo cabecera + tarjetas + barra.
-- Un **degradado real** en el momento de marca: `gradientStops` de 3 o 4 paradas con una diferencia que se vea (al menos 15 % de luminosidad o un cambio de tono entre extremos) o un degradado del tema, siempre con tonos de un mismo color. Cinco copias de un negro-a-negro imperceptible cumplen la letra y no la intención; mejor uno que se note, y si la marca es blanco y oro puede ser sutil (crema a blanco en la superficie protagonista, o un filete de oro degradado) en vez de una superficie dorada.
+- Si el diseño pide degradados, un **degradado real** en el momento de marca: `gradientStops` de 3 o 4 paradas con una diferencia que se vea (al menos 15 % de luminosidad o un cambio de tono entre extremos) o un degradado del tema, siempre con tonos de un mismo color. Cinco copias de un negro-a-negro imperceptible cumplen la letra y no la intención; mejor uno que se note, y si la marca es blanco y oro puede ser sutil (crema a blanco en la superficie protagonista, o un filete de oro degradado) en vez de una superficie dorada.
 - **Sin HEX fijos en superficies**: tarjetas, chips y avatares con tokens (`@primary`, `@surface`, `@accent`). Y comprueba el modo oscuro como diseño, no solo como contraste: si el protagonista era «la tarjeta negra», en oscuro todo es negro y deja de serlo; inviértelo (oro o crema con texto oscuro) para que siga mandando.
 - **Las opciones también son paleta**: si la marca es negro y oro, un selector de colores no ofrece siete grises; ofrece negro, oro y crema.
 - Una **animación de entrada** en Presentar y, si hay ilustración, una animación propia.
