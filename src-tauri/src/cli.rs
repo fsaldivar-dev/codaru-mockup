@@ -19,6 +19,7 @@ Usage: codaru [--socket PATH] COMMAND [OPTIONS]
 
   context [--scope SCOPE] [--depth N] [--page ID]  Read selection, frame, page, or workspace
   schema                                  Discover commands and operation schema
+  experience [--ids ID,ID] [--frame ID]     Read analytics, accessibility and test contracts
   comments [--id ID]                       Read threads or exact context of one anchor
   catalog [--kind KIND] [--kit KIT] [--query TEXT]
   locale [CODE|source]                    Inspect or change the preview language (no document edit)
@@ -65,7 +66,7 @@ fn parse(args: &[String]) -> Result<Options> {
         socket = Some(PathBuf::from(take_value(args, &mut index, "--socket")?)); index += 1;
     }
     let command = args.get(index).ok_or_else(|| invalid("Choose a command. Run codaru --help."))?.clone(); index += 1;
-    if !["schema", "context", "comments", "apply", "catalog", "select", "undo", "redo", "export", "lint", "find", "versions", "locale"].contains(&command.as_str()) { return Err(invalid(format!("Unknown command '{}'. Run codaru --help.", command))); }
+    if !["schema", "context", "comments", "experience", "apply", "catalog", "select", "undo", "redo", "export", "lint", "find", "versions", "locale"].contains(&command.as_str()) { return Err(invalid(format!("Unknown command '{}'. Run codaru --help.", command))); }
     let mut options = Options { command, params: Map::new(), file: None, output: None, socket };
     let mut ids = Vec::new(); let mut seen = std::collections::HashSet::new();
     while index < args.len() {
@@ -85,14 +86,14 @@ fn parse(args: &[String]) -> Result<Options> {
             },
             ("apply", "--file") => { options.file = Some(take_value(args, &mut index, arg)?); },
             ("apply", "--dry-run") => { options.params.insert("dryRun".into(), json!(true)); },
-            ("select" | "export", "--ids") => { ids.extend(take_value(args, &mut index, arg)?.split(',').filter(|id| !id.is_empty()).map(str::to_owned)); },
+            ("select" | "export" | "experience", "--ids") => { ids.extend(take_value(args, &mut index, arg)?.split(',').filter(|id| !id.is_empty()).map(str::to_owned)); },
             ("select", _) if !arg.starts_with('-') => ids.push(arg.clone()),
             ("export", "--format") => {
                 let format = take_value(args, &mut index, arg)?;
                 if !["json", "html", "svg", "png", "assets", "aru"].contains(&format.as_str()) { return Err(invalid("--format must be json, html, svg, png, assets, or aru.")); }
                 options.params.insert("format".into(), json!(format));
             },
-            ("lint", "--frame") => { options.params.insert("frame".into(), json!(take_value(args, &mut index, arg)?)); },
+            ("lint" | "experience", "--frame") => { options.params.insert("frame".into(), json!(take_value(args, &mut index, arg)?)); },
             ("context" | "lint" | "export" | "find", "--page") => { options.params.insert("page".into(), json!(take_value(args, &mut index, arg)?)); },
             ("find", "--query" | "--frame" | "--type") => { options.params.insert(arg.trim_start_matches("--").into(), json!(take_value(args, &mut index, arg)?)); },
             ("find", "--limit") => {
@@ -119,6 +120,7 @@ fn parse(args: &[String]) -> Result<Options> {
         options.params.entry("dryRun").or_insert(json!(false));
     }
     if options.command == "select" { options.params.insert("ids".into(), json!(ids)); }
+    if options.command == "experience" && !ids.is_empty() { options.params.insert("ids".into(), json!(ids)); }
     if options.command == "export" {
         options.params.entry("format").or_insert(json!("json"));
         if !ids.is_empty() { if options.params.contains_key("frame") { return Err(invalid("Use --frame or --ids, not both.")); } options.params.insert("ids".into(), json!(ids)); }
@@ -207,6 +209,7 @@ mod tests {
         assert_eq!(parse(&args(&["export"])).unwrap().params["format"], "json");
         assert_eq!(parse(&args(&["lint", "--frame", "home"])).unwrap().params, json!({"frame":"home"}).as_object().unwrap().clone());
         assert!(parse(&args(&["lint"])).unwrap().params.is_empty());
+        assert_eq!(parse(&args(&["experience", "--ids", "play,search", "--frame", "home"])).unwrap().params, json!({"ids":["play","search"],"frame":"home"}).as_object().unwrap().clone());
         assert_eq!(parse(&args(&["catalog", "--kind", "component", "--kit", "glass", "--query", "card"])).unwrap().params, json!({"kind":"component","kit":"glass","query":"card"}).as_object().unwrap().clone());
         let export = parse(&args(&["export", "--format", "svg", "--frame", "screen-1", "--output", "preview.svg"])).unwrap();
         assert_eq!(export.params["frame"], "screen-1"); assert_eq!(export.params["format"], "svg"); assert_eq!(export.output.unwrap(), PathBuf::from("preview.svg"));

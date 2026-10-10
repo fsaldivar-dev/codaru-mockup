@@ -1,3 +1,4 @@
+export type {ExperienceSpec,ExperienceReport,AccessibilitySpec,AnalyticsEventSpec} from './contracts';
 export type { DesignStylePackage } from './contracts';
 export type { ResourceCandidate, ResourceRecord, ResourceSummary, ResourceServices, ResourcePreview, ResourceReviewRequest, ResourceReviewVerdict } from './contracts';
 export type { ComponentProperty, ComponentPropertyValue, ComponentPropertyState } from './component-properties';
@@ -19,6 +20,7 @@ export type { EditorAppearance, EditorAppearanceTokens } from './ui-theme';
 export type { Project, DesignNode, Kind, Component } from './model';
 
 export interface EditorViewOptions {
+  onCorrectionRequest?: (request:import('./contracts').CorrectionRequest)=>Promise<void>;
   /** Editor chrome only. Project theme tokens are independent. */
   appearance?: EditorAppearance;
   /** The document that owns all fragment containers. Defaults to window.document. */
@@ -58,7 +60,7 @@ export function createEditorView(editor: CodaruEditor, options: EditorViewOption
   const app = owner.createElement('div');
   const mounted = new Map<EditorPart, FragmentHandle>();
   let disposed = false, appearance = options.appearance ?? {};
-  const runtime = createEditorRuntime({ app, editor, modular: true, invoke: options.invoke, nativeAgent: options.nativeAgent, onDispose: () => { disposed = true; for (const handle of mounted.values()) handle.destroy(); mounted.clear(); } });
+  const runtime = createEditorRuntime({ app, editor, modular: true, invoke: options.invoke, nativeAgent: options.nativeAgent, onCorrectionRequest:options.onCorrectionRequest, onDispose: () => { disposed = true; for (const handle of mounted.values()) handle.destroy(); mounted.clear(); } });
   function assertActive() { if (disposed) throw new Error('La vista fue desmontada.'); getEditorSession(editor).assertActive(); }
   function destroy() {
     if (disposed) return;

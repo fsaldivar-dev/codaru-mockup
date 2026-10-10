@@ -200,4 +200,20 @@ agente del IDE y sin evaluación simulada.
 
 ## Comentarios del layout
 
-Importa createCommentsView de codaru-mockup/comments. Monta panel y marcadores por separado; view.getCanvasViewport() proporciona el origen correcto para los pins. La sesión ofrece getComments, captureCommentAnchor, getCommentContext y subscribeComments. El IDE aporta IA y persistencia; los borradores no notifican a la IA y las propuestas no cambian geometría. Véase docs/COMMENTS.md en el repositorio.
+Importa createCommentsView de codaru-mockup/comments. Usa `mountPins(view.getCanvasViewport())`, `setAnnotationMode(true)` y `annotate(ids?)` para señalar capas y escribir críticas junto al elemento. El panel con el historial se monta opcionalmente por separado; view.getCanvasViewport() proporciona el origen correcto para los pins. La sesión ofrece getComments, captureCommentAnchor, getCommentContext y subscribeComments. El IDE aporta IA y persistencia; los borradores no notifican a la IA y las propuestas no cambian geometría. Véase docs/COMMENTS.md en el repositorio.
+
+La retroalimentación admite una cola persistente de correcciones: `mountQueue`
+monta su panel independiente y `onCorrectionRequest` entrega el lote ordenado al
+IDE. El callback resuelve al aceptar el lote y rechaza para conservarlo si falla.
+`getCorrectionRequest()` permite construir controles propios. Las propuestas no
+se aplican automáticamente. [Contrato de comentarios y cola](../../docs/COMMENTS.md).
+
+### Analítica, accesibilidad y pruebas
+
+`editor.setExperience(id, spec)` guarda un contrato por capa; `getExperienceReport({ids?,frameId?})`
+exporta instrumentación por evento, semántica accesible, identificadores web/iOS/Android,
+criterios de aceptación y hallazgos. Disponible en core e iframe. La entrada opcional
+`codaru-mockup/experience` ofrece `createExperienceView` con paneles `accessibility`,
+`analytics` y `tests`, apariencia compartida y `onHandoff`/`onExport` para el IDE.
+No emite analítica, no contiene un proveedor y no certifica accesibilidad del producto.
+[Contrato e integración](https://github.com/fsaldivar-dev/codaru-mockup/blob/main/docs/EXPERIENCE.md).

@@ -1,3 +1,4 @@
+import {suggestedExperience} from './experience';
 import { children, color, panelsOf, postureGroup, type DesignNode, type Project } from './model';
 import { effectiveTheme, resolveNodeStyle, type GradientToken, type MaterialToken } from './themes';
 import { iconLicenseNotice, iconSVG } from './icon-data';
@@ -86,6 +87,17 @@ function renderElement(p: Project, n: DesignNode, preview: boolean, clean: boole
     el.append(text);
   }
   if (preview && n.targetId) { el.dataset.target = n.targetId; if (n.transition) el.dataset.transition = JSON.stringify(n.transition); el.tabIndex = 0; el.setAttribute('role', 'button'); el.style.cursor = 'pointer'; }
+  if(preview){
+    const a=n.experience?.accessibility,target=n.type==='input'?el.querySelector('input')??el:el;
+    target.setAttribute('data-testid',n.experience?.testId??suggestedExperience(n).testId);
+    if(a?.role)target.setAttribute('role',a.role);
+    if(a?.name)target.setAttribute('aria-label',a.name);
+    if(a?.nameKey)target.setAttribute('data-accessible-name-key',a.nameKey);
+    if(a?.description)target.setAttribute('aria-description',a.description);
+    if(a?.decorative)target.setAttribute('aria-hidden','true');
+    if(a?.live)target.setAttribute('aria-live',a.live);
+    // States, keyboard actions and focus order are contracts, not simulated product behavior.
+  }
   for (const child of byParent.get(n.id) ?? []) el.append(renderElement(p, child, preview, clean, byParent));
   if (n.type === 'frame' && preview) { const style = document.createElement('style'); style.textContent = fieldFocusCSS; el.prepend(style); const group = postureGroup(p, n.id); if (group.length > 1) el.dataset.postures = group.map(f => f.id).join(' '); el.dataset.panels = String(panelsOf(n)); }
   // Screens far from the viewport are skipped by the browser until they come into view.

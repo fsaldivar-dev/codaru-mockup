@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.0 - 2026-10-09
+
+- Contratos por capa de accesibilidad, analítica y pruebas: paneles independientes personalizables y acceso desde el inspector; eventos con propósito, disparador y esquema; roles/nombres localizados, teclado/foco/estados y criterios de aceptación. Reporte portable con revisión exacta, vínculos de implementación, orientación por plataforma y verificaciones automatizables/manuales. API core/iframe y CLI `experience`/`experience.set`. Sin colector de datos ni SDK; revisión de diseño sin certificación WCAG.
+- Anotaciones visuales compactas y cola ordenada de correcciones: envío de un lote al IDE o exportación JSON, conservación ante fallos/cambios concurrentes y propuestas separadas de cambios aplicados.
+
 ## 0.8.0 — 2026-10-09
 
 - Comentarios del layout: hilos anclados a una selección, marcadores en el lienzo, respuestas, resolver/reabrir, borradores preservados y aviso cuando cambia o desaparece el objeto. Panel opcional `codaru-mockup/comments`, hooks `subscribeComments` y comando CLI `comments`. La IA del IDE propone; los ajustes al diseño siguen las transacciones con revisión.

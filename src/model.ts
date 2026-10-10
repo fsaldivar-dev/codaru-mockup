@@ -1,3 +1,4 @@
+import {validateExperienceSpec} from './experience-spec';
 import { validateIdentityLab } from './identity';
 import {validateComments} from './comments';
 import { validateStylePackages } from './style-package';
@@ -13,6 +14,8 @@ export type Kind = 'frame' | 'rect' | 'ellipse' | 'text' | 'button' | 'input' | 
 export type Layout = 'free' | 'vertical' | 'horizontal';
 export type Theme = 'light' | 'dark';
 export interface DesignNode {
+  /** Accessible behavior, analytics placement and acceptance contracts for implementation. */
+  experience?: import('./contracts').ExperienceSpec;
   id: string; type: Kind; name: string; parentId: string | null;
   x: number; y: number; width: number; height: number;
   fill: string; color: string; stroke: string; strokeWidth: number;
@@ -777,12 +780,13 @@ export function validate(input: unknown, trusted = false): Project {
   if(p.stylePackages!==undefined)validateStylePackages(p.stylePackages);
   if(p.identityLab!==undefined)validateIdentityLab(p.identityLab);
   if(p.comments!==undefined)validateComments(p.comments);
-  const overrideKeys = new Set([...Object.keys(node('rect')), 'radiusTR', 'radiusBR', 'radiusBL', 'componentId', 'instanceOf', 'componentKey', 'overrides', 'textKey', 'fillToken', 'materialToken', 'typographyToken', 'radiusToken', 'themeId', 'themeMode', 'kitId', 'iconPack', 'iconName', 'svg', 'aruSource', 'animations', 'transition', 'gradientStops', 'device', 'fold', 'foldPair', 'safeArea', 'skin', 'paddingSides', 'justify', 'align', 'wrap', 'hugWidth', 'hugHeight', 'minWidth', 'maxWidth', 'minHeight', 'maxHeight']);
+  const overrideKeys = new Set([...Object.keys(node('rect')), 'radiusTR', 'radiusBR', 'radiusBL', 'componentId', 'instanceOf', 'componentKey', 'overrides', 'textKey', 'fillToken', 'materialToken', 'typographyToken', 'radiusToken', 'themeId', 'themeMode', 'kitId', 'iconPack', 'iconName', 'svg', 'aruSource', 'animations', 'transition', 'experience', 'gradientStops', 'device', 'fold', 'foldPair', 'safeArea', 'skin', 'paddingSides', 'justify', 'align', 'wrap', 'hugWidth', 'hugHeight', 'minWidth', 'maxWidth', 'minHeight', 'maxHeight']);
   function validateNodes(ns: DesignNode[]) {
     const ids = new Set<string>();
     for (const n of ns) {
       if (!n || typeof n.id !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(n.id) || ids.has(n.id) || !Object.keys(labels).includes(n.type)) throw new Error('Elemento inválido o identificador repetido');
       ids.add(n.id);
+      if(n.experience!==undefined)validateExperienceSpec(n.experience);
       for (const key of ['x', 'y', 'width', 'height', 'strokeWidth', 'radius', 'opacity', 'gradientAngle', 'fontSize', 'fontWeight', 'lineHeight', 'padding', 'gap'] as const) if (!Number.isFinite(n[key]) || Math.abs(n[key]) > 100000) throw new Error('Geometría inválida');
       if (n.page !== undefined && (typeof n.page !== 'string' || !PAGE_ID.test(n.page))) throw new Error('Página de pantalla inválida');
       if (n.role !== undefined && !frameRoles.includes(n.role)) throw new Error('Rol de marco inválido: screen, annotation o library');

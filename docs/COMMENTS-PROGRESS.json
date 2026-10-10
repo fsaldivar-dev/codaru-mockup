@@ -44,5 +44,41 @@
     "La IA y persistencia las aporta el IDE; subscribeComments es un hook local sin daemon o modelo integrado.",
     "Las propuestas no cambian geometría automáticamente; los cambios usan operaciones normales con revisión."
   ],
-  "next": null
+  "next": null,
+  "annotationUX": {
+    "status": "verified-local",
+    "intent": "Seleccionar una pieza y darle retroalimentación en una barra flotante; crítica visual, no documentación",
+    "interaction": [
+      "Burbuja de retroalimentación al seleccionar",
+      "Barra redondeada junto al elemento, marcador y selección azul",
+      "Inspección discreta al señalar y opciones de crítica ocultas por defecto",
+      "Conversación localizada y propuestas del IDE separadas de las ediciones",
+      "Partes CSS expuestas a través del canvas para personalización del IDE"
+    ],
+    "evidence": [
+      "artifacts/feedback-redesign/verification.json",
+      "43/43 UI; 181/181 modelo; TypeScript y consumidor limpio",
+      "Tauri aislado dev.codaru.feedback-qa: comentario sobre entrelazo-008, 1212 nodos conservados",
+      "artifacts/feedback-redesign/native-bar.png",
+      "artifacts/feedback-redesign/native-thread.png"
+    ],
+    "npmPublished": false
+  },
+  "correctionQueue": {
+    "status": "verified-local",
+    "completedAt": "2026-10-09T23:22:32.025082+00:00",
+    "interaction": [
+      "Agregar crítica anclada desde la barra",
+      "Revisar, ordenar, revelar o retirar",
+      "Enviar un lote al puerto del IDE o exportar JSON",
+      "Conservar fallos, cambios concurrentes y documentos reemplazados"
+    ],
+    "evidence": [
+      "artifacts/corrections-queue/verification.json",
+      "184/184 modelo y 48/48 UI",
+      "Paquete instalado en consumidor limpio, tipos NodeNext y núcleo sin DOM",
+      "Tauri aislado: 2 críticas y 2 propuestas reales; 1212 nodos intactos"
+    ],
+    "npmPublished": false
+  }
 }

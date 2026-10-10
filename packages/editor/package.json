@@ -1,6 +1,6 @@
 {
   "name": "codaru-mockup",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "type": "module",
   "main": "./dist/codaru.js",
   "types": "./dist/types/embed.d.ts",
@@ -45,6 +45,10 @@
     "./comments": {
       "types": "./dist/types/comments-view.d.ts",
       "import": "./dist/comments.js"
+    },
+    "./experience": {
+      "types": "./dist/types/experience-view.d.ts",
+      "import": "./dist/experience.js"
     }
   },
   "files": [

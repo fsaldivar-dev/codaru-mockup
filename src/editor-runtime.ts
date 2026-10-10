@@ -28,7 +28,7 @@ import { createViewDOM } from './view-dom';
 import { createBuildingFeedback } from './building';
 import { localizeProject, localizationIssues, resolveText, type LocalizationIssue } from './localization';
 
-export interface RuntimeOptions { app: HTMLDivElement; editor?: CodaruEditor; modular?: boolean; storageKey?: string | null; invoke?: EmbeddedOptions['invoke']; nativeAgent?: boolean; onDispose?: () => void; }
+export interface RuntimeOptions { onCorrectionRequest?:(request:import('./contracts').CorrectionRequest)=>Promise<void>; app: HTMLDivElement; editor?: CodaruEditor; modular?: boolean; storageKey?: string | null; invoke?: EmbeddedOptions['invoke']; nativeAgent?: boolean; onDispose?: () => void; }
 export function createEditorRuntime(options: RuntimeOptions) {
 const ownerDocument = options.app.ownerDocument;
 const window = ownerDocument.defaultView!;
@@ -41,6 +41,7 @@ const tauri = (window as unknown as { __TAURI_INTERNALS__?: { invoke: NativeInvo
 let nativeInvoke: NativeInvoke | undefined = options.invoke ?? (embedded ? undefined : tauri?.invoke.bind(tauri));
 let embeddedInitialized = false, disposed = false;
 let onHostChange: EmbeddedOptions['onChange'];
+let onCorrectionRequest=options.onCorrectionRequest;
 let storageWarning = '';
 function initial() {
   try { const saved = STORAGE && localStorage.getItem(STORAGE); if (saved) return validate(JSON.parse(saved)); }
@@ -76,7 +77,7 @@ const btn = (act: string, label: string, ico?: string, cls = '') => `<button cla
 app.innerHTML = `
   <header class="topbar"><div class="brand"><span class="brand-mark">${icon('frame', 21)}</span><strong>codaru<span> / mockup</span></strong><span class="alpha">01</span></div>
     <div class="project-title"><span class="breadcrumb">Proyectos</span><span class="slash">/</span><input id="project-name" aria-label="Nombre del proyecto" maxlength="200"/><span id="save-state" class="save-dot" title="Guardado local"></span></div>
-    <div class="top-actions"><button data-action="agent-help" class="agent-button">IA / CLI</button>${options.modular?'':'<button data-action="comments" class="themes-button">Comentarios</button>'}<button data-action="versions" class="themes-button">Versiones</button><button data-action="themes" class="themes-button">Temas</button>${btn('open', 'Abrir proyecto', 'folder', 'icon-button')}${btn('save', 'Guardar archivo · ⌘S', 'download', 'icon-button')}<span class="divider"></span><button data-action="preview" class="preview-button">${icon('play', 14)}<span>Presentar</span></button></div>
+    <div class="top-actions"><button data-action="agent-help" class="agent-button">IA / CLI</button>${options.modular?'':'<button data-action="annotate" class="themes-button">Anotar</button><button data-action="comments" class="themes-button">Comentarios</button>'}<button data-action="versions" class="themes-button">Versiones</button><button data-action="themes" class="themes-button">Temas</button>${btn('open', 'Abrir proyecto', 'folder', 'icon-button')}${btn('save', 'Guardar archivo · ⌘S', 'download', 'icon-button')}<span class="divider"></span><button data-action="preview" class="preview-button">${icon('play', 14)}<span>Presentar</span></button></div>
   </header>
   <div class="workspace"><aside class="sidebar left-panel">
     <section class="project-panel"><div class="section-heading"><span>PÁGINAS</span><span class="count" id="frame-count" title="Pantallas en el documento">2</span><button class="icon-button tiny" data-action="add-page" aria-label="Nueva página" title="Nueva página">${icon('plus', 15)}</button></div><div id="pages" class="page-list"></div>
@@ -627,7 +628,7 @@ function renderInspector() {
     <section class="inspector-section"><div class="section-heading"><span>AL HACER CLIC</span>${icon('link',14)}</div><select data-field="targetId" aria-label="Navegar a pantalla"><option value="">Sin navegación</option>${pagesOf(p()).map(page=>{const frames=rootsOnPage(p(),page.id).filter(f=>f.type==='frame'&&f.id!==frameOf(p(),n.id)?.id);return frames.length?`<optgroup label="${esc(page.name)}">${frames.map(f=>`<option value="${f.id}" ${n.targetId===f.id?'selected':''}>${esc(f.name)}</option>`).join('')}</optgroup>`:'';}).join('')}</select>${n.targetId&&!onPage(n.targetId)?`<p class="field-note">La pantalla de destino está en otra página.</p>`:''}${n.targetId?`<label class="full-field"><span>Transición</span><select data-transition="type" aria-label="Transición">${[['','Sin animación'],...transitionTypes.map(t=>[t,transitionLabels[t]])].map(([v,l])=>`<option value="${v}" ${(n.transition?.type??'')===v?'selected':''}>${l}</option>`).join('')}</select></label>${n.transition?`<div class="field-grid"><label class="number-field"><span>Duración</span><input type="number" aria-label="Duración de la transición" data-transition="duration" value="${n.transition.duration}" min="0" max="5000" step="50"/></label><label class="full-field"><span>Curva</span><select data-transition="easing" aria-label="Curva de la transición">${easings.map(e=>`<option value="${e}" ${n.transition!.easing===e?'selected':''}>${easingLabels[e]}</option>`).join('')}</select></label></div>`:''}`:''}<p class="field-note">Prueba la conexión en Presentar.</p></section>
     <section class="inspector-section"><div class="section-heading"><span>ANIMACIÓN</span>${icon('play',14)}</div><p class="field-note">${n.animations?.length?`${n.animations.length} ${n.animations.length===1?'animación':'animaciones'}: ${esc(n.animations.map(a=>a.name).join(', '))}.`:'Sin animaciones.'}${n.svg?` ${vectorLayers(n.svg).length} capas animables.`:''} Se reproducen en Presentar.</p><button class="wide-button" data-action="animator">${icon('spark',16)} Abrir animador</button>${n.type==='vector'?'<button class="wide-button" data-action="image">Cambiar ilustración</button>':''}${n.aruSource?`<p class="field-note">ARU · ${esc(n.aruSource.filename)}</p><button class="wide-button" data-action="edit-aru" ${session.canOpenIllustration()?'':'disabled'}>Editar ilustración en el IDE ↗</button><button class="wide-button" data-action="export-aru">Exportar fuente ARU</button>`:''}</section>
     ${variantPanel(n)}
-    <section class="inspector-section"><div class="button-row">${n.type!=='frame'&&!n.componentId&&!n.instanceOf?'<button class="component-button" data-action="make-component">◇ Crear componente</button>':''}${n.instanceOf?'<button data-action="master">Editar maestro</button><button data-action="detach">Desvincular</button>':''}${n.componentId?'<button class="component-button" data-action="insert-instance">◇ Insertar instancia</button>':''}${n.type==='group'&&!n.componentId&&!n.instanceOf?'<button data-action="ungroup">Desagrupar</button>':''}</div>${n.type==='frame'?'<button class="wide-button" data-action="export-svg">Exportar pantalla SVG</button>':''}</section></fieldset>${implementationPanel(p(),n,session.canOpenImplementation())}${assetPanel()}${themePanel()}`;
+    <section class="inspector-section"><div class="button-row">${n.type!=='frame'&&!n.componentId&&!n.instanceOf?'<button class="component-button" data-action="make-component">◇ Crear componente</button>':''}${n.instanceOf?'<button data-action="master">Editar maestro</button><button data-action="detach">Desvincular</button>':''}${n.componentId?'<button class="component-button" data-action="insert-instance">◇ Insertar instancia</button>':''}${n.type==='group'&&!n.componentId&&!n.instanceOf?'<button data-action="ungroup">Desagrupar</button>':''}</div>${n.type==='frame'?'<button class="wide-button" data-action="export-svg">Exportar pantalla SVG</button>':''}</section></fieldset>${implementationPanel(p(),n,session.canOpenImplementation())}<section class="inspector-section"><div class="section-heading"><span>CONTRATO DEL PRODUCTO</span></div><p class="field-note">Accesibilidad · Analítica · Pruebas${n.experience?.analytics?.length?` · ${n.experience.analytics.length} eventos`:""}</p><button class="wide-button" data-action="experience">Configurar contrato</button></section>${assetPanel()}${themePanel()}`;
   prepareInspectorSections();
 }
 
@@ -836,20 +837,24 @@ function preview(id?: string, reset = true, transition?: Transition, reverse = f
   byId<HTMLSelectElement>('preview-select').onchange=e=>{previewHistory.push({id:frame.id});preview((e.target as HTMLSelectElement).value,false);};
   (document.querySelector('[data-action="close-preview"]') as HTMLButtonElement).focus();
 }
-function closePreview(){closeColorPicker();const modal=byId('modal-root');modal.onclick=null;modal.onchange=null;modal.onkeydown=null;previewFrame=null;byId('modal-root').replaceChildren();stage.focus();}
+let experienceCleanup:(()=>void)|undefined;
+function closePreview(){experienceCleanup?.();experienceCleanup=undefined;closeColorPicker();const modal=byId('modal-root');modal.onclick=null;modal.onchange=null;modal.onkeydown=null;previewFrame=null;byId('modal-root').replaceChildren();stage.focus();}
 function help(){byId('modal-root').innerHTML=`<div class="modal-backdrop"><section class="dialog help-dialog" role="dialog" aria-modal="true" aria-label="Atajos"><button data-action="close-preview" class="dialog-close icon-button">${icon('close')}</button><span class="eyebrow">HECHO PARA DIBUJAR</span><h2>Menos vueltas. Más ideas.</h2><div class="shortcut-list">${[['Seleccionar / dibujar','V / R / T / B'],['Crear pantalla / elipse','F / O'],['Mover lienzo','Espacio + arrastrar'],['Zoom','⌘ + rueda / pellizco / + / −'],['Escala 100%','0'],['Mover con rueda','Rueda / ⇧ + rueda'],['Ajustar pantallas / selección','⇧1 / ⇧2'],['Selección múltiple','Arrastrar / ⇧ + clic'],['Entrar en pantalla o grupo','Doble clic / Enter'],['Salir un nivel','Escape'],['Seleccionar hijos del nivel','⌘A'],['Agrupar','⌘G'],['Crear componente','⌥⌘K'],['Duplicar','⌘D'],['Deshacer / rehacer','⌘Z / ⇧⌘Z'],['Mover 1 / 10 px','Flechas / ⇧ + flechas'],['Editar texto','Doble clic'],['Guardar proyecto','⌘S']].map(([l,k])=>`<div><span>${l}</span><kbd>${k}</kbd></div>`).join('')}</div></section></div>`;}
 
 let commentView:import('./comments-view').CommentsView|undefined,commentSidebar:HTMLElement|undefined;
+function beginFeedback(){if(state.selected.length&&state.selected.every(id=>find(id)?.type!=='frame'))commentView!.annotate();else commentView!.setAnnotationMode(true);}
 async function action(act: string) {
   assertActive();
   if(options.modular && !dom.parts.dialogs.isConnected && ['themes','animator','preview','help','agent-help','new','example','example-devices','open','locale-review'].includes(act)) throw new Error('Monta la parte dialogs para usar esta acción, o usa los diálogos y la API de tu IDE.');
   switch(act){
+    case 'annotate':
     case 'comments':{
+      if(commentSidebar&&act==='annotate'){beginFeedback();break;}
       if(commentSidebar){commentView!.flush();commentSidebar.hidden=!commentSidebar.hidden;commentSidebar.style.display=commentSidebar.hidden?'none':'flex';break;}
       const {createCommentsView}=await import('./comments-view');commentSidebar=document.createElement('aside');commentSidebar.style.cssText='position:absolute;right:0;top:64px;bottom:0;width:340px;z-index:35;display:flex;flex-direction:column;box-shadow:-8px 0 24px #0003;background:var(--ui-surface);';
       const close=document.createElement('button');close.textContent='Cerrar comentarios';close.onclick=()=>{try{commentView!.flush();commentSidebar!.hidden=true;commentSidebar!.style.display='none';}catch(e){toast(String(e));}};commentSidebar.append(close);
       const slot=document.createElement('div');slot.style.cssText='min-height:0;flex:1;';commentSidebar.append(slot);app.append(commentSidebar);
-      commentView=createCommentsView(editor,{appearance:{theme:'dark'},onReveal:ids=>fit(true,[...new Set(ids.map(id=>frameOf(p(),id)?.id??id))]),onOpen:()=>{commentSidebar!.hidden=false;commentSidebar!.style.display='flex';},onError:e=>toast(e.message)});commentView.mountPanel(slot);commentView.mountPins(stage);break;
+      commentView=createCommentsView(editor,{onCorrectionRequest,appearance:{theme:'dark'},onReveal:ids=>fit(true,[...new Set(ids.map(id=>frameOf(p(),id)?.id??id))]),onOpen:()=>{commentSidebar!.hidden=false;commentSidebar!.style.display='flex';},onError:e=>toast(e.message)});commentView.mountPanel(slot);commentView.mountPins(stage);if(act==='annotate'){commentSidebar.hidden=true;commentSidebar.style.display='none';beginFeedback();}break;
     }
     case 'enter-scope':if(state.selected.length===1)enterScope(state.selected[0]);break;
     case 'add-frame':addFrame();break;
@@ -859,6 +864,7 @@ async function action(act: string) {
     case 'zoom-in':zoomAt(state.zoom*1.2);break;
     case 'zoom-out':zoomAt(state.zoom/1.2);break;
     case 'agent-help':agentHelp();break;
+    case 'experience':{closePreview();const {openExperienceEditor}=await import('./experience-inspector');if(disposed)break;experienceCleanup=openExperienceEditor(byId('modal-root'),editor,byId('inspector'),fn=>{store.commit(fn);render();persist();},closePreview);break;}
     case 'themes':openThemeEditor({root:byId('modal-root'),get:p,commit:fn=>{store.commit(fn);render();persist();},undo:()=>{store.undo();render();persist();},close:closePreview});break;
     case 'animator':{const id=state.selected[0];if(state.selected.length!==1||!find(id)){toast('Selecciona un solo elemento para animarlo.');break;}const {openAnimator}=await import('./animator');if(disposed)break;openAnimator({root:byId('modal-root'),get:p,nodeId:id,commit:fn=>{store.commit(fn);render();persist();},undo:()=>{store.undo();render();persist();},close:closePreview});break;}
     case 'lint':review={issues:lintProject(p()),heat:review?.heat??true};select([]);render();toast(review.issues.length?`Revisión: ${review.issues.length} hallazgos. Pulsa uno para ir a él.`:'Revisión: sin problemas detectados.');break;
@@ -1224,6 +1230,7 @@ function initializeEmbedded(options: EmbeddedOptions) {
   session.setTranslationHandler(options.onTranslationRequest);
   session.setImplementationHandler(options.onImplementationRequest);
   session.setIllustrationHandler(options.onIllustrationRequest);
+  onCorrectionRequest=options.onCorrectionRequest;
   session.setResourceLibraryHandler(options.onResourceLibraryChange);
   editor.setResourceServices(options.resourceServices ?? {});
   lastNotified=store.serialize();onHostChange=options.onChange;nativeInvoke=options.invoke;
@@ -1237,6 +1244,7 @@ function disposeEmbedded() {
     // Commit a focused text edit before taking the final snapshot, cancel transient gestures.
     (document.activeElement as HTMLElement|null)?.blur();
     if(gesture)finishGesture({pointerId:gesture.pointerId,clientX:gesture.screen.x,clientY:gesture.screen.y},true);
+    experienceCleanup?.();experienceCleanup=undefined;
     clearTimeout(saveTimer);clearTimeout(toastTimer);flushDraft();
     disposed=true;onHostChange=undefined;nativeInvoke=undefined;
     if(agentTimer!==undefined)clearInterval(agentTimer);
@@ -1248,7 +1256,8 @@ function disposeEmbedded() {
 // Explicit, transactional operations for a host agent. No model or network is required by the editor.
 type Operation = import('./contracts').EditorOperation;
 const api = {
-  getComments:editor.getComments,captureCommentAnchor:editor.captureCommentAnchor,getCommentContext:editor.getCommentContext,subscribeComments:editor.subscribeComments,
+  getExperienceReport:editor.getExperienceReport,setExperience:editor.setExperience,
+  getComments:editor.getComments,getCorrectionRequest:editor.getCorrectionRequest,captureCommentAnchor:editor.captureCommentAnchor,getCommentContext:editor.getCommentContext,subscribeComments:editor.subscribeComments,
   getStyles:()=>{assertActive();return editor.getStyles();},getStyle:(id:string)=>{assertActive();return editor.getStyle(id);},importStyle:(...args:Parameters<typeof editor.importStyle>)=>{assertActive();const result=editor.importStyle(...args);persist();return result;},applyStyle:(...args:Parameters<typeof editor.applyStyle>)=>{assertActive();const result=editor.applyStyle(...args);persist();return result;},
   getResourceLibrary:(...args:Parameters<typeof editor.getResourceLibrary>)=>{assertActive();return editor.getResourceLibrary(...args);},getResource:(...args:Parameters<typeof editor.getResource>)=>{assertActive();return editor.getResource(...args);},stageResource:(...args:Parameters<typeof editor.stageResource>)=>{assertActive();return editor.stageResource(...args);},reviewResource:(...args:Parameters<typeof editor.reviewResource>)=>{assertActive();return editor.reviewResource(...args);},requestResourceEdit:(...args:Parameters<typeof editor.requestResourceEdit>)=>{assertActive();return editor.requestResourceEdit(...args);},setResourceServices:(...args:Parameters<typeof editor.setResourceServices>)=>{assertActive();return editor.setResourceServices(...args);},exportResource:(...args:Parameters<typeof editor.exportResource>)=>{assertActive();return editor.exportResource(...args);},
   insertResource:async (...args:Parameters<typeof editor.insertResource>)=>{assertActive();const result=await editor.insertResource(...args);persist();return result;},

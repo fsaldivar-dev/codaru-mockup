@@ -68,7 +68,7 @@ export function resolveText(n: Pick<DesignNode, 'text' | 'textKey'>, config: Loc
 /** Read-only projection for rendering/export; it never writes translations into the source document. */
 export function localizeProject(p: Project, config: LocalizationConfig | null): Project {
   if (!config?.locale) return p;
-  return { ...p, nodes: p.nodes.map(n => n.textKey ? { ...n, text: resolveText(n, config).text } : n) };
+  return { ...p, nodes: p.nodes.map(n => {const localized=n.textKey ? { ...n, text: resolveText(n, config).text } : n;const a=n.experience?.accessibility;if(!a?.nameKey)return localized;return {...localized,experience:{...n.experience,accessibility:{...a,name:resolveText({text:a.name??n.name,textKey:a.nameKey},config).text}}};}) };
 }
 /** Without a mounted canvas overflow uses font metrics. A view can replace it with DOM measurements. */
 export function localizationIssues(p: Project, config: LocalizationConfig | null, measure: TextMeasure = metricMeasure): LocalizationIssue[] {

@@ -221,3 +221,13 @@ Contratos: `docs/RESOURCE-LIBRARY.md` y `docs/STYLE-PACKAGES.md`.
 ## Comentarios
 
 comments lista hilos y devuelve el ancla de la selección; comments --id ID devuelve contexto, revisión, nodos (hasta 200), truncated y capas ausentes. Las operaciones comment.* se descubren con schema y usan el lote de apply habitual. Los hooks se suscriben dentro del IDE con subscribeComments; el CLI no ejecuta un modelo ni aplica propuestas automáticamente.
+
+## Contratos de analítica, accesibilidad y pruebas
+
+`experience [--ids ID,ID] [--frame ID]` devuelve el reporte `codaru-experience/1`:
+revisión fuente, ficha por capa, instrumentación de eventos, enlaces de implementación,
+IDs de pruebas web/iOS/Android y verificaciones de diseño/implementación.
+`experience.set {id,spec}` reemplaza la ficha en un lote con revisión esperada;
+`spec:null` la elimina. `context` resume la ficha y avisa `experience.truncated`.
+El IDE conecta analítica y pruebas al código; Codaru no envía eventos.
+Véase [EXPERIENCE.md](docs/EXPERIENCE.md).

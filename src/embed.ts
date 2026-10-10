@@ -1,3 +1,4 @@
+export type {ExperienceSpec,ExperienceReport,AccessibilitySpec,AnalyticsEventSpec} from './contracts';
 import type { CodaruEditor } from './editor-core';
 import type { ResourceRecord, ResourceServices } from './contracts';
 export type { DesignStylePackage } from './contracts';
@@ -16,6 +17,7 @@ export type { LocalizationConfig, LocalizationState, LocalizationIssue, Translat
 export { screens, roleOf, pagesOf, pageView, type FrameRole, type Page, type ScreenInfo } from './model';
 
 export interface EmbeddedOptions {
+  onCorrectionRequest?:(request:import('./contracts').CorrectionRequest)=>Promise<void>;
   resourceServices?: ResourceServices;
   onResourceLibraryChange?: (records: ResourceRecord[]) => void;
   document?: Project;
@@ -27,7 +29,7 @@ export interface EmbeddedOptions {
   onIllustrationRequest?: (request: IllustrationRequest) => void | Promise<void>;
   onTranslationRequest?: (request: TranslationRequest) => void | Promise<void>;
 }
-export interface EditorAPI extends Pick<CodaruEditor,'getComments'|'captureCommentAnchor'|'getCommentContext'|'subscribeComments'|'getStyles'|'getStyle'|'importStyle'|'applyStyle'|'getResourceLibrary'|'getResource'|'stageResource'|'reviewResource'|'requestResourceEdit'|'setResourceServices'|'insertResource'|'exportResource'> {
+export interface EditorAPI extends Pick<CodaruEditor,'getExperienceReport'|'setExperience'|'getCorrectionRequest'|'getComments'|'captureCommentAnchor'|'getCommentContext'|'subscribeComments'|'getStyles'|'getStyle'|'importStyle'|'applyStyle'|'getResourceLibrary'|'getResource'|'stageResource'|'reviewResource'|'requestResourceEdit'|'setResourceServices'|'insertResource'|'exportResource'> {
   getDocument(): Project;
   getPreviewDocument(): Project;
   getLocalization(): LocalizationConfig | null;
@@ -162,6 +164,7 @@ export function mountCodaru(container: HTMLElement, options: MountCodaruOptions 
         onTranslationRequest: options.onTranslationRequest,
         onImplementationRequest: options.onImplementationRequest,
         onIllustrationRequest: options.onIllustrationRequest,
+        onCorrectionRequest:options.onCorrectionRequest,
         onChange: document => { if (!destroyed) options.onChange?.(structuredClone(document)); },
       }));
       await initialization;

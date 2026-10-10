@@ -1,4 +1,4 @@
-# Codaru Mockup · 0.8
+# Codaru Mockup · 0.9
 
 Editor local de maquetas de interfaz, diseñado para integrarse dentro de una aplicación Tauri existente. TypeScript, HTML/CSS y SVG, sin dependencias de interfaz en ejecución. Incluye un paquete embebible, un plugin Rust opcional y una aplicación macOS de ejemplo. La aplicación compilada no necesita Node, un servidor, una cuenta ni conexión a Internet.
 
@@ -8,6 +8,10 @@ npx codaru-assets public/codaru
 ```
 
 Licencia **BSD-3-Clause**. Los iconos Material y Lucide conservan sus licencias; consulta [los avisos de terceros](THIRD-PARTY-NOTICES.md).
+
+En **0.9.0**, selecciona una capa y agrega una crítica visual junto al elemento. La cola permite revisar y enviar varias correcciones al IDE en un lote. [Anotaciones y cola](docs/COMMENTS.md). Las propuestas de la IA permanecen separadas de los cambios aplicados.
+
+**Propiedades → Contrato del producto** define accesibilidad, eventos de analítica y criterios de prueba por capa. Los tres paneles también se montan independientemente desde `codaru-mockup/experience`; la API y el CLI entregan un reporte con revisión exacta y orientación web/iOS/Android. [Integración y alcance](docs/EXPERIENCE.md). El IDE conecta el contrato al código y a las pruebas reales; la librería no recolecta analítica.
 
 ![Editor de Codaru con el ejemplo Forma](docs/editor.png)
 

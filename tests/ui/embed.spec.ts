@@ -205,3 +205,16 @@ test('@package implementation links cross the iframe boundary with isolated host
   expect(saved.doc.components.find((c: any) => c.id === fixture.ids.card).implementations.macos.symbol).toBe('MacCard');
   expect(saved.error).toContain('desmontado'); expect(saved.count).toBe(2);
 });
+
+test('iframe correction queue hands one batch to the host and keeps the document portable',async({page})=>{
+ await page.evaluate(async()=>{const t=(window as any).embedTest;t.correctionBatches=[];const r=t.mount('queue',{documentName:'Cola embebida',onCorrectionRequest:async(batch:any)=>{t.correctionBatches.push(batch);}});await r.handle.ready;const e=r.api;e.select(['queue-shape']);e.apply([{op:'comment.create',id:'queue-note',anchor:e.captureCommentAnchor(),message:{id:'queue-message',text:'Esta forma se pierde.',author:{name:'QA',kind:'human'},at:new Date().toISOString()}},{op:'comment.queue.add',id:'queue-note',messageId:'queue-message'}]);});
+ const frame=editor(page,'queue');await frame.getByRole('button',{name:'Comentarios',exact:true}).click();await frame.getByRole('button',{name:'Cerrar comentarios',exact:true}).click();await frame.getByRole('button',{name:'Cola de correcciones',exact:true}).click();await frame.getByRole('region',{name:'Cola de correcciones'}).getByRole('button',{name:'Enviar correcciones',exact:true}).click();await expect(frame.getByRole('region',{name:'Cola de correcciones'})).toContainText('Cola recibida por el IDE');
+ expect(await page.evaluate(()=>(window as any).embedTest.correctionBatches[0].items[0].context.thread.anchor.nodeIds)).toEqual(['queue-shape']);expect(await page.evaluate(()=>(window as any).embedTest.records.queue.api.getComments().queue)).toEqual([]);
+});
+
+test('iframe delivers accessibility, analytics and test contracts with explicit persistence and isolation',async({page})=>{
+ await mount(page,'contract',{documentName:'Contrato del IDE'});await mount(page,'isolated',{documentName:'Otra sesión'});
+ const report=await page.evaluate(()=>{const r=(window as any).embedTest.records.contract;r.api.setExperience('contract-shape',{accessibility:{role:'button',name:'Abrir colección',keyboard:['Enter'],focus:'visible'},analytics:[{name:'collection.open',trigger:'press',purpose:'Medir navegación',consent:'required'}],testId:'open-collection'});return r.api.getExperienceReport({ids:['contract-shape']});});
+ expect(report.entries[0].instrumentation[0].event.name).toBe('collection.open');expect(report.entries[0].tests.bindings.ios).toBe('accessibilityIdentifier=open-collection');expect((await documentOf(page,'isolated')).nodes.every((n:any)=>!n.experience)).toBe(true);
+ const final=await page.evaluate(async()=>await (window as any).embedTest.records.contract.handle.destroy());expect(final.nodes.find((n:any)=>n.id==='contract-shape').experience.accessibility.name).toBe('Abrir colección');
+});

@@ -33,8 +33,60 @@ export interface ImplementationRequest {
   reference: ImplementationReference;
 }
 
+/** Design-time contracts. The IDE instruments the product; Codaru collects no usage data. */
+export type AccessibilityRole = 'button'|'link'|'textbox'|'checkbox'|'switch'|'slider'|'tab'|'heading'|'img'|'region'|'status';
+export interface AccessibilitySpec {
+  role?: AccessibilityRole;
+  name?: string;
+  /** Resolved by the IDE's localization catalogue, not embedded user text. */
+  nameKey?: string;
+  description?: string;
+  decorative?: boolean;
+  keyboard?: string[];
+  focus?: 'visible'|'not-focusable';
+  focusOrder?: number;
+  live?: 'off'|'polite'|'assertive';
+  reducedMotion?: boolean;
+  states?: Array<'disabled'|'checked'|'selected'|'expanded'|'invalid'|'busy'>;
+}
+export interface AnalyticsEventSpec {
+  name: string;
+  trigger: 'press'|'view'|'change'|'submit'|'success'|'failure';
+  purpose: string;
+  consent?: 'required'|'not-required';
+  /** Property definitions and sources only; never samples of real user data. */
+  properties?: Record<string,{type:'string'|'number'|'boolean';source:string;sensitive?:boolean}>;
+}
+export interface ExperienceSpec {
+  accessibility?: AccessibilitySpec;
+  /** An explicit empty list means no analytics are intended for this element. */
+  analytics?: AnalyticsEventSpec[];
+  testId?: string;
+  acceptance?: string[];
+}
+export interface ExperienceIssue {
+  rule: string; nodeId: string; frameId: string|null;
+  severity: 'error'|'warning'|'info'; message: string; fix: string;
+  verification: 'design'|'implementation';
+}
+export interface ExperienceEntry {
+  nodeId:string; frameId:string|null; name:string; visible:boolean;
+  spec:ExperienceSpec;
+  suggested:{role?:AccessibilityRole;name?:string;testId:string};
+  implementation:ComponentImplementations|null;
+  instrumentation:Array<{event:AnalyticsEventSpec;where:string;platforms:Record<'web'|'ios'|'android',string>}>;
+  tests:{bindings:Record<'web'|'ios'|'android',string>;assertions:Array<{kind:string;expected:string;verification:'automated'|'manual'}>};
+}
+export interface ExperienceReport {
+  format:'codaru-experience/1'; revision:string;
+  entries:ExperienceEntry[]; issues:ExperienceIssue[];
+  /** Items requiring a running product; this report never certifies WCAG compliance. */
+  runtimeChecks:string[];
+}
+
 /** One transaction at the editor boundary, regardless of which UI initiated it. */
 export type EditorOperation = IdentityOperation | CommentOperation
+  | {op:'experience.set';id:string;spec:ExperienceSpec|null}
   | { op:'style.import'; data:DesignStylePackage }
   | { op:'style.apply'; id:string; frameId?:string; mode?:'light'|'dark' }
   | { op: 'aru'; data: AruAsset; id?: string; parentId?: string | null; x?: number; y?: number; width?: number; name?: string }
@@ -70,13 +122,19 @@ export interface CommentAnchor {
 export interface CommentMessage { id:string; text:string; author:CommentAuthor; at:string; }
 export interface CommentThread { id:string; anchor:CommentAnchor; messages:CommentMessage[]; status:'open'|'resolved'; }
 export interface CommentDraft { id:string; threadId?:string; anchor:CommentAnchor; text:string; author:CommentAuthor; }
-export interface LayoutComments { format:'codaru-comments/1'; threads:CommentThread[]; drafts:CommentDraft[]; }
+export interface CorrectionQueueItem { threadId:string; messageId:string; }
+export interface LayoutComments { format:'codaru-comments/1'; threads:CommentThread[]; drafts:CommentDraft[]; queue?:CorrectionQueueItem[]; }
+/** One ordered snapshot; the host acknowledges delivery, never implicit application. */
+export interface CorrectionRequest { id:string; items:{item:CorrectionQueueItem;context:CommentContext}[]; document:import('./model').Project; }
 export type CommentOperation =
   | {op:'comment.create';id:string;anchor:CommentAnchor;message:CommentMessage}
   | {op:'comment.reply';id:string;message:CommentMessage}
   | {op:'comment.status';id:string;status:CommentThread['status']}
   | {op:'comment.draft.put';draft:CommentDraft}
-  | {op:'comment.draft.remove';id:string};
+  | {op:'comment.draft.remove';id:string}
+  | {op:'comment.queue.add';id:string;messageId:string}
+  | {op:'comment.queue.remove';id:string;messageId:string}
+  | {op:'comment.queue.move';id:string;index:number};
 export interface CommentContext {
   thread:CommentThread; currentRevision:string|null; stale:boolean; missingIds:string[];
   nodes:DesignNode[]; truncated:boolean; bounds:CommentAnchor['bounds'];
@@ -85,6 +143,8 @@ export interface CommentEvent {
   sequence:number;
   type:'comment.created'|'comment.replied'|'comment.resolved'|'comment.reopened'|'comments.restored';
   threadId?:string; message?:CommentMessage; targetRevision?:string;
+  /** Collected for explicit batch delivery; do not start an individual AI job. */
+  queued?:boolean;
 }
 /** The IDE supplies its own renderer/evaluator; proposals never mutate geometry. */
 export interface CommentReviewRequest { context:CommentContext; document:import('./model').Project; }

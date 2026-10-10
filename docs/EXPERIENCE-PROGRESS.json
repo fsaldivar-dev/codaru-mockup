@@ -1,0 +1,71 @@
+{
+  "status": "implemented-and-verified-locally",
+  "updatedAt": "2026-10-10T00:21:37.895247+00:00",
+  "scope": "Contratos por capa de analitica, accesibilidad y pruebas para un IDE embebido",
+  "capabilities": [
+    "Persistencia v1/v2 y herencia con sobrescrituras locales",
+    "Reporte con revision exacta y vinculo a implementacion",
+    "Eventos tipados con proposito y ubicacion logica",
+    "Nombre localizado, rol, teclado, foco, estados, anuncios y movimiento reducido",
+    "Identificadores web/iOS/Android y criterios de aceptacion",
+    "Tres paneles independientes personalizables y modal del inspector",
+    "Puertos core/iframe/CLI y exportacion JSON"
+  ],
+  "verification": {
+    "modelTests": 189,
+    "uiTests": 153,
+    "uiSkipped": 1,
+    "skipReason": "Revision visual opcional de recurso ARU requiere fixture explicito; no aplica a este contrato",
+    "rustAppTests": 21,
+    "rustPluginTests": 17,
+    "typescript": "passed",
+    "package": {
+      "package": "codaru-mockup",
+      "version": "0.8.0",
+      "compressedBytes": 498012,
+      "unpackedBytes": 1699146,
+      "integrity": "sha512-nlWV93mFJeEEuNLW1kX1iFibR4qs0FPko67yVs4uMJFxd3Y0Z5ouBVqCrQoFGJea1bT+9rBUgueYVM2Ib7TKJg==",
+      "consumerIntegrityMatches": true,
+      "coreWithoutDOM": true,
+      "typesVerified": true,
+      "customizedFieldRadius": "12px",
+      "browserHandoff": "IDE recibió collection.open · 1 elemento",
+      "published": false
+    },
+    "native": {
+      "app": "dev.codaru.experience-qa",
+      "privateSocket": true,
+      "humanSocketUsed": false,
+      "exactRevision": "04e75f6ec9774271caf409fcec5ccf66d821a51ce76c4b25d86c93be58db05bb",
+      "layerCount": 7,
+      "visualPropertiesUnchanged": true,
+      "nativeFirstClickHandoff": true,
+      "nativeInspectorEditSaved": true,
+      "cliDryRunAndSameBatchApplied": true,
+      "analyticsCollected": false
+    },
+    "screenshots": [
+      "artifacts/experience/native-tests.png",
+      "artifacts/experience/consumer-panels.png"
+    ],
+    "logs": [
+      "artifacts/experience/model-final.log",
+      "artifacts/experience/ui-final-full.log",
+      "artifacts/experience/rust-final.log",
+      "artifacts/experience/rust-plugin-final.log",
+      "artifacts/experience/package-build-final.log",
+      "artifacts/experience/native-build-final.log"
+    ]
+  },
+  "boundaries": [
+    "El host implementa y emite analitica; Codaru guarda el contrato",
+    "El plan describe pruebas del producto; el host aporta los runners",
+    "La revision del diseno no certifica WCAG",
+    "Sin modelos, SDK colector ni servidor Node en ejecucion"
+  ],
+  "release": {
+    "versionUnchanged": "0.8.0",
+    "npmPublished": false,
+    "nextAction": "Asignar nueva version y publicar cuando se autorice el proximo release"
+  }
+}

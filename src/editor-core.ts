@@ -1,7 +1,11 @@
+import {experienceReport,setExperience} from './experience';
+import type {ExperienceSpec,ExperienceReport} from './contracts';
+export {experienceReport} from './experience';
+export type {ExperienceSpec,ExperienceReport,AccessibilitySpec,AnalyticsEventSpec,ExperienceEntry,ExperienceIssue} from './contracts';
 import { applyIdentityOperation, emptyIdentityLab, identityIssues, identityTargetRevision, validateIdentityEvidence, exportIdentityPackage } from './identity';
-import {applyCommentOperation,captureCommentAnchor,emptyComments,getCommentContext,commentChanges} from './comments';
-import type {LayoutComments,CommentAnchor,CommentContext,CommentEvent} from './contracts';
-export type {LayoutComments,CommentAnchor,CommentContext,CommentEvent,CommentAuthor,CommentThread,CommentMessage,CommentDraft,CommentReviewRequest} from './contracts';
+import {applyCommentOperation,captureCommentAnchor,emptyComments,getCommentContext,getCorrectionRequest,commentChanges} from './comments';
+import type {LayoutComments,CommentAnchor,CommentContext,CommentEvent,CorrectionRequest} from './contracts';
+export type {LayoutComments,CommentAnchor,CommentContext,CommentEvent,CommentAuthor,CommentThread,CommentMessage,CommentDraft,CommentReviewRequest,CorrectionQueueItem,CorrectionRequest} from './contracts';
 import type { IdentityLab, IdentityBrief, IdentityReference, IdentityDirection, IdentityDecision, IdentityOperation, IdentityState, IdentityServices, IdentityServiceRequest, IdentityRequestOptions, IdentityRequestResult, IdentityPackage } from './contracts';
 export type { IdentityLab, IdentityBrief, IdentityReference, IdentityDirection, IdentityDecision, IdentityOperation, IdentityState, IdentityServices, IdentityServiceRequest, IdentityRequestOptions, IdentityRequestResult, IdentityPackage, IdentityCritique, IdentityEvidence, IdentityRefinement, IdentityFinding } from './contracts';
 import { parseStylePackage, importStylePackage, applyStylePackage, styleSummaries } from './style-package';
@@ -62,7 +66,10 @@ export interface CreateEditorOptions {
   onTranslationRequest?: (request: TranslationRequest) => void | Promise<void>;
 }
 export interface CodaruEditor {
+  getExperienceReport(options?:{ids?:string[];frameId?:string}):ExperienceReport;
+  setExperience(id:string,spec:ExperienceSpec|null):Project;
   getComments():LayoutComments;
+  getCorrectionRequest():CorrectionRequest;
   captureCommentAnchor(ids?:string[]):CommentAnchor;
   getCommentContext(id:string):CommentContext;
   /** No replay on subscribe. De-duplicate message IDs when persisting IDE jobs. */
@@ -317,6 +324,9 @@ export function createEditor(options: CreateEditorOptions = {}): CodaruEditor {
     if (typeof document === 'undefined') throw new Error('La exportación HTML/SVG necesita un DOM de navegador. Usa exportación JSON en una sesión sin interfaz.');
   }
   const editor: CodaruEditor = {
+    getExperienceReport(options){assertActive();return experienceReport(store.project,options);},
+    setExperience(id,spec){return editor.apply([{op:'experience.set',id,spec}]);},
+    getCorrectionRequest(){assertActive();return getCorrectionRequest(store.project);},
     getComments(){assertActive();return clone(store.project.comments??emptyComments());},
     captureCommentAnchor(ids=state.selected){assertActive();return captureCommentAnchor(store.project,ids);},
     getCommentContext(id){assertActive();return getCommentContext(store.project,id);},
@@ -444,7 +454,8 @@ export function createEditor(options: CreateEditorOptions = {}): CodaruEditor {
       return commit(project => {
         for (const op of operations) {
           switch (op.op) {
-            case 'comment.create':case 'comment.reply':case 'comment.status':case 'comment.draft.put':case 'comment.draft.remove':applyCommentOperation(project,op);break;
+            case 'experience.set':setExperience(project,op.id,op.spec);break;
+            case 'comment.create':case 'comment.reply':case 'comment.status':case 'comment.draft.put':case 'comment.draft.remove':case 'comment.queue.add':case 'comment.queue.remove':case 'comment.queue.move':applyCommentOperation(project,op);break;
             case 'identity.brief.set': case 'identity.reference.put': case 'identity.reference.remove': case 'identity.direction.put': case 'identity.direction.remove': case 'identity.decision.add': case 'identity.refinement.put': case 'identity.critique.add': applyIdentityOperation(project,op); break;
             case 'style.import': importStylePackage(project,op.data); break;
             case 'style.apply': applyStylePackage(project,op.id,op.frameId,op.mode); break;

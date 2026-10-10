@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
 
 const src = fileURLToPath(new URL('../src/', import.meta.url));
-const adapters = new Set(['embed', 'modular', 'editor-runtime', 'view-dom', 'main', 'ui-theme', 'component-properties-view', 'implementations-view', 'resource-preview', 'resource-library-view', 'style-package-view', 'identity-view', 'identity-preview', 'comments-view']);
+const adapters = new Set(['embed', 'modular', 'editor-runtime', 'view-dom', 'main', 'ui-theme', 'component-properties-view', 'implementations-view', 'resource-preview', 'resource-library-view', 'style-package-view', 'experience-view', 'experience-inspector', 'identity-view', 'identity-preview', 'comments-view']);
 
 function imports(file: string): string[] {
   const source = ts.createSourceFile(file, readFileSync(file, 'utf8'), ts.ScriptTarget.Latest, true);
