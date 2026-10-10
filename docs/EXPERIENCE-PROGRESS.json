@@ -1,5 +1,5 @@
 {
-  "status": "implemented-and-verified-locally",
+  "status": "released",
   "updatedAt": "2026-10-10T00:21:37.895247+00:00",
   "scope": "Contratos por capa de analitica, accesibilidad y pruebas para un IDE embebido",
   "capabilities": [
@@ -64,8 +64,14 @@
     "Sin modelos, SDK colector ni servidor Node en ejecucion"
   ],
   "release": {
-    "versionUnchanged": "0.8.0",
-    "npmPublished": false,
-    "nextAction": "Asignar nueva version y publicar cuando se autorice el proximo release"
+    "version": "0.9.0",
+    "npmPublished": true,
+    "githubPublished": true,
+    "tag": "v0.9.0",
+    "commit": "bcf25984f5cec47a2373e80b26fe6a4b7a1a3287",
+    "githubURL": "https://github.com/fsaldivar-dev/codaru-mockup/releases/tag/v0.9.0",
+    "publishedAt": "2026-10-10T00:46:42Z",
+    "evidence": "artifacts/release-0.9.0/verification.json",
+    "nextAction": null
   }
 }

@@ -46,7 +46,7 @@
   ],
   "next": null,
   "annotationUX": {
-    "status": "verified-local",
+    "status": "released",
     "intent": "Seleccionar una pieza y darle retroalimentación en una barra flotante; crítica visual, no documentación",
     "interaction": [
       "Burbuja de retroalimentación al seleccionar",
@@ -62,10 +62,12 @@
       "artifacts/feedback-redesign/native-bar.png",
       "artifacts/feedback-redesign/native-thread.png"
     ],
-    "npmPublished": false
+    "npmPublished": true,
+    "publishedVersion": "0.9.0",
+    "releaseEvidence": "artifacts/release-0.9.0/verification.json"
   },
   "correctionQueue": {
-    "status": "verified-local",
+    "status": "released",
     "completedAt": "2026-10-09T23:22:32.025082+00:00",
     "interaction": [
       "Agregar crítica anclada desde la barra",
@@ -79,6 +81,8 @@
       "Paquete instalado en consumidor limpio, tipos NodeNext y núcleo sin DOM",
       "Tauri aislado: 2 críticas y 2 propuestas reales; 1212 nodos intactos"
     ],
-    "npmPublished": false
+    "npmPublished": true,
+    "publishedVersion": "0.9.0",
+    "releaseEvidence": "artifacts/release-0.9.0/verification.json"
   }
 }
